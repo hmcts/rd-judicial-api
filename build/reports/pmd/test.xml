@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd"
+    version="6.12.0" timestamp="2020-01-09T12:09:04.003">
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\JudicialControllerUnitTest.java">
+<violation beginline="23" endline="23" begincolumn="32" endcolumn="49" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller" class="JudicialControllerUnitTest" variable="judicialController" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="25" endline="25" begincolumn="38" endcolumn="65" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller" class="JudicialControllerUnitTest" variable="judicialRoleTypeResponseMock" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="26" endline="26" begincolumn="37" endcolumn="63" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller" class="JudicialControllerUnitTest" variable="judicialRoleTypeServiceMock" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="27" endline="27" begincolumn="44" endcolumn="71" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller" class="JudicialControllerUnitTest" variable="judicialRoleTypeResponseList" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="41" endline="41" begincolumn="17" endcolumn="47" rule="JUnitTestContainsTooManyAsserts" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller" class="JudicialControllerUnitTest" method="testRetrieveJudicialRoleTypes" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junittestcontainstoomanyasserts" priority="3">
+Unit tests should not contain more than 1 assert(s).
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\WelcomeControllerTest.java">
+<violation beginline="9" endline="9" begincolumn="1" endcolumn="68" rule="ImportFromSamePackage" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller" class="WelcomeControllerTest" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#importfromsamepackage" priority="3">
+No need to import a type that lives in the same package
+</violation>
+<violation beginline="13" endline="13" begincolumn="37" endcolumn="53" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller" class="WelcomeControllerTest" variable="welcomeController" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="16" endline="16" begincolumn="17" endcolumn="48" rule="JUnitTestContainsTooManyAsserts" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller" class="WelcomeControllerTest" method="should_return_welcome_response" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junittestcontainstoomanyasserts" priority="3">
+Unit tests should not contain more than 1 assert(s).
+</violation>
+<violation beginline="20" endline="20" begincolumn="9" endcolumn="21" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller" class="WelcomeControllerTest" method="should_return_welcome_response" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="21" endline="21" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller" class="WelcomeControllerTest" method="should_return_welcome_response" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="22" endline="22" begincolumn="9" endcolumn="18" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller" class="WelcomeControllerTest" method="should_return_welcome_response" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ErrorConstantsUnitTest.java">
+<violation beginline="6" endline="6" begincolumn="1" endcolumn="72" rule="ImportFromSamePackage" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ErrorConstantsUnitTest" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#importfromsamepackage" priority="3">
+No need to import a type that lives in the same package
+</violation>
+<violation beginline="11" endline="11" begincolumn="17" endcolumn="33" rule="JUnitTestContainsTooManyAsserts" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ErrorConstantsUnitTest" method="check_constants" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junittestcontainstoomanyasserts" priority="3">
+Unit tests should not contain more than 1 assert(s).
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ErrorResponseUnitTest.java">
+<violation beginline="7" endline="7" begincolumn="1" endcolumn="71" rule="ImportFromSamePackage" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ErrorResponseUnitTest" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#importfromsamepackage" priority="3">
+No need to import a type that lives in the same package
+</violation>
+<violation beginline="12" endline="12" begincolumn="17" endcolumn="35" rule="JUnitTestContainsTooManyAsserts" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ErrorResponseUnitTest" method="testErrorResponse" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junittestcontainstoomanyasserts" priority="3">
+Unit tests should not contain more than 1 assert(s).
+</violation>
+<violation beginline="13" endline="13" begincolumn="20" endcolumn="29" rule="UnusedLocalVariable" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ErrorResponseUnitTest" method="testErrorResponse" variable="httpStatus" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'httpStatus'.
+</violation>
+<violation beginline="13" endline="28" begincolumn="20" endcolumn="45" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ErrorResponseUnitTest" method="testErrorResponse" variable="httpStatus" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+Found 'DU'-anomaly for variable 'httpStatus' (lines '13'-'28').
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ExceptionMapperUnitTest.java">
+<violation beginline="28" endline="28" begincolumn="29" endcolumn="43" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" variable="exceptionMapper" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="36" endline="36" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_empty_result_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="45" endline="45" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_resource_not_found_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="54" endline="54" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_illegal_argument_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="63" endline="63" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_http_message_not_readable_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="72" endline="72" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_http_media_type_not_supported_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="81" endline="81" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_forbidden_error_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="92" endline="92" begincolumn="9" endcolumn="21" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_http_status_code_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="101" endline="101" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="110" endline="110" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_method_not_valid_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="119" endline="119" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_invalid_request_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="128" endline="128" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_duplicate_key_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="137" endline="137" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_constraint_violation_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="146" endline="146" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="should_handle_data_integrity_violation_exception" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+<violation beginline="149" endline="149" begincolumn="36" endcolumn="121" rule="UnusedPrivateMethod" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ExceptionMapperUnitTest" method="generateCustomDataIntegrityViolationResponseMessageForSpecificCause" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#unusedprivatemethod" priority="3">
+Avoid unused private methods such as 'generateCustomDataIntegrityViolationResponseMessageForSpecificCause(String)'.
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\response\JudicialRoleTypeResponseUnitTest.java">
+<violation beginline="10" endline="10" begincolumn="17" endcolumn="46" rule="JUnitTestContainsTooManyAsserts" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller.response" class="JudicialRoleTypeResponseUnitTest" method="testJudicialRoleTypeResponse" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junittestcontainstoomanyasserts" priority="3">
+Unit tests should not contain more than 1 assert(s).
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\domain\JudicialRoleTypeUnitTest.java">
+<violation beginline="10" endline="10" begincolumn="17" endcolumn="38" rule="JUnitTestContainsTooManyAsserts" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.domain" class="JudicialRoleTypeUnitTest" method="judicialRoleTypeTest" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junittestcontainstoomanyasserts" priority="3">
+Unit tests should not contain more than 1 assert(s).
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\serialization\StdSerializerTest.java">
+<violation beginline="19" endline="19" begincolumn="26" endcolumn="31" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.serialization" class="StdSerializerTest" variable="mapper" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="21" endline="21" begincolumn="36" endcolumn="48" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.serialization" class="StdSerializerTest" variable="stdSerializer" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="40" endline="40" begincolumn="9" endcolumn="20" rule="JUnitAssertionsShouldIncludeMessage" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.serialization" class="StdSerializerTest" method="should_serialize_argument_to_string" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junitassertionsshouldincludemessage" priority="3">
+JUnit assertions should include a message
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\service\impl\JudicialRoleTypeServiceImplUnitTest.java">
+<violation beginline="20" endline="20" begincolumn="41" endcolumn="43" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImplUnitTest" variable="sut" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="22" endline="22" begincolumn="40" endcolumn="69" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImplUnitTest" variable="judicialRoleTypeRepositoryMock" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="23" endline="23" begincolumn="30" endcolumn="49" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImplUnitTest" variable="judicialRoleTypeMock" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="24" endline="24" begincolumn="38" endcolumn="65" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImplUnitTest" variable="judicialRoleTypeResponseMock" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="26" endline="26" begincolumn="36" endcolumn="52" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImplUnitTest" variable="judicialRoleTypes" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="27" endline="27" begincolumn="44" endcolumn="68" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImplUnitTest" variable="judicialRoleTypeResponses" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+</file>
+</pmd>

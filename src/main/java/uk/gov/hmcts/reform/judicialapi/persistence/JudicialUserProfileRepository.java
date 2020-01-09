@@ -6,4 +6,6 @@ import uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfile;
 
 @Repository
 public interface JudicialUserProfileRepository extends JpaRepository<JudicialUserProfile, String> {
+
+    JudicialUserProfile findUserProfileByEmailAddress(String email);
 }

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - Class uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>Class uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/uk.gov.hmcts.reform.judicialapi.controller.advice.html">uk.gov.hmcts.reform.judicialapi.controller.advice</a> &gt; ExceptionMapperUnitTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">13</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">1.552s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">should_handle_constraint_violation_exception</td>
+<td class="success">0.031s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_data_integrity_violation_exception</td>
+<td class="success">0.795s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_duplicate_key_exception</td>
+<td class="success">0.019s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_empty_result_exception</td>
+<td class="success">0.035s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_exception</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_forbidden_error_exception</td>
+<td class="success">0.043s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_http_media_type_not_supported_exception</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_http_message_not_readable_exception</td>
+<td class="success">0.035s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_http_status_code_exception</td>
+<td class="success">0.490s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_illegal_argument_exception</td>
+<td class="success">0.016s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_invalid_request_exception</td>
+<td class="success">0.017s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_method_not_valid_exception</td>
+<td class="success">0.039s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">should_handle_resource_not_found_exception</td>
+<td class="success">0.018s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2020-01-09 12:09:09.860 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+org.springframework.dao.DataIntegrityViolationException: null
+
+2020-01-09 12:09:10.013 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+java.lang.Exception: null
+
+2020-01-09 12:09:10.045 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+javax.validation.ConstraintViolationException: null
+
+2020-01-09 12:09:10.063 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException: null
+
+2020-01-09 12:09:10.104 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+org.springframework.web.bind.MethodArgumentNotValidException: null
+
+2020-01-09 12:09:10.121 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+java.lang.IllegalArgumentException: null
+
+2020-01-09 12:09:10.156 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+org.springframework.dao.EmptyResultDataAccessException: null
+
+2020-01-09 12:09:10.176 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+org.springframework.dao.DuplicateKeyException: null
+
+2020-01-09 12:09:10.195 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequest: null
+
+2020-01-09 12:09:10.232 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+org.springframework.http.converter.HttpMessageNotReadableException: null
+
+2020-01-09 12:09:10.236 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+java.lang.IllegalArgumentException: null
+
+2020-01-09 12:09:10.279 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+java.nio.file.AccessDeniedException: null
+
+2020-01-09 12:09:10.770 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+
+org.springframework.web.client.HttpStatusCodeException$MockitoMock$1995858095: null
+
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 5.4</a> at 09-Jan-2020 12:09:11</p>
+</div>
+</div>
+</body>
+</html>

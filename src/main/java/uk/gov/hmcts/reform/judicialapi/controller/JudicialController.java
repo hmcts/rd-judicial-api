@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialUserProfileResponse;
+import uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfile;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialRoleTypeService;
+import uk.gov.hmcts.reform.judicialapi.service.JudicialUserProfileService;
+import uk.gov.hmcts.reform.judicialapi.util.JrdUtil;
 
 @RequestMapping(path = "refdata/v1/judicial")
 @RestController
@@ -25,6 +29,9 @@ public class JudicialController {
 
     @Autowired
     protected JudicialRoleTypeService judicialRoleTypeService;
+
+    @Autowired
+    protected JudicialUserProfileService judicialUserProfileService;
 
     @ApiOperation(
             value = "Retrieves all judicial roles"
@@ -58,4 +65,43 @@ public class JudicialController {
 
         return new ResponseEntity<>(judicialRolesResponse, HttpStatus.OK);
     }
+
+
+    @ApiOperation(
+            value = "Retrieve JRD user profile"
+    )
+
+    @ApiResponses({
+            @ApiResponse(
+                    code = 200,
+                    message = "Retrieved JRD User profile",
+                    response = JudicialUserProfileResponse.class
+            ),
+            @ApiResponse(
+                    code = 403,
+                    message = "Forbidden Error: Access denied"
+            ),
+            @ApiResponse(
+                    code = 500,
+                    message = "Server Error",
+                    response = String.class
+            )
+    })
+
+
+    //@Secured("caseworker") need to be implemented,
+    @GetMapping(value = "/emailid",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+
+    protected ResponseEntity retrieveUserProfileByEmail(String email) {
+
+        JudicialUserProfile user = judicialUserProfileService.findJudicialUserProfileByEmailAddress(JrdUtil.removeEmptySpaces(email));
+
+        JudicialUserProfileResponse judicialUsersResponse = new JudicialUserProfileResponse(user);
+        return ResponseEntity
+                .status(200)
+                .body(judicialUsersResponse);
+    }
+
+
 }

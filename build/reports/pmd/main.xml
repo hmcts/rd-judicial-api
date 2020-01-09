@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd"
+    version="6.12.0" timestamp="2020-01-09T12:08:54.598">
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\configuration\FeignInterceptorConfiguration.java">
+<violation beginline="29" endline="29" begincolumn="58" endcolumn="75" rule="UseLocaleWithCaseConversions" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.configuration" class="FeignInterceptorConfiguration" method="requestInterceptor" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#uselocalewithcaseconversions" priority="3">
+When doing a String.toLowerCase()/toUpperCase() call, use a Locale
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\advice\InvalidRequest.java">
+<violation beginline="3" endline="8" begincolumn="8" endcolumn="1" rule="MissingSerialVersionUID" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="InvalidRequest" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#missingserialversionuid" priority="3">
+Classes implementing Serializable should set a serialVersionUID
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ResourceNotFoundException.java">
+<violation beginline="3" endline="8" begincolumn="8" endcolumn="1" rule="MissingSerialVersionUID" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller.advice" class="ResourceNotFoundException" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#missingserialversionuid" priority="3">
+Classes implementing Serializable should set a serialVersionUID
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\domain\AuthorisationType.java">
+<violation beginline="23" endline="23" begincolumn="13" endcolumn="37" rule="AvoidFieldNameMatchingTypeName" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.domain" class="AuthorisationType" variable="VariableDeclaratorId" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#avoidfieldnamematchingtypename" priority="3">
+It is somewhat confusing to have a field name matching the declaring class name
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\serialization\StdSerializer.java">
+<violation beginline="10" endline="10" begincolumn="32" endcolumn="37" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.serialization" class="StdSerializer" variable="mapper" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="18" endline="28" begincolumn="12" endcolumn="5" rule="MissingOverride" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.serialization" class="StdSerializer" method="serialize" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#missingoverride" priority="3">
+The method 'serialize(T)' is missing an @Override annotation.
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\service\impl\JudicialRoleTypeServiceImpl.java">
+<violation beginline="20" endline="20" begincolumn="32" endcolumn="57" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImpl" variable="judicialRoleTypeRepository" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="22" endline="32" begincolumn="13" endcolumn="74" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImpl" method="retrieveJudicialRoles" variable="judicialRoleType" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+Found 'UR'-anomaly for variable 'judicialRoleType' (lines '22'-'32').
+</violation>
+<violation beginline="22" endline="38" begincolumn="12" endcolumn="5" rule="MissingOverride" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImpl" method="retrieveJudicialRoles" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#missingoverride" priority="3">
+The method 'retrieveJudicialRoles()' is missing an @Override annotation.
+</violation>
+<violation beginline="25" endline="38" begincolumn="40" endcolumn="84" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialRoleTypeServiceImpl" method="retrieveJudicialRoles" variable="judicialRoleTypeResponses" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+Found 'DU'-anomaly for variable 'judicialRoleTypeResponses' (lines '25'-'38').
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\service\impl\JudicialUserProfileServiceImpl.java">
+<violation beginline="12" endline="12" begincolumn="35" endcolumn="63" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.service.impl" class="JudicialUserProfileServiceImpl" variable="judicialUserProfileRepository" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+</file>
+</pmd>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd xmlns="http://pmd.sourceforge.net/report/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd"
+    version="6.12.0" timestamp="2020-01-09T15:10:56.921">
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\AuthorizationFunctionalTest.java">
+<violation beginline="38" endline="120" begincolumn="17" endcolumn="1" rule="AbstractClassWithoutAbstractMethod" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#abstractclasswithoutabstractmethod" priority="3">
+This abstract class does not have any abstract methods
+</violation>
+<violation beginline="41" endline="41" begincolumn="22" endcolumn="27" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" variable="s2sUrl" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="44" endline="44" begincolumn="22" endcolumn="28" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" variable="s2sName" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="47" endline="47" begincolumn="22" endcolumn="30" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" variable="s2sSecret" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="50" endline="50" begincolumn="22" endcolumn="35" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" variable="judicialApiUrl" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="55" endline="55" begincolumn="33" endcolumn="49" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" variable="judicialApiClient" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="65" endline="65" begincolumn="9" endcolumn="114" rule="GuardLogStatement" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" method="setUp" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="66" endline="66" begincolumn="9" endcolumn="59" rule="GuardLogStatement" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" method="setUp" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="67" endline="67" begincolumn="9" endcolumn="49" rule="GuardLogStatement" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" method="setUp" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="72" endline="78" begincolumn="46" endcolumn="69" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" method="executeScript" variable="path" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+Found 'UR'-anomaly for variable 'path' (lines '72'-'78').
+</violation>
+<violation beginline="72" endline="79" begincolumn="25" endcolumn="54" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" method="executeScript" variable="scriptLine" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+Found 'UR'-anomaly for variable 'scriptLine' (lines '72'-'79').
+</violation>
+<violation beginline="85" endline="85" begincolumn="13" endcolumn="99" rule="GuardLogStatement" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" method="executeScript" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="93" endline="93" begincolumn="9" endcolumn="84" rule="GuardLogStatement" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" method="createDataSource" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+<violation beginline="108" endline="108" begincolumn="27" endcolumn="54" rule="UnusedPrivateMethod" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" method="getValueOrThrow" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#unusedprivatemethod" priority="3">
+Avoid unused private methods such as 'getValueOrThrow(String)'.
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\RetrieveJudicialRolesTest.java">
+<violation beginline="34" endline="42" begincolumn="17" endcolumn="46" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi" class="RetrieveJudicialRolesTest" method="rdcc_739_ac1_user_with_appropriate_rights_can_retrieve_list_of_all_judicial_roles" variable="role" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+Found 'UR'-anomaly for variable 'role' (lines '34'-'42').
+</violation>
+<violation beginline="34" endline="49" begincolumn="12" endcolumn="5" rule="JUnitTestsShouldIncludeAssert" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="RetrieveJudicialRolesTest" method="rdcc_739_ac1_user_with_appropriate_rights_can_retrieve_list_of_all_judicial_roles" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junittestsshouldincludeassert" priority="3">
+JUnit tests should include assert() or fail()
+</violation>
+<violation beginline="34" endline="34" begincolumn="17" endcolumn="99" rule="JUnitTestContainsTooManyAsserts" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="RetrieveJudicialRolesTest" method="rdcc_739_ac1_user_with_appropriate_rights_can_retrieve_list_of_all_judicial_roles" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#junittestcontainstoomanyasserts" priority="3">
+Unit tests should not contain more than 1 assert(s).
+</violation>
+<violation beginline="57" endline="57" begincolumn="9" endcolumn="45" rule="GuardLogStatement" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="RetrieveJudicialRolesTest" method="rdcc_739_ac2_user_without_appropriate_rights_cannot_retrieve_list_of_all_judicial_roles" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#guardlogstatement" priority="2">
+Logger calls should be surrounded by log level guards.
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\client\JudicialApiClient.java">
+<violation beginline="18" endline="18" begincolumn="26" endcolumn="39" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.client" class="JudicialApiClient" variable="judicialApiUrl" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\client\S2sClient.java">
+<violation beginline="20" endline="20" begincolumn="39" endcolumn="44" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.client" class="S2sClient" variable="s2sUrl" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="21" endline="21" begincolumn="39" endcolumn="54" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.client" class="S2sClient" variable="microserviceName" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="22" endline="22" begincolumn="39" endcolumn="53" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.client" class="S2sClient" variable="microserviceKey" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+<violation beginline="23" endline="23" begincolumn="39" endcolumn="51" rule="BeanMembersShouldSerialize" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.client" class="S2sClient" variable="authenticator" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#beanmembersshouldserialize" priority="3">
+Found non-transient, non-static member. Please mark as transient or provide accessors.
+</violation>
+</file>
+</pmd>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.10.1">
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\JudicialApplication.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\configuration\FeignConfiguration.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\configuration\FeignHeaderConfig.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\configuration\FeignInterceptorConfiguration.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\configuration\JacksonConfiguration.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\configuration\RestTemplateConfiguration.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\configuration\SwaggerConfiguration.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\JudicialController.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\WelcomeController.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ErrorConstants.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ErrorResponse.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ExceptionMapper.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\advice\InvalidRequest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ResourceNotFoundException.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\response\JudicialRoleTypeResponse.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\response\JudicialUserProfileResponse.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\domain\AuthorisationType.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\domain\BaseLocationType.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\domain\ContractType.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\domain\JudicialOfficeAppointment.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\domain\JudicialOfficeAuthorisation.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\domain\JudicialRoleType.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\domain\JudicialUserProfile.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\domain\RegionType.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\persistence\AuthorisationTypeRepository.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\persistence\BaseLocationTypeRepository.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\persistence\ContractTypeRepository.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\persistence\JudicialOfficeAppointmentRepository.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\persistence\JudicialOfficeAuthorisationRepository.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\persistence\JudicialRoleTypeRepository.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\persistence\JudicialUserProfileRepository.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\persistence\RegionTypeRepository.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\serialization\Deserializer.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\serialization\Serializer.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\serialization\StdSerializer.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\service\JudicialRoleTypeService.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\service\JudicialUserProfileService.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\service\impl\JudicialRoleTypeServiceImpl.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\service\impl\JudicialUserProfileServiceImpl.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\util\JrdUtil.java">
+</file>
+</checkstyle>

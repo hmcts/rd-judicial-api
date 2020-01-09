@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-01-09T12:09:07" hostname="LTGB06856" time="0.169">
+  <properties/>
+  <testcase name="check_constants" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest" time="0.169"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

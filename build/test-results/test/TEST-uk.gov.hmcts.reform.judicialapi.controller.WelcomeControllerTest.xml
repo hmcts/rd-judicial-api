@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-01-09T12:09:10" hostname="LTGB06856" time="0.029">
+  <properties/>
+  <testcase name="should_return_welcome_response" classname="uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest" time="0.029"/>
+  <system-out><![CDATA[2020-01-09 12:09:10.916  INFO   --- [    Test worker] u.g.h.r.j.controller.WelcomeController   : Welcome message 'Welcome to the Judicial API' from running instance: b3fa921d-6d5b-44b2-85e4-12cc08849a5b
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

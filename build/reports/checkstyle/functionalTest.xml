@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.10.1">
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\AuthorizationFunctionalTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\RetrieveJudicialRolesTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\RetrieveJudicialUserProfileByEmailTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\client\JudicialApiClient.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\client\S2sClient.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\config\Oauth2.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\config\TestConfigProperties.java">
+</file>
+</checkstyle>

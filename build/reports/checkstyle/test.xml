@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.10.1">
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\JudicialControllerUnitTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\WelcomeControllerTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ErrorConstantsUnitTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ErrorResponseUnitTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\advice\ExceptionMapperUnitTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\controller\response\JudicialRoleTypeResponseUnitTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\domain\JudicialRoleTypeUnitTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\serialization\StdSerializerTest.java">
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\test\java\uk\gov\hmcts\reform\judicialapi\service\impl\JudicialRoleTypeServiceImplUnitTest.java">
+</file>
+</checkstyle>
