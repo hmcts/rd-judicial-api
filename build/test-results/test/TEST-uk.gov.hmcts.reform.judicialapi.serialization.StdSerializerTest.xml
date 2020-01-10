@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-01-09T12:09:11" hostname="LTGB06856" time="0.057">
+<testsuite name="uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-01-10T17:32:56" hostname="LTGB06856" time="0.083">
   <properties/>
-  <testcase name="should_convert_checked_exception_to_runtime_on_error" classname="uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest" time="0.056"/>
+  <testcase name="should_convert_checked_exception_to_runtime_on_error" classname="uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest" time="0.08"/>
   <testcase name="should_serialize_argument_to_string" classname="uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

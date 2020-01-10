@@ -18,10 +18,13 @@ s2s-secret: ${S2S_SECRET:K6KA6PRLRFWQLSD6}
 
 spring.flyway.enabled: false
 ## Secure roles configuration 1
+
+
 exui.role.hmcts-admin: prd-admin
 exui.role.pui-user-manager: pui-user-manager
 exui.role.pui-organisation-manager: pui-organisation-manager
 exui.role.pui-finance-manager: pui-finance-manager
 exui.role.pui-case-manager: pui-case-manager
+exui.role.pui-case-worker: pui-case-worker
 
 

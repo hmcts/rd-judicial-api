@@ -2,10 +2,18 @@
 <pmd xmlns="http://pmd.sourceforge.net/report/2.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd"
-    version="6.12.0" timestamp="2020-01-09T12:08:54.598">
+    version="6.12.0" timestamp="2020-01-10T17:44:19.491">
 <file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\configuration\FeignInterceptorConfiguration.java">
 <violation beginline="29" endline="29" begincolumn="58" endcolumn="75" rule="UseLocaleWithCaseConversions" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.configuration" class="FeignInterceptorConfiguration" method="requestInterceptor" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#uselocalewithcaseconversions" priority="3">
 When doing a String.toLowerCase()/toUpperCase() call, use a Locale
+</violation>
+</file>
+<file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\JudicialController.java">
+<violation beginline="120" endline="120" begincolumn="37" endcolumn="57" rule="UnusedLocalVariable" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi.controller" class="JudicialController" method="retrieveUserProfileByEmail" variable="judicialUsersResponse" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#unusedlocalvariable" priority="3">
+Avoid unused local variables such as 'judicialUsersResponse'.
+</violation>
+<violation beginline="120" endline="124" begincolumn="37" endcolumn="97" rule="DataflowAnomalyAnalysis" ruleset="Error Prone" package="uk.gov.hmcts.reform.judicialapi.controller" class="JudicialController" method="retrieveUserProfileByEmail" variable="judicialUsersResponse" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_errorprone.html#dataflowanomalyanalysis" priority="5">
+Found 'DU'-anomaly for variable 'judicialUsersResponse' (lines '120'-'124').
 </violation>
 </file>
 <file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\main\java\uk\gov\hmcts\reform\judicialapi\controller\advice\InvalidRequest.java">

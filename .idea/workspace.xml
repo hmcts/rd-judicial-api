@@ -2,184 +2,74 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="99e738cd-dab3-4c8d-b177-66b62224c293" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileChanges/last-build.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/4.10.2/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/fileChanges/last-build.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/fileContent/fileContent.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/jarAnalysis.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/javaCompile.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/taskHistory.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/bootScripts/rd-judicial-api" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/bootScripts/rd-judicial-api.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/AuthorizationFunctionalTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialRolesTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/client/JudicialApiClient.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/client/S2sClient.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/config/Oauth2.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/config/TestConfigProperties.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialRolesTypesTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/docs/SwaggerPublisher.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/util/AuthorizationEnabledIntegrationTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/util/JudicialReferenceDataClient.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/util/SpringBootIntegrationTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/JudicialApplication.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/configuration/FeignConfiguration.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/configuration/FeignHeaderConfig.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/configuration/FeignInterceptorConfiguration.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/configuration/JacksonConfiguration.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/configuration/RestTemplateConfiguration.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/configuration/SwaggerConfiguration.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/WelcomeController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/advice/ErrorConstants.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/advice/ErrorResponse$ErrorResponseBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/advice/ErrorResponse.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/advice/ExceptionMapper.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/advice/InvalidRequest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/advice/ResourceNotFoundException.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialRoleTypeResponse$JudicialRoleTypeResponseBuilder.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialRoleTypeResponse.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/AuthorisationType.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/BaseLocationType.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/ContractType.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAppointment.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAuthorisation.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/JudicialRoleType.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/JudicialUserProfile.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/RegionType.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/persistence/AuthorisationTypeRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/persistence/BaseLocationTypeRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/persistence/ContractTypeRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/persistence/JudicialOfficeAppointmentRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/persistence/JudicialOfficeAuthorisationRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/persistence/JudicialRoleTypeRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/persistence/JudicialUserProfileRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/persistence/RegionTypeRepository.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/serialization/Deserializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/serialization/Serializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/serialization/StdSerializer.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/service/JudicialRoleTypeService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/service/JudicialUserProfileService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialRoleTypeServiceImpl.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialUserProfileServiceImpl.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/util/JrdUtil.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/smokeTest/uk/gov/hmcts/reform/judicialapi/SmokeTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/controller/JudicialControllerUnitTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/controller/WelcomeControllerTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/controller/advice/ErrorConstantsUnitTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/controller/advice/ErrorResponseUnitTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/controller/advice/ExceptionMapperUnitTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialRoleTypeResponseUnitTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/domain/JudicialRoleTypeUnitTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/serialization/StdSerializerTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialRoleTypeServiceImplUnitTest.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/distributions/rd-judicial-api-0.0.1.tar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/distributions/rd-judicial-api-0.0.1.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/distributions/rd-judicial-api-boot-0.0.1.tar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/distributions/rd-judicial-api-boot-0.0.1.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/jacoco/test.exec" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/libs/rd-judicial-api.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/functionalTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/functionalTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/integrationTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/integrationTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/main.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/main.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/smokeTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/smokeTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/test.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/checkstyle/test.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/functionalTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/functionalTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/integrationTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/integrationTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/main.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/main.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/smokeTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/smokeTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/test.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/pmd/test.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/css/base-style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/css/style.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/js/report.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.advice.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.response.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.domain.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.serialization.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.service.impl.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/functionalTest/application-functional.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/functionalTest/delete-data-functional.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/functionalTest/load-data-functional.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/integrationTest/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/integrationTest/load-data-functional.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/application.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/bootstrap.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/config.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/main/db/migration/V1_1__init_tables.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/resources/test/logback-test.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/scripts/rd-judicial-api" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/scripts/rd-judicial-api.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/bootJar/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/expandedArchives/org.jacoco.agent-0.8.1.jar_16670a76000912152d9d3da9154738d1/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/expandedArchives/org.jacoco.agent-0.8.1.jar_16670a76000912152d9d3da9154738d1/META-INF/maven/org.jacoco/org.jacoco.agent/pom.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/expandedArchives/org.jacoco.agent-0.8.1.jar_16670a76000912152d9d3da9154738d1/META-INF/maven/org.jacoco/org.jacoco.agent/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/expandedArchives/org.jacoco.agent-0.8.1.jar_16670a76000912152d9d3da9154738d1/about.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/expandedArchives/org.jacoco.agent-0.8.1.jar_16670a76000912152d9d3da9154738d1/jacocoagent.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/expandedArchives/org.jacoco.agent-0.8.1.jar_16670a76000912152d9d3da9154738d1/org/jacoco/agent/AgentJar.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/service/JudicialUserProfileService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialUserProfileServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/util/JrdUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lombok.config" beforeDir="false" afterPath="$PROJECT_DIR$/lombok.config" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialUserProfileTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/jarAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.4/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/util/AuthorizationEnabledIntegrationTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/util/AuthorizationEnabledIntegrationTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/util/JudicialReferenceDataClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/util/JudicialReferenceDataClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/jacoco/test.exec" beforeDir="false" afterPath="$PROJECT_DIR$/build/jacoco/test.exec" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/checkstyle/integrationTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/checkstyle/integrationTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/checkstyle/integrationTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/checkstyle/integrationTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/checkstyle/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/checkstyle/main.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/checkstyle/main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/checkstyle/main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/checkstyle/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/checkstyle/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/checkstyle/test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/checkstyle/test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/pmd/functionalTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/pmd/functionalTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/pmd/integrationTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/pmd/integrationTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/pmd/integrationTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/pmd/integrationTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/pmd/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/pmd/main.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/pmd/main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/pmd/main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/pmd/smokeTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/pmd/smokeTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/pmd/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/pmd/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/pmd/test.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/pmd/test.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.advice.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.advice.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.response.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.response.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.domain.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.domain.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.serialization.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.serialization.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.service.impl.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.service.impl.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/resources/functionalTest/application-functional.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/functionalTest/application-functional.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/functionalTest/resources/application-functional.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/functionalTest/resources/application-functional.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/AuthorizationEnabledIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/AuthorizationEnabledIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/JudicialReferenceDataClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/JudicialReferenceDataClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/persistence/JudicialUserProfileRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/persistence/JudicialUserProfileRepository.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -190,6 +80,9 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageViewManager">
+    <option name="myElementSize" value="181" />
   </component>
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
@@ -223,6 +116,12 @@
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
               </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="rd-judicial-api" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="verification" type="c8890929:TasksNode$1" />
+              </path>
             </expand>
             <select />
           </tree_state>
@@ -235,8 +134,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1122">
-              <caret line="85" column="45" selection-start-line="85" selection-start-column="45" selection-end-line="85" selection-end-column="45" />
+            <state relative-caret-position="149">
+              <caret line="111" column="61" lean-forward="true" selection-start-line="111" selection-start-column="61" selection-end-line="111" selection-end-column="61" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -247,80 +146,35 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="-527">
+              <caret line="2" column="57" selection-start-line="2" selection-start-column="57" selection-end-line="2" selection-end-column="57" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/JudicialReferenceDataClient.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="60">
+              <caret line="37" column="31" selection-start-line="37" selection-start-column="31" selection-end-line="37" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialUserProfile.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-211">
+              <caret line="87" column="91" lean-forward="true" selection-start-line="87" selection-start-column="12" selection-end-line="87" selection-end-column="91" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.java">
+        <entry file="file://$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialUserProfileTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
-              <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialRolesTypesTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialRolesTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialUserProfileServiceImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="6" column="52" selection-start-line="6" selection-start-column="52" selection-end-line="6" selection-end-column="52" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/persistence/JudicialUserProfileRepository.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="9" column="68" selection-start-line="9" selection-start-column="68" selection-end-line="9" selection-end-column="68" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/persistence/JudicialOfficeAuthorisationRepository.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/persistence/JudicialRoleTypeRepository.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
+            <state relative-caret-position="68">
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
             </state>
           </provider>
         </entry>
@@ -328,11 +182,50 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
+            <state relative-caret-position="204">
               <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialRoleTypeResponse.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="129">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="595">
+              <caret line="35" column="7" lean-forward="true" selection-start-line="13" selection-start-column="5" selection-end-line="35" selection-end-column="7" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/AuthorizationFunctionalTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="54" column="25" lean-forward="true" selection-start-line="54" selection-start-column="25" selection-end-line="54" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/client/JudicialApiClient.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-170">
+              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -342,9 +235,16 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="JUnit4 Test Class" />
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>run-in</find>
+      <find>rdjudicialapi_default</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -360,12 +260,22 @@
         <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/service/JudicialUserProfileService.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/Util/JrdUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/persistence/JudicialUserProfileRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.java" />
         <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialUserProfileServiceImpl.java" />
-        <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.java" />
         <option value="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileFuncTest.java" />
         <option value="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJRDUserProfileByEmailTest.java" />
+        <option value="$PROJECT_DIR$/docker-compose.yml" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/JudicialApplication.java" />
+        <option value="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/JudicialReferenceDataClient.java" />
+        <option value="$PROJECT_DIR$/src/functionalTest/resources/application-functional.yaml" />
+        <option value="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/AuthorizationEnabledIntegrationTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileEnitiyResponse.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse1.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileEntityResponse.java" />
         <option value="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.java" />
+        <option value="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.java" />
+        <option value="$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialUserProfileTest.java" />
       </list>
     </option>
   </component>
@@ -379,7 +289,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -390,20 +299,12 @@
             <path>
               <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
               <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
+              <item name="bin" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
               <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-              <item name="reports" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-              <item name="reports" type="462c0819:PsiDirectoryNode" />
-              <item name="checkstyle" type="462c0819:PsiDirectoryNode" />
+              <item name="database" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
@@ -435,6 +336,22 @@
               <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
               <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="functionalTest" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="judicialapi" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="functionalTest" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="integrationTest" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
             <path>
@@ -451,24 +368,198 @@
               <item name="integrationTest" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="judicialapi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="integrationTest" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="judicialapi" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="judicialapi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="judicialapi" type="462c0819:PsiDirectoryNode" />
+              <item name="controller" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="judicialapi" type="462c0819:PsiDirectoryNode" />
+              <item name="domain" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="judicialapi" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="judicialapi" type="462c0819:PsiDirectoryNode" />
+              <item name="controller" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="rd-judicial-api" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="judicialapi" type="462c0819:PsiDirectoryNode" />
+              <item name="domain" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="spring-web-5.1.6.RELEASE.jar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="spring-web-5.1.6.RELEASE.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="springframework" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="spring-web-5.1.6.RELEASE.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="springframework" type="462c0819:PsiDirectoryNode" />
+              <item name="http" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="time" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="Gradle: org.springframework:spring-web:5.1.6.RELEASE" type="70bed36:NamedLibraryElementNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="Gradle: org.springframework:spring-web:5.1.6.RELEASE" type="70bed36:NamedLibraryElementNode" />
+              <item name="spring-web-5.1.6.RELEASE.jar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="Gradle: org.springframework:spring-web:5.1.6.RELEASE" type="70bed36:NamedLibraryElementNode" />
+              <item name="spring-web-5.1.6.RELEASE.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="springframework" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="rd-judicial-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="Gradle: org.springframework:spring-web:5.1.6.RELEASE" type="70bed36:NamedLibraryElementNode" />
+              <item name="spring-web-5.1.6.RELEASE.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="springframework" type="462c0819:PsiDirectoryNode" />
+              <item name="http" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/functionalTest" />
-    <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.annotationProcessors" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
+    <property name="last_opened_file_path" value="$USER_HOME$/RDCC-571/rd-judicial-api" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.import" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="uk.gov.hmcts.reform.judicialapi.domain" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi" />
     </key>
@@ -477,6 +568,9 @@
       <recent name="uk.gov.hmcts.reform.judicialapi.service.impl" />
       <recent name="uk.gov.hmcts.reform.judicialapi.service" />
       <recent name="uk.gov.hmcts.reform.judicialapi.controller.response" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest" />
@@ -494,8 +588,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
-    <configuration name="rd-judicial-api [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.rd-judicial-api [integration]">
+    <configuration name="rd-judicial-api [integrationTestClasses]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -506,7 +600,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="build" />
+            <option value="integrationTestClasses" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -514,9 +608,81 @@
       <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
       <method v="2" />
     </configuration>
+    <configuration name="rd-judicial-api [integration]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="integration" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="JudicialUserProfileTest.judicialUserProfileTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="rd-judicial-api.test" />
+      <shortenClasspath name="CLASSPATH_FILE" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="uk.gov.hmcts.reform.judicialapi.domain.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="uk.gov.hmcts.reform.judicialapi.domain" />
+      <option name="MAIN_CLASS_NAME" value="uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfileTest" />
+      <option name="METHOD_NAME" value="judicialUserProfileTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="PARAMETERS" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RetrieveJudicialUserProfileTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="rd-judicial-api.integrationTest" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="uk.gov.hmcts.reform.judicialapi.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="uk.gov.hmcts.reform.judicialapi" />
+      <option name="MAIN_CLASS_NAME" value="uk.gov.hmcts.reform.judicialapi.RetrieveJudicialUserProfileTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RetrieveJudicialUserProfileTest.search_judicial_user_profile_with_emailId" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="rd-judicial-api.integrationTest" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="uk.gov.hmcts.reform.judicialapi.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="uk.gov.hmcts.reform.judicialapi" />
+      <option name="MAIN_CLASS_NAME" value="uk.gov.hmcts.reform.judicialapi.RetrieveJudicialUserProfileTest" />
+      <option name="METHOD_NAME" value="search_judicial_user_profile_with_emailId" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.rd-judicial-api [build]" />
+        <item itemvalue="Gradle.rd-judicial-api [integration]" />
+        <item itemvalue="Gradle.rd-judicial-api [integrationTestClasses]" />
+        <item itemvalue="JUnit.RetrieveJudicialUserProfileTest" />
+        <item itemvalue="JUnit.RetrieveJudicialUserProfileTest.search_judicial_user_profile_with_emailId" />
+        <item itemvalue="JUnit.JudicialUserProfileTest.judicialUserProfileTest" />
       </list>
     </recent_temporary>
   </component>
@@ -533,11 +699,40 @@
     </task>
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="JudicialUserProfileTest_judicialUserProfiletest - 2020.01.10 at 12h 30m 52s.xml">
+      <configuration name="JudicialUserProfileTest.judicialUserProfiletest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="JudicialUserProfileTest - 2020.01.10 at 12h 33m 02s.xml">
+      <configuration name="JudicialUserProfileTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="JudicialUserProfileTest_judicialUserProfileTest - 2020.01.10 at 12h 58m 29s.xml">
+      <configuration name="JudicialUserProfileTest.judicialUserProfileTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="JudicialUserProfileTest_judicialUserProfileTest - 2020.01.10 at 13h 00m 41s.xml">
+      <configuration name="JudicialUserProfileTest.judicialUserProfileTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="JudicialUserProfileTest_judicialUserProfileTest - 2020.01.10 at 13h 04m 08s.xml">
+      <configuration name="JudicialUserProfileTest.judicialUserProfileTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="JudicialUserProfileTest_judicialUserProfileTest - 2020.01.10 at 13h 10m 48s.xml">
+      <configuration name="JudicialUserProfileTest.judicialUserProfileTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="JudicialUserProfileTest_judicialUserProfileTest - 2020.01.10 at 13h 21m 27s.xml">
+      <configuration name="JudicialUserProfileTest.judicialUserProfileTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="JudicialUserProfileTest_judicialUserProfileTest - 2020.01.10 at 13h 21m 41s.xml">
+      <configuration name="JudicialUserProfileTest.judicialUserProfileTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="rd-judicial-api_[integration] - 2020.01.10 at 17h 15m 24s.xml">
+      <configuration name="rd-judicial-api [integration]" configurationId="GradleRunConfiguration" />
+    </history-entry>
+  </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20045386" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21028744" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -550,8 +745,8 @@
       <window_info id="Learn" order="10" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32993197" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.50510204" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39965987" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -560,8 +755,10 @@
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Console" order="11" />
-      <window_info anchor="bottom" id="Version Control" order="12" />
+      <window_info anchor="bottom" id="Version Control" order="12" weight="0.34397164" />
       <window_info anchor="bottom" id="DB Execution Console" order="13" />
+      <window_info anchor="bottom" id="Messages" order="14" />
+      <window_info anchor="right" id="Coverage" side_tool="true" weight="0.58084774" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -569,10 +766,60 @@
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="right" id="sbt" order="5" />
       <window_info anchor="right" id="Capture Analysis" order="6" />
-      <window_info anchor="right" id="Gradle" order="7" weight="0.63736266" />
+      <window_info anchor="right" id="Gradle" order="7" visible="true" weight="0.14599092" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info anchor="right" id="Theme Preview" order="9" />
     </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21104388" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="DB Browser" order="4" />
+      <window_info id="UI Designer" order="5" />
+      <window_info id="Project Explorer" order="6" />
+      <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info id="Capture Tool" order="8" />
+      <window_info id="Job Explorer" order="9" />
+      <window_info id="Learn" order="10" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.54931974" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39965987" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.34397164" />
+      <window_info anchor="bottom" id="sbt-shell-toolwindow" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Console" order="11" />
+      <window_info anchor="bottom" id="Version Control" order="12" weight="0.34397164" />
+      <window_info anchor="bottom" id="DB Execution Console" order="13" />
+      <window_info anchor="bottom" id="Messages" order="14" />
+      <window_info anchor="right" id="Coverage" order="0" side_tool="true" weight="0.32980332" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info anchor="right" id="Maven" order="4" />
+      <window_info anchor="right" id="Palette" order="5" />
+      <window_info anchor="right" id="sbt" order="6" />
+      <window_info anchor="right" id="Capture Analysis" order="7" />
+      <window_info anchor="right" id="Gradle" order="8" weight="0.6369138" />
+      <window_info anchor="right" id="Palette&#9;" order="9" />
+      <window_info anchor="right" id="Theme Preview" order="10" />
+    </layout-to-restore>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/rd_judicial_api$JudicialApplication.ic" NAME="JudicialApplication Coverage Results" MODIFIED="1578587318060" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>uk.gov.hmcts.reform.judicialapi.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/rd_judicial_api$JudicialUserProfileTest.ic" NAME="JudicialUserProfileTest Coverage Results" MODIFIED="1578659572089" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>uk.gov.hmcts.reform.judicialapi.domain.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/rd_judicial_api$JudicialUserProfileTest_judicialUserProfileTest.ic" NAME="JudicialUserProfileTest.judicialUserProfileTest Coverage Results" MODIFIED="1578662493989" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>uk.gov.hmcts.reform.judicialapi.domain.*</FILTER>
+    </SUITE>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/configuration/SwaggerConfiguration.java">
@@ -589,13 +836,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/JudicialApplication.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/WelcomeController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-450">
@@ -603,41 +843,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/service/JudicialUserProfileService.java">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/util/JrdUtil.java">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/build/reports/checkstyle/main.html">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1122">
-          <caret line="85" column="45" selection-start-line="85" selection-start-column="45" selection-end-line="85" selection-end-column="45" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialRolesTypesTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialRolesTest.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -677,9 +887,200 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.java">
+    <entry file="file://$PROJECT_DIR$/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/init-db.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/run-in-docker.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-153">
+          <caret line="24" column="1" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="36" selection-start-line="36" selection-end-line="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="66" selection-start-line="4" selection-start-column="66" selection-end-line="4" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/JudicialApplication.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
+          <caret line="14" column="65" lean-forward="true" selection-start-line="14" selection-start-column="65" selection-end-line="14" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.1.6.RELEASE/dfb9e2cce0376ed468b6988b88a08fa7fb43f355/spring-web-5.1.6.RELEASE-sources.jar!/org/springframework/http/HttpStatus.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="33" column="12" selection-start-line="33" selection-start-column="12" selection-end-line="33" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialRoleTypeServiceImplUnitTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-123">
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/service/JudicialRoleTypeService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="6" column="17" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialRoleType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_211/src.zip!/java/time/LocalDateTime.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="134" column="32" selection-start-line="134" selection-start-column="19" selection-end-line="134" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/service/JudicialUserProfileService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="45" selection-start-line="4" selection-start-column="45" selection-end-line="4" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialRoleTypeResponseUnitTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="14" column="58" selection-start-line="14" selection-start-column="58" selection-end-line="14" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/domain/ContractType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/domain/BaseLocationType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-221">
+          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAppointment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="62" column="38" selection-start-line="62" selection-start-column="38" selection-end-line="62" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialRoleTypeUnitTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="47">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAuthorisation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-323">
+          <caret line="20" column="13" selection-start-line="20" selection-start-column="13" selection-end-line="20" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/SpringBootIntegrationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-164">
+          <caret line="27" column="31" selection-start-line="27" selection-start-column="31" selection-end-line="27" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/application.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="58" column="24" lean-forward="true" selection-start-line="58" selection-start-column="24" selection-end-line="58" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/functionalTest/resources/application-functional.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialRolesTypesTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="19" column="35" lean-forward="true" selection-start-line="19" selection-start-column="35" selection-end-line="19" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialControllerUnitTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="22" column="26" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/AuthorizationEnabledIntegrationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="23" column="73" selection-start-line="23" selection-start-column="73" selection-end-line="23" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileEntityResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="14" column="44" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/util/JudicialReferenceDataClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="37" column="31" selection-start-line="37" selection-start-column="31" selection-end-line="37" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialUserProfile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-211">
+          <caret line="87" column="91" lean-forward="true" selection-start-line="87" selection-start-column="12" selection-end-line="87" selection-end-column="91" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
           <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -687,13 +1088,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialRoleTypeResponse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/AuthorizationFunctionalTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="54" column="25" lean-forward="true" selection-start-line="54" selection-start-column="25" selection-end-line="54" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/client/JudicialApiClient.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-170">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
+        <state relative-caret-position="595">
+          <caret line="35" column="7" lean-forward="true" selection-start-line="13" selection-start-column="5" selection-end-line="35" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-527">
+          <caret line="2" column="57" selection-start-line="2" selection-start-column="57" selection-end-line="2" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="149">
+          <caret line="111" column="61" lean-forward="true" selection-start-line="111" selection-start-column="61" selection-end-line="111" selection-end-column="61" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialUserProfileTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>
@@ -747,6 +1193,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
+          <last-edited>integrationTest|rd-judicial-api</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

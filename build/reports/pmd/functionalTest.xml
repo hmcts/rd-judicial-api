@@ -2,7 +2,7 @@
 <pmd xmlns="http://pmd.sourceforge.net/report/2.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://pmd.sourceforge.net/report/2.0.0 http://pmd.sourceforge.net/report_2_0_0.xsd"
-    version="6.12.0" timestamp="2020-01-09T15:10:56.921">
+    version="6.12.0" timestamp="2020-01-10T17:32:20.253">
 <file name="C:\Users\764106\RDCC_571J\rd-judicial-api\src\functionalTest\java\uk\gov\hmcts\reform\judicialapi\AuthorizationFunctionalTest.java">
 <violation beginline="38" endline="120" begincolumn="17" endcolumn="1" rule="AbstractClassWithoutAbstractMethod" ruleset="Best Practices" package="uk.gov.hmcts.reform.judicialapi" class="AuthorizationFunctionalTest" externalInfoUrl="https://pmd.github.io/pmd-6.12.0/pmd_rules_java_bestpractices.html#abstractclasswithoutabstractmethod" priority="3">
 This abstract class does not have any abstract methods

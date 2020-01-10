@@ -1,13 +1,17 @@
 package uk.gov.hmcts.reform.judicialapi.controller;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 
 import java.util.List;
+
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,7 @@ import uk.gov.hmcts.reform.judicialapi.service.JudicialRoleTypeService;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserProfileService;
 import uk.gov.hmcts.reform.judicialapi.util.JrdUtil;
 
+
 @RequestMapping(path = "refdata/v1/judicial")
 @RestController
 @Slf4j
@@ -32,6 +37,9 @@ public class JudicialController {
 
     @Autowired
     protected JudicialUserProfileService judicialUserProfileService;
+
+    @Value("${exui.role.pui-case-worker:}")
+    protected String puiCaseWorker;
 
     @ApiOperation(
             value = "Retrieves all judicial roles"
@@ -68,8 +76,18 @@ public class JudicialController {
 
 
     @ApiOperation(
-            value = "Retrieve JRD user profile"
+            value = "Retrieve Judicial user profile by email",
+            authorizations = {
+                    @Authorization(value = "ServiceAuthorization"),
+                    @Authorization(value = "Authorization")
+            }
     )
+
+    @ApiParam(
+            name = "email",
+            type = "string",
+            value = "The email of the desired user to be retrieved",
+            required = false)
 
     @ApiResponses({
             @ApiResponse(
@@ -89,18 +107,20 @@ public class JudicialController {
     })
 
 
-    //@Secured("caseworker") need to be implemented,
-    @GetMapping(value = "/emailid",
+
+    @GetMapping(value = "/user/emailid/{emailID}",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 
-    protected ResponseEntity retrieveUserProfileByEmail(String email) {
+
+    //@Secured("caseworker")
+    protected ResponseEntity<JudicialUserProfileResponse> retrieveUserProfileByEmail(String email) {
 
         JudicialUserProfile user = judicialUserProfileService.findJudicialUserProfileByEmailAddress(JrdUtil.removeEmptySpaces(email));
 
         JudicialUserProfileResponse judicialUsersResponse = new JudicialUserProfileResponse(user);
         return ResponseEntity
                 .status(200)
-                .body(judicialUsersResponse);
+                .body(new JudicialUserProfileResponse(user));
     }
 
 

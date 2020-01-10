@@ -34,6 +34,11 @@ public class JudicialReferenceDataClient {
         return getRequest(APP_BASE_PATH + "/roles", role);
     }
 
+
+    public Map<String, Object> findJudicialUserProfileByUserEmail(String email,String role) {
+        return getRequest("/user?email={email}", email,role);
+    }
+
     private HttpHeaders getS2sTokenHeaders() {
 
         HttpHeaders headers = new HttpHeaders();

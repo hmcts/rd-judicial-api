@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-01-09T12:09:10" hostname="LTGB06856" time="0.123">
+<testsuite name="uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-01-10T17:32:55" hostname="LTGB06856" time="0.163">
   <properties/>
-  <testcase name="testRetrieveJudicialRoleTypes" classname="uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest" time="0.123"/>
+  <testcase name="testRetrieveJudicialRoleTypes" classname="uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest" time="0.163"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

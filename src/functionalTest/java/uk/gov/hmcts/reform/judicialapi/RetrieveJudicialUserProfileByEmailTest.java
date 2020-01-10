@@ -1,31 +1,40 @@
 package uk.gov.hmcts.reform.judicialapi;
 
-import com.google.common.collect.ImmutableList;
-import java.nio.file.Paths;
 import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.ResourceUtils;
+
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 @ActiveProfiles("functional")
 @Slf4j
 public class RetrieveJudicialUserProfileByEmailTest extends AuthorizationFunctionalTest {
 
-    @BeforeClass
-    public static void dbSetup() throws Exception {
-        String loadFile = ResourceUtils.getFile("classpath:load-data-functional.sql").getCanonicalPath();
-        executeScript(ImmutableList.of(Paths.get(loadFile)));
-    }
+//    @Test
+//    public void can_find_a_user_by_their_email_address() {
+//
+//        String email = randomAlphabetic(10) + "@usersearch.test".toLowerCase();
+//        OrganisationCreationRequest request = someMinimalOrganisationRequest()
+//                .superUser(aUserCreationRequest()
+//                        .firstName("some-fname")
+//                        .lastName("some-lname")
+//                        .email(email)
+//                        .jurisdictions(OrganisationFixtures.createJurisdictions())
+//                        .build())
+//                .build();
+//        Map<String, Object> response = professionalApiClient.createOrganisation(request);
+//
+//        String orgIdentifierResponse = (String) response.get("organisationIdentifier");
+//        assertThat(orgIdentifierResponse).isNotEmpty();
+//        request.setStatus("ACTIVE");
+//        professionalApiClient.updateOrganisation(request, hmctsAdmin, orgIdentifierResponse);
+//
+//        Map<String, Object> searchResponse = judicialApiClient.(email.toLowerCase(), hmctsAdmin);
+//
+//        assertThat(searchResponse.get("firstName")).isEqualTo("some-fname");
+//    }
 
-    @AfterClass
-    public static void dbTearDown() throws Exception {
-        String deleteFile = ResourceUtils.getFile("classpath:delete-data-functional.sql").getCanonicalPath();
-        executeScript(ImmutableList.of(Paths.get(deleteFile)));
-    }
 }
 
 
