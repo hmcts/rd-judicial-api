@@ -13,7 +13,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class JudicialUserProfileServiceImplUnitTest {
-    
+
     @InjectMocks
     private JudicialUserProfileServiceImpl sut;
 
@@ -30,6 +30,7 @@ public class JudicialUserProfileServiceImplUnitTest {
         judicialUserProfileRepositoryMock = mock(JudicialUserProfileRepository.class);
         judicialUserProfileMock = mock(JudicialUserProfile.class);
         judicialUserProfileResponseMock = mock(JudicialUserProfileResponse.class);
+        
         MockitoAnnotations.initMocks(this);
 
         judicialUserProfiles = new ArrayList<>();

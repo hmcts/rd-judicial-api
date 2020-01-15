@@ -2,94 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="99e738cd-dab3-4c8d-b177-66b62224c293" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/functionalTest/resources/delete-user-profile-funct-data.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/functionalTest/resources/load-user-profile-functional.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/BaseLocationTypeResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/ContractTypeResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialOfficeAppointmentResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialOfficeAuthorisationsResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/RegionTypeResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponseUnitTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialUserProfileServiceImplUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/jarAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4/javaCompile/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/AuthorizationFunctionalTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/AuthorizationFunctionalTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/client/JudicialApiClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/functionalTest/uk/gov/hmcts/reform/judicialapi/client/JudicialApiClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/integrationTest/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAppointment.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAppointment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/controller/JudicialControllerUnitTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/test/uk/gov/hmcts/reform/judicialapi/controller/JudicialControllerUnitTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/jacoco/integration.exec" beforeDir="false" afterPath="$PROJECT_DIR$/build/jacoco/integration.exec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/jacoco/test.exec" beforeDir="false" afterPath="$PROJECT_DIR$/build/jacoco/test.exec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/integration/classes/uk.gov.hmcts.reform.judicialapi.RetrieveJudicialRolesTypesTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/integration/classes/uk.gov.hmcts.reform.judicialapi.RetrieveJudicialRolesTypesTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/integration/classes/uk.gov.hmcts.reform.judicialapi.RetrieveJudicialUserProfileTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/integration/classes/uk.gov.hmcts.reform.judicialapi.RetrieveJudicialUserProfileTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/integration/classes/uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/integration/classes/uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/integration/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/integration/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/integration/packages/uk.gov.hmcts.reform.judicialapi.docs.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/integration/packages/uk.gov.hmcts.reform.judicialapi.docs.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/integration/packages/uk.gov.hmcts.reform.judicialapi.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/integration/packages/uk.gov.hmcts.reform.judicialapi.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfileTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfileTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/classes/uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.advice.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.advice.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.response.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.controller.response.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.domain.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.domain.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.serialization.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.serialization.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.service.impl.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/uk.gov.hmcts.reform.judicialapi.service.impl.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/integration/TEST-uk.gov.hmcts.reform.judicialapi.RetrieveJudicialRolesTypesTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/integration/TEST-uk.gov.hmcts.reform.judicialapi.RetrieveJudicialRolesTypesTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/integration/TEST-uk.gov.hmcts.reform.judicialapi.RetrieveJudicialUserProfileTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/integration/TEST-uk.gov.hmcts.reform.judicialapi.RetrieveJudicialUserProfileTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/integration/TEST-uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/integration/TEST-uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/integration/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/integration/binary/output.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/integration/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/integration/binary/output.bin.idx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/integration/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/integration/binary/results.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.JudicialControllerUnitTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.WelcomeControllerTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstantsUnitTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponseUnitTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponseUnitTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleTypeUnitTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfileTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfileTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.serialization.StdSerializerTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/TEST-uk.gov.hmcts.reform.judicialapi.service.impl.JudicialRoleTypeServiceImplUnitTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/output.bin.idx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAppointment.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAppointment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/classes/uk/gov/hmcts/reform/judicialapi/controller/JudicialControllerUnitTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/classes/uk/gov/hmcts/reform/judicialapi/controller/JudicialControllerUnitTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/AuthorizationFunctionalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/AuthorizationFunctionalTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileByEmailTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/client/JudicialApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/functionalTest/java/uk/gov/hmcts/reform/judicialapi/client/JudicialApiClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/integrationTest/java/uk/gov/hmcts/reform/judicialapi/RetrieveJudicialUserProfileTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/JudicialUserProfileResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAppointment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/uk/gov/hmcts/reform/judicialapi/domain/JudicialOfficeAppointment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialControllerUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/controller/JudicialControllerUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialUserProfileServiceImplUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialUserProfileServiceImplUnitTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -184,8 +98,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialUserProfileServiceImplUnitTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
+            <state relative-caret-position="187">
+              <caret line="32" column="8" selection-start-line="32" selection-start-column="8" selection-end-line="32" selection-end-column="8" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -320,7 +237,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="676" />
+    <option name="x" value="-7" />
     <option name="width" value="697" />
     <option name="height" value="735" />
   </component>
@@ -1193,8 +1110,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialUserProfileServiceImplUnitTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
+        <state relative-caret-position="187">
+          <caret line="32" column="8" selection-start-line="32" selection-start-column="8" selection-end-line="32" selection-end-column="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
