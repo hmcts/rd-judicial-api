@@ -13,8 +13,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 public class JudicialUserProfileServiceImplUnitTest {
-
-
+    
     @InjectMocks
     private JudicialUserProfileServiceImpl sut;
 
