@@ -22,7 +22,7 @@ public class JudicialUserProfileServiceImplUnitTest {
     private JudicialUserProfileResponse judicialUserProfileResponseMock;
 
     private List<JudicialUserProfile> judicialUserProfiles;
-    private List<JudicialUserProfileResponse> judicialUserProfileResponses;
+    private List<JudicialUserProfileResponse> judicialUserProfileResponse;
 
     @Before
     public void setUp() {
@@ -30,11 +30,11 @@ public class JudicialUserProfileServiceImplUnitTest {
         judicialUserProfileRepositoryMock = mock(JudicialUserProfileRepository.class);
         judicialUserProfileMock = mock(JudicialUserProfile.class);
         judicialUserProfileResponseMock = mock(JudicialUserProfileResponse.class);
-        
+
         MockitoAnnotations.initMocks(this);
 
         judicialUserProfiles = new ArrayList<>();
-        judicialUserProfileResponses = new ArrayList<>();
+        judicialUserProfileResponse = new ArrayList<>();
     }
 
 //    @Test
