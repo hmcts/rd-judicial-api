@@ -54,6 +54,8 @@ public abstract class AuthorizationFunctionalTest {
 
     protected JudicialApiClient judicialApiClient;
 
+
+
     @Autowired
     protected TestConfigProperties configProperties;
 

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialUserProfileResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfile;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
 
@@ -34,19 +35,22 @@ public class RetrieveJudicialUserProfileTest  extends AuthorizationEnabledIntegr
     }
 
     @Test
-    public void search_judicial_user_profile_with_emailId() {
+    public void search_returns_judicial_user_profile_with_emailId() {
 
 
         Map<String, Object> response = judicialReferenceDataClient.findJudicialUserProfileByUserEmail("somewhere@net.com",caseworker);
 
-        List<HashMap> judicialUsersProfileResponse = (List<HashMap>) response.get("users");
-        HashMap judicialUsersProfileResponses = judicialUsersProfileResponse.get(0);
+        assertThat(response.get("http_status")).isEqualTo("200 OK");
+        assertThat(((List<JudicialUserProfileResponse>) response.get("users")).size()).isGreaterThan(0);
 
-        assertThat(judicialUsersProfileResponses.get("fullName")).isNotNull();
-        assertThat(judicialUsersProfileResponses.get("surName")).isNotNull();
-        assertThat(judicialUsersProfileResponses.get("lastName")).isNotNull();
-        assertThat(judicialUsersProfileResponses.get("emailID")).isNotNull();
-        assertThat(judicialUsersProfileResponses.get("title")).isNotNull();
+        List<HashMap> judicialUsersProfileResponses = (List<HashMap>) response.get("users");
+        HashMap judicialUsersProfileResponse = judicialUsersProfileResponses.get(0);
+
+        assertThat(judicialUsersProfileResponse.get("fullname")).isNotNull();
+        assertThat(judicialUsersProfileResponse.get("surname")).isNotNull();
+        assertThat(judicialUsersProfileResponse.get("lastName")).isNotNull();
+        assertThat(judicialUsersProfileResponse.get("emailID")).isNotNull();
+        assertThat(judicialUsersProfileResponse.get("title")).isNotNull();
     }
 
     @Test

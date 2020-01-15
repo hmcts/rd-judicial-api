@@ -1,70 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2020-01-10T17:32:52" hostname="LTGB06856" time="2.494">
+<testsuite name="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2020-01-15T14:05:50" hostname="LTGB06856" time="1.607">
   <properties/>
-  <testcase name="should_handle_data_integrity_violation_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="1.31"/>
-  <testcase name="should_handle_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.016"/>
-  <testcase name="should_handle_constraint_violation_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.058"/>
-  <testcase name="should_handle_resource_not_found_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.03"/>
-  <testcase name="should_handle_method_not_valid_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.058"/>
-  <testcase name="should_handle_illegal_argument_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.031"/>
-  <testcase name="should_handle_empty_result_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.058"/>
-  <testcase name="should_handle_duplicate_key_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.029"/>
-  <testcase name="should_handle_invalid_request_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.03"/>
-  <testcase name="should_handle_http_message_not_readable_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.055"/>
-  <testcase name="should_handle_http_media_type_not_supported_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.004"/>
-  <testcase name="should_handle_forbidden_error_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.055"/>
-  <testcase name="should_handle_http_status_code_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.723"/>
-  <system-out><![CDATA[2020-01-10 17:32:53.886 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+  <testcase name="should_handle_data_integrity_violation_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.878"/>
+  <testcase name="should_handle_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.011"/>
+  <testcase name="should_handle_constraint_violation_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.035"/>
+  <testcase name="should_handle_resource_not_found_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.018"/>
+  <testcase name="should_handle_method_not_valid_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.041"/>
+  <testcase name="should_handle_illegal_argument_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.016"/>
+  <testcase name="should_handle_empty_result_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.035"/>
+  <testcase name="should_handle_duplicate_key_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.017"/>
+  <testcase name="should_handle_invalid_request_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.016"/>
+  <testcase name="should_handle_http_message_not_readable_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.034"/>
+  <testcase name="should_handle_http_media_type_not_supported_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.002"/>
+  <testcase name="should_handle_forbidden_error_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.035"/>
+  <testcase name="should_handle_http_status_code_exception" classname="uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapperUnitTest" time="0.454"/>
+  <system-out><![CDATA[2020-01-15 14:05:50.883 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.dao.DataIntegrityViolationException: null
 
-2020-01-10 17:32:54.130 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.048 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 java.lang.Exception: null
 
-2020-01-10 17:32:54.190 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.085 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 javax.validation.ConstraintViolationException: null
 
-2020-01-10 17:32:54.220 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.103 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException: null
 
-2020-01-10 17:32:54.282 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.145 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.web.bind.MethodArgumentNotValidException: null
 
-2020-01-10 17:32:54.315 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.163 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 java.lang.IllegalArgumentException: null
 
-2020-01-10 17:32:54.375 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.199 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.dao.EmptyResultDataAccessException: null
 
-2020-01-10 17:32:54.417 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.218 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.dao.DuplicateKeyException: null
 
-2020-01-10 17:32:54.449 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.235 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequest: null
 
-2020-01-10 17:32:54.505 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.269 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.http.converter.HttpMessageNotReadableException: null
 
-2020-01-10 17:32:54.512 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.273 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 java.lang.IllegalArgumentException: null
 
-2020-01-10 17:32:54.569 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.309 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 java.nio.file.AccessDeniedException: null
 
-2020-01-10 17:32:55.293 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.764 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
-org.springframework.web.client.HttpStatusCodeException$MockitoMock$2093659071: null
+org.springframework.web.client.HttpStatusCodeException$MockitoMock$40739969: null
 
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>

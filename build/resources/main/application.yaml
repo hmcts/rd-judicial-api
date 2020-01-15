@@ -67,6 +67,7 @@ security:
     - "/error"
     - "/favicon.ico"
     - "/**"
+    - "/user/**"
   authorisedServices:
     - rd-judicial-api
 

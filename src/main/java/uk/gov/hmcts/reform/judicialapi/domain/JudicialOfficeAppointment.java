@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.domain;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -83,4 +84,5 @@ public class JudicialOfficeAppointment {
         this.createdDate = createdDate;
         this.lastLoadedDate = lastLoadedDate;
     }
+
 }

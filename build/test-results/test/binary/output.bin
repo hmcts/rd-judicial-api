@@ -1,57 +1,57 @@
-{2020-01-10 17:32:53.886 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:50.883 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 ?org.springframework.dao.DataIntegrityViolationException: null
 
-{2020-01-10 17:32:54.130 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.048 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 java.lang.Exception: null
 
-	{2020-01-10 17:32:54.190 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+	{2020-01-15 14:05:51.085 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 	
 	5javax.validation.ConstraintViolationException: null
 	
 
-{2020-01-10 17:32:54.220 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.103 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 
 
 Suk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException: null
 
 
-{2020-01-10 17:32:54.282 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.145 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 Dorg.springframework.web.bind.MethodArgumentNotValidException: null
 
-{2020-01-10 17:32:54.315 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.163 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 *java.lang.IllegalArgumentException: null
 
-{2020-01-10 17:32:54.375 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.199 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 >org.springframework.dao.EmptyResultDataAccessException: null
 
-{2020-01-10 17:32:54.417 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.218 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 5org.springframework.dao.DuplicateKeyException: null
 
-{2020-01-10 17:32:54.449 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.235 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 Huk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequest: null
 
-{2020-01-10 17:32:54.505 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.269 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 Jorg.springframework.http.converter.HttpMessageNotReadableException: null
 
-{2020-01-10 17:32:54.512 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.273 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 *java.lang.IllegalArgumentException: null
 
-{2020-01-10 17:32:54.569 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.309 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 +java.nio.file.AccessDeniedException: null
 
-{2020-01-10 17:32:55.293 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+{2020-01-15 14:05:51.764 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
-Uorg.springframework.web.client.HttpStatusCodeException$MockitoMock$2093659071: null
+Sorg.springframework.web.client.HttpStatusCodeException$MockitoMock$40739969: null
 
-Ì2020-01-10 17:32:55.491  INFO   --- [    Test worker] u.g.h.r.j.controller.WelcomeController   : Welcome message 'Welcome to the Judicial API' from running instance: d043d575-bcc1-489a-964f-c82342673ba4
+Ì2020-01-15 14:05:52.000  INFO   --- [    Test worker] u.g.h.r.j.controller.WelcomeController   : Welcome message 'Welcome to the Judicial API' from running instance: 0b6c5e48-43b3-4481-bfa6-6dd89f206e44

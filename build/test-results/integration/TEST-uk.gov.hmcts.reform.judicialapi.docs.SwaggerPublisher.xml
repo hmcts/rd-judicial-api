@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher" tests="1" skipped="0" failures="1" errors="0" timestamp="2020-01-10T17:14:17" hostname="LTGB06856" time="0.034">
+<testsuite name="uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher" tests="1" skipped="0" failures="1" errors="0" timestamp="2020-01-15T13:53:10" hostname="LTGB06856" time="0.005">
   <properties/>
-  <testcase name="shouldGenerateDocs" classname="uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher" time="0.034">
+  <testcase name="shouldGenerateDocs" classname="uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher" time="0.005">
     <failure message="java.lang.IllegalStateException: Failed to load ApplicationContext" type="java.lang.IllegalStateException">java.lang.IllegalStateException: Failed to load ApplicationContext
 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:125)
 	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:108)
@@ -82,11 +82,11 @@ Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No q
 	... 67 more
 </failure>
   </testcase>
-  <system-out><![CDATA[2020-01-10 17:13:50.854  INFO   --- [    Test worker] org.springframework.core.KotlinDetector  : Kotlin reflection implementation not found at runtime, related features won't be available.
-2020-01-10 17:13:50.978  INFO   --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher], using SpringBootContextLoader
-2020-01-10 17:13:50.991  INFO   --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher]: no resource found for suffixes {-context.xml, Context.groovy}.
-2020-01-10 17:13:51.742  INFO   --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
-2020-01-10 17:13:51.812  INFO   --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@102441a6, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@2c5945b6, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@6d351084, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@4973ff90, org.springframework.test.context.support.DirtiesContextTestExecutionListener@7be8ae69, org.springframework.test.context.transaction.TransactionalTestExecutionListener@1d7a3057, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@588eb24c, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@ed749b2, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@30f225e7, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@7cc65326, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@51f78220, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@6559db75]
+  <system-out><![CDATA[2020-01-15 13:52:54.211  INFO   --- [    Test worker] org.springframework.core.KotlinDetector  : Kotlin reflection implementation not found at runtime, related features won't be available.
+2020-01-15 13:52:54.345  INFO   --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher], using SpringBootContextLoader
+2020-01-15 13:52:54.357  INFO   --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher]: no resource found for suffixes {-context.xml, Context.groovy}.
+2020-01-15 13:52:54.938  INFO   --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+2020-01-15 13:52:54.984  INFO   --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@4cdf2c3a, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@70843c3e, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@5a29c080, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@6315e492, org.springframework.test.context.support.DirtiesContextTestExecutionListener@561eba36, org.springframework.test.context.transaction.TransactionalTestExecutionListener@72a1907, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@1393f4a2, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@5feea336, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@7c827df7, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@2b37b141, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@270d6661, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@d5086a5]
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -96,40 +96,40 @@ Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No q
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v2.1.4.RELEASE)
 
-2020-01-10 17:14:00.155  INFO 4236 --- [    Test worker] b.c.PropertySourceBootstrapConfiguration : Located property source: PropertiesvolumePropertySource {name='propertiesvolume.null'}
-2020-01-10 17:14:00.198  INFO 4236 --- [    Test worker] u.g.h.r.j.docs.SwaggerPublisher          : No active profile set, falling back to default profiles: default
-2020-01-10 17:14:03.103  INFO 4236 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
-2020-01-10 17:14:03.503  INFO 4236 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 369ms. Found 8 repository interfaces.
-2020-01-10 17:14:04.757  WARN 4236 --- [    Test worker] o.s.boot.actuate.endpoint.EndpointId     : Endpoint ID 'hystrix.stream' contains invalid characters, please migrate to a valid format.
-2020-01-10 17:14:05.894  INFO 4236 --- [    Test worker] o.s.cloud.context.scope.GenericScope     : BeanFactory id=084a87e4-b7c0-3e58-8be4-ab4f38e6eca2
-2020-01-10 17:14:08.260  INFO 4236 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 5.2.4 by Boxfuse
-2020-01-10 17:14:08.463  INFO 4236 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-01-10 17:14:09.315  INFO 4236 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-01-10 17:14:09.334  INFO 4236 --- [    Test worker] o.f.c.internal.database.DatabaseFactory  : Database: jdbc:h2:mem:dbjuddata (H2 1.4)
-2020-01-10 17:14:09.436  WARN 4236 --- [    Test worker] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: H2 1.4.199 is newer than this version of Flyway and support has not been tested.
-2020-01-10 17:14:09.627  INFO 4236 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.073s)
-2020-01-10 17:14:09.675  INFO 4236 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table: "PUBLIC"."flyway_schema_history"
-2020-01-10 17:14:09.795  INFO 4236 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
-2020-01-10 17:14:09.812  INFO 4236 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version 1.1 - init tables
-2020-01-10 17:14:09.958  INFO 4236 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "PUBLIC" (execution time 00:00.293s)
-2020-01-10 17:14:11.056  INFO 4236 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+2020-01-15 13:53:00.022  INFO 1316 --- [    Test worker] b.c.PropertySourceBootstrapConfiguration : Located property source: PropertiesvolumePropertySource {name='propertiesvolume.null'}
+2020-01-15 13:53:00.048  INFO 1316 --- [    Test worker] u.g.h.r.j.docs.SwaggerPublisher          : No active profile set, falling back to default profiles: default
+2020-01-15 13:53:01.856  INFO 1316 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2020-01-15 13:53:02.088  INFO 1316 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 217ms. Found 8 repository interfaces.
+2020-01-15 13:53:02.945  WARN 1316 --- [    Test worker] o.s.boot.actuate.endpoint.EndpointId     : Endpoint ID 'hystrix.stream' contains invalid characters, please migrate to a valid format.
+2020-01-15 13:53:03.474  INFO 1316 --- [    Test worker] o.s.cloud.context.scope.GenericScope     : BeanFactory id=084a87e4-b7c0-3e58-8be4-ab4f38e6eca2
+2020-01-15 13:53:04.816  INFO 1316 --- [    Test worker] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 5.2.4 by Boxfuse
+2020-01-15 13:53:04.944  INFO 1316 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-01-15 13:53:05.453  INFO 1316 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-01-15 13:53:05.466  INFO 1316 --- [    Test worker] o.f.c.internal.database.DatabaseFactory  : Database: jdbc:h2:mem:dbjuddata (H2 1.4)
+2020-01-15 13:53:05.540  WARN 1316 --- [    Test worker] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: H2 1.4.199 is newer than this version of Flyway and support has not been tested.
+2020-01-15 13:53:05.663  INFO 1316 --- [    Test worker] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.040s)
+2020-01-15 13:53:05.678  INFO 1316 --- [    Test worker] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table: "PUBLIC"."flyway_schema_history"
+2020-01-15 13:53:05.714  INFO 1316 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Current version of schema "PUBLIC": << Empty Schema >>
+2020-01-15 13:53:05.717  INFO 1316 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Migrating schema "PUBLIC" to version 1.1 - init tables
+2020-01-15 13:53:05.772  INFO 1316 --- [    Test worker] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema "PUBLIC" (execution time 00:00.096s)
+2020-01-15 13:53:06.345  INFO 1316 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
 	name: default
 	...]
-2020-01-10 17:14:11.387  INFO 4236 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.9.Final}
-2020-01-10 17:14:11.392  INFO 4236 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
-2020-01-10 17:14:12.383  INFO 4236 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
-2020-01-10 17:14:13.118  INFO 4236 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2020-01-10 17:14:13.207  INFO 4236 --- [    Test worker] o.h.e.j.e.i.LobCreatorBuilderImpl        : HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
-2020-01-10 17:14:13.224  INFO 4236 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@1b638e04
-2020-01-10 17:14:15.945  INFO 4236 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2020-01-10 17:14:17.112  WARN 4236 --- [    Test worker] o.s.w.c.s.GenericWebApplicationContext   : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'judicialController': Unsatisfied dependency expressed through field 'judicialUserProfileService'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'uk.gov.hmcts.reform.judicialapi.service.JudicialUserProfileService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
-2020-01-10 17:14:17.114  INFO 4236 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2020-01-10 17:14:17.119  INFO 4236 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-01-10 17:14:17.128  INFO 4236 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-2020-01-10 17:14:17.150  INFO 4236 --- [    Test worker] ConditionEvaluationReportLoggingListener : 
+2020-01-15 13:53:06.507  INFO 1316 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.9.Final}
+2020-01-15 13:53:06.510  INFO 1316 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+2020-01-15 13:53:06.833  INFO 1316 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2020-01-15 13:53:07.171  INFO 1316 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2020-01-15 13:53:07.227  INFO 1316 --- [    Test worker] o.h.e.j.e.i.LobCreatorBuilderImpl        : HHH000421: Disabling contextual LOB creation as hibernate.jdbc.lob.non_contextual_creation is true
+2020-01-15 13:53:07.237  INFO 1316 --- [    Test worker] org.hibernate.type.BasicTypeRegistry     : HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@3a4fc3e0
+2020-01-15 13:53:08.789  INFO 1316 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-01-15 13:53:09.561  WARN 1316 --- [    Test worker] o.s.w.c.s.GenericWebApplicationContext   : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'judicialController': Unsatisfied dependency expressed through field 'judicialUserProfileService'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'uk.gov.hmcts.reform.judicialapi.service.JudicialUserProfileService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2020-01-15 13:53:09.562  INFO 1316 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2020-01-15 13:53:09.567  INFO 1316 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-01-15 13:53:09.573  INFO 1316 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-01-15 13:53:09.593  INFO 1316 --- [    Test worker] ConditionEvaluationReportLoggingListener : 
 
 Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
-2020-01-10 17:14:17.758 ERROR 4236 --- [    Test worker] o.s.b.d.LoggingFailureAnalysisReporter   : 
+2020-01-15 13:53:09.988 ERROR 1316 --- [    Test worker] o.s.b.d.LoggingFailureAnalysisReporter   : 
 
 ***************************
 APPLICATION FAILED TO START
@@ -147,7 +147,7 @@ Action:
 
 Consider defining a bean of type 'uk.gov.hmcts.reform.judicialapi.service.JudicialUserProfileService' in your configuration.
 
-2020-01-10 17:14:17.776 ERROR 4236 --- [    Test worker] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@102441a6] to prepare test instance [uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher@2d7a14f6]
+2020-01-15 13:53:09.994 ERROR 1316 --- [    Test worker] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@4cdf2c3a] to prepare test instance [uk.gov.hmcts.reform.judicialapi.docs.SwaggerPublisher@19fb9316]
 
 java.lang.IllegalStateException: Failed to load ApplicationContext
 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:125)

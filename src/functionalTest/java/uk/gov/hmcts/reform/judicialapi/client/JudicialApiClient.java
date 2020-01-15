@@ -51,6 +51,19 @@ public class JudicialApiClient {
                 .header("Accepts", APPLICATION_JSON_UTF8_VALUE);
     }
 
+    public Map<String, Object> searchForUserByEmailAddress(String email, String role) {
+        Response response = withUnauthenticatedRequest()
+                .param("email", email)
+                .get("/refdata//v1/judicial/user")
+                .andReturn();
+        log.info("Search For User By Email Response: " + response.asString());
+        response.then()
+                .assertThat()
+                .statusCode(OK.value());
+
+        return response.body().as(Map.class);
+    }
+
     public Map<String, Object> retrieveAllJudicialRoles(String roleOfAccessor, HttpStatus expectedStatus) {
         Response response = withUnauthenticatedRequest()
                 .get("/refdata/v1/judicial/roles")

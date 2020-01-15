@@ -1,0 +1,1 @@
+DELETE FROM JUDICIAL_USER_PROFILE WHERE elink_id = 'elink_id';

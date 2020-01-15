@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">2.457s</div>
+<div class="counter">1.592s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,67 +79,67 @@
 </thead>
 <tr>
 <td class="success">should_handle_constraint_violation_exception</td>
-<td class="success">0.058s</td>
+<td class="success">0.035s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_data_integrity_violation_exception</td>
-<td class="success">1.310s</td>
+<td class="success">0.878s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_duplicate_key_exception</td>
-<td class="success">0.029s</td>
+<td class="success">0.017s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_empty_result_exception</td>
-<td class="success">0.058s</td>
+<td class="success">0.035s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_exception</td>
-<td class="success">0.016s</td>
+<td class="success">0.011s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_forbidden_error_exception</td>
-<td class="success">0.055s</td>
+<td class="success">0.035s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_http_media_type_not_supported_exception</td>
-<td class="success">0.004s</td>
+<td class="success">0.002s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_http_message_not_readable_exception</td>
-<td class="success">0.055s</td>
+<td class="success">0.034s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_http_status_code_exception</td>
-<td class="success">0.723s</td>
+<td class="success">0.454s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_illegal_argument_exception</td>
-<td class="success">0.031s</td>
+<td class="success">0.016s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_invalid_request_exception</td>
-<td class="success">0.030s</td>
+<td class="success">0.016s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_method_not_valid_exception</td>
-<td class="success">0.058s</td>
+<td class="success">0.041s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">should_handle_resource_not_found_exception</td>
-<td class="success">0.030s</td>
+<td class="success">0.018s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -147,57 +147,57 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>2020-01-10 17:32:53.886 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+<pre>2020-01-15 14:05:50.883 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.dao.DataIntegrityViolationException: null
 
-2020-01-10 17:32:54.130 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.048 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 java.lang.Exception: null
 
-2020-01-10 17:32:54.190 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.085 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 javax.validation.ConstraintViolationException: null
 
-2020-01-10 17:32:54.220 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.103 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException: null
 
-2020-01-10 17:32:54.282 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.145 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.web.bind.MethodArgumentNotValidException: null
 
-2020-01-10 17:32:54.315 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.163 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 java.lang.IllegalArgumentException: null
 
-2020-01-10 17:32:54.375 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.199 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.dao.EmptyResultDataAccessException: null
 
-2020-01-10 17:32:54.417 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.218 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.dao.DuplicateKeyException: null
 
-2020-01-10 17:32:54.449 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.235 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequest: null
 
-2020-01-10 17:32:54.505 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.269 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 org.springframework.http.converter.HttpMessageNotReadableException: null
 
-2020-01-10 17:32:54.512 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.273 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 java.lang.IllegalArgumentException: null
 
-2020-01-10 17:32:54.569 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.309 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
 java.nio.file.AccessDeniedException: null
 
-2020-01-10 17:32:55.293 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
+2020-01-15 14:05:51.764 ERROR   --- [    Test worker] u.g.h.r.j.c.advice.ExceptionMapper       : handling exception: null
 
-org.springframework.web.client.HttpStatusCodeException$MockitoMock$2093659071: null
+org.springframework.web.client.HttpStatusCodeException$MockitoMock$40739969: null
 
 </pre>
 </span>
@@ -210,7 +210,7 @@ org.springframework.web.client.HttpStatusCodeException$MockitoMock$2093659071: n
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 5.4</a> at 10-Jan-2020 17:32:57</p>
+<a href="http://www.gradle.org">Gradle 5.4</a> at 15-Jan-2020 14:05:53</p>
 </div>
 </div>
 </body>

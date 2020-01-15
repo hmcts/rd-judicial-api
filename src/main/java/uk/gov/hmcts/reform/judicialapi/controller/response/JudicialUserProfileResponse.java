@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.judicialapi.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,9 +16,6 @@ public class JudicialUserProfileResponse {
 
     @JsonProperty
     private String elinksId;
-
-    @JsonProperty
-    private String personalCode;
 
     @JsonProperty
     private String title;
@@ -34,12 +33,6 @@ public class JudicialUserProfileResponse {
     private String postNominals;
 
     @JsonProperty
-    private String contractType;
-
-    @JsonProperty
-    private String workPattern;
-
-    @JsonProperty
     private String emailId;
 
     @JsonProperty
@@ -52,31 +45,22 @@ public class JudicialUserProfileResponse {
     private boolean activeFlag;
 
     @JsonProperty
-    private LocalDateTime extractedDate;
+    private  List<JudicialOfficeAppointmentResponse> judicialOfficeAppointmentsResponse;
 
     @JsonProperty
-    private LocalDateTime createdDate;
-
-    @JsonProperty
-    private LocalDateTime lastLoadedDate;
+    private List<JudicialOfficeAuthorisationsResponse> judicialOfficeAuthorisationsResponseList;
 
     public JudicialUserProfileResponse(JudicialUserProfile user) {
         this.elinksId = user.getElinksId();
-        this.personalCode = user.getPersonalCode();
         this.title = user.getTitle();
         this.knownAs = user.getKnownAs();
         this.surname = user.getSurname();
         this.fullName = user.getFullName();
         this.postNominals = user.getPostNominals();
-        this.contractType = user.getContractType();
-        this.workPattern = user.getWorkPattern();
         this.emailId = user.getEmailId();
         this.joiningDate = user.getJoiningDate();
         this.lastWorkingDate = user.getLastWorkingDate();
         this.activeFlag = user.isActiveFlag();
-        this.extractedDate = user.getExtractedDate();
-        this.createdDate = user.getCreatedDate();
-        this.lastLoadedDate = user.getLastLoadedDate();
     }
 
 }

@@ -1,0 +1,3 @@
+"Story","Title","Result","Date","Stability","Duration (s)"
+"Retrieve judicial roles test","Rdcc 739 ac1 user with appropriate rights can retrieve list of all judicial roles","ERROR","2020-01-14T15:45:29.558Z[Europe/London]","0.0","12.1"
+"Retrieve judicial user profile by email test","Rdcc 751 ac1 user with appropriate rights can retrieve user profile with email","ERROR","2020-01-14T15:45:45.226Z[Europe/London]","0.0","2.29"

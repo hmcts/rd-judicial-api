@@ -14,7 +14,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialUserProfileResponse;
+import uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfile;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialRoleTypeService;
+import uk.gov.hmcts.reform.judicialapi.service.JudicialUserProfileService;
 
 @Slf4j
 public class JudicialControllerUnitTest {
@@ -26,6 +29,10 @@ public class JudicialControllerUnitTest {
     private JudicialRoleTypeService judicialRoleTypeServiceMock;
     private List<JudicialRoleTypeResponse> judicialRoleTypeResponseList;
 
+    private JudicialUserProfileService judicialUserProfileServiceMock;
+    private JudicialUserProfileResponse judicialUserProfileResponseMock;
+    private ResponseEntity<?> responseEntityMock;
+
     @Before
     public void setUp() throws Exception {
         judicialRoleTypeResponseMock = mock(JudicialRoleTypeResponse.class);
@@ -34,7 +41,13 @@ public class JudicialControllerUnitTest {
         judicialRoleTypeResponseList = new ArrayList<>();
         judicialRoleTypeResponseList.add(judicialRoleTypeResponseMock);
 
+
+        judicialUserProfileResponseMock = mock(JudicialUserProfileResponse.class);
+        judicialUserProfileServiceMock = mock(JudicialUserProfileService.class);
+
+
         MockitoAnnotations.initMocks(this);
+
     }
 
     @Test
@@ -51,4 +64,20 @@ public class JudicialControllerUnitTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
     }
+
+    @Test
+    public void testRetrieveJudicialUserProfile() {
+
+        final HttpStatus expectedHttpStatus = HttpStatus.OK;
+        JudicialUserProfile judicialUserProfile = new JudicialUserProfile("12345","12345","title","knownAs","surname","fullname","postNominals","contractType","workPattern","test@email.com",null,null,true,null,null,null);
+
+        when(judicialUserProfileServiceMock.findJudicialUserProfileByEmailAddress("testing@email.com")).thenReturn(judicialUserProfile);
+
+        ResponseEntity actual = judicialController.retrieveUserProfileByEmail("testing@email.com");
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCode()).isEqualTo(expectedHttpStatus);
+    }
+
+
 }

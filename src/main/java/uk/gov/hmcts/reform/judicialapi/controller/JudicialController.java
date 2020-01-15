@@ -108,19 +108,19 @@ public class JudicialController {
 
 
 
-    @GetMapping(value = "/user/emailid/{emailID}",
+    @GetMapping(value = "/user/emailId",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 
 
     //@Secured("caseworker")
-    protected ResponseEntity<JudicialUserProfileResponse> retrieveUserProfileByEmail(String email) {
+    protected ResponseEntity retrieveUserProfileByEmail(String email) {
 
         JudicialUserProfile user = judicialUserProfileService.findJudicialUserProfileByEmailAddress(JrdUtil.removeEmptySpaces(email));
 
         JudicialUserProfileResponse judicialUsersResponse = new JudicialUserProfileResponse(user);
         return ResponseEntity
                 .status(200)
-                .body(new JudicialUserProfileResponse(user));
+                .body(judicialUsersResponse);
     }
 
 
