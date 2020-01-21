@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
+import net.serenitybdd.rest.SerenityRest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -71,13 +72,12 @@ public abstract class AuthorizationFunctionalTest {
         log.info("Configured S2S microservice: " + s2sName);
         log.info("Configured S2S URL: " + s2sUrl);
 
-        IdamOpenIdClient idamOpenIdClient = new IdamOpenIdClient(configProperties);
-        log.info("idamOpenIdClient: " + idamOpenIdClient);
         /*SerenityRest.proxy("proxyout.reform.hmcts.net", 8080);
         RestAssured.proxy("proxyout.reform.hmcts.net", 8080);*/
 
+        IdamOpenIdClient idamOpenIdClient = new IdamOpenIdClient(configProperties);
+        log.info("idamOpenIdClient: " + idamOpenIdClient);
         String s2sToken = new S2sClient(s2sUrl, s2sName, s2sSecret).signIntoS2S();
-
         judicialApiClient = new JudicialApiClient(judicialApiUrl, s2sToken, idamOpenIdClient);
     }
 

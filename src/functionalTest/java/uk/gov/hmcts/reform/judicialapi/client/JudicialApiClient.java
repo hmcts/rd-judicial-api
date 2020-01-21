@@ -31,6 +31,9 @@ public class JudicialApiClient {
         this.s2sToken = s2sToken;
         this.idamOpenIdClient = idamOpenIdClient;
     }
+    /*public JudicialApiClient(String judicialApiUrl) {
+        this.judicialApiUrl = judicialApiUrl;
+    }*/
 
     public String getWelcomePage() {
         return withUnauthenticatedRequest()
@@ -83,7 +86,7 @@ public class JudicialApiClient {
     }
 
     public Map<String, Object> retrieveAllJudicialRoles(String roleOfAccessor, HttpStatus expectedStatus) {
-        Response response = withUnauthenticatedRequest()
+        Response response = getS2sTokenHeaders()
                 .get("/refdata/v1/judicial/roles")
                 .andReturn();
 
