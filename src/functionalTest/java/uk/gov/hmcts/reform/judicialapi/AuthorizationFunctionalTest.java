@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 @ComponentScan("uk.gov.hmcts.reform.judicialapi")
 @TestPropertySource("classpath:application-functional.yaml")
 @Slf4j
+@Ignore
 public abstract class AuthorizationFunctionalTest {
 
     @Value("${s2s-url}")

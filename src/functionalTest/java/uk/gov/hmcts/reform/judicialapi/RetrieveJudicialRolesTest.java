@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import org.springframework.util.ResourceUtils;
 @RunWith(SpringIntegrationSerenityRunner.class)
 @ActiveProfiles("functional")
 @Slf4j
+@Ignore
 public class RetrieveJudicialRolesTest extends AuthorizationFunctionalTest {
 
     @BeforeClass
