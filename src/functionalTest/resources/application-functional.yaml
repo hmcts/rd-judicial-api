@@ -14,7 +14,7 @@ idam.auth.clientId: rd-judicial-api
 
 idam.auth.tokenAuth: ${IDAM_TOKEN_ATUH:cmQtcHJvZmVzc2lvbmFsLWFwaTpjYzVmMmE2LTk2OTAtMTFlOS1iYzQyLTUyNmFmNzc2NGY2NA==}
 idam.auth.redirectUrl: ${OAUTH2_REDIRECT_URI:https://rd-judicial-api-aat.service.core-compute-aat.internal/oauth2redirect}
-s2s-secret: ${S2S_SECRET:K6KA6PRLRFWQLSD6}
+s2s-secret: ${S2S_SECRET:F5U22E7HCOOEZY5P}
 
 spring.flyway.enabled: false
 ## Secure roles configuration 1
