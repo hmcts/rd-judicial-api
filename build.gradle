@@ -227,7 +227,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
-    //compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
@@ -254,11 +254,11 @@ dependencies {
     compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.0.4'
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
     compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: versions.reformHealthStarter
-//    compile(group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.3') {
-//        // TODO remove when auth-checker-lib upgrades its dependency to spring boot 2.0.x
-//        exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
-//
-//    }
+    compile(group: 'uk.gov.hmcts.reform.auth', name: 'auth-checker-lib', version: '2.1.3') {
+        // TODO remove when auth-checker-lib upgrades its dependency to spring boot 2.0.x
+        exclude group: 'uk.gov.hmcts.reform', module: 'java-logging-spring'
+
+    }
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '5.2.4'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
