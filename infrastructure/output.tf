@@ -13,4 +13,3 @@ output "vaultName" {
 
 output "vaultUri" {
   value = "${local.s2s_vault_uri}"
-}
