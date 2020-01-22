@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
-import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 
 public class ErrorResponseUnitTest {
 

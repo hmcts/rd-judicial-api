@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.judicialapi.controller.advice;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorConstants;
 
 public class ErrorConstantsUnitTest {
 
