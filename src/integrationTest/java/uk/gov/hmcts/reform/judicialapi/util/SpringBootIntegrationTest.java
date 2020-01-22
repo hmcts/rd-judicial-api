@@ -51,7 +51,7 @@ public abstract class SpringBootIntegrationTest {
         dataSource.setUsername(userName);
         dataSource.setPassword(password);
         // schema init
-        Resource initSchema = new ClassPathResource("load-data-functional.sql");
+        Resource initSchema = new ClassPathResource("load-data-integration.sql");
         DatabasePopulator databasePopulator = new ResourceDatabasePopulator(initSchema);
         DatabasePopulatorUtils.execute(databasePopulator, dataSource);
     }
