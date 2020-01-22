@@ -123,8 +123,6 @@ REFERENCES judicial_user_profile (elinks_Id);
 ALTER TABLE judicial_office_authorisation ADD CONSTRAINT authorisation_Id_fk1 FOREIGN KEY (authorisation_Id)
 REFERENCES authorisation_type (authorisation_Id);
 
-CREATE INDEX column_name_idx ON table_name (column_name);
-
 CREATE INDEX elinks_Id_idx1 ON judicial_user_profile (elinks_Id);
 
 CREATE INDEX base_location_Id_idx1 ON base_location_type (base_location_Id);
