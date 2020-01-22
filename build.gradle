@@ -305,9 +305,6 @@ dependencies {
         force = true
     }
 
-    testContractCompile(group: 'au.com.dius', name:'pact-jvm-consumer-junit5_2.12', version: versions.pact_version) {
-        force = true
-    }
 
     integrationTestCompile sourceSets.main.runtimeClasspath
     integrationTestCompile sourceSets.test.runtimeClasspath
@@ -317,12 +314,6 @@ dependencies {
 
     smokeTestCompile sourceSets.main.runtimeClasspath
     smokeTestCompile sourceSets.test.runtimeClasspath
-
-    testContractCompile sourceSets.main.runtimeClasspath
-    testContractCompile sourceSets.test.runtimeClasspath
-
-    testPactCompile sourceSets.main.runtimeClasspath
-    testPactCompile sourceSets.test.runtimeClasspath
 }
 
 // https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/configuration.html
