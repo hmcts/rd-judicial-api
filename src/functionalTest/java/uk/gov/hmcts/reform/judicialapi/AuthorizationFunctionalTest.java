@@ -104,7 +104,7 @@ public abstract class AuthorizationFunctionalTest {
         log.info("DB Host name::" + getValueOrDefault("POSTGRES_HOST", "localhost"));
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setServerName(getValueOrDefault("POSTGRES_HOST", "localhost"));
-        dataSource.setPortNumber(Integer.parseInt(getValueOrDefault("POSTGRES_PORT", "5456")));
+        dataSource.setPortNumber(Integer.parseInt(getValueOrDefault("POSTGRES_PORT", "5432")));
         dataSource.setDatabaseName(getValueOrDefault("POSTGRES_DATABASE","dbjuddata"));
         dataSource.setUser("dbjuddata");
         dataSource.setPassword("dbjuddata");
