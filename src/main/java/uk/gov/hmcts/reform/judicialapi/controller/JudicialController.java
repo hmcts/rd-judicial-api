@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ import uk.gov.hmcts.reform.judicialapi.service.JudicialRoleTypeService;
 @RequestMapping(path = "refdata/v1/judicial")
 @RestController
 @Slf4j
-@NoArgsConstructor
 public class JudicialController {
 
     @Autowired
