@@ -24,7 +24,7 @@ public class JudicialOfficeAuthorisationsResponse {
     private String authorisationDate;
 
 
-    public JudicialOfficeAuthorisationsResponse (JudicialOfficeAuthorisation judicialOfficeAuthorisation, AuthorisationType authorisationType) {
+    public JudicialOfficeAuthorisationsResponse(JudicialOfficeAuthorisation judicialOfficeAuthorisation, AuthorisationType authorisationType) {
         this.authorisationId = judicialOfficeAuthorisation.toString();
         this.authorisationDescEn = authorisationType.getJurisdictionDescEn();
         this.jurisdictionId = authorisationType.getJurisdictionId();

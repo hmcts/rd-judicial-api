@@ -1,20 +1,18 @@
 package uk.gov.hmcts.reform.judicialapi.controller.response;
 
-import org.junit.Test;
-import uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfile;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class JudicialUserProfileResponseUnitTest {
+public class JudicialUserProfileEntityResponseUnitTest {
 
 
     @Test
     public void testJudicialUserProfileResponse() {
 
-        JudicialUserProfileResponse sut = new JudicialUserProfileResponse();
+        JudicialUserProfileEntityResponse sut = new JudicialUserProfileEntityResponse();
 
         final String elinksId = "1";
         final String title = "title";

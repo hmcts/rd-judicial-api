@@ -8,7 +8,7 @@ public class ContractTypeResponse {
     @JsonProperty
     private String contractTypeDescEn;
 
-    public ContractTypeResponse (ContractType contractType) {
+    public ContractTypeResponse(ContractType contractType) {
         this.contractTypeDescEn = contractType.getContractTypeDescEn();
     }
 

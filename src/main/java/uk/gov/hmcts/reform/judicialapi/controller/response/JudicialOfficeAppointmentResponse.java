@@ -8,19 +8,17 @@ import uk.gov.hmcts.reform.judicialapi.domain.JudicialOfficeAppointment;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
 
-import java.util.List;
-
 @Getter
 public class JudicialOfficeAppointmentResponse {
 
     @JsonProperty
     private String roleId;
     @JsonProperty
-    private String roleDesc_En;
+    private String roleDescEn;
     @JsonProperty
     private String contractTypeId;
     @JsonProperty
-    private String contractTypeDescEN;
+    private String contractTypeDescen;
     @JsonProperty
     private String baseLocationType;
     @JsonProperty
@@ -30,7 +28,7 @@ public class JudicialOfficeAppointmentResponse {
     @JsonProperty
     private String courtType;
     @JsonProperty
-    private  String circuit;
+    private String circuit;
     @JsonProperty
     private String areaOfExpertise;
     @JsonProperty
@@ -38,7 +36,7 @@ public class JudicialOfficeAppointmentResponse {
     @JsonProperty
     private String regionId;
     @JsonProperty
-    private String regionDescEN;
+    private String regionDescEn;
     @JsonProperty
     private String isPrincipleAppointment;
     @JsonProperty
@@ -48,30 +46,27 @@ public class JudicialOfficeAppointmentResponse {
     @JsonProperty
     private String activeFlag;
 
+    public JudicialOfficeAppointmentResponse(JudicialOfficeAppointment judicialOfficeAppointment, BaseLocationType baseLocationType, JudicialRoleType judicialRoleType, ContractType contractType,
+                                             RegionType regionType) {
+        this.roleId = judicialRoleType.getRoleId();
+        this.roleDescEn = judicialRoleType.getRoleDescEn();
+        this.contractTypeId = contractType.getContractTypeDescCy();
+        this.contractTypeDescen = contractType.getContractTypeDescEn();
+        this.baseLocationType = baseLocationType.getBaseLocationId();
+        this.courtName = baseLocationType.getCourtName();
+        this.bench = baseLocationType.getBench();
+        this.courtType = baseLocationType.getCourtType();
+        this.circuit = baseLocationType.getCircuit();
+        this.areaOfExpertise = baseLocationType.getAreaOfExpertise();
+        this.nationalCourtCode = baseLocationType.getNationalCourtCode();
+        this.regionId = regionType.getRegionId();
+        this.regionDescEn = regionType.getRegionDescEn();
+        this.isPrincipleAppointment = judicialOfficeAppointment.toString();
+        this.startDate = judicialOfficeAppointment.toString();
+        this.endDate = judicialOfficeAppointment.toString();
+        this.activeFlag = judicialOfficeAppointment.toString();
 
 
-
-    public JudicialOfficeAppointmentResponse (JudicialOfficeAppointment judicialOfficeAppointment, BaseLocationType baseLocationType, JudicialRoleType judicialRoleType, ContractType contractType,
-                                               RegionType regionType) {
-    this.roleId = judicialRoleType.getRoleId();
-    this.roleDesc_En = judicialRoleType.getRoleDescEn();
-    this.contractTypeId = contractType.getContractTypeDescCy();
-    this.contractTypeDescEN = contractType.getContractTypeDescEn();
-    this.baseLocationType = baseLocationType.getBaseLocationId();
-    this.courtName = baseLocationType.getCourtName();
-    this.bench = baseLocationType.getBench();
-    this.courtType = baseLocationType.getCourtType();
-    this.circuit = baseLocationType.getCircuit();
-    this.areaOfExpertise = baseLocationType.getAreaOfExpertise();
-    this.nationalCourtCode = baseLocationType.getNationalCourtCode();
-    this.regionId = regionType.getRegionId();
-    this.regionDescEN = regionType.getRegionDescEn();
-    this.isPrincipleAppointment = judicialOfficeAppointment.toString();
-    this.startDate = judicialOfficeAppointment.toString();
-    this.endDate = judicialOfficeAppointment.toString();
-    this.activeFlag = judicialOfficeAppointment.toString();
-
-
-}
+    }
 
 }

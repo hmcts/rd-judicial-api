@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.Authorization;
 
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,14 +17,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialRoleTypeEntityResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialUserProfileEntityResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialUserProfileResponse;
-import uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfile;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialRoleTypeService;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserProfileService;
-import uk.gov.hmcts.reform.judicialapi.util.JrdUtil;
-
 
 @RequestMapping(path = "refdata/v1/judicial")
 @RestController
@@ -49,7 +48,7 @@ public class JudicialController {
             @ApiResponse(
                     code = 200,
                     message = "List of judicial role types",
-                    response = List.class
+                    response = JudicialRoleTypeEntityResponse.class
             ),
             @ApiResponse(
                     code = 403,
@@ -67,11 +66,11 @@ public class JudicialController {
     @GetMapping(value = "/roles",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 
-    public ResponseEntity<List<JudicialRoleTypeResponse>> getJudicialRoles() {
+    public ResponseEntity<JudicialRoleTypeEntityResponse> getJudicialRoles() {
 
-        List<JudicialRoleTypeResponse> judicialRolesResponse = judicialRoleTypeService.retrieveJudicialRoles();
+        JudicialRoleTypeEntityResponse judicialRoleTypeEntityResponse = judicialRoleTypeService.retrieveJudicialRoles();
 
-        return new ResponseEntity<>(judicialRolesResponse, HttpStatus.OK);
+        return new ResponseEntity<>(judicialRoleTypeEntityResponse, HttpStatus.OK);
     }
 
 
@@ -92,7 +91,7 @@ public class JudicialController {
     @ApiResponses({
             @ApiResponse(
                     code = 200,
-                    message = "Retrieved JRD User profile",
+                    message = "Retrieved Judicial User profile",
                     response = JudicialUserProfileResponse.class
             ),
             @ApiResponse(
@@ -106,22 +105,25 @@ public class JudicialController {
             )
     })
 
-
-
     @GetMapping(value = "/user/emailId",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 
-
     //@Secured("caseworker")
-    protected ResponseEntity retrieveUserProfileByEmail(String email) {
+    protected ResponseEntity<JudicialUserProfileEntityResponse> retrieveUserProfileByEmail(
+            @ApiParam(hidden = true) @NotNull @RequestParam("email") String email) {
 
-        JudicialUserProfile user = judicialUserProfileService.findJudicialUserProfileByEmailAddress(JrdUtil.removeEmptySpaces(email));
+        return retrieveUserProfileByEmailId(email);
 
-        JudicialUserProfileResponse judicialUsersResponse = new JudicialUserProfileResponse(user);
+    }
+
+    protected ResponseEntity<JudicialUserProfileEntityResponse> retrieveUserProfileByEmailId(String email) {
+
+        JudicialUserProfileEntityResponse judicialUsersResponse = null;
+
+        judicialUsersResponse = judicialUserProfileService.retrieveUserprofilebyemailId(email);
         return ResponseEntity
                 .status(200)
                 .body(judicialUsersResponse);
     }
-
 
 }

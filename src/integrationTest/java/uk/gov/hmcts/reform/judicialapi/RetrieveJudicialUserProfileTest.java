@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialUserProfileResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfile;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
 
+@Slf4j
 public class RetrieveJudicialUserProfileTest  extends AuthorizationEnabledIntegrationTest {
 
     @Before
@@ -59,5 +61,11 @@ public class RetrieveJudicialUserProfileTest  extends AuthorizationEnabledIntegr
                 judicialReferenceDataClient.findJudicialUserProfileByUserEmail("somewhere@net.com", caseworker);
 
         assertThat(response.get("http_status")).isEqualTo("404");
+    }
+
+    public void user_with_non_caseworker_role_cannot_retrieve_judicial_user_profile() {
+        Map<String, Object> response = judicialReferenceDataClient.findJudicialUserProfileByUserEmail("somewhere@net.com",puiOrgManager);
+        log.info("response::::::" + response);
+        assertThat(response.get("http_status")).isEqualTo("403");
     }
 }

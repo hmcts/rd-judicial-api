@@ -17,3 +17,13 @@ spring:
     username: ${POSTGRES_USERNAME:dbjuddata}
     password: ${POSTGRES_PASSWORD:dbjuddata}
 
+security:
+
+  authorisedServices:
+    - "it"
+## IDAM feign connection
+auth.idam.client.baseUrl: ${IDAM_URL:http://127.0.0.1:5000}
+
+exui.role:
+  caseworker: caseworker
+  pui-organisation-manager: pui-organisation-manager

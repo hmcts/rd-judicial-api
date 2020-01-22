@@ -1,23 +1,22 @@
 package uk.gov.hmcts.reform.judicialapi;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableList;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.ResourceUtils;
-
-import java.nio.file.Paths;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 
 @RunWith(SpringIntegrationSerenityRunner.class)
 @ActiveProfiles("functional")
@@ -45,10 +44,24 @@ public class RetrieveJudicialUserProfileByEmailTest extends AuthorizationFunctio
                 assertThat(judicialUserProfile.get("fullName")).isEqualTo("fullName");
             }
         });
+    }
+
+    @Test
+    public void can_retrieve_an_judicial_user_profile_by_request_param_equal_to_email() {
+
+        Map<String, Object> response = judicialApiClient
+                .searchForUserByEmailAddress("james@demo.net", caseworker);
+        assertThat(response.size()).isGreaterThanOrEqualTo(1);
+    }
 
 
+    @Test
+    public void does_not_retrieve_user_profile_if_user_email_is_invalid() {
 
-  }
+        judicialApiClient
+                .searchForUserByEmailAddress("james@demo.ne", caseworker);
+        log.info("Invalid emailID request, user not found");
+    }
 
     @AfterClass
     public static void dbTearDown() throws Exception {

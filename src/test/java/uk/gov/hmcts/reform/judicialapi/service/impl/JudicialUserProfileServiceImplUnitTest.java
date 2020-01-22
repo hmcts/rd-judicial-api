@@ -1,16 +1,19 @@
 package uk.gov.hmcts.reform.judicialapi.service.impl;
 
+import static org.apache.commons.lang.RandomStringUtils.randomAlphabetic;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.when;
+
 import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialUserProfileResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
+import uk.gov.hmcts.reform.judicialapi.controller.response.JudicialUserProfileEntityResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialUserProfile;
 import uk.gov.hmcts.reform.judicialapi.persistence.JudicialUserProfileRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
 
 public class JudicialUserProfileServiceImplUnitTest {
 
@@ -19,36 +22,48 @@ public class JudicialUserProfileServiceImplUnitTest {
 
     private JudicialUserProfileRepository judicialUserProfileRepositoryMock;
     private JudicialUserProfile judicialUserProfileMock;
-    private JudicialUserProfileResponse judicialUserProfileResponseMock;
 
-    private List<JudicialUserProfile> judicialUserProfiles;
-    private List<JudicialUserProfileResponse> judicialUserProfileResponse;
 
     @Before
     public void setUp() {
 
         judicialUserProfileRepositoryMock = mock(JudicialUserProfileRepository.class);
         judicialUserProfileMock = mock(JudicialUserProfile.class);
-        judicialUserProfileResponseMock = mock(JudicialUserProfileResponse.class);
-
         MockitoAnnotations.initMocks(this);
 
-        judicialUserProfiles = new ArrayList<>();
-        judicialUserProfileResponse = new ArrayList<>();
     }
 
-//    @Test
-//    public void retrieveJudicialRolesTest() {
-//
-//        judicialUserProfiles.add(judicialUserProfileMock);
-//        judicialUserProfileResponses.add(judicialUserProfileResponseMock);
-//
-//        when(judicialUserProfileRepositoryMock.findAll()).thenReturn(judicialUserProfiles);
-//
-//       // List<JudicialUserProfileResponse> actual = sut.findJudicialUserProfileByEmailAddress(any(String.class));
-//
-//       // assertThat(actual).isNotNull();
-//
-//        verify(judicialUserProfileRepositoryMock, times(1)).findAll();
-//     }
+
+    @Test
+    public void testRetrievejudicialuserprofilebyEmailid() throws Exception {
+        JudicialUserProfile userProfile = mock(JudicialUserProfile.class);
+
+        String email = randomAlphabetic(10) + "@usersearch.test".toLowerCase();
+        String elinkId = "ElinkId";
+        String fullName = "fullName";
+        String surName = "Surname";
+
+        when(userProfile.getEmailId()).thenReturn(email);
+
+
+        when(judicialUserProfileRepositoryMock.findUserProfileByEmailAddress(email)).thenReturn(judicialUserProfileMock);
+        when(judicialUserProfileMock.getEmailId()).thenReturn(email);
+        when(judicialUserProfileMock.getElinksId()).thenReturn(elinkId);
+        when(judicialUserProfileMock.getFullName()).thenReturn(fullName);
+        when(judicialUserProfileMock.getSurname()).thenReturn(surName);
+
+
+        JudicialUserProfileEntityResponse judicialUserProfileEntityResponse = sut.retrieveUserProfile(email);
+
+        assertThat(judicialUserProfileEntityResponse).isNotNull();
+
+        verify(judicialUserProfileRepositoryMock, times(1)).findUserProfileByEmailAddress(any(String.class));
+
+    }
+
+    @Ignore
+    @Test(expected = ResourceNotFoundException.class)
+    public void retrieveJudicialUserProfileThrowsResourceNotFoundIfEmpty() {
+        sut.judicialUserProfileRepository.findUserProfileByEmailAddress("test@net.co.uk");
+    }
 }

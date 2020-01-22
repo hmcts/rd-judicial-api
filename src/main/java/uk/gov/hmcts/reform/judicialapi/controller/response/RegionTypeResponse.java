@@ -8,8 +8,7 @@ public class RegionTypeResponse {
     @JsonProperty
     private String regionDescEn;
 
-    public RegionTypeResponse (RegionType regionType){
+    public RegionTypeResponse(RegionType regionType) {
         this.regionDescEn = regionType.getRegionDescEn();
     }
-
 }

@@ -190,8 +190,6 @@ sonarqube {
     properties {
         property "sonar.projectName", "RD :: Judicial Reference api"
         property "sonar.projectKey", "RDJUDICIALAPI"
-        //property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
-        //property "sonar.jacoco.itReportPath", "${project.buildDir}/jacoco/integration.exec"
         property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"

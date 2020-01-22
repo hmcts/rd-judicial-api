@@ -11,14 +11,25 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.rest.SerenityRest;
 import org.springframework.http.HttpStatus;
+import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 
 @Slf4j
 public class JudicialApiClient {
 
-    private final String judicialApiUrl;
+    private static final String SERVICE_HEADER = "ServiceAuthorization";
+    private static final String AUTHORIZATION_HEADER = "Authorization";
 
-    public JudicialApiClient(String judicialApiUrl) {
+    private final String judicialApiUrl;
+    private final String s2sToken;
+
+    protected IdamOpenIdClient idamOpenIdClient;
+
+    public JudicialApiClient(String judicialApiUrl,
+                             String s2sToken,
+                             IdamOpenIdClient idamOpenIdClient) {
         this.judicialApiUrl = judicialApiUrl;
+        this.s2sToken = s2sToken;
+        this.idamOpenIdClient = idamOpenIdClient;
     }
 
     public String getWelcomePage() {
@@ -54,7 +65,7 @@ public class JudicialApiClient {
     public Map<String, Object> searchForUserByEmailAddress(String email, String role) {
         Response response = withUnauthenticatedRequest()
                 .param("email", email)
-                .get("/refdata//v1/judicial/user")
+                .get("/refdata/v1/judicial/user")
                 .andReturn();
         log.info("Search For User By Email Response: " + response.asString());
         response.then()
@@ -62,6 +73,26 @@ public class JudicialApiClient {
                 .statusCode(OK.value());
 
         return response.body().as(Map.class);
+    }
+
+    private RequestSpecification getS2sTokenHeaders() {
+        return withUnauthenticatedRequest()
+                .header(SERVICE_HEADER, "Bearer " + s2sToken);
+    }
+
+    private RequestSpecification getMultipleAuthHeadersInternal() {
+        return getMultipleAuthHeaders(idamOpenIdClient.getInternalOpenIdToken());
+    }
+
+    public RequestSpecification getMultipleAuthHeaders(String userToken) {
+
+        return SerenityRest.with()
+                .relaxedHTTPSValidation()
+                .baseUri(judicialApiUrl)
+                .header("Content-Type", APPLICATION_JSON_UTF8_VALUE)
+                .header("Accepts", APPLICATION_JSON_UTF8_VALUE)
+                .header(SERVICE_HEADER, "Bearer " + s2sToken)
+                .header(AUTHORIZATION_HEADER, "Bearer " + userToken);
     }
 
     public Map<String, Object> retrieveAllJudicialRoles(String roleOfAccessor, HttpStatus expectedStatus) {

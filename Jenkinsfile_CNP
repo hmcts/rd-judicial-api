@@ -29,14 +29,16 @@ def vaultOverrides = [
 withPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
-    //loadVaultSecrets(secrets)
+    loadVaultSecrets(secrets)
 
     enableDbMigration('rd')
     enableDockerBuild()
     installCharts()
+    disableLegacyDeployment()
     enableAksStagingDeployment()
 
     env.S2S_URL_FOR_TESTS = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+    env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
     env.TEST_URL = "http://rd-judicial-api-aat.service.core-compute-aat.internal"
 
     after('functionalTest:preview') {

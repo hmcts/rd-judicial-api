@@ -24,7 +24,7 @@ public class BaseLocationTypeResponse {
     @JsonProperty
     private String nationalCourtCode;
 
-    public BaseLocationTypeResponse (BaseLocationType baseLocationType) {
+    public BaseLocationTypeResponse(BaseLocationType baseLocationType) {
         this.courtName = baseLocationType.getCourtName();
         this.bench = baseLocationType.getBench();
         this.courtType = baseLocationType.getCourtType();

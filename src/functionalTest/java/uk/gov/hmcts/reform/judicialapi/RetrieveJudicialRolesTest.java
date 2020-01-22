@@ -35,8 +35,8 @@ public class RetrieveJudicialRolesTest extends AuthorizationFunctionalTest {
         //Given I am a user with the appropriate rights to retrieve list of all Judicial Roles
         //When I search for the list of all Judicial Roles
         //Then I should be able to see the list of Judicial roles
-        Map<String, Object> judicialRoleTypeListResponse = judicialApiClient.retrieveAllJudicialRoles("caseworker", HttpStatus.OK);
-        List<HashMap> judicialRoles = (List<HashMap>) judicialRoleTypeListResponse.get("judicialRoleTypeResponseList");
+        Map<String, Object> judicialRoleTypesResponse = judicialApiClient.retrieveAllJudicialRoles(caseworker, HttpStatus.OK);
+        List<HashMap> judicialRoles = (List<HashMap>) judicialRoleTypesResponse.get("judicialRoles");
         judicialRoles.stream().forEach(role -> {
             assertThat("roleId").isNotNull();
             if (role.get("roleId").equals("1")) {
@@ -53,7 +53,7 @@ public class RetrieveJudicialRolesTest extends AuthorizationFunctionalTest {
         //Given I am a user without the appropriate rights to retrieve list of all Judicial Roles
         //When I search for the list of all Judicial Roles
         //Then I should get a failure outcome as I do not have the appropriate rights for accessing role information
-        Map<String, Object> response = judicialApiClient.retrieveAllJudicialRoles("pui-user-manager", HttpStatus.FORBIDDEN);
+        Map<String, Object> response = judicialApiClient.retrieveAllJudicialRoles(puiOrgManager, HttpStatus.FORBIDDEN);
         log.info("response::::::" + response);
         //assertThat(response.get("errorMessage")).isNotNull();
         //assertThat(response.get("errorMessage")).isEqualTo("9 : Access Denied");
