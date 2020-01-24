@@ -37,7 +37,7 @@ public class JudicialApiClient {
 
     public String getWelcomePage() {
         return withUnauthenticatedRequest()
-                .get("/")
+                .get()
                 .then()
                 .statusCode(OK.value())
                 .and()
@@ -48,7 +48,7 @@ public class JudicialApiClient {
 
     public String getHealthPage() {
         return withUnauthenticatedRequest()
-                .get("/health")
+                .get("health")
                 .then()
                 .statusCode(OK.value())
                 .and()
