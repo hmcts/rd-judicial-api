@@ -70,6 +70,9 @@ public abstract class AuthorizationFunctionalTest {
         log.info("Configured S2S secret: " + s2sSecret.substring(0, 2) + "************" + s2sSecret.substring(14));
         log.info("Configured S2S microservice: " + s2sName);
         log.info("Configured S2S URL: " + s2sUrl);
+        RestAssured.baseURI = judicialApiUrl;
+        RestAssured.useRelaxedHTTPSValidation();
+
 
         /*SerenityRest.proxy("proxyout.reform.hmcts.net", 8080);
         RestAssured.proxy("proxyout.reform.hmcts.net", 8080);*/

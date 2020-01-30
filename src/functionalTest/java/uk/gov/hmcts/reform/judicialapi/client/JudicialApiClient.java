@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.client;
 
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import io.restassured.response.Response;
@@ -36,25 +35,23 @@ public class JudicialApiClient {
     }*/
 
     public String getWelcomePage() {
-        return withUnauthenticatedRequest()
+        return  SerenityRest
+                .when()
                 .get("/")
                 .then()
-                .statusCode(OK.value())
+                .statusCode(HttpStatus.OK.value())
                 .and()
-                .extract()
-                .body()
-                .asString();
+                .extract().body().asString();
     }
 
     public String getHealthPage() {
-        return withUnauthenticatedRequest()
+        return  SerenityRest
+                .when()
                 .get("/health")
                 .then()
-                .statusCode(OK.value())
+                .statusCode(HttpStatus.OK.value())
                 .and()
-                .extract()
-                .body()
-                .asString();
+                .extract().body().asString();
     }
 
     private RequestSpecification withUnauthenticatedRequest() {
