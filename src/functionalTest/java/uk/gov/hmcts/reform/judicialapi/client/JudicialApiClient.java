@@ -40,12 +40,9 @@ public class JudicialApiClient {
                 .when()
                 .get("/")
                 .body();
-                log.info("GET response body::::::" + extractionOptions);
+        log.info("GET response body::::::" + extractionOptions);
 
-                return extractionOptions.toString();
-                //.statusCode(HttpStatus.OK.value())
-                //.and()
-                //.extract().body().asString();
+        return extractionOptions.toString();
     }
 
     public String getHealthPage() {
