@@ -67,13 +67,25 @@ public class JudicialApiClient {
         ResponseBodyExtractionOptions extractionOptions = withUnauthenticatedRequest()
                 .when()
                 .get("/health")
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .and()
-                .extract().body();
-        log.info("Response body::::::" + extractionOptions);
+                .body();
 
-        return extractionOptions.toString();
+        log.info("GET response body::::::" + withUnauthenticatedRequest()
+                .get("/health")
+                .then()
+                .statusCode(OK.value())
+                .and()
+                .extract()
+                .body()
+                .asString());
+
+        return withUnauthenticatedRequest()
+                .get("/health")
+                .then()
+                .statusCode(OK.value())
+                .and()
+                .extract()
+                .body()
+                .asString();
     }
 
     private RequestSpecification withUnauthenticatedRequest() {
