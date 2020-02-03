@@ -43,15 +43,6 @@ public class JudicialApiClient {
                 .get("/")
                 .body();
 
-        log.info("GET response body::::::" +  withUnauthenticatedRequest()
-                .get("/")
-                .then()
-                .statusCode(OK.value())
-                .and()
-                .extract()
-                .body()
-                .asString());
-
         return withUnauthenticatedRequest()
                 .get("/")
                 .then()
@@ -68,15 +59,6 @@ public class JudicialApiClient {
                 .when()
                 .get("/health")
                 .body();
-
-        log.info("GET response body::::::" + withUnauthenticatedRequest()
-                .get("/health")
-                .then()
-                .statusCode(OK.value())
-                .and()
-                .extract()
-                .body()
-                .asString());
 
         return withUnauthenticatedRequest()
                 .get("/health")

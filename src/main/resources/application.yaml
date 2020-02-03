@@ -74,7 +74,7 @@ security:
 auth.provider.service.client.baseUrl: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
 idam:
   s2s-auth:
-    totp_secret: ${S2S_SECRET:F5U22E7HCOOEZY5P}
+    totp_secret: ${S2S_SECRET:AAAAAAAAAAAAAAAA}
     microservice: rd_judicial_api
     url: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
 
