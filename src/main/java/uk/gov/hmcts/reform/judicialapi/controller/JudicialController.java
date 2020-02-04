@@ -51,7 +51,7 @@ public class JudicialController {
 
     //@Secured("caseworker")
     @GetMapping(value = "/roles",
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
 
     public ResponseEntity<JudicialRoleTypeEntityResponse> getJudicialRoles() {
 

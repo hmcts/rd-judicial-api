@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.client;
 
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBodyExtractionOptions;
@@ -74,8 +74,8 @@ public class JudicialApiClient {
         return SerenityRest.given()
                 .relaxedHTTPSValidation()
                 .baseUri(judicialApiUrl)
-                .header("Content-Type", APPLICATION_JSON_UTF8_VALUE)
-                .header("Accepts", APPLICATION_JSON_UTF8_VALUE);
+                .header("Content-Type", APPLICATION_JSON_VALUE)
+                .header("Accepts", APPLICATION_JSON_VALUE);
     }
 
     private RequestSpecification getS2sTokenHeaders() {
@@ -92,8 +92,8 @@ public class JudicialApiClient {
         return SerenityRest.with()
                 .relaxedHTTPSValidation()
                 .baseUri(judicialApiUrl)
-                .header("Content-Type", APPLICATION_JSON_UTF8_VALUE)
-                .header("Accepts", APPLICATION_JSON_UTF8_VALUE)
+                .header("Content-Type", APPLICATION_JSON_VALUE)
+                .header("Accepts", APPLICATION_JSON_VALUE)
                 .header(SERVICE_HEADER, "Bearer " + s2sToken)
                 .header(AUTHORIZATION_HEADER, "Bearer " + userToken);
     }
