@@ -80,7 +80,7 @@ idam:
 
 auth.idam.client.baseUrl: ${idam_url:https://idam-api.aat.platform.hmcts.net}
 
-auth.idam.client.detailsUri: "/details"
+auth.idam.client.detailsUri: "/o/userinfo"
 
 feign:
   allow:
