@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,8 @@ public class JudicialController {
     @ApiOperation(
             value = "Retrieves all judicial roles",
             authorizations = {
-            @Authorization(value = "ServiceAuthorization")
+            @Authorization(value = "ServiceAuthorization"),
+                    @Authorization(value = "Authorization")
         }
     )
 
@@ -49,7 +51,7 @@ public class JudicialController {
     })
 
 
-    //@Secured("caseworker")
+    @Secured("caseworker")
     @GetMapping(value = "/roles",
             produces = MediaType.APPLICATION_JSON_VALUE)
 
