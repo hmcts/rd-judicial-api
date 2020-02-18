@@ -67,7 +67,7 @@ public class JudicialReferenceDataClient {
     private HttpHeaders getMultipleAuthHeaders(String role, String userId) {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         headers.add("ServiceAuthorization", JWT_TOKEN);
         String bearerToken = sidamTokenMap.get(role);
@@ -90,7 +90,7 @@ public class JudicialReferenceDataClient {
     private HttpHeaders getS2sTokenHeaders() {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("ServiceAuthorization", JWT_TOKEN);
         return headers;
     }
