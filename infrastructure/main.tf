@@ -40,7 +40,7 @@ data "azurerm_key_vault_secret" "s2s_url" {
 }
 
 
-data "azurerm_key_vault_secret" "s2s_secret" {
+data "azurerm_key_vault_secret" "jrd_s2s_secret" {
   name = "microservicekey-rd-judicial-api"
   key_vault_id = "${data.azurerm_key_vault.s2s_key_vault.id}"
 }
