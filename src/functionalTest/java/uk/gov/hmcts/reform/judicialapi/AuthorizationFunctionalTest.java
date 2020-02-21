@@ -80,6 +80,7 @@ public abstract class AuthorizationFunctionalTest {
         IdamOpenIdClient idamOpenIdClient = new IdamOpenIdClient(configProperties);
         log.info("idamOpenIdClient: " + idamOpenIdClient);
         String s2sToken = new S2sClient(s2sUrl, s2sName, s2sSecret).signIntoS2S();
+        log.info("s2sToken::::::::::" + s2sToken);
         judicialApiClient = new JudicialApiClient(judicialApiUrl, s2sToken, idamOpenIdClient);
     }
 

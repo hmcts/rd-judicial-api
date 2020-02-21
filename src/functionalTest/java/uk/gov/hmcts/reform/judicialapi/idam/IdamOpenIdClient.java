@@ -75,8 +75,8 @@ public class IdamOpenIdClient {
         return userEmail;
     }
 
-    public String getInternalOpenIdToken() {
-        String userEmail = createUser("prd-admin");
+    public String getInternalOpenIdToken(String role) {
+        String userEmail = createUser(role);
         return getOpenIdToken(userEmail);
     }
 

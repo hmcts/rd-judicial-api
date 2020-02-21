@@ -83,8 +83,8 @@ public class JudicialApiClient {
                 .header(SERVICE_HEADER, "Bearer " + s2sToken);
     }
 
-    private RequestSpecification getMultipleAuthHeadersInternal() {
-        return getMultipleAuthHeaders(idamOpenIdClient.getInternalOpenIdToken());
+    private RequestSpecification getMultipleAuthHeadersInternal(String role) {
+        return getMultipleAuthHeaders(idamOpenIdClient.getInternalOpenIdToken(role));
     }
 
     public RequestSpecification getMultipleAuthHeaders(String userToken) {
@@ -99,7 +99,7 @@ public class JudicialApiClient {
     }
 
     public Map<String, Object> retrieveAllJudicialRoles(String roleOfAccessor, HttpStatus expectedStatus) {
-        Response response = getS2sTokenHeaders()
+        Response response = getMultipleAuthHeadersInternal(roleOfAccessor)
                 .get("/refdata/v1/judicial/roles")
                 .andReturn();
 
