@@ -40,7 +40,7 @@ data "azurerm_key_vault_secret" "s2s_url" {
 }
 
 
-data "azurerm_key_vault_secret" "s2s_secret" {
+data "azurerm_key_vault_secret" "jrd_s2s_secret" {
   name = "microservicekey-rd-judicial-api"
   key_vault_id = "${data.azurerm_key_vault.s2s_key_vault.id}"
 }
@@ -97,42 +97,4 @@ module "db-judicial-ref-data" {
   common_tags = "${var.common_tags}"
   postgresql_version    = "${var.postgresql_version}"
 
-}
-
-
-module "rd_judicial_api" {
-  source = "git@github.com:hmcts/cnp-module-webapp?ref=master"
-  product = "${var.product}-${var.component}"
-  location = "${var.location}"
-  env = "${var.env}"
-  ilbIp = "${var.ilbIp}"
-  resource_group_name = "${azurerm_resource_group.rg.name}"
-  subscription = "${var.subscription}"
-  capacity = "${var.capacity}"
-  instance_size = "${var.instance_size}"
-  common_tags = "${merge(var.common_tags, map("lastUpdated", "${timestamp()}"))}"
-  appinsights_instrumentation_key = "${var.appinsights_instrumentation_key}"
-  asp_name = "${local.app_service_plan}"
-  asp_rg = "${local.app_service_plan}"
-
-  app_settings = {
-    LOGBACK_REQUIRE_ALERT_LEVEL = false
-    LOGBACK_REQUIRE_ERROR_CODE = false
-
-    POSTGRES_HOST = "${module.db-judicial-ref-data.host_name}"
-    POSTGRES_PORT = "${module.db-judicial-ref-data.postgresql_listen_port}"
-    POSTGRES_DATABASE = "${module.db-judicial-ref-data.postgresql_database}"
-    POSTGRES_USER = "${module.db-judicial-ref-data.user_name}"
-    POSTGRES_USERNAME = "${module.db-judicial-ref-data.user_name}"
-    POSTGRES_PASSWORD = "${module.db-judicial-ref-data.postgresql_password}"
-    POSTGRES_CONNECTION_OPTIONS = "?"
-
-    S2S_URL = "${data.azurerm_key_vault_secret.s2s_url.value}"
-    S2S_SECRET = "${data.azurerm_key_vault_secret.s2s_secret.value}"
-
-    ROOT_LOGGING_LEVEL = "${var.root_logging_level}"
-    LOG_LEVEL_SPRING_WEB = "${var.log_level_spring_web}"
-    LOG_LEVEL_RD = "${var.log_level_rd}"
-    EXCEPTION_LENGTH = 100
-  }
 }
