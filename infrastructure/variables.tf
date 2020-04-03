@@ -65,3 +65,8 @@ variable "postgresql_version" {
   default = "11"
 }
 
+variable "enable_ase" {
+  default = false
+}
+
+
