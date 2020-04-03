@@ -7,6 +7,9 @@ java:
     POSTGRES_USERNAME: dbjuddata@rd-judicial-api-postgres-db-{{ .Values.global.environment }}
     POSTGRES_PORT: 5432
     S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+    spring:
+      flyway:
+        enabled: false
   image: 'hmctspublic.azurecr.io/rd/judicial-api:latest'
   keyVaults:
     rd:
@@ -14,3 +17,4 @@ java:
         - judicial-api-POSTGRES-PASS
         - s2s-secret
         - AppInsightsInstrumentationKey
+
