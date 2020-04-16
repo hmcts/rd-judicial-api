@@ -167,7 +167,6 @@ pitest {
     targetClasses = ['uk.gov.hmcts.reform.judicialapi.*']
     excludedClasses = [
             'uk.gov.hmcts.reform.judicialapi.configuration.*',
-            'uk.gov.hmcts.reform.judicialapi.controller.*',
             'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
     ]
     threads = 10
