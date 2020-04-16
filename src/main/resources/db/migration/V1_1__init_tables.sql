@@ -1,7 +1,7 @@
 -- NB Flyway requires lowercase for table names
 create schema if not exists dbjuddata;
 
-CREATE TABLE judicial_user_profile(
+CREATE TABLE dbjuddata.judicial_user_profile(
 	elinks_Id varchar(256) NOT NULL,
 	personal_code varchar(32) NOT NULL,
 	title varchar(64) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE judicial_user_profile(
 
 );
 
-CREATE TABLE judicial_office_appointment(
+CREATE TABLE dbjuddata.judicial_office_appointment(
 	judicial_office_appointment_Id bigint NOT NULL,
 	elinks_Id varchar(256) NOT NULL,
 	role_id varchar(128) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE judicial_office_appointment(
 
 );
 
-CREATE TABLE judicial_office_authorisation(
+CREATE TABLE dbjuddata.judicial_office_authorisation(
 	judicial_office_auth_Id bigint NOT NULL,
 	elinks_Id varchar(256) NOT NULL,
 	authorisation_Id varchar(256),
@@ -55,7 +55,7 @@ CREATE TABLE judicial_office_authorisation(
 	CONSTRAINT jud_auth_jur_unique UNIQUE (jurisdiction_id)
 
 );
-CREATE TABLE authorisation_type(
+CREATE TABLE dbjuddata.authorisation_type(
 	authorisation_Id varchar(64) NOT NULL,
 	authorisation_desc_en varchar(256) NOT NULL,
 	authorisation_desc_cy varchar(256),
@@ -66,7 +66,7 @@ CREATE TABLE authorisation_type(
 
 );
 
-CREATE TABLE judicial_role_type(
+CREATE TABLE dbjuddata.judicial_role_type(
 	role_id varchar(64) NOT NULL,
 	role_desc_en varchar(256) NOT NULL,
 	role_desc_cy varchar(256),
@@ -74,7 +74,7 @@ CREATE TABLE judicial_role_type(
 
 );
 
-CREATE TABLE contract_type(
+CREATE TABLE dbjuddata.contract_type(
 	contract_type_Id varchar(64) NOT NULL,
 	contract_type_desc_en varchar(256) NOT NULL,
 	contract_type_desc_cy varchar(256),
@@ -82,7 +82,7 @@ CREATE TABLE contract_type(
 
 );
 
-CREATE TABLE base_location_type(
+CREATE TABLE dbjuddata.base_location_type(
 	base_location_Id varchar(64) NOT NULL,
 	court_name varchar(128),
 	bench varchar(128),
@@ -94,7 +94,7 @@ CREATE TABLE base_location_type(
 
 );
 
-CREATE TABLE region_type(
+CREATE TABLE dbjuddata.region_type(
 	region_Id varchar(64) NOT NULL,
 	region_desc_en varchar(256) NOT NULL,
 	region_desc_cy varchar(256),
@@ -102,23 +102,23 @@ CREATE TABLE region_type(
 
 );
 
-ALTER TABLE judicial_office_appointment ADD CONSTRAINT elinks_Id_fk1 FOREIGN KEY (elinks_Id)
+ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT elinks_Id_fk1 FOREIGN KEY (elinks_Id)
 REFERENCES judicial_user_profile (elinks_Id);
 
-ALTER TABLE judicial_office_appointment ADD CONSTRAINT role_id_fk1 FOREIGN KEY (role_id)
+ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT role_id_fk1 FOREIGN KEY (role_id)
 REFERENCES judicial_role_type (role_id);
 
-ALTER TABLE judicial_office_appointment ADD CONSTRAINT contract_type_Id_fk1 FOREIGN KEY (contract_type_Id)
+ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT contract_type_Id_fk1 FOREIGN KEY (contract_type_Id)
 REFERENCES contract_type (contract_type_Id);
 
-ALTER TABLE judicial_office_appointment ADD CONSTRAINT base_location_Id_fk1 FOREIGN KEY (base_location_Id)
+ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT base_location_Id_fk1 FOREIGN KEY (base_location_Id)
 REFERENCES base_location_type (base_location_Id);
 
-ALTER TABLE judicial_office_appointment ADD CONSTRAINT region_Id_fk1 FOREIGN KEY (region_Id)
+ALTER TABLE dbjuddata.judicial_office_appointment ADD CONSTRAINT region_Id_fk1 FOREIGN KEY (region_Id)
 REFERENCES region_type (region_Id);
 
-ALTER TABLE judicial_office_authorisation ADD CONSTRAINT elinks_Id_fk2 FOREIGN KEY (elinks_Id)
+ALTER TABLE dbjuddata.judicial_office_authorisation ADD CONSTRAINT elinks_Id_fk2 FOREIGN KEY (elinks_Id)
 REFERENCES judicial_user_profile (elinks_Id);
 
-ALTER TABLE judicial_office_authorisation ADD CONSTRAINT authorisation_Id_fk1 FOREIGN KEY (authorisation_Id)
+ALTER TABLE dbjuddata.judicial_office_authorisation ADD CONSTRAINT authorisation_Id_fk1 FOREIGN KEY (authorisation_Id)
 REFERENCES authorisation_type (authorisation_Id);
