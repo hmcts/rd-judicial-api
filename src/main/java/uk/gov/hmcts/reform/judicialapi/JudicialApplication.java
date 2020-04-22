@@ -8,10 +8,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.retry.annotation.EnableRetry;
 
+@SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform.judicialapi")
 @EnableJpaAuditing
 @EnableJpaRepositories
 @EnableRetry
-@SpringBootApplication
 @EnableCircuitBreaker
 @EnableFeignClients(basePackages = {
         "uk.gov.hmcts.reform.judicialapi",
