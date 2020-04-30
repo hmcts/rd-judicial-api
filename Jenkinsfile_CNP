@@ -36,8 +36,6 @@ withPipeline(type, product, component) {
     disableLegacyDeployment()
     enableAksStagingDeployment()
 
-    env.TEST_URL = "http://rd-judicial-api-aat.service.core-compute-aat.internal"
-
     after('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
