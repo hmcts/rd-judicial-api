@@ -54,14 +54,8 @@
         <notes><![CDATA[
    file name: tomcat-embed-websocket-9.0.30.jar
    ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
+        <gav regex="true">^org\.apache\.tomcat\.embed:tomcat-embed-websocket:.*$</gav>
         <cpe>cpe:/a:apache:tomcat</cpe>
-        <cpe>cpe:/a:apache_software_foundation:tomcat</cpe>
-        <cpe>cpe:/a:apache_tomcat:apache_tomcat</cpe>
-        <cve>CVE-2019-17569</cve>
-        <cve>CVE-2020-1745</cve>
-        <cve>CVE-2020-1935</cve>
-        <cve>CVE-2020-1938</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -82,8 +76,6 @@
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.apache\.sling/org\.apache\.sling\.javax\.activation@.*$</packageUrl>
         <cpe>cpe:/a:apache:sling</cpe>
-        <cve>CVE-2016-5394</cve>
-        <cve>CVE-2016-6798</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -105,22 +97,8 @@
         <notes><![CDATA[
    file name: selenium-opera-driver-3.141.59.jar
    ]]></notes>
-        <sha1>6b11ed01182bfd8bb62ddeae34cf9eadd3cfc7ff</sha1>
+        <filePath regex="true">.*\bselenium-opera-driver-3.141.59.jar</filePath>
         <cpe>cpe:/a:opera:opera</cpe>
-        <cve>CVE-2003-1561</cve>
-        <cve>CVE-2008-1761</cve>
-        <cve>CVE-2008-1764</cve>
-        <cve>CVE-2008-3079</cve>
-        <cve>CVE-2008-3172</cve>
-        <cve>CVE-2008-4293</cve>
-        <cve>CVE-2008-4695</cve>
-        <cve>CVE-2008-4696</cve>
-        <cve>CVE-2008-4794</cve>
-        <cve>CVE-2008-5679</cve>
-        <cve>CVE-2009-0915</cve>
-        <cve>CVE-2010-5227</cve>
-        <cve>CVE-2015-8960</cve>
-        <cve>CVE-2019-19788</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -142,35 +120,25 @@
         <notes><![CDATA[
    file name: htmlunit-2.36.0.jar
    ]]></notes>
-        <sha1>efe6df9c5bc1284cd1d7952434ea4f85c5a32f72</sha1>
         <cpe>cpe:/a:htmlunit_project:htmlunit</cpe>
-        <cve>CVE-2020-5529</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
    file name: neko-htmlunit-2.36.0.jar
    ]]></notes>
-        <sha1>6e999678a3b2813ea71fac4ebc5996b1406e954d</sha1>
         <cpe>cpe:/a:htmlunit_project:htmlunit</cpe>
-        <cve>CVE-2020-5529</cve>
-        <cve>CVE-2020-5529</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
    file name: phantomjsdriver-1.4.4.jar
    ]]></notes>
-        <sha1>e5778e3273f8201bf9e0ff65fb8118f37b84beba</sha1>
         <cpe>cpe:/a:phantomjs:phantomjs</cpe>
-        <cve>CVE-2019-17221</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
    file name: commons-beanutils-core-1.8.3.jar
    ]]></notes>
-        <sha1>75812698e5e859f2cb587c622c4cdfcd61676426</sha1>
         <cpe>cpe:/a:apache:commons_beanutils</cpe>
-        <cve>CVE-2014-0114</cve>
-        <cve>CVE-2019-10086</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -200,25 +168,19 @@
         <notes><![CDATA[
    file name: asciidoctorj-1.5.6.jar
    ]]></notes>
-        <sha1>bb757d4b8b0f8438ce2ed781f6688cc6c01d9237</sha1>
         <cpe>cpe:/a:asciidoctor:asciidoctor</cpe>
-        <cve>CVE-2018-18385</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
    file name: htmlunit-core-js-2.36.0.jar
    ]]></notes>
-        <sha1>47bc8cf3a812169a4ce283515604c6cbab4aa13f</sha1>
         <cpe>cpe:/a:htmlunit_project:htmlunit</cpe>
-        <cve>CVE-2020-5529</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
    file name: htmlunit-cssparser-1.5.0.jar
    ]]></notes>
-        <sha1>7e40e04f32622e63a30e92ac158f799f67d8ddf0</sha1>
         <cpe>cpe:/a:htmlunit_project:htmlunit</cpe>
-        <cve>CVE-2020-5529</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
@@ -356,40 +318,18 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-   file name: jruby-complete-1.7.26.jar: jquery.js
-   ]]></notes>
-        <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
-        <vulnerabilityName>Regex in its jQuery.htmlPrefilter  sometimes may introduce XSS</vulnerabilityName>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: jruby-complete-1.7.26.jar: bcprov-jdk15on-1.54.jar
-   ]]></notes>
-        <sha1>1acdedeb89f1d950d67b73d481eb7736df65eedb</sha1>
-        <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle-java-crytography-api</cpe>
-        <cve>CVE-2016-1000338</cve>
-        <cve>CVE-2016-1000339</cve>
-        <cve>CVE-2016-1000340</cve>
-        <cve>CVE-2016-1000341</cve>
-        <cve>CVE-2016-1000342</cve>
-        <cve>CVE-2016-1000343</cve>
-        <cve>CVE-2016-1000344</cve>
-        <cve>CVE-2016-1000345</cve>
-        <cve>CVE-2016-1000346</cve>
-        <cve>CVE-2016-1000352</cve>
-        <cve>CVE-2016-2427</cve>
-        <cve>CVE-2017-13098</cve>
-        <cve>CVE-2018-1000180</cve>
-        <cve>CVE-2018-1000613</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
    file name: jruby-complete-1.7.26.jar: readline.jar
    ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.jruby/readline@.*$</packageUrl>
         <cpe>cpe:/a:jruby:jruby</cpe>
-        <cve>CVE-2010-1330</cve>
-        <cve>CVE-2011-4838</cve>
+    </suppress>
+
+    <suppress>
+        <notes><![CDATA[
+   file name: jruby-complete-1.7.26.jar: readline.jar
+   ]]></notes>
+        <filePath regex="true">.*\bbcprov-jdk15on-1.54\.jar</filePath>
+        <cpe>cpe:/a:bouncycastle:legion-of-the-bouncy-castle-java-crytography-api</cpe>
     </suppress>
     <suppress>
         <notes><![CDATA[
