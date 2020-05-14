@@ -368,8 +368,6 @@
         <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-security@.*$</packageUrl>
         <cpe>cpe:/a:eclipse:jetty</cpe>
         <cpe>cpe:/a:jetty:jetty</cpe>
-<!--        <cve>CVE-2019-10241</cve>-->
-<!--        <cve>CVE-2019-10247</cve>-->
     </suppress>
     <suppress>
         <notes><![CDATA[
