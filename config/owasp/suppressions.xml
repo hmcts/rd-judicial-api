@@ -403,4 +403,11 @@
         <cpe>cpe:/a:eclipse:jetty</cpe>
         <cpe>cpe:/a:jetty:jetty</cpe>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+file name: ant*.jar
+]]></notes>
+        <filePath regex="true">.*\**\.jar</filePath>
+        <cpe>cpe:/a:apache:ant</cpe>
+    </suppress>
 </suppressions>
