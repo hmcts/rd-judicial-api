@@ -34,7 +34,7 @@ def versions = [
         reformHealthStarter: '0.0.5',
         reformLogging      : '5.1.0',
         reformS2sClient    : '3.0.0',
-        serenity           : '2.0.23',
+        serenity           : '2.0.76',
         sonarPitest        : '0.5',
         springBoot         : '2.1.4.RELEASE',
         springHystrix      : '2.1.1.RELEASE',
@@ -47,8 +47,8 @@ def jarName = 'rd-judicial-api.jar'
 group = 'uk.gov.hmcts.reform.juddata'
 version = '0.0.1'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 compileJava {
     options.compilerArgs << '-parameters' << '-Xlint:deprecation' << "-Xlint:unchecked" << "-Werror"
@@ -151,7 +151,7 @@ task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
 }
 
 jacoco {
-    toolVersion = "0.8.1"
+    toolVersion = "0.8.5"
 }
 
 jacocoTestReport {
@@ -233,7 +233,12 @@ dependencies {
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.2'
     compile group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     compile group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
-    compile group: 'io.rest-assured', name: 'rest-assured', version: '3.0.7'
+    compile (group: 'io.rest-assured', name: 'rest-assured', version: '4.1.2') {
+        exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
+    }
+
+    compile group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
+
     compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
@@ -258,8 +263,12 @@ dependencies {
         exclude group: "org.hamcrest", module: "hamcrest-library"
     }
 
-    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '4.0.0'
-    testCompile group: 'io.rest-assured', name: 'rest-assured-common', version: '4.0.0'
+    testCompile(group: 'io.rest-assured', name: 'rest-assured', version: '4.0.0') {
+        exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
+    }
+    testCompile(group: 'io.rest-assured', name: 'rest-assured-common', version: '4.0.0') {
+        exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
+    }
 
     testCompile group: 'com.h2database', name: 'h2'
     testCompile "com.github.tomakehurst:wiremock:2.19.0"
