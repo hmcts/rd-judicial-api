@@ -61,3 +61,12 @@ variable "managed_identity_object_id" {
   default = ""
 }
 
+variable "postgresql_version" {
+  default = "11"
+}
+
+variable "enable_ase" {
+  default = false
+}
+
+

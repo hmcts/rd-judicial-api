@@ -46,6 +46,9 @@ withNightlyPipeline(type, product, component) {
     loadVaultSecrets(secrets)
 
     enableMutationTest()
-    enableFullFunctionalTest()
-    enableSecurityScan()
+    //not required functional tests for now as no rest api
+    //enableFullFunctionalTest()
+
+    //This is not required as this is batch application and we don't have any API
+    //enableSecurityScan()
 }
