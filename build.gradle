@@ -38,7 +38,7 @@ def versions = [
         sonarPitest        : '0.5',
         springBoot         : '2.3.2.RELEASE',
         springHystrix      : '2.1.1.RELEASE',
-        springfoxSwagger   : '2.9.2'
+        springfoxSwagger   : '3.0.0'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
