@@ -3,11 +3,14 @@ package uk.gov.hmcts.reform.judicialapi;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.restassured.RestAssured;
+
+import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
+@Slf4j
 public class SmokeTest {
 
     private final String targetInstance =
@@ -19,6 +22,7 @@ public class SmokeTest {
     @Test
     public void should_prove_app_is_running_and_healthy() {
 
+        log.info("{} env variable", System.getenv("TEST_URL"));
         RestAssured.baseURI = targetInstance;
         RestAssured.useRelaxedHTTPSValidation();
 
