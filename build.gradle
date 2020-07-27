@@ -33,12 +33,12 @@ def versions = [
         pitest             : '1.4.2',
         reformHealthStarter: '0.0.5',
         reformLogging      : '5.1.0',
-        reformS2sClient    : '3.1.2',
+        reformS2sClient    : '3.0.0',
         serenity           : '2.0.76',
         sonarPitest        : '0.5',
         springBoot         : '2.3.2.RELEASE',
         springHystrix      : '2.1.1.RELEASE',
-        springfoxSwagger   : '3.0.0'
+        springfoxSwagger   : '2.9.2'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
@@ -235,7 +235,7 @@ dependencies {
 
     compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
+    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.0.4'
     compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
     compile group: 'uk.gov.hmcts.reform', name: 'health-spring-boot-starter', version: versions.reformHealthStarter
 
