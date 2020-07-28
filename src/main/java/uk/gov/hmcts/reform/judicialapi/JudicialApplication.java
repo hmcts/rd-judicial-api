@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import uk.gov.hmcts.reform.health.HealthAutoConfiguration;
 
 
-@SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform.judicialapi", exclude = HealthAutoConfiguration.class)
+@SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform.judicialapi")
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
 public class JudicialApplication {
 
