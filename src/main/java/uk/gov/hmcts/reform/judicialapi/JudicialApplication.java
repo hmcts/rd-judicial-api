@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.judicialapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import uk.gov.hmcts.reform.health.HealthAutoConfiguration;
 
 
 @SpringBootApplication(scanBasePackages = "uk.gov.hmcts.reform.judicialapi")

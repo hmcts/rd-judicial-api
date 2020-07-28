@@ -213,6 +213,9 @@ dependencies {
 
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.3.2.RELEASE'
+
+
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
     //compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'

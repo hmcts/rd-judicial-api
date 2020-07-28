@@ -8,9 +8,14 @@ management:
         include: 'health'
     web:
       base-path: "/"
-  endpoint:
-    health:
-      show-details: "always"
+
+  health:
+    show-details: "always"
+    probes:
+      enabled: true
+    .group:
+      readiness:
+        include: readinessState,db
 
 spring:
   jpa:
