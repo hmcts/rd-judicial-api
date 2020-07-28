@@ -2,20 +2,18 @@ server:
   port: ${PORT:8093}
 
 management:
+  endpoint:
+    health:
+      cache:
+        time-to-live: 30s
+      show-details: "always"
   endpoints:
-    jmx:
-      exposure:
-        include: 'health'
     web:
       base-path: "/"
-
-  health:
-    show-details: "always"
-    probes:
-      enabled: true
-    .group:
-      readiness:
-        include: readinessState,db
+      exposure:
+        include: health, info
+  security:
+    enabled: false
 
 spring:
   jpa:
