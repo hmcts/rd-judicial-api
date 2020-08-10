@@ -26,4 +26,17 @@ public class WelcomeControllerTest {
             containsString(expectedMessage)
         );
     }
+
+    @Test
+    public void should_return_email_success_response() {
+
+        ResponseEntity<String> responseEntity = welcomeController.retrievePaymentAccountByEmail("abc@gmail.com");
+        String expectedMessage = "Welcome to the Judicial API";
+        assertNotNull(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertThat(
+            responseEntity.getBody(),
+            containsString(expectedMessage)
+        );
+    }
 }

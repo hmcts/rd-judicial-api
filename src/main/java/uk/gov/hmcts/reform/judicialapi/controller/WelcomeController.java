@@ -8,10 +8,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.UUID;
+import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,6 +55,20 @@ public class WelcomeController {
     public ResponseEntity<String> welcome() {
 
         LOG.info("Welcome message '{}' from running instance: {}", MESSAGE, INSTANCE_ID);
+
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .body("{\"message\": \"" + MESSAGE + "\"}");
+    }
+
+    @GetMapping(
+        path = "/testEmail",
+        produces = APPLICATION_JSON_VALUE
+    )
+    @ResponseBody
+    public ResponseEntity<String>
+        retrievePaymentAccountByEmail(@NotNull @RequestParam("email") String email) {
 
         return ResponseEntity
             .ok()
