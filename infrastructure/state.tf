@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.12"  # Terraform client version
+  required_version = "~> 0.12"  # Terraform client version
   backend "azurerm" {}
   required_providers {
     azurerm = {
