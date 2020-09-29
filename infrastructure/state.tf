@@ -1,13 +1,19 @@
 terraform {
-  required_version = "~> 0.12"  # Terraform client version
-  backend "azurerm" {}
   required_providers {
     azurerm = {
-      source = "hashicorp/azurerm"
-      version = "2.20.0"
+      # The "hashicorp" namespace is the new home for the HashiCorp-maintained
+      # provider plugins.
+      #
+      # source is not required for the hashicorp/* namespace as a measure of
+      # backward compatibility for commonly-used providers, but recommended for
+      # explicitness.
+      source  = "hashicorp/azurerm"
+      version = "~> 2.12"
     }
-    random = {
-      source = "hashicorp/random"
+    newrelic = {
+      # source is required for providers in other namespaces, to avoid ambiguity.
+      source  = "newrelic/newrelic"
+      version = "~> 2.1.1"
     }
   }
 }
