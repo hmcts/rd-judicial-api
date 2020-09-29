@@ -1,8 +1,3 @@
-# Temporary fix for template API version error on deployment
-provider "azurerm" {
-  version = "1.22.0"
-}
-
 locals {
   local_env = "${(var.env == "preview" || var.env == "spreview") ? (var.env == "preview" ) ? "aat" : "saat" : var.env}"
   preview_app_service_plan = "${var.product}-${var.component}-${var.env}"
@@ -86,5 +81,4 @@ module "db-judicial-ref-data" {
   database_name = "dbjuddata"
   common_tags = "${var.common_tags}"
   postgresql_version    = "${var.postgresql_version}"
-
 }
