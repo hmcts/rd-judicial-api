@@ -26,6 +26,9 @@ def vaultOverrides = [
     'spreview': 'saat'
 ]
 
+// Configure branches to sync with master branch
+def branchesToSync = ['demo', 'ithc', 'perftest']
+
 withPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
