@@ -264,21 +264,6 @@ dependencies {
         because 'Apache HttpClient versions prior to version 4.5.13 can misinterpret malformed authority component in ' +
                 'request URIs passed to the library as java.net.URI object and pick the wrong target host for request execution.'
     }
-    implementation('org.codehaus.groovy:groovy:2.5.14') {
-        because 'Apache Groovy provides extension methods to aid with creating temporary directories. ' +
-                'Prior to this fix, Groovy\'s implementation of those extension methods was using a now superseded ' +
-                'Java JDK method call that is potentially not secure on some operating systems in some contexts'
-    }
-    implementation('org.codehaus.groovy:groovy-json:2.5.14') {
-        because 'Apache Groovy provides extension methods to aid with creating temporary directories. ' +
-                'Prior to this fix, Groovy\'s implementation of those extension methods was using a now superseded ' +
-                'Java JDK method call that is potentially not secure on some operating systems in some contexts.'
-    }
-    implementation('org.codehaus.groovy:groovy-xml:2.5.14') {
-        because 'Apache Groovy provides extension methods to aid with creating temporary directories. ' +
-                'Prior to this fix, Groovy\'s implementation of those extension methods was using a now superseded ' +
-                'Java JDK method call that is potentially not secure on some operating systems in some contexts.'
-    }
 
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
 
@@ -325,10 +310,6 @@ dependencies {
     testCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.25') {
         force = true
     }
-
-    testCompile group: 'org.codehaus.groovy', name: 'groovy', version: '2.5.14'
-    testCompile group: 'org.codehaus.groovy', name: 'groovy-xml', version: '2.5.14'
-    testCompile group: 'org.codehaus.groovy', name: 'groovy-json', version: '2.5.14'
 
     integrationTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
         force = true
