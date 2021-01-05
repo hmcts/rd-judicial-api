@@ -4,9 +4,7 @@ spring:
       prefixed: false
       paths: /mnt/secrets/rd
       aliases:
-        s2s.microservicekey-rd-judicial-api: S2S_SECRET
-        rd.s2s-url: S2S_URL
-        s2s-secret: idam.s2s-auth.totp_secret
+        judicial-api-s2s-secret: S2S_SECRET
+        s2s-url: S2S_URL
         judicial-api-POSTGRES-PASS: spring.datasource.password
         AppInsightsInstrumentationKey: azure.application-insights.instrumentation-key
-
