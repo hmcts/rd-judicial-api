@@ -26,6 +26,9 @@ def vaultOverrides = [
     'spreview': 'saat'
 ]
 
+// Configure branches to sync with master branch
+def branchesToSync = ['demo', 'ithc', 'perftest']
+
 withPipeline(type, product, component) {
 
     overrideVaultEnvironments(vaultOverrides)
@@ -34,6 +37,9 @@ withPipeline(type, product, component) {
     enableDbMigration('rd')
     disableLegacyDeployment()
     enableAksStagingDeployment()
+
+    // Sync demo and perftest with master branch
+    syncBranchesWithMaster(branchesToSync)
 
     env.S2S_URL_FOR_TESTS = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
@@ -46,5 +52,4 @@ withPipeline(type, product, component) {
     after('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
-
 }
