@@ -244,10 +244,6 @@ dependencies {
 
     compile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
 
-    implementation('org.apache.httpcomponents:httpclient:4.5.13') {
-        because 'Apache HttpClient versions prior to version 4.5.13 can misinterpret malformed authority component in ' +
-                'request URIs passed to the library as java.net.URI object and pick the wrong target host for request execution.'
-    }
 
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
 
@@ -285,8 +281,6 @@ dependencies {
         exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
         exclude group: 'javax.websocket', module: 'javax.websocket-api'
     }
-
-
 
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
