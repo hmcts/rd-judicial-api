@@ -210,16 +210,9 @@ dependencies {
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
-    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc')
-    {
-        exclude group: "org.apache.tomcat.embed", module: "tomcat-embed-websocket"
-        exclude group: "org.apache.tomcat.embed", module: "tomcat-embed-core"
-    }
-    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot)
-    {
-            exclude group: "org.apache.tomcat.embed", module: "tomcat-embed-websocket"
-            exclude group: "org.apache.tomcat.embed", module: "tomcat-embed-core"
-    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
 
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
 
