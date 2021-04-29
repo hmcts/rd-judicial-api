@@ -7,7 +7,9 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity(name = "base_location_type")
 @Getter
@@ -43,5 +45,8 @@ public class BaseLocationType {
     @Column(name = "national_court_code")
     @Size(max = 128)
     private String nationalCourtCode;
+
+    @OneToMany(targetEntity = Appointment.class, mappedBy = "baseLocationType")
+    private List<Appointment> appointments;
 
 }

@@ -8,7 +8,9 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity(name = "authorisation_type")
 @Getter
@@ -40,5 +42,8 @@ public class AuthorisationType {
     @Column(name = "jurisdiction_desc_cy")
     @Size(max = 256)
     private String jurisdictionDescCy;
+
+    @OneToMany(targetEntity = Authorisation.class, mappedBy = "authorisationType")
+    private List<Authorisation> authorisations;
 
 }

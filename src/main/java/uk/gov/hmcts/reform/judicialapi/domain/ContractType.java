@@ -7,7 +7,9 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity(name = "contract_type")
 @Getter
@@ -27,5 +29,8 @@ public class ContractType {
     @Column(name = "contract_type_desc_cy")
     @Size(max = 256)
     private String contractTypeDescCy;
+
+    @OneToMany(targetEntity = Appointment.class, mappedBy = "contractType")
+    private List<Appointment> appointments;
 
 }

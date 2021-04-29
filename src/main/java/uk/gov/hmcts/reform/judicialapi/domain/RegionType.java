@@ -7,7 +7,9 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity(name = "region_type")
 @Getter
@@ -27,5 +29,8 @@ public class RegionType {
     @Column(name = "region_desc_cy")
     @Size(max = 256)
     private String regionDescCy;
+
+    @OneToMany(targetEntity = Appointment.class, mappedBy = "regionType")
+    private List<Appointment> appointments;
 
 }
