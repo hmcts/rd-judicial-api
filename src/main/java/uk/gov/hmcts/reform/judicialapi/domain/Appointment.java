@@ -23,7 +23,6 @@ public class Appointment implements Serializable {
     @Column(name = "judicial_office_appointment_Id")
     private Long officeAppointmentId;
 
-
     @Column(name = "is_prinicple_appointment")
     private Boolean isPrincipleAppointment;
 

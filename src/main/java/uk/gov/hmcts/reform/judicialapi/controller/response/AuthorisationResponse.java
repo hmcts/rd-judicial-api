@@ -18,7 +18,7 @@ public class AuthorisationResponse {
 
     public AuthorisationResponse(Authorisation authorisation) {
         this.authorisationId = authorisation.getOfficeAuthId().toString();
-        this.jurisdiction = authorisation.getJurisdictionId();
+        this.jurisdiction = authorisation.getJurisdiction() == null ? "" : authorisation.getJurisdiction();
     }
 
 }

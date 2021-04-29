@@ -36,16 +36,20 @@ public class AppointmentResponse {
 
     public AppointmentResponse(Appointment appointment) {
         this.appointmentId = appointment.getOfficeAppointmentId().toString();
-        this.roleId = appointment.getRoleType().getRole_id();
-        this.roleDesc_En = appointment.getRoleType().getRoleDescEn();
-        this.contractTypeId = appointment.getContractType().getContractTypeId();
-        this.contractTypeDescEn = appointment.getContractType().getContractTypeDescEn();
-        this.baseLocationId = appointment.getBaseLocationType().getBaseLocationId();
-        this.regionId = appointment.getRegionType().getRegionId();
-        this.regionDescEn = appointment.getRegionType().getRegionDescEn();
-        this.isPrincipalAppointment = appointment.getIsPrincipleAppointment().toString();
-        this.startDate = appointment.getStartDate().toString();
-        this.endDate = appointment.getEndDate().toString();
+        this.roleId = appointment.getRoleType() == null ? "" : appointment.getRoleType().getRoleId();
+        this.roleDesc_En = appointment.getRoleType() == null ? "" : appointment.getRoleType().getRoleDescEn();
+        this.contractTypeId = appointment.getContractType() == null ? "" :
+                appointment.getContractType().getContractTypeId();
+        this.contractTypeDescEn = appointment.getContractType() == null ? "" :
+                appointment.getContractType().getContractTypeDescEn();
+        this.baseLocationId = appointment.getBaseLocationType() == null ? "" :
+                appointment.getBaseLocationType().getBaseLocationId();
+        this.regionId = appointment.getRegionType() == null ? "" : appointment.getRegionType().getRegionId();
+        this.regionDescEn = appointment.getRegionType() == null ? "" : appointment.getRegionType().getRegionDescEn();
+        this.isPrincipalAppointment = appointment.getIsPrincipleAppointment() == null ? "" :
+                appointment.getIsPrincipleAppointment().toString();
+        this.startDate = appointment.getStartDate() == null ? "" : appointment.getStartDate().toString();
+        this.endDate = appointment.getEndDate() == null ? "" : appointment.getEndDate().toString();
     }
 
 

@@ -1,28 +1,33 @@
 package uk.gov.hmcts.reform.judicialapi.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
-import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
-import uk.gov.hmcts.reform.judicialapi.repository.AppointmentRepository;
-import uk.gov.hmcts.reform.judicialapi.repository.AuthorisationRepository;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
 public class JudicialUserServiceImpl implements JudicialUserService {
 
     @Autowired
-    private AppointmentRepository appointmentRepository;
-    @Autowired
-    private AuthorisationRepository authorisationRepository;
+    private UserProfileRepository userProfileRepository;
 
 
     @Override
-    public OrmResponse fetchJudicialUsers(Integer size, Integer page) {
+    public List<OrmResponse> fetchJudicialUsers(Integer size, Integer page) {
 
-        OrmResponse ormResponse = new OrmResponse();
-        List<Appointment> appointments = appointmentRepository.findAll();
+        List<OrmResponse> ormResponses;
+        List<UserProfile> userProfiles = userProfileRepository.findAll();
 
-        return ormResponse;
+
+        ormResponses = userProfiles.stream()
+                .map(OrmResponse::new)
+                .collect(Collectors.toList());
+
+        return ormResponses;
     }
 }

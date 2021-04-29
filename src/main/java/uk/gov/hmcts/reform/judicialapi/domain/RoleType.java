@@ -20,7 +20,7 @@ public class RoleType {
     @Id
     @Column(name = "role_Id")
     @Size(max = 64)
-    private String role_id;
+    private String roleId;
 
     @Column(name = "role_desc_en")
     @Size(max = 256)

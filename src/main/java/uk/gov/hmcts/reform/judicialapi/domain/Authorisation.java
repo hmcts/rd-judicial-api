@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "judicial_office_authorisation")
@@ -24,21 +23,28 @@ public class Authorisation implements Serializable {
     @Column(name = "judicial_office_auth_Id")
     private Long officeAuthId;
 
-    @Column(name = "jurisdiction_id")
+    @Column(name = "jurisdiction")
     @Size(max = 256)
-    private String jurisdictionId;
+    private String jurisdiction;
 
-    @Column(name = "authorisation_date")
-    private LocalDate authorisationDate;
+    @Column(name = "ticket_id")
+    private Long ticketId;
 
-    @Column(name = "extracted_date")
-    private LocalDate extractedDate;
+    @Column(name = "start_date")
+    private LocalDateTime startDate;
+
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-    @Column(name = "last_loaded_date")
-    private LocalDateTime lastLoadedDate;
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
+
+    @Column(name = "lower_level")
+    @Size(max = 256)
+    private String lowerLevel;
 
     @ManyToOne
     @JoinColumn(name = "elinks_Id", nullable = false)
