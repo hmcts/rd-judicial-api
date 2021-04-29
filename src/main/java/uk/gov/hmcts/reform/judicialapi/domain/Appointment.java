@@ -23,25 +23,6 @@ public class Appointment implements Serializable {
     @Column(name = "judicial_office_appointment_Id")
     private Long officeAppointmentId;
 
-    @ManyToOne
-    @JoinColumn(name = "elinks_Id", nullable = false)
-    private UserProfile userProfile;
-
-    @ManyToOne
-    @JoinColumn(name = "role_Id")
-    private RoleType roleType;
-
-    @ManyToOne
-    @JoinColumn(name = "contract_type_Id")
-    private ContractType contractType;
-
-    @ManyToOne
-    @JoinColumn(name = "base_location_Id")
-    private BaseLocationType baseLocationType;
-
-    @ManyToOne
-    @JoinColumn(name = "region_Id")
-    private RegionType regionType;
 
     @Column(name = "is_prinicple_appointment")
     private Boolean isPrincipleAppointment;
@@ -63,5 +44,25 @@ public class Appointment implements Serializable {
 
     @Column(name = "last_loaded_date")
     private LocalDateTime lastLoadedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "elinks_Id", nullable = false)
+    private UserProfile userProfile;
+
+    @ManyToOne
+    @JoinColumn(name = "role_Id")
+    private RoleType roleType;
+
+    @ManyToOne
+    @JoinColumn(name = "contract_type_Id")
+    private ContractType contractType;
+
+    @ManyToOne
+    @JoinColumn(name = "base_location_Id")
+    private BaseLocationType baseLocationType;
+
+    @ManyToOne
+    @JoinColumn(name = "region_Id")
+    private RegionType regionType;
 
 }

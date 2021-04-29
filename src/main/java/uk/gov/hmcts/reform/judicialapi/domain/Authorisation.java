@@ -24,14 +24,6 @@ public class Authorisation implements Serializable {
     @Column(name = "judicial_office_auth_Id")
     private Long officeAuthId;
 
-    @ManyToOne
-    @JoinColumn(name = "elinks_Id", nullable = false)
-    private UserProfile userProfile;
-
-    @ManyToOne
-    @JoinColumn(name = "authorisation_Id")
-    private AuthorisationType authorisationType;
-
     @Column(name = "jurisdiction_id")
     @Size(max = 256)
     private String jurisdictionId;
@@ -47,5 +39,9 @@ public class Authorisation implements Serializable {
 
     @Column(name = "last_loaded_date")
     private LocalDateTime lastLoadedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "elinks_Id", nullable = false)
+    private UserProfile userProfile;
 
 }
