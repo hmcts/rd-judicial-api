@@ -16,7 +16,7 @@ public class AppointmentResponse {
     @JsonProperty
     private String roleId;
     @JsonProperty
-    private String roleDesc_En;
+    private String roleDescEn;
     @JsonProperty
     private String contractTypeId;
     @JsonProperty
@@ -37,7 +37,7 @@ public class AppointmentResponse {
     public AppointmentResponse(Appointment appointment) {
         this.appointmentId = appointment.getOfficeAppointmentId().toString();
         this.roleId = appointment.getRoleType() == null ? "" : appointment.getRoleType().getRoleId();
-        this.roleDesc_En = appointment.getRoleType() == null ? "" : appointment.getRoleType().getRoleDescEn();
+        this.roleDescEn = appointment.getRoleType() == null ? "" : appointment.getRoleType().getRoleDescEn();
         this.contractTypeId = appointment.getContractType() == null ? "" :
                 appointment.getContractType().getContractTypeId();
         this.contractTypeDescEn = appointment.getContractType() == null ? "" :

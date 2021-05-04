@@ -34,7 +34,7 @@ public class UserProfile {
 
     @Column(name = "known_as")
     @Size(max = 64)
-    private String known_as;
+    private String knownAs;
 
     @Column(name = "surname")
     @Size(max = 256)
