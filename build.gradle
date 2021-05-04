@@ -181,8 +181,8 @@ sonarqube {
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/judicialapi/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/JudicialApplication.java,"+
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/domain/*," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/service/*," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/*," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/service/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/*"
     }
 }
