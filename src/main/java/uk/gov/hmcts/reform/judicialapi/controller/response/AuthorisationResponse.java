@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 
+import static java.util.Objects.isNull;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +20,7 @@ public class AuthorisationResponse {
 
     public AuthorisationResponse(Authorisation authorisation) {
         this.authorisationId = authorisation.getOfficeAuthId().toString();
-        this.jurisdiction = authorisation.getJurisdiction() == null ? "" : authorisation.getJurisdiction();
+        this.jurisdiction = isNull(authorisation.getJurisdiction()) ? "" : authorisation.getJurisdiction();
     }
 
 }

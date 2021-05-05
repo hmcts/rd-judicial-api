@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
@@ -24,7 +25,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
 
     @Override
-    public List<OrmResponse> fetchJudicialUsers(Integer size, Integer page) {
+    public ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page) {
 
         Pageable pageable = createPageableObject(page, size);
         Page<UserProfile> pagedUserProfiles = userProfileRepository.findAll(pageable);
@@ -35,7 +36,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .map(OrmResponse::new)
                 .collect(Collectors.toList());
 
-        return ormResponses;
+        return ResponseEntity
+                .status(200)
+                .body(ormResponses);
     }
 
     public Pageable createPageableObject(Integer page, Integer size) {
