@@ -7,6 +7,8 @@ import lombok.Setter;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang.StringUtils.EMPTY;
 
 @Getter
 @Setter
@@ -37,22 +39,23 @@ public class AppointmentResponse {
     private String endDate;
 
     public AppointmentResponse(Appointment appointment) {
-        this.appointmentId = appointment.getOfficeAppointmentId().toString();
-        this.roleId = isNull(appointment.getRoleType()) ? "" : appointment.getRoleType().getRoleId();
-        this.roleDescEn = isNull(appointment.getRoleType()) ? "" : appointment.getRoleType().getRoleDescEn();
-        this.contractTypeId = isNull(appointment.getContractType()) ? "" :
+        
+        if(nonNull(appointment)) {
+            this.appointmentId = String.valueOf(appointment.getOfficeAppointmentId());
+            this.roleId = isNull(appointment.getRoleType()) ? EMPTY : appointment.getRoleType().getRoleId();
+            this.roleDescEn = isNull(appointment.getRoleType()) ? EMPTY : appointment.getRoleType().getRoleDescEn();
+            this.contractTypeId = isNull(appointment.getContractType()) ? EMPTY :
                 appointment.getContractType().getContractTypeId();
-        this.contractTypeDescEn = isNull(appointment.getContractType()) ? "" :
+            this.contractTypeDescEn = isNull(appointment.getContractType()) ? EMPTY :
                 appointment.getContractType().getContractTypeDescEn();
-        this.baseLocationId = isNull(appointment.getBaseLocationType()) ? "" :
+            this.baseLocationId = isNull(appointment.getBaseLocationType()) ? EMPTY :
                 appointment.getBaseLocationType().getBaseLocationId();
-        this.regionId = isNull(appointment.getRegionType()) ? "" : appointment.getRegionType().getRegionId();
-        this.regionDescEn = isNull(appointment.getRegionType()) ? "" : appointment.getRegionType().getRegionDescEn();
-        this.isPrincipalAppointment = isNull(appointment.getIsPrincipleAppointment()) ? "" :
+            this.regionId = isNull(appointment.getRegionType()) ? EMPTY : appointment.getRegionType().getRegionId();
+            this.regionDescEn = isNull(appointment.getRegionType()) ? EMPTY : appointment.getRegionType().getRegionDescEn();
+            this.isPrincipalAppointment = isNull(appointment.getIsPrincipleAppointment()) ? EMPTY :
                 appointment.getIsPrincipleAppointment().toString();
-        this.startDate = isNull(appointment.getStartDate()) ? "" : appointment.getStartDate().toString();
-        this.endDate = isNull(appointment.getEndDate()) ? "" : appointment.getEndDate().toString();
+            this.startDate = isNull(appointment.getStartDate()) ? EMPTY : appointment.getStartDate().toString();
+            this.endDate = isNull(appointment.getEndDate()) ? EMPTY : appointment.getEndDate().toString();
+        }
     }
-
-
 }
