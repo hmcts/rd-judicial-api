@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
+import uk.gov.hmcts.reform.judicialapi.domain.ContractType;
+import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
+import uk.gov.hmcts.reform.judicialapi.domain.RoleType;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -40,22 +43,33 @@ public class AppointmentResponse {
 
     public AppointmentResponse(Appointment appointment) {
         
-        if(nonNull(appointment)) {
+        if (nonNull(appointment)) {
             this.appointmentId = String.valueOf(appointment.getOfficeAppointmentId());
-            this.roleId = isNull(appointment.getRoleType()) ? EMPTY : appointment.getRoleType().getRoleId();
-            this.roleDescEn = isNull(appointment.getRoleType()) ? EMPTY : appointment.getRoleType().getRoleDescEn();
-            this.contractTypeId = isNull(appointment.getContractType()) ? EMPTY :
-                appointment.getContractType().getContractTypeId();
-            this.contractTypeDescEn = isNull(appointment.getContractType()) ? EMPTY :
-                appointment.getContractType().getContractTypeDescEn();
             this.baseLocationId = isNull(appointment.getBaseLocationType()) ? EMPTY :
                 appointment.getBaseLocationType().getBaseLocationId();
-            this.regionId = isNull(appointment.getRegionType()) ? EMPTY : appointment.getRegionType().getRegionId();
-            this.regionDescEn = isNull(appointment.getRegionType()) ? EMPTY : appointment.getRegionType().getRegionDescEn();
             this.isPrincipalAppointment = isNull(appointment.getIsPrincipleAppointment()) ? EMPTY :
                 appointment.getIsPrincipleAppointment().toString();
             this.startDate = isNull(appointment.getStartDate()) ? EMPTY : appointment.getStartDate().toString();
             this.endDate = isNull(appointment.getEndDate()) ? EMPTY : appointment.getEndDate().toString();
+
+            validateNonNull(appointment.getRoleType(), appointment.getContractType(), appointment.getRegionType());
+        }
+    }
+
+    public void validateNonNull(RoleType roleType, ContractType contractType, RegionType regionType) {
+        if (nonNull(roleType)) {
+            this.roleId =  roleType.getRoleId();
+            this.roleDescEn = roleType.getRoleDescEn();
+        }
+
+        if (nonNull(contractType)) {
+            this.contractTypeId = contractType.getContractTypeId();
+            this.contractTypeDescEn = contractType.getContractTypeDescEn();
+        }
+
+        if (nonNull(regionType)) {
+            this.regionId = regionType.getRegionId();
+            this.regionDescEn = regionType.getRegionDescEn();
         }
     }
 }

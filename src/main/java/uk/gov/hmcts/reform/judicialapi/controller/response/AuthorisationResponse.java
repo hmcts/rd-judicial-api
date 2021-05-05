@@ -7,6 +7,8 @@ import lombok.Setter;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang.StringUtils.EMPTY;
 
 @Getter
 @Setter
@@ -19,8 +21,11 @@ public class AuthorisationResponse {
     private String jurisdiction;
 
     public AuthorisationResponse(Authorisation authorisation) {
-        this.authorisationId = authorisation.getOfficeAuthId().toString();
-        this.jurisdiction = isNull(authorisation.getJurisdiction()) ? "" : authorisation.getJurisdiction();
+
+        if (nonNull(authorisation)) {
+            this.authorisationId = String.valueOf(authorisation.getOfficeAuthId());
+            this.jurisdiction = isNull(authorisation.getJurisdiction()) ? EMPTY : authorisation.getJurisdiction();
+        }
     }
 
 }

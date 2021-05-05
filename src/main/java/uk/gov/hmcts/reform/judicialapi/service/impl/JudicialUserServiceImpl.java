@@ -15,6 +15,8 @@ import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+
 @Service
 public class JudicialUserServiceImpl implements JudicialUserService {
 
@@ -42,7 +44,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     }
 
     public Pageable createPageableObject(Integer page, Integer size) {
-        if (size == null) {
+        if (isNull(size)) {
             size = defaultPageSize;
         }
         return PageRequest.of(page, size);
