@@ -12,6 +12,9 @@ java:
   keyVaults:
     rd:
       secrets:
-        - judicial-api-POSTGRES-PASS
-        - judicial-api-s2s-secret
-        - ApplicationInsightsInstrumentationKey
+        - name: judicial-api-POSTGRES-PASS
+          alias: spring.datasource.password
+        - name: judicial-api-s2s-secret
+          alias: S2S_SECRET
+        - name: ApplicationInsightsInstrumentationKey
+          alias: azure.application-insights.instrumentation-key

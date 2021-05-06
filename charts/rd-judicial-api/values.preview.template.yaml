@@ -14,5 +14,9 @@ java:
   keyVaults:
     rd:
       secrets:
-        - judicial-api-s2s-secret
-        - ApplicationInsightsInstrumentationKey
+        - name: ApplicationInsightsInstrumentationKey
+          alias: azure.application-insights.instrumentation-key
+        - name: LD-SDK-KEY
+          alias: LD_SDK_KEY
+        - name: judicial-api-s2s-secret
+          alias: S2S_SECRET

@@ -13,9 +13,9 @@ plugins {
     id 'pmd'
     id 'com.github.ben-manes.versions' version '0.27.0'
     id "info.solidsoft.pitest" version '1.5.1'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'org.sonarqube' version '2.8'
-    id 'org.springframework.boot' version '2.3.9.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.sonarqube' version '3.1.1'
+    id 'org.springframework.boot' version '2.4.5'
     id "org.flywaydb.flyway" version "6.5.1"
     id "io.freefair.lombok" version "4.1.6"
     id 'uk.gov.hmcts.java' version '0.12.0'
@@ -27,13 +27,13 @@ apply plugin: 'project-report'
 apply plugin: 'idea'
 
 def versions = [
-        lombok             : '1.18.6',
-        reformLogging      : '5.1.0',
-        reformS2sClient    : '3.1.2',
+        lombok             : '1.18.20',
+        reformLogging      : '5.1.7',
+        reformS2sClient    : '4.0.0',
         serenity           : '2.0.76',
         sonarPitest        : '0.5',
-        springBoot         : '2.3.9.RELEASE',
-        springHystrix      : '2.1.1.RELEASE',
+        springBoot         : '2.4.5',
+        springHystrix      : '2.2.8.RELEASE',
         springfoxSwagger   : '2.9.2'
 ]
 
@@ -183,7 +183,8 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/domain/*," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/service/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/*"
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/*," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/util/*"
     }
 }
 
@@ -217,6 +218,7 @@ dependencies {
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
 
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot

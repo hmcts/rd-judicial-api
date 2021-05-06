@@ -1,9 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,7 +13,7 @@ import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
 
 @Service
 public class JudicialUserServiceImpl implements JudicialUserService {
@@ -23,7 +21,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @Autowired
     private UserProfileRepository userProfileRepository;
 
-    private int defaultPageSize;
 
 
     @Override
@@ -43,16 +40,4 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .body(ormResponses);
     }
 
-    public Pageable createPageableObject(Integer page, Integer size) {
-        if (isNull(size)) {
-            size = defaultPageSize;
-        }
-        return PageRequest.of(page, size);
-    }
-
-
-    @Value("${defaultPageSize}")
-    public void setDefaultPageSize(int defaultPageSize) {
-        this.defaultPageSize = defaultPageSize;
-    }
 }
