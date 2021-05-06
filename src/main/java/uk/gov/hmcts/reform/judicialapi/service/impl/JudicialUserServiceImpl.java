@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +22,14 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @Autowired
     private UserProfileRepository userProfileRepository;
 
+    @Value("${defaultPageSize}")
+    Integer defaultPageSize;
 
 
     @Override
     public ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page) {
 
-        Pageable pageable = createPageableObject(page, size);
+        Pageable pageable = createPageableObject(page, size, defaultPageSize);
         Page<UserProfile> pagedUserProfiles = userProfileRepository.findAll(pageable);
 
         List<UserProfile> userProfiles = pagedUserProfiles.getContent();
