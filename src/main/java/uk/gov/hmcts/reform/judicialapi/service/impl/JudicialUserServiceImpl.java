@@ -32,7 +32,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     public ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page) {
         long startTimeForQuery = System.currentTimeMillis();
         Pageable pageable = createPageableObject(page, size, defaultPageSize,
-                Sort.by(Sort.DEFAULT_DIRECTION, "elinksId"));
+                Sort.by(Sort.DEFAULT_DIRECTION, "officeAppointmentId"));
         Page<UserProfile> pagedUserProfiles = userProfileRepository.findAll(pageable);
 
         log.info("The query took {} milliseconds for {} records: ",
