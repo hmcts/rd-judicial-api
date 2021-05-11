@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import static java.util.Objects.isNull;
 
@@ -15,11 +14,11 @@ public class RefDataUtil {
     private RefDataUtil() {
     }
 
-    public static Pageable createPageableObject(Integer page, Integer size, Integer defaultPageSize, Sort sort) {
+    public static Pageable createPageableObject(Integer page, Integer size, Integer defaultPageSize) {
         if (isNull(size)) {
             size = defaultPageSize;
         }
-        return PageRequest.of(page, size, sort);
+        return PageRequest.of(page, size);
     }
 
 }
