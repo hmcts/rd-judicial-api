@@ -78,6 +78,12 @@ public class UserProfile {
     @Column(name = "last_loaded_date")
     private LocalDateTime lastLoadedDate;
 
+    @Column(name = "object_id")
+    private String objectId;
+
+    @Column(name = "sidam_id")
+    private String sidamId;
+
     @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile")
     private List<Appointment> appointments;
 

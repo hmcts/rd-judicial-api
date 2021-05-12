@@ -2,12 +2,13 @@ package uk.gov.hmcts.reform.judicialapi.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 
+
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -28,9 +29,10 @@ public class JrdUsersController {
             produces = APPLICATION_JSON_VALUE
     )
     public ResponseEntity<Object> fetchUsers(@RequestParam(value = "page_size", required = false) Integer size,
-                                             @RequestParam(value = "page_number", required = false) Integer page) {
+                                             @RequestParam(value = "page_number", required = false) Integer page,
+                                             @RequestBody UserRequest userRequest) {
 
-        return judicialUserService.fetchJudicialUsers(size, page);
+        return judicialUserService.fetchJudicialUsers(size, page, userRequest.getUserIds());
     }
 
 

@@ -28,10 +28,10 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     Integer defaultPageSize;
 
     @Override
-    public ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page) {
+    public ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page, List<String> sidamIds) {
         long startTimeForQuery = System.currentTimeMillis();
         Pageable pageable = createPageableObject(page, size, defaultPageSize);
-        Page<UserProfile> pagedUserProfiles = userProfileRepository.findAll(pageable);
+        Page<UserProfile> pagedUserProfiles = userProfileRepository.findBySidamIdIn(sidamIds, pageable);
 
         log.info("The query took {} milliseconds for {} records: ",
                 System.currentTimeMillis() - startTimeForQuery, size);
