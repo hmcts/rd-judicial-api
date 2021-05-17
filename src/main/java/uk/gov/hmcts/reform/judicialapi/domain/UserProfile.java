@@ -89,4 +89,5 @@ public class UserProfile {
 
     @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile")
     private List<Authorisation> authorisations;
+    
 }
