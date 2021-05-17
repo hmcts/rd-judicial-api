@@ -9,7 +9,6 @@ import lombok.Setter;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
@@ -27,7 +26,7 @@ public class OrmResponse {
     private List<AuthorisationResponse> authorisations;
 
     public OrmResponse(UserProfile userProfile) {
-        this.idamId = UUID.randomUUID().toString();
+        this.idamId = userProfile.getSidamId();
         this.appointments = userProfile.getAppointments()
                 .stream()
                 .map(AppointmentResponse::new)
