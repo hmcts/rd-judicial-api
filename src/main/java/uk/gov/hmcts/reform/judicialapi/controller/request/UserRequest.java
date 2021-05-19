@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class UserRequest implements Serializable {
-    @JsonProperty("user_ids")
+    //Commenting out the Json Property in order to bring it inline with Staff Ref Data
+    // @JsonProperty("user_ids")
     private List<String> userIds;
 }
