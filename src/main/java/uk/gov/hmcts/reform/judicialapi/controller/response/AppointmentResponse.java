@@ -9,6 +9,8 @@ import uk.gov.hmcts.reform.judicialapi.domain.ContractType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.domain.RoleType;
 
+import java.time.LocalDateTime;
+
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -37,9 +39,9 @@ public class AppointmentResponse {
     @JsonProperty
     private String isPrincipalAppointment;
     @JsonProperty
-    private String startDate;
+    private LocalDateTime startDate;
     @JsonProperty
-    private String endDate;
+    private LocalDateTime endDate;
 
     public AppointmentResponse(Appointment appointment) {
         
@@ -49,8 +51,8 @@ public class AppointmentResponse {
                 appointment.getBaseLocationType().getBaseLocationId();
             this.isPrincipalAppointment = isNull(appointment.getIsPrincipleAppointment()) ? EMPTY :
                 appointment.getIsPrincipleAppointment().toString();
-            this.startDate = isNull(appointment.getStartDate()) ? EMPTY : appointment.getStartDate().toString();
-            this.endDate = isNull(appointment.getEndDate()) ? EMPTY : appointment.getEndDate().toString();
+            this.startDate = isNull(appointment.getStartDate()) ? null : appointment.getStartDate();
+            this.endDate = isNull(appointment.getEndDate()) ? null : appointment.getEndDate();
 
             validateNonNull(appointment.getRoleType(), appointment.getContractType(), appointment.getRegionType());
         }
