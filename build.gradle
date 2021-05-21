@@ -96,9 +96,9 @@ idea {
 }
 
 configurations {
-    integrationTestCompile.extendsFrom testCompile
+    integrationTestImplementation.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
-    functionalTestCompile.extendsFrom testCompile
+    functionalTestImplementation.extendsFrom testCompile
     functionalTestRuntime.extendsFrom testRuntime
 }
 
@@ -204,7 +204,7 @@ dependencies {
 
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
     testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    integrationTestCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    integrationTestImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
     integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
 
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
@@ -279,26 +279,32 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
 
-    testImplementation(group: 'org.yaml', name: 'snakeyaml', version: '1.25') {
-        force = true
+    testImplementation(group: 'org.yaml', name: 'snakeyaml') {
+        version{
+            strictly '1.25'
+        }
     }
 
-    integrationTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
-        force = true
+    integrationTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
+        version{
+            strictly '1.23'
+        }
     }
 
-    functionalTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
-        force = true
+    functionalTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
+        version{
+            strictly '1.25'
+        }
     }
 
-    integrationTestCompile sourceSets.main.runtimeClasspath
-    integrationTestCompile sourceSets.test.runtimeClasspath
+    integrationTestImplementation sourceSets.main.runtimeClasspath
+    integrationTestImplementation sourceSets.test.runtimeClasspath
 
-    functionalTestCompile sourceSets.main.runtimeClasspath
-    functionalTestCompile sourceSets.test.runtimeClasspath
+    functionalTestImplementation sourceSets.main.runtimeClasspath
+    functionalTestImplementation sourceSets.test.runtimeClasspath
 
-    smokeTestCompile sourceSets.main.runtimeClasspath
-    smokeTestCompile sourceSets.test.runtimeClasspath
+    smokeTestImplementation sourceSets.main.runtimeClasspath
+    smokeTestImplementation sourceSets.test.runtimeClasspath
 }
 
 dependencyCheck {
@@ -321,7 +327,7 @@ dependencyUpdates.resolutionStrategy = {
 gradle.startParameter.continueOnFailure = true
 
 bootJar {
-    archiveName = jarName
+    archiveFileName = jarName
     manifest {
         attributes('Implementation-Version': project.version.toString())
     }
