@@ -236,7 +236,8 @@ dependencies {
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
 
     compile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
-
+    //Fix for CVE-2021-29425
+    implementation 'commons-io:commons-io:2.8.0'
 
     testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
 
