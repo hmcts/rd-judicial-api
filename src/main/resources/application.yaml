@@ -33,7 +33,7 @@ spring:
             issuer-uri: ${OPEN_ID_API_BASE_URI:https://idam-web-public.aat.platform.hmcts.net/o}
         registration:
           oidc:
-            client-id: ${IDAM_CLIENT_ID:microservicekey-rd-judicial-ref-api}
+            client-id: ${IDAM_CLIENT_ID:microservicekey-rd-judicial-api}
             client-secret: ${S2S_SECRET:AAAAAAAAAAAAAAAA}
   cache:
     cache-names: token
@@ -69,13 +69,11 @@ spring:
       log-abandoned: true
       abandon-when-percentage-full: 0
 
-config:
-  import: "optional:configtree:/mnt/secrets/rd/"
-
 security:
   anonymousPaths:
     - "/"
     - "/health"
+    - "/health/readiness"
     - "/health/liveness"
     - "/actuator/**"
     - "/loggers/**"
@@ -86,13 +84,8 @@ security:
     - "/csrf"
     - "/error"
     - "/favicon.ico"
-    - "/**"
-  authorisedServices:
-    - rd-judicial-api
-
 
 ### dependency configuration
-auth.provider.service.client.baseUrl: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
 idam:
   s2s-auth:
     totp_secret: ${S2S_SECRET:AAAAAAAAAAAAAAAA}
@@ -102,15 +95,12 @@ idam:
     services: ${JRD_S2S_AUTHORISED_SERVICES:rd_judicial_api,am_org_role_mapping_service,iac}
   api.url: ${idam_url:https://idam-api.aat.platform.hmcts.net}
 
-auth.idam.client.baseUrl: ${idam_url:https://idam-api.aat.platform.hmcts.net}
-
-auth.idam.client.detailsUri: "/details"
-
+oidc.issuer: ${OIDC_ISSUER_URL:https://forgerock-am.service.core-compute-idam-aat.internal:8443/openam/oauth2/hmcts}
+loggingComponentName: RD-Caseworker-Ref-Api
 feign:
   allow:
     headers:
       - authorization
-      - serviceauthorization
 
 defaultPageSize: ${DEFAULTPAGESIZE:10}
 
@@ -120,6 +110,3 @@ launchdarkly:
     environment: ${LAUNCH_DARKLY_ENV:preview}
     user: rd
 
-loggingComponentName: RD-Judicial-Ref-Api
-
-oidc.issuer: ${OIDC_ISSUER_URL:https://forgerock-am.service.core-compute-idam-aat.internal:8443/openam/oauth2/hmcts}
