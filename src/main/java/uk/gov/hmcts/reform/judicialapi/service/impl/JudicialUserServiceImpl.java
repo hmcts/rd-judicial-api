@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
@@ -38,6 +40,11 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         long startTimeForObjectConversion = System.currentTimeMillis();
         List<UserProfile> userProfiles = pagedUserProfiles.getContent();
+
+        if (CollectionUtils.isEmpty(userProfiles)) {
+            throw new ResourceNotFoundException("Data not found");
+        }
+
         List<OrmResponse> ormResponses = userProfiles.stream()
                 .map(OrmResponse::new)
                 .collect(Collectors.toList());
