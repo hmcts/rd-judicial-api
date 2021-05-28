@@ -23,7 +23,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.reform.judicialapi.AuthorizationFunctionalTest.*;
+import static uk.gov.hmcts.reform.judicialapi.AuthorizationFunctionalTest.CREDS;
+import static uk.gov.hmcts.reform.judicialapi.AuthorizationFunctionalTest.EMAIL;
+import static uk.gov.hmcts.reform.judicialapi.AuthorizationFunctionalTest.ROLE_JRD_ADMIN;
+import static uk.gov.hmcts.reform.judicialapi.AuthorizationFunctionalTest.ROLE_JRD_SYSTEM_USER;
+import static uk.gov.hmcts.reform.judicialapi.AuthorizationFunctionalTest.generateRandomEmail;
 
 @Slf4j
 public class IdamOpenIdClient {
@@ -137,7 +141,7 @@ public class IdamOpenIdClient {
         tokenParams.put("client_id", testConfig.getClientId());
         tokenParams.put("client_secret", testConfig.getClientSecret());
         tokenParams.put("redirect_uri", testConfig.getOauthRedirectUrl());
-        tokenParams.put("scope", "openid profile roles manage-user create-user search-user");
+        tokenParams.put("scope", "openid profile roles openid roles profile create-user manage-user");
         Response openIdTokenResponse = RestAssured
                 .given()
                 .relaxedHTTPSValidation()

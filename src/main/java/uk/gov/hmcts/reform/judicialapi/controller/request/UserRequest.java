@@ -14,6 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class UserRequest implements Serializable {
-    @JsonProperty("user_ids")
+    @JsonProperty("userIds")
     private List<String> userIds;
 }

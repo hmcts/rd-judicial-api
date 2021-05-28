@@ -4,14 +4,10 @@ package uk.gov.hmcts.reform.judicialapi;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import lombok.extern.slf4j.Slf4j;
-import net.serenitybdd.rest.SerenityRest;
-import org.junit.AfterClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListeners;
@@ -52,7 +48,7 @@ public class AuthorizationFunctionalTest extends AbstractTestExecutionListener {
     protected String s2sSecret;
 
     @Value("${targetInstance}")
-    protected String caseWorkerApiUrl;
+    protected String jrdApiUrl;
 
     protected static JudicialApiClient judicialApiClient;
 
@@ -84,13 +80,12 @@ public class AuthorizationFunctionalTest extends AbstractTestExecutionListener {
         log.info("Configured S2S microservice: " + s2sName);
         log.info("Configured S2S URL: " + s2sUrl);
 
+        idamOpenIdClient = new IdamOpenIdClient(configProperties);
 
         //Single S2S & Sidam call
         s2sToken = isNull(s2sToken) ? new S2sClient(s2sUrl, s2sName, s2sSecret).signIntoS2S() : s2sToken;
 
-        judicialApiClient = new JudicialApiClient(
-                caseWorkerApiUrl,
-                s2sToken, idamOpenIdClient);
+        judicialApiClient = new JudicialApiClient(jrdApiUrl, s2sToken, idamOpenIdClient);
     }
 
     public static String generateRandomEmail() {
@@ -106,10 +101,7 @@ public class AuthorizationFunctionalTest extends AbstractTestExecutionListener {
         Response fetchResponse = judicialApiClient.getMultipleAuthHeadersInternal(ROLE_JRD_SYSTEM_USER)
                 .body(userRequest).log().body(true)
                 .post("/refdata/judicial/users/fetch?page_size=" + pageSize + "&page_number=" + pageNumber)
-                .then()
-                .log().body(true)
-                .and()
-                .extract().response();
+                .andReturn();
 
         log.info("JRD get users response: {}", fetchResponse.getStatusCode());
 

@@ -1,16 +1,12 @@
-package uk.gov.hmcts.reform.judicialapi;
+package uk.gov.hmcts.reform.judicialapi.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,7 +15,11 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.generateToken;
@@ -32,18 +32,16 @@ public class JudicialReferenceDataClient {
     private static String JWT_TOKEN = null;
     private final RestTemplate restTemplate = new RestTemplate();
     static String bearerToken;
-
-    @Value("${idam.s2s-authorised.services}")
     private String serviceName;
-
     private String baseUrl;
     private String issuer;
     private long expiration;
 
-    public JudicialReferenceDataClient(int port, String issuer, Long tokenExpirationInterval) {
+    public JudicialReferenceDataClient(int port, String issuer, Long tokenExpirationInterval, String serviceName) {
         this.baseUrl = "http://localhost:" + port + APP_BASE_PATH;
         this.issuer = issuer;
         this.expiration = tokenExpirationInterval;
+        this.serviceName = serviceName;
     }
 
     public Map<String, Object> fetchJudicialProfilesById(Integer pageSize, Integer pageNumber,
