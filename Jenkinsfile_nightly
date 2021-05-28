@@ -19,6 +19,9 @@ def component = "judicial-api"
 def secrets = [
   's2s-${env}': [
     secret('microservicekey-rd-judicial-api', 'S2S_SECRET')
+  ],
+  'rd-${env}': [
+          secret('LD-SDK-KEY', 'LD_SDK_KEY')
   ]
 ]
 

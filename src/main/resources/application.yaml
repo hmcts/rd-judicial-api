@@ -106,7 +106,7 @@ defaultPageSize: ${DEFAULTPAGESIZE:10}
 
 launchdarkly:
   sdk:
-    key: ${RD_LD_SDK_KEY:}
+    key: ${LD_SDK_KEY:}
     environment: ${LAUNCH_DARKLY_ENV:preview}
     user: rd
 
