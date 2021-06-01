@@ -38,6 +38,7 @@ public class JrdUsersController {
 
     @ApiOperation(
             value = "This API returns judicial user profiles with their appointments and authorisations",
+            notes = "**IDAM Roles to access API** :\n jrd-system-user",
             authorizations = {
                  @Authorization(value = "ServiceAuthorization"),
                  @Authorization(value = "Authorization")

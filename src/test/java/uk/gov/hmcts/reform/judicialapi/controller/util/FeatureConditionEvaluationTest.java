@@ -56,7 +56,7 @@ public class FeatureConditionEvaluationTest {
         launchDarklyMap.put("WelcomeController.test", "test-flag");
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpRequest));
         when(featureToggleService.getLaunchDarklyMap()).thenReturn(launchDarklyMap);
-        String token = generateDummyS2SToken("rd_caseworker_ref_api");
+        String token = generateDummyS2SToken("rd_judicial_api");
         when(httpRequest.getHeader(FeatureConditionEvaluation.SERVICE_AUTHORIZATION))
                 .thenReturn(FeatureConditionEvaluation.BEARER + token);
         when(featureToggleService.isFlagEnabled(anyString(),anyString())).thenReturn(true);
@@ -71,7 +71,7 @@ public class FeatureConditionEvaluationTest {
         launchDarklyMap.put("WelcomeController.test", "test-flag");
         when(featureToggleService.getLaunchDarklyMap()).thenReturn(launchDarklyMap);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpRequest));
-        String token = generateDummyS2SToken("rd_caseworker_ref_api");
+        String token = generateDummyS2SToken("rd_judicial_api");
         when(httpRequest.getHeader(FeatureConditionEvaluation.SERVICE_AUTHORIZATION))
                 .thenReturn(FeatureConditionEvaluation.BEARER + token);
         when(featureToggleService.isFlagEnabled(anyString(),anyString())).thenReturn(false);

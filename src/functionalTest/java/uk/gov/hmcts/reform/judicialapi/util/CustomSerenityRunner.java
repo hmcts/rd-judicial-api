@@ -14,6 +14,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.service.impl.FeatureToggleServiceImpl;
 
 import static java.lang.System.getenv;
+import static java.util.Objects.nonNull;
 import static org.apache.commons.lang.BooleanUtils.isNotTrue;
 
 @ContextConfiguration(classes = {TestConfigProperties.class, Oauth2.class})
@@ -42,7 +43,7 @@ public class CustomSerenityRunner extends SpringIntegrationSerenityRunner {
         }
 
         ToggleEnable toggleEnable = child.getAnnotation(ToggleEnable.class);
-        if (toggleEnable != null) {
+        if (nonNull(toggleEnable)) {
             featureToggleService.mapServiceToFlag();
             flagName = featureToggleService.getLaunchDarklyMap()
                 .get(toggleEnable.mapKey());

@@ -12,6 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Objects.isNull;
+
 public class KeyGenUtil {
 
     private static RSAKey rsaJwk;
@@ -21,7 +23,7 @@ public class KeyGenUtil {
     }
 
     public static RSAKey getRsaJwk() throws JOSEException {
-        if (rsaJwk == null) {
+        if (isNull(rsaJwk)) {
             rsaJwk = new RSAKeyGenerator(2048)
                     .keyID(KEY_ID)
                     .generate();

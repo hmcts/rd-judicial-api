@@ -14,6 +14,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 
+import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter.AUTHORISATION;
 
 
@@ -30,10 +31,10 @@ public class FeignInterceptorConfiguration {
     public RequestInterceptor requestInterceptor(FeignHeaderConfig config) {
         return requestTemplate -> {
             ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            if (attrs != null) {
+            if (nonNull(attrs)) {
                 HttpServletRequest request = attrs.getRequest();
                 Enumeration<String> headerNames = request.getHeaderNames();
-                if (headerNames != null) {
+                if (nonNull(headerNames)) {
                     while (headerNames.hasMoreElements()) {
                         String name = headerNames.nextElement();
                         String value = request.getHeader(name);

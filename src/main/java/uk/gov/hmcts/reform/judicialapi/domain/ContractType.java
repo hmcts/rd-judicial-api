@@ -19,7 +19,6 @@ public class ContractType {
 
     @Id
     @Column(name = "contract_type_Id")
-    @Size(max = 64)
     private String contractTypeId;
 
     @Column(name = "contract_type_desc_en")

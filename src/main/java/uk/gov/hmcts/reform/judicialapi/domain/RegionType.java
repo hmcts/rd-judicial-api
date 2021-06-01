@@ -19,7 +19,6 @@ public class RegionType {
 
     @Id
     @Column(name = "region_Id")
-    @Size(max = 64)
     private String regionId;
 
     @Column(name = "region_desc_en")

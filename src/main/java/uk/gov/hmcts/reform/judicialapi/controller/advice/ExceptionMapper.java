@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -42,7 +43,7 @@ public class ExceptionMapper {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Object> handlerForNoCaseWorkersFound(
+    public ResponseEntity<Object> handlerForNoJudicialUsersFound(
             ResourceNotFoundException ex) {
         return errorDetailsResponseEntity(ex, NOT_FOUND, EMPTY_RESULT_DATA_ACCESS.getErrorMessage());
     }
@@ -74,7 +75,7 @@ public class ExceptionMapper {
 
     private static Throwable getRootException(Throwable exception) {
         Throwable rootException = exception;
-        while (rootException.getCause() != null) {
+        while (nonNull(rootException.getCause())) {
             rootException = rootException.getCause();
         }
         return rootException;

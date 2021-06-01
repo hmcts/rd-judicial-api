@@ -21,7 +21,6 @@ public class UserProfile {
 
     @Id
     @Column(name = "elinks_Id")
-    @Size(max = 256)
     private String elinksId;
 
     @Column(name = "personal_code")

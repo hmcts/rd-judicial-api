@@ -7,10 +7,9 @@ import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.util.List;
-import java.util.UUID;
 
 @Repository
-public interface UserProfileRepository extends JpaRepository<UserProfile, UUID> {
+public interface UserProfileRepository extends JpaRepository<UserProfile, String> {
 
     Page<UserProfile> findBySidamIdIn(List<String> sidamIds, Pageable pageable);
 }

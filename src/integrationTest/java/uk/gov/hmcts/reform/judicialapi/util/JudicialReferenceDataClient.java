@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static java.util.Objects.nonNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.generateToken;
 
@@ -50,11 +51,11 @@ public class JudicialReferenceDataClient {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("/fetch");
 
-        if (pageSize != null) {
+        if (nonNull(pageSize)) {
             stringBuilder.append("?page_size=");
             stringBuilder.append(pageSize);
         }
-        if (pageNumber != null) {
+        if (nonNull(pageNumber)) {
             stringBuilder.append("&page_number=");
             stringBuilder.append(pageNumber);
         }

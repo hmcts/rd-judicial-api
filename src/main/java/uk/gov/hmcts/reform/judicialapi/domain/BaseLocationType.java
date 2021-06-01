@@ -19,7 +19,6 @@ public class BaseLocationType {
 
     @Id
     @Column(name = "base_location_Id")
-    @Size(max = 64)
     private String baseLocationId;
 
     @Column(name = "court_name")
