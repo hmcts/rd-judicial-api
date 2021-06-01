@@ -239,7 +239,7 @@ dependencies {
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
 
-    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.4.0'
 
     testImplementation("org.hamcrest:hamcrest-junit:2.0.0.0") {
         exclude group: "org.hamcrest", module: "hamcrest-core"
