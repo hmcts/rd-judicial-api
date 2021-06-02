@@ -1,3 +1,0 @@
-"Story","Title","Result","Date","Stability","Duration (s)"
-"Judicial users functional test","Initialisation","ERROR","2021-06-02T14:52:25.070911+01:00[Europe/London]","0.0","0.0"
-"Judicial users functional test","Should get403 when api toggled off","SUCCESS","2021-06-02T14:56:22.855578+01:00[Europe/London]","0.0","3.41"

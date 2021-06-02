@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite errors="1" failures="0" name="uk.gov.hmcts.reform.judicialapi.JudicialUsersFunctionalTest" skipped="0" tests="1" time="0.0" timestamp="2021-06-02 02:52:25"><testcase classname="uk.gov.hmcts.reform.judicialapi.JudicialUsersFunctionalTest" name="Initialisation"><error message="begin 0, end 2, length 0" type="java.lang.StringIndexOutOfBoundsException">begin 0, end 2, length 0</error><system-err>begin 0, end 2, length 0
-uk.gov.hmcts.reform.judicialapi.AuthorizationFunctionalTest.beforeTestClass(AuthorizationFunctionalTest.java:79)
-org.springframework.test.context.TestContextManager.beforeTestClass(TestContextManager.java:213)
-org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:60)
-org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
-</system-err></testcase></testsuite>
