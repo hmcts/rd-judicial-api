@@ -1,0 +1,8 @@
+"Story","Title","Result","Date","Stability","Duration (s)"
+"Fetch users integration test","Should return403 for unauthorised users","SUCCESS","2021-06-01T16:38:59.078658+01:00[Europe/London]","0.0","17.39"
+"Fetch users integration test","Should return401 for invalid tokens","SUCCESS","2021-06-01T16:39:16.510286+01:00[Europe/London]","0.0","0.32"
+"Fetch users integration test","Should return200 with valid parameters","SUCCESS","2021-06-01T16:39:16.836525+01:00[Europe/London]","0.0","0.66"
+"Fetch users integration test","Should return403 when ld feature disabled","SUCCESS","2021-06-01T16:39:17.501487+01:00[Europe/London]","0.0","0.33"
+"Fetch users integration test","Should return404 when no users found","SUCCESS","2021-06-01T16:39:17.834703+01:00[Europe/London]","0.0","0.28"
+"Fetch users integration test","Should return400 for empty user ids","SUCCESS","2021-06-01T16:39:18.114607+01:00[Europe/London]","0.0","0.26"
+"Judicial users functional test","Should get403 when api toggled off","SUCCESS","2021-06-02T14:56:22.855578+01:00[Europe/London]","0.0","3.41"
