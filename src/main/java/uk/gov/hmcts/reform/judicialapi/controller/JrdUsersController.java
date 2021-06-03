@@ -76,7 +76,7 @@ public class JrdUsersController {
         consumes = APPLICATION_JSON_VALUE,
         produces = APPLICATION_JSON_VALUE
     )
-    @Secured("jrd-system-user")
+    @Secured({"jrd-system-user", "jrd-admin"})
     public ResponseEntity<Object> fetchUsers(@RequestParam(value = "page_size", required = false) Integer size,
                                              @RequestParam(value = "page_number", required = false) Integer page,
                                              @RequestBody UserRequest userRequest) {
