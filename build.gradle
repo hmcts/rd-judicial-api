@@ -12,7 +12,7 @@ plugins {
     id 'jacoco'
     id 'pmd'
     id 'com.github.ben-manes.versions' version '0.27.0'
-    id "info.solidsoft.pitest" version '1.5.1'
+    id "info.solidsoft.pitest" version '1.5.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '3.1.1'
     id 'org.springframework.boot' version '2.4.5'
@@ -161,8 +161,10 @@ jacocoTestReport {
 
 pitest {
     targetClasses = ['uk.gov.hmcts.reform.judicialapi.*']
+    testSourceSets = [sourceSets.integrationTest, sourceSets.test]
     excludedClasses = [
             'uk.gov.hmcts.reform.judicialapi.configuration.*',
+            'uk.gov.hmcts.reform.judicialapi.controller.*',
             'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
     ]
     threads = 10
@@ -279,6 +281,8 @@ dependencies {
     testImplementation group: 'com.github.mifmif', name: 'generex', version: '1.0.2'
 
     testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
+    testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
 
     testCompile (group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity)
     testCompile (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
