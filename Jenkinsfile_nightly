@@ -19,6 +19,12 @@ def component = "judicial-api"
 def secrets = [
   's2s-${env}': [
     secret('microservicekey-rd-judicial-api', 'S2S_SECRET')
+  ],
+  'rd-${env}': [
+          secret('OAUTH2-CLIENT-SECRET', 'OAUTH2_CLIENT_SECRET'),
+          secret('OAUTH2-CLIENT-AUTH', 'OAUTH2_CLIENT_AUTH'),
+          secret('OAUTH2-CLIENT-ID', 'OAUTH2_CLIENT_ID'),
+          secret('LD-SDK-KEY', 'LD_SDK_KEY')
   ]
 ]
 
@@ -41,6 +47,7 @@ withNightlyPipeline(type, product, component) {
     env.TEST_URL = "http://rd-judicial-api-aat.service.core-compute-aat.internal"
     env.S2S_URL_FOR_TESTS = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
     env.Rules = params.SecurityRules
+    env.execution_environment = "aat"
 
     overrideVaultEnvironments(vaultOverrides)
     loadVaultSecrets(secrets)
