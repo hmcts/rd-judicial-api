@@ -29,7 +29,7 @@ public class UserProfileTest {
         assertThat(userProfile.getFullName()).isEqualTo("name");
         assertThat(userProfile.getPostNominals()).isEqualTo("postNominals");
         assertThat(userProfile.getWorkPattern()).isEqualTo("workPattern");
-        assertThat(userProfile.getEJudiciaryEmailId()).isEqualTo("emailId");
+        assertThat(userProfile.getEjudiciaryEmailId()).isEqualTo("emailId");
         assertThat(userProfile.getActiveFlag()).isEqualTo(Boolean.TRUE);
         assertThat(userProfile.getObjectId()).isEqualTo("objectId");
         assertThat(userProfile.getSidamId()).isEqualTo("sidamId");

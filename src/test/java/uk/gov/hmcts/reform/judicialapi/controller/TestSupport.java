@@ -65,7 +65,7 @@ public class TestSupport {
         userProfile.setFullName("name");
         userProfile.setPostNominals("postNominals");
         userProfile.setWorkPattern("workPattern");
-        userProfile.setEJudiciaryEmailId("emailId");
+        userProfile.setEjudiciaryEmailId("emailId");
         userProfile.setActiveFlag(Boolean.TRUE);
         userProfile.setJoiningDate(date);
         userProfile.setLastWorkingDate(date);
