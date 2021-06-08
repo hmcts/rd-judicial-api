@@ -1,20 +1,30 @@
 package uk.gov.hmcts.reform.judicialapi;
 
+import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import io.restassured.RestAssured;
 
+import io.restassured.response.Response;
+import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
+import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTags;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.http.HttpStatus;
+import org.junit.runner.RunWith;
 
+@RunWith(SpringIntegrationSerenityRunner.class)
+@WithTags({@WithTag("testType:Smoke")})
 public class SmokeTest {
 
     private final String targetInstance =
         StringUtils.defaultIfBlank(
             System.getenv("TEST_URL"),
-            "http://localhost:8090"
+            "http://localhost:8093"
         );
 
     @Test
@@ -23,15 +33,19 @@ public class SmokeTest {
         RestAssured.baseURI = targetInstance;
         RestAssured.useRelaxedHTTPSValidation();
 
-        String response = SerenityRest
-            .when()
-            .get("/health")
-            .then()
-            .statusCode(HttpStatus.OK.value())
-            .and()
-            .extract().body().asString();
+        Response response = SerenityRest
+                .given()
+                .relaxedHTTPSValidation()
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .get("/")
+                .andReturn();
+        if (nonNull(response) && response.statusCode() == 200) {
+            assertThat(response.body().asString())
+                    .contains("Welcome to the Judicial API");
 
-        assertThat(response)
-            .contains("UP");
+        } else {
+
+            Assert.fail();
+        }
     }
 }
