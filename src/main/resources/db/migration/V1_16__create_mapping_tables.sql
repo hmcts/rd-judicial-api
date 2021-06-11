@@ -5,3 +5,11 @@ create table judicial_service_code_mapping(
         service_description varchar(512),
         CONSTRAINT service_code UNIQUE (service_code)
 );
+
+create table judicial_location_mapping(
+        epimms_id varchar(16),
+        judicial_base_location_id varchar(64),
+        building_location_name varchar(256),
+        base_location_name varchar(128),
+        CONSTRAINT epimms_id UNIQUE (epimms_id)
+);
