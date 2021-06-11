@@ -13,3 +13,15 @@ create table judicial_location_mapping(
         base_location_name varchar(128),
         CONSTRAINT epimms_id UNIQUE (epimms_id)
 );
+
+insert into judicial_service_code_mapping(
+       service_code,
+       jurisdiction,
+       lower_level,
+       service_description)
+values(
+        'BFA1',
+        'Authorisation Tribunals',
+        'First Tier - Immigration and Asylum',
+        'Immigration and Asylum Appeals')
+;
