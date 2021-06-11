@@ -10,8 +10,7 @@ create table judicial_location_mapping(
         epimms_id varchar(16),
         judicial_base_location_id varchar(64),
         building_location_name varchar(256),
-        base_location_name varchar(128),
-        CONSTRAINT epimms_id UNIQUE (epimms_id)
+        base_location_name varchar(128)
 );
 
 insert into judicial_service_code_mapping(
