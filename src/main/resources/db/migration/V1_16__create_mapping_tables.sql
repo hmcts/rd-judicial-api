@@ -25,3 +25,56 @@ values(
         'First Tier - Immigration and Asylum',
         'Immigration and Asylum Appeals')
 ;
+
+insert into judicial_location_mapping(
+        epimms_id,
+        judicial_base_location_id,
+        building_location_name,
+        base_location_name)
+values(
+        '227101',
+        '1030',
+        'NEWPORT TRIBUNAL CENTRE - COLUMBUS HOUSE',
+        '227101'),
+        (
+        '231596',
+        '1030',
+        'BIRMINGHAM CIVIL AND FAMILY JUSTICE CENTRE',
+        'Immigration and Asylum First Tier'
+        ),
+        (
+        '366559',
+        '1030',
+        'ATLANTIC QUAY GLASGOW',
+        'Immigration and Asylum First Tier'
+        ),
+        (
+        '366796',
+        '1030',
+        'NEWCASTLE CIVIL & FAMILY COURTS AND TRIBUNALS CENTRE',
+        'Immigration and Asylum First Tier'
+        ),
+        (
+        '386417',
+        '1030',
+        'HATTON CROSS TRIBUNAL HEARING CENTRE',
+        'Immigration and Asylum First Tier'
+        ),
+        (
+        '512401',
+        '1030',
+        'MANCHESTER TRIBUNAL HEARING CENTRE - PICCADILLY EXCHANGE',
+        'Immigration and Asylum First Tier'
+        ),
+        (
+        '698118',
+        '1030',
+        'BRADFORD TRIBUNAL HEARING CENTRE',
+        'Immigration and Asylum First Tier'
+        ),
+        (
+        '765324',
+        '1030',
+        'TAYLOR HOUSE TRIBUNAL HEARING CENTRE',
+        'Immigration and Asylum First Tier')
+;
