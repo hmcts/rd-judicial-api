@@ -34,7 +34,7 @@ values(
         '227101',
         '1030',
         'NEWPORT TRIBUNAL CENTRE - COLUMBUS HOUSE',
-        '227101'),
+        'Immigration and Asylum First Tier'),
         (
         '231596',
         '1030',
