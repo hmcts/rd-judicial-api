@@ -55,4 +55,8 @@ withNightlyPipeline(type, product, component) {
     enableMutationTest()
     enableFullFunctionalTest()
     enableSecurityScan()
+
+    after('fullFunctionalTest') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
+    }
 }
