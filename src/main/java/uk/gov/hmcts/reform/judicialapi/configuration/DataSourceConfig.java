@@ -11,6 +11,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DataSourceConfig {
 
+    @Value("${spring.datasource.driverClassName}")
+    String driverClass;
+
     @Value("${spring.datasource.url}")
     String url;
 
@@ -26,7 +29,7 @@ public class DataSourceConfig {
     @Bean
     public DataSource dataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("org.postgresql.Driver");
+        dataSourceBuilder.driverClassName(driverClass);
         dataSourceBuilder.url(url);
         dataSourceBuilder.username(userName);
         dataSourceBuilder.password(password);
