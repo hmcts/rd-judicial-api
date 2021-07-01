@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.83")
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.3.6")
     }
 }
 
@@ -12,13 +12,14 @@ plugins {
     id 'jacoco'
     id 'pmd'
     id 'com.github.ben-manes.versions' version '0.27.0'
-    id "info.solidsoft.pitest" version '1.5.1'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'org.sonarqube' version '2.8'
-    id 'org.springframework.boot' version '2.3.9.RELEASE'
+    id "info.solidsoft.pitest" version '1.5.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.sonarqube' version '3.1.1'
+    id 'org.springframework.boot' version '2.4.6'
     id "org.flywaydb.flyway" version "6.5.1"
     id "io.freefair.lombok" version "4.1.6"
     id 'uk.gov.hmcts.java' version '0.12.0'
+    id 'au.com.dius.pact' version '4.1.7'
 }
 
 apply plugin: 'java'
@@ -27,14 +28,20 @@ apply plugin: 'project-report'
 apply plugin: 'idea'
 
 def versions = [
-        lombok             : '1.18.6',
-        reformLogging      : '5.1.0',
-        reformS2sClient    : '3.1.2',
+        lombok             : '1.18.20',
+        gradlePitest       : '1.3.0',
+        pitest             : '1.5.1',
+        reformHealthStarter: '0.0.5',
+        reformLogging      : '5.1.7',
+        reformS2sClient    : '4.0.0',
         serenity           : '2.0.76',
         sonarPitest        : '0.5',
-        springBoot         : '2.3.9.RELEASE',
+        springBoot         : '2.4.6',
         springHystrix      : '2.1.1.RELEASE',
-        springfoxSwagger   : '2.9.2'
+        springfoxSwagger   : '2.9.2',
+        restAssured        : '4.3.3',
+        jackson            : '2.12.1',
+        launchDarklySdk    : '5.2.2'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
@@ -96,9 +103,9 @@ idea {
 }
 
 configurations {
-    integrationTestCompile.extendsFrom testCompile
+    integrationTestImplementation.extendsFrom testCompile
     integrationTestRuntime.extendsFrom testRuntime
-    functionalTestCompile.extendsFrom testCompile
+    functionalTestImplementation.extendsFrom testCompile
     functionalTestRuntime.extendsFrom testRuntime
 }
 
@@ -154,8 +161,10 @@ jacocoTestReport {
 
 pitest {
     targetClasses = ['uk.gov.hmcts.reform.judicialapi.*']
+    testSourceSets = [sourceSets.integrationTest, sourceSets.test]
     excludedClasses = [
             'uk.gov.hmcts.reform.judicialapi.configuration.*',
+            'uk.gov.hmcts.reform.judicialapi.controller.*',
             'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
     ]
     threads = 10
@@ -180,21 +189,22 @@ sonarqube {
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/judicialapi/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/JudicialApplication.java,"+
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/domain/*," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/JudicialRoleTypeServiceImpl.java"
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/domain/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/request/**"
     }
 }
 
-project.tasks['sonarqube'].dependsOn test, jacocoTestReport
+project.tasks['sonarqube'].dependsOn test, integration, jacocoTestReport
 project.tasks['sonarqube'].group = "Verification"
 
 repositories {
-
-    maven {
-        url "https://dl.bintray.com/hmcts/hmcts-maven"
-    }
-
+    mavenLocal()
     jcenter()
+    mavenCentral()
+    maven {
+        url 'https://jitpack.io'
+    }
+    maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
 }
 
 dependencies {
@@ -204,101 +214,110 @@ dependencies {
 
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
     testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    integrationTestCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    integrationTestImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
     integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
 
-    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
-
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
 
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
 
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
     compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.5.6'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.2'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.2'
+    compile group: 'javax.inject', name: 'javax.inject', version: '1'
+    compile "org.springframework.boot:spring-boot-starter-oauth2-client"
+    compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    compile group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0'
+    compile group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
+    compile group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
 
-    compile group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
 
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
-    compile group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-    compile group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
-    compile group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
+    implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
+    implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
+    implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
+    implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '6.5.1'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
+    compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
+    compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
+    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
+    implementation "io.github.openfeign:feign-httpclient:11.0"
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    compile group: 'com.google.guava', name: 'guava', version: '30.0-jre'
+
+    implementation group: 'com.google.guava', name: 'guava', version: '30.0-jre'
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
 
-    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
 
-    testCompile("org.hamcrest:hamcrest-junit:2.0.0.0") {
+    testImplementation("org.hamcrest:hamcrest-junit:2.0.0.0") {
         exclude group: "org.hamcrest", module: "hamcrest-core"
         exclude group: "org.hamcrest", module: "hamcrest-library"
     }
+    
+    testImplementation group: 'com.h2database', name: 'h2'
+    testImplementation "com.github.tomakehurst:wiremock:2.21.0"
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.4.6'
+    testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+    testImplementation group: 'com.github.mifmif', name: 'generex', version: '1.0.2'
 
-    testCompile group: 'com.h2database', name: 'h2'
-    testCompile "com.github.tomakehurst:wiremock:2.19.0"
-    testCompile group: 'org.mockito', name: 'mockito-core', version: '3.2.4'
-    testCompile group: 'org.mockito', name: 'mockito-inline', version: '3.1.0'
-    testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.4'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-
-    testCompile 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
+    testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
+    testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
 
     testCompile (group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity)
-    {
-        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-        exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
     testCompile (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
-    {
-        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-        exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
     testCompile (group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity)
-    {
-        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-        exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
     testCompile (group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity)
-    {
-        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+
+
+    testImplementation(group: 'org.yaml', name: 'snakeyaml') {
+        version{
+            strictly '1.25'
+        }
     }
 
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-
-
-    testCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.25') {
-        force = true
+    integrationTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
+        version{
+            strictly '1.23'
+        }
     }
 
-    integrationTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
-        force = true
+    functionalTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
+        version{
+            strictly '1.25'
+        }
     }
 
-    functionalTestCompile(group: 'org.yaml', name: 'snakeyaml', version: '1.23') {
-        force = true
-    }
+    integrationTestImplementation sourceSets.main.runtimeClasspath
+    integrationTestImplementation sourceSets.test.runtimeClasspath
 
-    integrationTestCompile sourceSets.main.runtimeClasspath
-    integrationTestCompile sourceSets.test.runtimeClasspath
+    functionalTestImplementation sourceSets.main.runtimeClasspath
+    functionalTestImplementation sourceSets.test.runtimeClasspath
 
-    functionalTestCompile sourceSets.main.runtimeClasspath
-    functionalTestCompile sourceSets.test.runtimeClasspath
-
-    smokeTestCompile sourceSets.main.runtimeClasspath
-    smokeTestCompile sourceSets.test.runtimeClasspath
+    smokeTestImplementation sourceSets.main.runtimeClasspath
+    smokeTestImplementation sourceSets.test.runtimeClasspath
 }
 
 dependencyCheck {
@@ -321,7 +340,7 @@ dependencyUpdates.resolutionStrategy = {
 gradle.startParameter.continueOnFailure = true
 
 bootJar {
-    archiveName = jarName
+    archiveFileName = jarName
     manifest {
         attributes('Implementation-Version': project.version.toString())
     }
