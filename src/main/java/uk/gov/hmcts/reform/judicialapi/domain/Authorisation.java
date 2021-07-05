@@ -47,7 +47,10 @@ public class Authorisation implements Serializable {
     private String lowerLevel;
 
     @ManyToOne
-    @JoinColumn(name = "elinks_Id", nullable = false)
+    @JoinColumn(name = "per_Id", nullable = false)
     private UserProfile userProfile;
 
+    @Column(name = "personal_code")
+    @Size(max = 32)
+    private String personalCode;
 }

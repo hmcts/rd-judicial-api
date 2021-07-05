@@ -1,0 +1,1 @@
+ALTER TABLE judicial_user_profile ALTER COLUMN work_pattern DROP NOT NULL;

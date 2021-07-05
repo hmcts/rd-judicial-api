@@ -23,12 +23,6 @@ public class AppointmentResponseTest {
                 .isEqualTo(appointment.getIsPrincipleAppointment().toString());
         assertThat(appointmentResponse.getStartDate()).isEqualTo(appointment.getStartDate().toString());
         assertThat(appointmentResponse.getEndDate()).isEqualTo(appointment.getEndDate().toString());
-        assertThat(appointmentResponse.getRoleId()).isEqualTo(appointment.getRoleType().getRoleId());
-        assertThat(appointmentResponse.getRoleDescEn()).isEqualTo(appointment.getRoleType().getRoleDescEn());
-        assertThat(appointmentResponse.getContractTypeId())
-                .isEqualTo(appointment.getContractType().getContractTypeId());
-        assertThat(appointmentResponse.getContractTypeDescEn())
-                .isEqualTo(appointment.getContractType().getContractTypeDescEn());
         assertThat(appointmentResponse.getRegionId()).isEqualTo(appointment.getRegionType().getRegionId());
         assertThat(appointmentResponse.getRegionDescEn()).isEqualTo(appointment.getRegionType().getRegionDescEn());
     }
@@ -61,8 +55,4 @@ public class AppointmentResponseTest {
         assertThat(appointmentResponse.getRegionId()).isEqualTo("regionId");
         assertThat(appointmentResponse.getRegionDescEn()).isEqualTo("regionDescEn");
     }
-
-
-
-
 }
