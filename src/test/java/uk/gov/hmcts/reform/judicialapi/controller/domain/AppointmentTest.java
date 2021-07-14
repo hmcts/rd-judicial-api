@@ -25,8 +25,6 @@ public class AppointmentTest {
         assertNotNull(appointment.getLastLoadedDate());
         assertNotNull(appointment.getUserProfile());
         assertNotNull(appointment.getRegionType());
-        assertNotNull(appointment.getRoleType());
         assertNotNull(appointment.getBaseLocationType());
-        assertNotNull(appointment.getContractType());
     }
 }
