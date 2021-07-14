@@ -25,10 +25,6 @@ public class BaseLocationType {
     @Size(max = 128)
     private String courtName;
 
-    @Column(name = "bench")
-    @Size(max = 128)
-    private String bench;
-
     @Column(name = "court_type")
     @Size(max = 128)
     private String courtType;
@@ -41,11 +37,6 @@ public class BaseLocationType {
     @Size(max = 128)
     private String areaOfExpertise;
 
-    @Column(name = "national_court_code")
-    @Size(max = 128)
-    private String nationalCourtCode;
-
     @OneToMany(targetEntity = Appointment.class, mappedBy = "baseLocationType")
     private List<Appointment> appointments;
-
 }

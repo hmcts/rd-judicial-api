@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Size;
 
 @Entity(name = "judicial_office_appointment")
 @Getter
@@ -45,16 +46,8 @@ public class Appointment implements Serializable {
     private LocalDateTime lastLoadedDate;
 
     @ManyToOne
-    @JoinColumn(name = "elinks_Id", nullable = false)
+    @JoinColumn(name = "per_Id", nullable = false)
     private UserProfile userProfile;
-
-    @ManyToOne
-    @JoinColumn(name = "role_Id")
-    private RoleType roleType;
-
-    @ManyToOne
-    @JoinColumn(name = "contract_type_Id")
-    private ContractType contractType;
 
     @ManyToOne
     @JoinColumn(name = "base_location_Id")
@@ -64,4 +57,7 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "region_Id")
     private RegionType regionType;
 
+    @Column(name = "personal_code")
+    @Size(max = 32)
+    private String personalCode;
 }

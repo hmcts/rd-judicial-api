@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
-import uk.gov.hmcts.reform.judicialapi.domain.ContractType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
-import uk.gov.hmcts.reform.judicialapi.domain.RoleType;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -52,20 +50,11 @@ public class AppointmentResponse {
             this.startDate = isNull(appointment.getStartDate()) ? EMPTY : appointment.getStartDate().toString();
             this.endDate = isNull(appointment.getEndDate()) ? EMPTY : appointment.getEndDate().toString();
 
-            validateNonNull(appointment.getRoleType(), appointment.getContractType(), appointment.getRegionType());
+            validateNonNull(appointment.getRegionType());
         }
     }
 
-    public void validateNonNull(RoleType roleType, ContractType contractType, RegionType regionType) {
-        if (nonNull(roleType)) {
-            this.roleId =  roleType.getRoleId();
-            this.roleDescEn = roleType.getRoleDescEn();
-        }
-
-        if (nonNull(contractType)) {
-            this.contractTypeId = contractType.getContractTypeId();
-            this.contractTypeDescEn = contractType.getContractTypeDescEn();
-        }
+    public void validateNonNull(RegionType regionType) {
 
         if (nonNull(regionType)) {
             this.regionId = regionType.getRegionId();
