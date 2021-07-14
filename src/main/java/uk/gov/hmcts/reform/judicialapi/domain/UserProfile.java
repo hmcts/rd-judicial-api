@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity(name = "judicial_user_profile")
 @Getter
@@ -20,16 +20,16 @@ import java.util.List;
 public class UserProfile {
 
     @Id
-    @Column(name = "elinks_Id")
-    private String elinksId;
+    @Column(name = "per_Id")
+    private String perId;
 
     @Column(name = "personal_code")
     @Size(max = 32)
     private String personalCode;
 
-    @Column(name = "title")
+    @Column(name = "appointment")
     @Size(max = 64)
-    private String title;
+    private String appointment;
 
     @Column(name = "known_as")
     @Size(max = 64)
@@ -47,17 +47,17 @@ public class UserProfile {
     @Size(max = 32)
     private String postNominals;
 
-    @Column(name = "contract_type")
+    @Column(name = "appointment_type")
     @Size(max = 32)
-    private String contractType;
+    private String appointmentType;
 
     @Column(name = "work_pattern")
     @Size(max = 32)
     private String workPattern;
 
-    @Column(name = "email_Id")
+    @Column(name = "ejudiciary_email")
     @Size(max = 256)
-    private String emailId;
+    private String ejudiciaryEmailId;
 
     @Column(name = "joining_date")
     private LocalDate joiningDate;
@@ -88,5 +88,5 @@ public class UserProfile {
 
     @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile")
     private List<Authorisation> authorisations;
-    
+
 }
