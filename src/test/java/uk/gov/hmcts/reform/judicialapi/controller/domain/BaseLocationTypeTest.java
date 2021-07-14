@@ -18,9 +18,7 @@ public class BaseLocationTypeTest {
         assertThat(baseLocationType.getBaseLocationId()).isEqualTo("0");
         assertThat(baseLocationType.getCourtType()).isEqualTo("Court Type");
         assertThat(baseLocationType.getCourtName()).isEqualTo("Court Name");
-        assertThat(baseLocationType.getBench()).isEqualTo("Bench");
         assertThat(baseLocationType.getCircuit()).isEqualTo("Circuit");
         assertThat(baseLocationType.getAreaOfExpertise()).isEqualTo("Area of Expertise");
-        assertThat(baseLocationType.getNationalCourtCode()).isEqualTo("National Court");
     }
 }

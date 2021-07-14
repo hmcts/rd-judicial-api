@@ -3,9 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.controller;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
-import uk.gov.hmcts.reform.judicialapi.domain.ContractType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
-import uk.gov.hmcts.reform.judicialapi.domain.RoleType;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.time.LocalDate;
@@ -22,15 +20,11 @@ public class TestSupport {
     }
 
     public static Appointment createAppointment() {
-        RoleType roleType = createRoleType();
-        ContractType contractType = createContractType();
         BaseLocationType baseLocationType = createBaseLocationType();
         RegionType regionType = createRegionType();
 
         Appointment appointment = new Appointment();
         appointment.setOfficeAppointmentId(1234567L);
-        appointment.setRoleType(roleType);
-        appointment.setContractType(contractType);
         appointment.setBaseLocationType(baseLocationType);
         appointment.setRegionType(regionType);
         appointment.setIsPrincipleAppointment(Boolean.TRUE);
@@ -63,15 +57,15 @@ public class TestSupport {
 
     public static UserProfile createUserProfile() {
         UserProfile userProfile = new UserProfile();
-        userProfile.setElinksId("1");
+        userProfile.setPerId("1");
         userProfile.setPersonalCode("personalCode");
-        userProfile.setTitle("title");
+        userProfile.setAppointment("title");
         userProfile.setKnownAs("knownAs");
         userProfile.setSurname("surname");
         userProfile.setFullName("name");
         userProfile.setPostNominals("postNominals");
         userProfile.setWorkPattern("workPattern");
-        userProfile.setEmailId("emailId");
+        userProfile.setEjudiciaryEmailId("emailId");
         userProfile.setActiveFlag(Boolean.TRUE);
         userProfile.setJoiningDate(date);
         userProfile.setLastWorkingDate(date);
@@ -92,33 +86,11 @@ public class TestSupport {
         baseLocationType.setCourtName("Court Name");
         baseLocationType.setCourtType("Court Type");
         baseLocationType.setAppointments(Collections.singletonList(new Appointment()));
-        baseLocationType.setBench("Bench");
         baseLocationType.setCircuit("Circuit");
         baseLocationType.setAreaOfExpertise("Area of Expertise");
-        baseLocationType.setNationalCourtCode("National Court");
-
         return baseLocationType;
     }
 
-    public static RoleType createRoleType() {
-        RoleType roleType = new RoleType();
-        roleType.setRoleId("0");
-        roleType.setRoleDescEn("default");
-        roleType.setRoleDescCy("default");
-        roleType.setAppointments(Collections.singletonList(new Appointment()));
-
-        return roleType;
-    }
-
-    public static ContractType createContractType() {
-        ContractType contractType = new ContractType();
-        contractType.setContractTypeId("0");
-        contractType.setContractTypeDescEn("default");
-        contractType.setContractTypeDescCy("default");
-        contractType.setAppointments(Collections.singletonList(new Appointment()));
-
-        return contractType;
-    }
 
     public static RegionType createRegionType() {
         RegionType regionType = new RegionType();
