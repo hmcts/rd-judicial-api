@@ -21,15 +21,15 @@ public class UserProfileTest {
         assertNotNull(userProfile.getLastLoadedDate());
         assertNotNull(userProfile.getExtractedDate());
         assertNotNull(userProfile.getCreatedDate());
-        assertThat(userProfile.getElinksId()).isEqualTo("1");
+        assertThat(userProfile.getPerId()).isEqualTo("1");
         assertThat(userProfile.getPersonalCode()).isEqualTo("personalCode");
-        assertThat(userProfile.getTitle()).isEqualTo("title");
+        assertThat(userProfile.getAppointment()).isEqualTo("title");
         assertThat(userProfile.getKnownAs()).isEqualTo("knownAs");
         assertThat(userProfile.getSurname()).isEqualTo("surname");
         assertThat(userProfile.getFullName()).isEqualTo("name");
         assertThat(userProfile.getPostNominals()).isEqualTo("postNominals");
         assertThat(userProfile.getWorkPattern()).isEqualTo("workPattern");
-        assertThat(userProfile.getEmailId()).isEqualTo("emailId");
+        assertThat(userProfile.getEjudiciaryEmailId()).isEqualTo("emailId");
         assertThat(userProfile.getActiveFlag()).isEqualTo(Boolean.TRUE);
         assertThat(userProfile.getObjectId()).isEqualTo("objectId");
         assertThat(userProfile.getSidamId()).isEqualTo("sidamId");
