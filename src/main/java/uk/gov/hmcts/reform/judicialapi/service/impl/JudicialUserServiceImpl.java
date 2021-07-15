@@ -31,14 +31,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @Override
     public ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page, List<String> sidamIds) {
-        long startTimeForQuery = System.currentTimeMillis();
         Pageable pageable = createPageableObject(page, size, defaultPageSize);
         Page<UserProfile> pagedUserProfiles = userProfileRepository.findBySidamIdIn(sidamIds, pageable);
 
-        log.info("The query took {} milliseconds for {} records: ",
-                System.currentTimeMillis() - startTimeForQuery, size);
-
-        long startTimeForObjectConversion = System.currentTimeMillis();
         List<UserProfile> userProfiles = pagedUserProfiles.getContent();
 
         if (CollectionUtils.isEmpty(userProfiles)) {
@@ -48,8 +43,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         List<OrmResponse> ormResponses = userProfiles.stream()
                 .map(OrmResponse::new)
                 .collect(Collectors.toList());
-        log.info("The object conversion took {} milliseconds: ",
-                System.currentTimeMillis() - startTimeForObjectConversion);
 
         return ResponseEntity
                 .status(200)
