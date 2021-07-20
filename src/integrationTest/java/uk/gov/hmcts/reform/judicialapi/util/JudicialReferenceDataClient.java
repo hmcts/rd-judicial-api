@@ -1,11 +1,13 @@
 package uk.gov.hmcts.reform.judicialapi.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,6 +39,8 @@ public class JudicialReferenceDataClient {
     private String baseUrl;
     private String issuer;
     private long expiration;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public JudicialReferenceDataClient(int port, String issuer, Long tokenExpirationInterval, String serviceName) {
         this.baseUrl = "http://localhost:" + port + APP_BASE_PATH;
@@ -141,5 +145,86 @@ public class JudicialReferenceDataClient {
 
     public static void setBearerToken(String bearerToken) {
         JudicialReferenceDataClient.bearerToken = bearerToken;
+    }
+
+    public Map<String, Object> fetchUserProfileByServiceName(String ccdServiceNames, Integer pageSize,
+                                                                 Integer pageNumber, String sortDirection,
+                                                                 String sortColumn, String role) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("/");
+
+        if (StringUtils.isNotBlank(ccdServiceNames)) {
+            stringBuilder.append("?serviceName=");
+            stringBuilder.append(ccdServiceNames);
+        }
+        if (pageSize != null) {
+            stringBuilder.append("&page_size=");
+            stringBuilder.append(pageSize);
+        }
+        if (pageNumber != null) {
+            stringBuilder.append("&page_number=");
+            stringBuilder.append(pageNumber);
+        }
+        if (StringUtils.isNotBlank(sortDirection)) {
+            stringBuilder.append("&sort_direction=");
+            stringBuilder.append(sortDirection);
+        }
+        if (StringUtils.isNotBlank(sortColumn)) {
+            stringBuilder.append("&sort_column=");
+            stringBuilder.append(sortColumn);
+        }
+
+        ResponseEntity<Map> responseEntity;
+        HttpEntity<String> request =
+                new HttpEntity<>(getMultipleAuthHeadersWithoutContentType(role, null));
+
+
+        try {
+
+            responseEntity = restTemplate.exchange(
+                    baseUrl + "/users" + stringBuilder.toString(),
+                    HttpMethod.GET, request,
+                    Map.class
+            );
+
+        } catch (RestClientResponseException ex) {
+            HashMap<String, Object> statusAndBody = new HashMap<>(2);
+            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("response_body", ex.getResponseBodyAsString());
+            return statusAndBody;
+        }
+
+        return getMapResponse(responseEntity);
+    }
+
+    private Map getMapResponse(ResponseEntity<Map> responseEntity) {
+
+        Map response = objectMapper
+                .convertValue(
+                        responseEntity.getBody(),
+                        Map.class);
+
+        response.put("http_status", responseEntity.getStatusCode().toString());
+        response.put("headers", responseEntity.getHeaders().toString());
+        response.put("body", responseEntity.getBody());
+        return response;
+    }
+
+    @NotNull
+    private HttpHeaders getMultipleAuthHeadersWithoutContentType(String role, String userId) {
+        HttpHeaders headers = new HttpHeaders();
+        if (StringUtils.isBlank(JWT_TOKEN)) {
+
+            JWT_TOKEN = generateS2SToken(serviceName);
+        }
+
+        headers.add("ServiceAuthorization", JWT_TOKEN);
+
+        if (StringUtils.isBlank(bearerToken)) {
+            bearerToken = "Bearer ".concat(getBearerToken(Objects.isNull(userId) ? UUID.randomUUID().toString()
+                    : userId, role));
+        }
+        headers.add("Authorization", bearerToken);
+        return headers;
     }
 }
