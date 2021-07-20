@@ -113,7 +113,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
                 userProfilePage.forEach(userProfile -> userProfile.getAuthorisations()
                         .stream()
-                        .filter(cw -> serviceNameToCodeMapping.containsKey(cw.getServiceCode()))
+                        .filter(auth -> serviceNameToCodeMapping.containsKey(auth.getServiceCode()))
                         .forEach(authorisations::add));
 
                 authorisations.forEach(authorisation -> userProfileList.add(
