@@ -6,3 +6,7 @@ insert into judicial_office_appointment(judicial_office_appointment_id, per_id, 
 
 insert into judicial_office_authorisation(judicial_office_auth_id, per_id, jurisdiction,	ticket_id, start_date, end_date, created_date, last_updated, lower_level) values (1, 1, 'Languages', 29611, current_timestamp, current_timestamp, current_timestamp, current_timestamp, 'Welsh');
 insert into judicial_office_authorisation(judicial_office_auth_id, per_id, jurisdiction,	ticket_id, start_date, end_date, created_date, last_updated, lower_level) values (2, 2, 'Languages', 29611, current_timestamp, current_timestamp, current_timestamp, current_timestamp, 'Welsh');
+
+
+insert into judicial_office_authorisation(judicial_office_auth_id, per_id, jurisdiction,	ticket_id, start_date, end_date, created_date, last_updated, lower_level, service_code) values (3, 2, 'Authorisation Tribunals', 29611, current_timestamp, current_timestamp, current_timestamp, current_timestamp, 'First Tier - Immigration and Asylum', 'BFA1');
+

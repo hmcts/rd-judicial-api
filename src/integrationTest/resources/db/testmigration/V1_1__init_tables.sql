@@ -50,6 +50,7 @@ CREATE TABLE judicial_office_authorisation(
 	created_date timestamp,
     last_updated timestamp,
     lower_level varchar(256),
+    service_code varchar(16),
 	CONSTRAINT jud_auth_pk PRIMARY KEY (judicial_office_auth_id)
 );
 
