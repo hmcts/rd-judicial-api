@@ -104,6 +104,7 @@ feign:
   allow:
     headers:
       - authorization
+locationRefDataUrl: ${LOCATION_REF_DATA_URL:http://rd-location-ref-api-aat.service.core-compute-aat.internal}
 
 defaultPageSize: ${DEFAULTPAGESIZE:10}
 
@@ -113,3 +114,6 @@ launchdarkly:
     environment: ${LAUNCH_DARKLY_ENV:preview}
     user: rd
 
+refresh:
+  pageSize: ${REFRESH_PAGE_SIZE:20}
+  sortColumn: ${REFRESH_SORT_COLUMN:perId}

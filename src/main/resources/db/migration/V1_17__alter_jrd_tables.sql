@@ -27,3 +27,5 @@ DROP table contract_type;
 ALTER TABLE base_location_type DROP COLUMN bench;
 ALTER TABLE base_location_type DROP COLUMN national_court_code;
 
+ALTER TABLE judicial_office_authorisation ADD COLUMN service_code varchar(16);
+

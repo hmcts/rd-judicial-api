@@ -3,6 +3,8 @@ package uk.gov.hmcts.reform.judicialapi.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,10 +15,12 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
+@Builder
 @Entity(name = "judicial_user_profile")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserProfile {
 
     @Id
