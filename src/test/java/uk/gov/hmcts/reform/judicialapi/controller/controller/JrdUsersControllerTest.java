@@ -6,11 +6,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.controller.JrdUsersController;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
+import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -56,5 +59,24 @@ public class JrdUsersControllerTest {
     @Test(expected = InvalidRequestException.class)
     public void shouldThrowInvalidRequestExceptionForEmptyServiceName() {
         jrdUsersController.fetchUsers(10, 0, new UserRequest());
+    }
+
+    @Test
+    public void shouldFetchUserProfileByServiceNames() {
+        responseEntity = ResponseEntity.ok().body(null);
+        when(judicialUserServiceMock.fetchUserProfileByServiceNames(any(), any()))
+                .thenReturn(responseEntity);
+
+        PageRequest pageRequest = RequestUtils.validateAndBuildPaginationObject(0, 1,
+                "perId", "ASC",
+                20, "id", UserProfile.class);
+
+        ResponseEntity<?> actual = jrdUsersController
+                .fetchUserProfileByServiceNames("cmc", 1, 0,
+                        "ASC", "perId");
+
+        assertNotNull(actual);
+        verify(judicialUserServiceMock, times(1))
+                .fetchUserProfileByServiceNames("cmc", pageRequest);
     }
 }
