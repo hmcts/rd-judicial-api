@@ -147,15 +147,15 @@ public class JudicialReferenceDataClient {
         JudicialReferenceDataClient.bearerToken = bearerToken;
     }
 
-    public Map<String, Object> fetchUserProfileByServiceName(String ccdServiceNames, Integer pageSize,
+    public Map<String, Object> fetchUserProfileByServiceName(String serviceName, Integer pageSize,
                                                                  Integer pageNumber, String sortDirection,
                                                                  String sortColumn, String role) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("/");
 
-        if (StringUtils.isNotBlank(ccdServiceNames)) {
+        if (StringUtils.isNotBlank(serviceName)) {
             stringBuilder.append("?serviceName=");
-            stringBuilder.append(ccdServiceNames);
+            stringBuilder.append(serviceName);
         }
         if (pageSize != null) {
             stringBuilder.append("&page_size=");

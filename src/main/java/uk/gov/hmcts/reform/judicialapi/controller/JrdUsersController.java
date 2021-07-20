@@ -152,7 +152,7 @@ public class JrdUsersController {
             path = "/",
             produces = APPLICATION_JSON_VALUE
     )
-    @Secured("cwd-system-user")
+    @Secured({"jrd-system-user", "jrd-admin"})
     public ResponseEntity<Object> fetchUserProfileByServiceNames(
             @RequestParam(name = "serviceName") @NotEmpty String serviceName,
             @RequestParam(name = "page_size", required = false) Integer pageSize,

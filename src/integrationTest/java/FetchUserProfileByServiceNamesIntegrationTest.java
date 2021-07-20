@@ -36,8 +36,7 @@ public class FetchUserProfileByServiceNamesIntegrationTest extends Authorization
                         "", "", "cwd-system-user");
         assertThat(response).containsEntry("http_status", "400");
         assertTrue(response.get("response_body").toString()
-                .contains("Required request parameter 'ccd_service_names'"
-                        + " for method parameter type String is not present"));
+                .contains(RefDataConstants.REQUIRED_PARAMETER_SERVICE_NAMES_IS_EMPTY));
     }
 
     @Test
