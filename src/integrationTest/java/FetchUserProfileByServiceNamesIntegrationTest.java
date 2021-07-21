@@ -33,17 +33,17 @@ public class FetchUserProfileByServiceNamesIntegrationTest extends Authorization
     public void shouldReturn400ForEmptyServiceName() {
         Map<String, Object> response = judicialReferenceDataClient
                 .fetchUserProfileByServiceName("", null, null,
-                        "", "", "cwd-system-user");
+                        "", "", "jrd-system-user");
         assertThat(response).containsEntry("http_status", "400");
         assertTrue(response.get("response_body").toString()
-                .contains(RefDataConstants.REQUIRED_PARAMETER_SERVICE_NAMES_IS_EMPTY));
+                .contains("Required request parameter 'serviceName' for method parameter type String is not present"));
     }
 
     @Test
     public void shouldReturn400ForInvalidPageSize() {
         Map<String, Object> response = judicialReferenceDataClient
                 .fetchUserProfileByServiceName("cmc", -1, null,
-                        "", "", "cwd-system-user");
+                        "", "", "jrd-system-user");
         assertThat(response).containsEntry("http_status", "400");
         assertTrue(response.get("response_body").toString()
                 .contains(String.format(RefDataConstants.INVALID_FIELD, RefDataConstants.PAGE_SIZE)));
@@ -53,7 +53,7 @@ public class FetchUserProfileByServiceNamesIntegrationTest extends Authorization
     public void shouldReturn400ForInvalidPageNumber() {
         Map<String, Object> response = judicialReferenceDataClient
                 .fetchUserProfileByServiceName("cmc", 1, -1,
-                        "", "", "cwd-system-user");
+                        "", "", "jrd-system-user");
         assertThat(response).containsEntry("http_status", "400");
         assertTrue(response.get("response_body").toString()
                 .contains(String.format(RefDataConstants.INVALID_FIELD, RefDataConstants.PAGE_NUMBER)));
@@ -63,7 +63,7 @@ public class FetchUserProfileByServiceNamesIntegrationTest extends Authorization
     public void shouldReturn400ForInvalidSortDirection() {
         Map<String, Object> response = judicialReferenceDataClient
                 .fetchUserProfileByServiceName("cmc", 1, 1,
-                        "Invalid", "", "cwd-system-user");
+                        "Invalid", "", "jrd-system-user");
         assertThat(response).containsEntry("http_status", "400");
         assertTrue(response.get("response_body").toString()
                 .contains(String.format(RefDataConstants.INVALID_FIELD, RefDataConstants.SORT_DIRECTION)));
