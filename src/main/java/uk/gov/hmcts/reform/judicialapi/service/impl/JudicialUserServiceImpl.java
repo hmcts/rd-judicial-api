@@ -80,9 +80,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public ResponseEntity<Object> fetchUserProfileByServiceNames(String serviceNames, PageRequest pageRequest) {
+    public ResponseEntity<Object> fetchUserProfileByServiceNames(String ccdServiceNames, PageRequest pageRequest) {
         Response lrdOrgInfoServiceResponse =
-                locationReferenceDataFeignClient.getLocationRefServiceMapping(serviceNames);
+                locationReferenceDataFeignClient.getLocationRefServiceMapping(ccdServiceNames);
         HttpStatus httpStatus = HttpStatus.valueOf(lrdOrgInfoServiceResponse.status());
         if (httpStatus.is2xxSuccessful()) {
             ResponseEntity<Object> responseEntity = JsonFeignResponseUtil.toResponseEntityWithListBody(
@@ -103,8 +103,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                         serviceNameToCodeMapping.keySet(), pageRequest);
 
                 if (userProfilePage.isEmpty()) {
-                    log.error("{}:: No data found in JRD for the service name {}",
-                            loggingComponentName, serviceNames);
+                    log.error("{}:: No data found in JRD for the ccdServiceNames {}",
+                            loggingComponentName, ccdServiceNames);
                     throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
                 }
 
@@ -122,7 +122,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                 .userProfile(buildUserProfileDto(authorisation.getUserProfile()))
                                 .build()));
                 log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
-                        + "for service names {}", loggingComponentName, serviceNames);
+                        + "for ccdServiceNames {}", loggingComponentName, ccdServiceNames);
                 return ResponseEntity
                         .ok()
                         .header("total_records", String.valueOf(userProfilePage.getTotalElements()))
@@ -131,8 +131,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             }
         }
 
-        log.error("{}:: Error in getting the data from LRD for the service name {} :: Status code {}",
-                loggingComponentName, serviceNames, httpStatus);
+        log.error("{}:: Error in getting the data from LRD for the ccdServiceNames {} :: Status code {}",
+                loggingComponentName, ccdServiceNames, httpStatus);
         ResponseEntity<Object> responseEntity = JsonFeignResponseUtil.toResponseEntity(lrdOrgInfoServiceResponse,
                 ErrorResponse.class);
         Object responseBody = responseEntity.getBody();

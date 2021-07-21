@@ -115,7 +115,7 @@ public class JrdUsersController {
 
     @ApiOperation(
             value = "This API returns the User profiles based on Service Name and Pagination parameters",
-            notes = "**IDAM Role to access API** :\n cwd-system-user",
+            notes = "**IDAM Role to access API** :\n jrd-system-user,\n jrd-admin",
             authorizations = {
                     @Authorization(value = "ServiceAuthorization"),
                     @Authorization(value = "Authorization")
@@ -154,15 +154,15 @@ public class JrdUsersController {
     )
     @Secured({"jrd-system-user", "jrd-admin"})
     public ResponseEntity<Object> fetchUserProfileByServiceNames(
-            @RequestParam(name = "serviceName") @NotEmpty String serviceName,
+            @RequestParam(name = "ccd_service_names") @NotEmpty String ccdServiceNames,
             @RequestParam(name = "page_size", required = false) Integer pageSize,
             @RequestParam(name = "page_number", required = false) Integer pageNumber,
             @RequestParam(name = "sort_direction", required = false) String sortDirection,
             @RequestParam(name = "sort_column", required = false) String sortColumn
     ) {
-        log.info("{}:: Fetching the User Profile to refresh role assignment for service names {}",
-                loggingComponentName, serviceName);
-        if (StringUtils.isBlank(serviceName)) {
+        log.info("{}:: Fetching the User Profile to refresh role assignment for ccdServiceNames {}",
+                loggingComponentName, ccdServiceNames);
+        if (StringUtils.isBlank(ccdServiceNames)) {
             throw new InvalidRequestException(REQUIRED_PARAMETER_SERVICE_NAMES_IS_EMPTY);
         }
 
@@ -170,7 +170,7 @@ public class JrdUsersController {
                 sortColumn, sortDirection, configPageSize, configSortColumn,
                 UserProfile.class);
 
-        return judicialUserService.fetchUserProfileByServiceNames(serviceName, pageRequest);
+        return judicialUserService.fetchUserProfileByServiceNames(ccdServiceNames, pageRequest);
     }
 
 }
