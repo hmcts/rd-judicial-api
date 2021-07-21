@@ -154,7 +154,7 @@ public class JudicialReferenceDataClient {
         stringBuilder.append("/");
 
         if (StringUtils.isNotBlank(serviceName)) {
-            stringBuilder.append("?serviceName=");
+            stringBuilder.append("?ccd_service_names=");
             stringBuilder.append(serviceName);
         }
         if (pageSize != null) {
