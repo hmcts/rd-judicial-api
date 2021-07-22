@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.judicialapi.client.JudicialApiClient;
 import uk.gov.hmcts.reform.judicialapi.client.S2sClient;
 import uk.gov.hmcts.reform.judicialapi.config.Oauth2;
 import uk.gov.hmcts.reform.judicialapi.config.TestConfigProperties;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
@@ -25,6 +26,7 @@ import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 
 import java.util.List;
 
+import static java.lang.System.getenv;
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
@@ -97,17 +99,4 @@ public class AuthorizationFunctionalTest extends AbstractTestExecutionListener {
     }
 
 
-    public List fetchUserProfiles(UserRequest userRequest, int pageSize, int pageNumber, int expectedResponse) {
-        Response fetchResponse = judicialApiClient.getMultipleAuthHeadersInternal(ROLE_JRD_SYSTEM_USER)
-                .body(userRequest).log().body(true)
-                .post("/refdata/judicial/users/fetch?page_size=" + pageSize + "&page_number=" + pageNumber)
-                .andReturn();
-
-        log.info("JRD get users response: {}", fetchResponse.getStatusCode());
-
-        fetchResponse.then()
-                .assertThat()
-                .statusCode(expectedResponse);
-        return asList(fetchResponse.getBody().as(OrmResponse.class));
-    }
 }

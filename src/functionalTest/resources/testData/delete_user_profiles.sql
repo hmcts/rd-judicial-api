@@ -1,0 +1,1 @@
+delete from judicial_user_profile where sidam_id in ('44862987-4b00-e2e7-4ff8-281b87f16bf9', '4c0ff6a3-8fd6-803b-301a-29d9dacccca8', '4asd32m3-5hu4-l2d3-6fd1-3h4ud7wj38d7');
