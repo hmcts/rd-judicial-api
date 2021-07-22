@@ -1,7 +1,4 @@
 buildscript {
-    repositories {
-        jcenter()
-    }
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.3.6")
     }
@@ -204,7 +201,6 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
-    maven { url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/' }
 }
 
 dependencies {
