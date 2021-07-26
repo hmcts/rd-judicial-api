@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.judicialapi;
 
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
-import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,18 +17,11 @@ import uk.gov.hmcts.reform.judicialapi.client.JudicialApiClient;
 import uk.gov.hmcts.reform.judicialapi.client.S2sClient;
 import uk.gov.hmcts.reform.judicialapi.config.Oauth2;
 import uk.gov.hmcts.reform.judicialapi.config.TestConfigProperties;
-import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 
 
-import java.util.List;
-
-import static java.lang.System.getenv;
 import static java.util.Objects.isNull;
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 @ContextConfiguration(classes = {TestConfigProperties.class, Oauth2.class})
 @ComponentScan("uk.gov.hmcts.reform.judicialapi")

@@ -13,12 +13,10 @@ import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 
-import java.util.List;
 
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.reform.judicialapi.AuthorizationFunctionalTest.ROLE_JRD_SYSTEM_USER;
 
 @Slf4j
 public class JudicialApiClient {

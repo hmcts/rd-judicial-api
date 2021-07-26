@@ -5,11 +5,8 @@ import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
@@ -18,7 +15,6 @@ import uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation;
 import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,8 +47,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         template.update(DELETE_TEST_USERS);
         try {
             template.getDataSource().getConnection().close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("DB connection not found");
         }
     }
