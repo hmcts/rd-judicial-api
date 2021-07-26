@@ -5,7 +5,11 @@ import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
@@ -13,33 +17,77 @@ import uk.gov.hmcts.reform.judicialapi.util.CustomSerenityRunner;
 import uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation;
 import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static java.lang.System.getenv;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 
 @RunWith(CustomSerenityRunner.class)
 @WithTags({@WithTag("testType:Functional")})
 @Slf4j
 public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
 
+    private DataSource dataSource;
+    private JdbcTemplate template;
+
+    private static final String INSERT_MULTIPLE_USERS = "INSERT INTO user_profile (per_id, personal_code, appointment, "
+            + "known_as, surname, full_name, ejudiciary_email, extracted_date, sidam_id) "
+            + "VALUES (12344, 'Emp1', 'Magistrate', 'Test', 'Test1','Test Test1', 'abc@gmail.com', current_timestamp, "
+            + "'44862987-4b00-e2e7-4ff8-281b87f16bf9');";
+
+    private static final String DELETE_TEST_USERS = "DELETE FROM user_profile WHERE "
+            + "sidam_id IN ('44862987-4b00-e2e7-4ff8-281b87f16bf9');";
+
     public static final String FETCH_USERS = "JrdUsersController.fetchUsers";
 
+    public void cleanUp() {
+        template.update(DELETE_TEST_USERS);
+        try {
+            template.getDataSource().getConnection().close();
+        }
+        catch (Exception e) {
+            log.info("DB connection not found");
+        }
+    }
+
+    private void dbSetup() {
+        String port = getenv("judicial-api-POSTGRES-PORT");
+        String dbName = getenv("judicial-api-POSTGRES-DATABASE");
+        String username = getenv("judicial-api-POSTGRES-USER");
+        String password = getenv("judicial-api-POSTGRES-PASS");
+        dataSource = DataSourceBuilder.create()
+                .driverClassName("org.postgresql.Driver")
+                .url("jdbc:postgresql://localhost:" + port + dbName)
+                .username(username)
+                .password(password)
+                .build();
+
+        template = new JdbcTemplate(dataSource);
+        template.update(INSERT_MULTIPLE_USERS);
+    }
+
     @Test
-    @Sql("insert_user_profiles.sql")
-    @Sql(scripts = "delete_user_profiles.sql", executionPhase = AFTER_TEST_METHOD)
     @ToggleEnable(mapKey = FETCH_USERS, withFeature = true)
     public void shouldReturn200() {
+        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
+            dbSetup();
+        }
         List<OrmResponse> userProfiles = (List<OrmResponse>)
                 judicialApiClient.fetchUserProfiles(getUserRequest(), 10, 0, OK,
                         ROLE_JRD_SYSTEM_USER);
 
-        assertThat(userProfiles).isNotNull().hasSize(3);
+        assertThat(userProfiles).isNotNull().hasSize(1);
+
+        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
+            cleanUp();
+        }
     }
 
     @Test
