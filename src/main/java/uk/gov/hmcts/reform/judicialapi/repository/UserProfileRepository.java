@@ -16,10 +16,10 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
     Page<UserProfile> findBySidamIdIn(List<String> sidamIds, Pageable pageable);
 
     @Query(value = "select up from judicial_user_profile up \n"
-            + "LEFT JOIN judicial_office_authorisation auth \n"
-            + "ON up.per_Id = auth.per_Id \n"
-            + "LEFT JOIN judicial_office_appointment appt \n"
-            + "ON up.per_Id = appt.per_Id \n"
-            + "where auth.service_code IN :serviceCode",nativeQuery = true)
+            + "JOIN FETCH judicial_office_authorisation auth \n"
+            + "ON up.perId = auth.perId \n"
+            + "JOIN FETCH judicial_office_appointment appt \n"
+            + "ON up.perId = appt.perId \n"
+            + "where auth.serviceCode IN :serviceCode")
     Page<UserProfile> fetchUserProfileByServiceNames(Set<String> serviceCode, Pageable pageable);
 }

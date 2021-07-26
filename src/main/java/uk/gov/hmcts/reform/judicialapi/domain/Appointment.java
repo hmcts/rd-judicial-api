@@ -46,7 +46,8 @@ public class Appointment implements Serializable {
     private LocalDateTime lastLoadedDate;
 
     @ManyToOne
-    @JoinColumn(name = "per_Id", nullable = false)
+    @JoinColumn(name = "per_id", referencedColumnName = "per_id",
+            nullable = false, insertable = false, updatable = false)
     private UserProfile userProfile;
 
     @ManyToOne
@@ -60,4 +61,7 @@ public class Appointment implements Serializable {
     @Column(name = "personal_code")
     @Size(max = 32)
     private String personalCode;
+
+    @Column(name = "per_id")
+    private String perId;
 }

@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 public class UserProfile {
 
     @Id
-    @Column(name = "per_Id")
+    @Column(name = "per_id")
     private String perId;
 
     @Column(name = "personal_code")
