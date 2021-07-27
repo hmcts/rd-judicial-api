@@ -73,18 +73,18 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @Test
     @ToggleEnable(mapKey = FETCH_USERS, withFeature = true)
     public void shouldReturn200() {
-        //if (getenv("execution_environment").equalsIgnoreCase("aat")) {
-        dbSetup();
-        //}
+        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
+            dbSetup();
+        }
         List<OrmResponse> userProfiles = (List<OrmResponse>)
                 judicialApiClient.fetchUserProfiles(getUserRequest(), 10, 0, OK,
                         ROLE_JRD_SYSTEM_USER);
 
         assertThat(userProfiles).isNotNull().hasSize(1);
 
-        //if (getenv("execution_environment").equalsIgnoreCase("aat")) {
-        cleanUp();
-        //}
+        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
+            cleanUp();
+        }
     }
 
     @Test
