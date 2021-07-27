@@ -40,8 +40,9 @@ spring:
     caffeine:
       spec: maximumSize=50,expireAfterWrite=1m
   jackson.date-format: yyyy-MM-dd
-  flyway.enabled: true
-  flyway.locations: classpath:db/migration
+  flyway:
+    enabled: true
+    locations: ${JUDICIAL_DB:classpath:db/migration}
 
 ### database configuration
   datasource:
