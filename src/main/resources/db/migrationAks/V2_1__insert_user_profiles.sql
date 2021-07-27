@@ -1,0 +1,2 @@
+insert into judicial_user_profile (per_id, personal_code, appointment, known_as, surname, full_name, post_nominals, appointment_type, work_pattern, ejudiciary_email, joining_date, last_working_date, active_flag, extracted_date, created_date, last_loaded_date, sidam_id)
+values (12344, 'Emp1', 'Magistrate', 'TestEmp', 'Test', 'Test1','Test Test1','temp','temp', 'abc@gmail.com', current_date, current_date, 'true' , current_timestamp, current_timestamp, current_timestamp, '44862987-4b00-e2e7-4ff8-281b87f16bf9') on conflict (per_id) do nothing;

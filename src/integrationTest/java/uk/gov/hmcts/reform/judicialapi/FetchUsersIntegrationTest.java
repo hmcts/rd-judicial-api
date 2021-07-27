@@ -1,3 +1,5 @@
+package uk.gov.hmcts.reform.judicialapi;
+
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;

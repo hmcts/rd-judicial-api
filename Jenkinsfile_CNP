@@ -1,4 +1,5 @@
 #!groovy
+import uk.gov.hmcts.contino.AppPipelineDsl
 
 @Library("Infrastructure")
 
@@ -6,6 +7,7 @@ def type = "java"
 def product = "rd"
 def component = "judicial-api"
 
+def appVault = "rd-aat"
 def secrets = [
   's2s-${env}': [
     secret('microservicekey-rd-judicial-api', 'S2S_SECRET')
@@ -15,6 +17,13 @@ def secrets = [
           secret('OAUTH2-CLIENT-AUTH', 'OAUTH2_CLIENT_AUTH'),
           secret('OAUTH2-CLIENT-ID', 'OAUTH2_CLIENT_ID'),
           secret('LD-SDK-KEY', 'LD_SDK_KEY')
+  ],
+  (appVault): [
+          secret('judicial-api-POSTGRES-HOST', 'DATABASE_HOST'),
+          secret('judicial-api-POSTGRES-PORT', 'DATABASE_PORT'),
+          secret('judicial-api-POSTGRES-DATABASE', 'DATABASE_NAME'),
+          secret('judicial-api-POSTGRES-USER', 'DATABASE_USER'),
+          secret('judicial-api-POSTGRES-PASS', 'DATABASE_PASS')
   ]
 ]
 
@@ -34,6 +43,12 @@ def vaultOverrides = [
 
 // Configure branches to sync with master branch
 def branchesToSync = ['demo', 'ithc', 'perftest']
+
+// Vars for Kubernetes PACT
+env.PACT_BROKER_FULL_URL = 'https://pact-broker.platform.hmcts.net'
+env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
+env.PACT_BROKER_PORT = "443"
+env.PACT_BROKER_SCHEME = "https"
 
 withPipeline(type, product, component) {
 
@@ -66,4 +81,14 @@ withPipeline(type, product, component) {
     after('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
     }
+
+    after('pact-provider-verification') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'build/reports/tests/**/*'
+    }
+
+
+    enablePactAs([
+        AppPipelineDsl.PactRoles.PROVIDER
+    ])
+
 }
