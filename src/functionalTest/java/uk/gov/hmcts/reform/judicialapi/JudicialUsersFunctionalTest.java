@@ -53,10 +53,10 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     }
 
     private void dbSetup() {
-        String port = getenv("judicial-api-POSTGRES-PORT");
-        String dbName = getenv("judicial-api-POSTGRES-DATABASE");
-        String username = getenv("judicial-api-POSTGRES-USER");
-        String password = getenv("judicial-api-POSTGRES-PASS");
+        String port = getenv("DATABASE_PORT");
+        String dbName = getenv("DATABASE_NAME");
+        String username = getenv("DATABASE_USER");
+        String password = getenv("DATABASE_PASS");
         dataSource = DataSourceBuilder.create()
                 .driverClassName("org.postgresql.Driver")
                 .url("jdbc:postgresql://localhost:" + port + "/" + dbName)
