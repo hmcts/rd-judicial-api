@@ -113,7 +113,7 @@ public class JudicialApiClient {
                 .statusCode(expectedStatus.value());
 
         if (expectedStatus.is2xxSuccessful()) {
-            return asList(fetchResponse.getBody().as(OrmResponse.class));
+            return asList(fetchResponse.getBody().as(OrmResponse[].class));
         } else {
             return fetchResponse.getBody().as(ErrorResponse.class);
         }
