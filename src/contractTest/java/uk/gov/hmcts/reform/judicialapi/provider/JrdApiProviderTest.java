@@ -25,6 +25,7 @@ import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 
 
 import java.util.Collections;
@@ -41,8 +42,8 @@ import static org.mockito.Mockito.when;
         host = "${PACT_BROKER_URL:localhost}",
         port = "${PACT_BROKER_PORT:80}", consumerVersionSelectors = {
         @VersionSelector(tag = "master")})
-@ContextConfiguration(classes = {JrdUsersController.class})
-@TestPropertySource(properties = {"loggingComponentName=JrdApiProviderTest"})
+@ContextConfiguration(classes = {JrdUsersController.class, JudicialUserServiceImpl.class})
+@TestPropertySource(properties = {"defaultPageSize=10"})
 @IgnoreNoPactsToVerify
 public class JrdApiProviderTest {
 
