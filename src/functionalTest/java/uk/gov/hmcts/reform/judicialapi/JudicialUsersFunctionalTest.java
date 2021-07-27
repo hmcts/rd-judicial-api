@@ -60,7 +60,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         String password = getenv("DATABASE_PASS");
         dataSource = DataSourceBuilder.create()
                 .driverClassName("org.postgresql.Driver")
-                .url("jdbc:postgresql://"+ host + ":" + port + "/" + dbName)
+                .url("jdbc:postgresql://" + host + ":" + port + "/" + dbName)
                 .username(username)
                 .password(password)
                 .build();
