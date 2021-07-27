@@ -33,8 +33,9 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     private DataSource dataSource;
     private JdbcTemplate template;
 
-    private static final String INSERT_MULTIPLE_USERS = "INSERT INTO user_profile (per_id, personal_code, appointment, "
-            + "known_as, surname, full_name, ejudiciary_email, extracted_date, sidam_id) "
+    private static final String INSERT_MULTIPLE_USERS =
+            "INSERT INTO judicial_user_profile (per_id, personal_code, appointment, known_as, surname, full_name, "
+            + "ejudiciary_email, extracted_date, sidam_id) "
             + "VALUES (12344, 'Emp1', 'Magistrate', 'Test', 'Test1','Test Test1', 'abc@gmail.com', current_timestamp, "
             + "'44862987-4b00-e2e7-4ff8-281b87f16bf9') ON CONFLICT (per_id) DO NOTHING;";
 
