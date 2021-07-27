@@ -53,13 +53,14 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     }
 
     private void dbSetup() {
+        String host = getenv("DATABASE_HOST");
         String port = getenv("DATABASE_PORT");
         String dbName = getenv("DATABASE_NAME");
         String username = getenv("DATABASE_USER");
         String password = getenv("DATABASE_PASS");
         dataSource = DataSourceBuilder.create()
                 .driverClassName("org.postgresql.Driver")
-                .url("jdbc:postgresql://localhost:" + port + "/" + dbName)
+                .url("jdbc:postgresql://"+ host + ":" + port + "/" + dbName)
                 .username(username)
                 .password(password)
                 .build();
