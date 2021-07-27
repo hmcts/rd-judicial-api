@@ -34,6 +34,7 @@ public class JudicialApiClient {
     private final String judicialApiUrl;
     private final String s2sToken;
     private final IdamOpenIdClient idamOpenIdClient;
+    private static String FETCH_USERS_URI = "/refdata/judicial/users/fetch?page_size=%s&page_number=%s";
 
     public JudicialApiClient(String judicialApiUrl,
                              String s2sToken,
@@ -103,7 +104,7 @@ public class JudicialApiClient {
                                     String role) {
         Response fetchResponse = getMultipleAuthHeadersInternal(role)
                 .body(userRequest).log().body(true)
-                .post("/refdata/judicial/users/fetch?page_size=" + pageSize + "&page_number=" + pageNumber)
+                .post(String.format(FETCH_USERS_URI, pageSize, pageNumber))
                 .andReturn();
 
         log.info("JRD get users response: {}", fetchResponse.getStatusCode());

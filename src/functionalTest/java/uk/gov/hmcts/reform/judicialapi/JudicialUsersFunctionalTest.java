@@ -72,7 +72,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
 
     @Test
     @ToggleEnable(mapKey = FETCH_USERS, withFeature = true)
-    public void shouldReturn200() {
+    public void shouldReturn200whenUserProfileExistsForGivenUserId() {
         if (getenv("execution_environment").equalsIgnoreCase("aat")) {
             dbSetup();
         }
@@ -89,7 +89,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
 
     @Test
     @ToggleEnable(mapKey = FETCH_USERS, withFeature = true)
-    public void shouldReturnDataNotFound() {
+    public void shouldReturnDataNotFoundWhenUserProfilesDoNotExistForGivenUserId() {
         ErrorResponse errorResponse = (ErrorResponse)
                 judicialApiClient.fetchUserProfiles(getDummyUserRequest(), 10, 0, NOT_FOUND,
                         ROLE_JRD_SYSTEM_USER);
@@ -122,7 +122,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     }
 
     private UserRequest getDummyUserRequest() {
-        List<String> userIds = new ArrayList<>();
+        var userIds = new ArrayList<String>();
         userIds.add(UUID.randomUUID().toString());
         userIds.add(UUID.randomUUID().toString());
         userIds.add(UUID.randomUUID().toString());
