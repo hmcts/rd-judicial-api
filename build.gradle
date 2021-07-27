@@ -38,7 +38,8 @@ def versions = [
         springfoxSwagger   : '2.9.2',
         restAssured        : '4.3.3',
         jackson            : '2.12.1',
-        launchDarklySdk    : '5.2.2'
+        launchDarklySdk    : '5.2.2',
+        pact_version       : '4.1.7'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
@@ -86,6 +87,24 @@ sourceSets {
         }
         resources.srcDir file('src/smokeTest/resources')
     }
+
+    contractTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/contractTest/java')
+        }
+        resources.srcDir file('src/contractTest/resources')
+    }
+
+    pactTest {
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/pactTest/java')
+        }
+        resources.srcDir file('src/pactTest/resources')
+    }
 }
 
 idea {
@@ -96,6 +115,44 @@ idea {
         testSourceDirs += project.sourceSets.functionalTest.resources.srcDirs
         testSourceDirs += project.sourceSets.smokeTest.java.srcDirs
         testSourceDirs += project.sourceSets.smokeTest.resources.srcDirs
+    }
+}
+
+project.ext {
+    pactVersion = getCheckedOutGitCommitHash()
+}
+
+def getCheckedOutGitCommitHash() {
+    'git rev-parse --verify --short HEAD'.execute().text.trim()
+}
+
+task contract(type: Test) {
+    description = 'Runs the consumer Pact tests'
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+    include "uk/gov/hmcts/reform/judicialapi/**"
+}
+
+task runProviderPactVerification(type: Test) {
+    useJUnitPlatform()
+    logger.lifecycle("Runs pact Tests")
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+    systemProperty 'pact.verifier.publishResults', System.getProperty('pact.verifier.publishResults')
+    systemProperty 'pact.provider.version', project.pactVersion
+}
+
+runProviderPactVerification.dependsOn contract
+
+runProviderPactVerification.finalizedBy pactVerify
+
+pact {
+    publish {
+        pactDirectory = 'pacts'
+        pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
+        tags = [System.getenv("PACT_BRANCH_NAME") ?:'Dev']
+        version = project.pactVersion
     }
 }
 
@@ -251,7 +308,7 @@ dependencies {
     compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
     compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
-    compile group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
     implementation "io.github.openfeign:feign-httpclient:11.0"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -267,7 +324,7 @@ dependencies {
         exclude group: "org.hamcrest", module: "hamcrest-core"
         exclude group: "org.hamcrest", module: "hamcrest-library"
     }
-    
+
     testImplementation group: 'com.h2database', name: 'h2'
     testImplementation "com.github.tomakehurst:wiremock:2.21.0"
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
@@ -289,13 +346,13 @@ dependencies {
 
 
     testImplementation(group: 'org.yaml', name: 'snakeyaml') {
-        version{
+        version {
             strictly '1.25'
         }
     }
 
     integrationTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
-        version{
+        version {
             strictly '1.23'
         }
     }
@@ -306,6 +363,16 @@ dependencies {
         }
     }
 
+    contractTestCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    contractTestRuntime group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+
+    contractTestCompile("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    contractTestRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    contractTestImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
+    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
+    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
+    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5spring', version: versions.pact_version
+
     integrationTestImplementation sourceSets.main.runtimeClasspath
     integrationTestImplementation sourceSets.test.runtimeClasspath
 
@@ -314,6 +381,12 @@ dependencies {
 
     smokeTestImplementation sourceSets.main.runtimeClasspath
     smokeTestImplementation sourceSets.test.runtimeClasspath
+
+    contractTestCompile sourceSets.main.runtimeClasspath
+    contractTestCompile sourceSets.test.runtimeClasspath
+
+    pactTestCompile sourceSets.main.runtimeClasspath
+    pactTestCompile sourceSets.test.runtimeClasspath
 }
 
 dependencyManagement {
