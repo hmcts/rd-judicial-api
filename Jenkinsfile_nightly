@@ -16,6 +16,7 @@ def type = "java"
 def product = "rd"
 def component = "judicial-api"
 
+def appVault = "rd-aat"
 def secrets = [
   's2s-${env}': [
     secret('microservicekey-rd-judicial-api', 'S2S_SECRET')
@@ -25,6 +26,13 @@ def secrets = [
           secret('OAUTH2-CLIENT-AUTH', 'OAUTH2_CLIENT_AUTH'),
           secret('OAUTH2-CLIENT-ID', 'OAUTH2_CLIENT_ID'),
           secret('LD-SDK-KEY', 'LD_SDK_KEY')
+  ],
+  (appVault): [
+          secret('judicial-api-POSTGRES-HOST', 'DATABASE_HOST'),
+          secret('judicial-api-POSTGRES-PORT', 'DATABASE_PORT'),
+          secret('judicial-api-POSTGRES-DATABASE', 'DATABASE_NAME'),
+          secret('judicial-api-POSTGRES-USER', 'DATABASE_USER'),
+          secret('judicial-api-POSTGRES-PASS', 'DATABASE_PASS')
   ]
 ]
 
