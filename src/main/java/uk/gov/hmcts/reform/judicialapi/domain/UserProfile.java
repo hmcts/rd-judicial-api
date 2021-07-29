@@ -5,7 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +16,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
 import javax.validation.constraints.Size;
+
+import static javax.persistence.CascadeType.ALL;
 
 @Builder
 @Entity(name = "judicial_user_profile")
@@ -21,7 +27,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserProfile {
+public class UserProfile implements Serializable {
 
     @Id
     @Column(name = "per_id")
@@ -87,10 +93,15 @@ public class UserProfile {
     @Column(name = "sidam_id")
     private String sidamId;
 
-    @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile")
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile", cascade = ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Appointment> appointments;
 
-    @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile")
+    @Fetch(FetchMode.SUBSELECT)
+    @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile", cascade = ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Authorisation> authorisations;
+
 
 }

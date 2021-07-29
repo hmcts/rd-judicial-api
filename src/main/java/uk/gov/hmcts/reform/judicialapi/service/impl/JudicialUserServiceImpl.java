@@ -13,14 +13,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
+import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfileWithServiceName;
+import uk.gov.hmcts.reform.judicialapi.client.domain.UserProfileWithServiceName;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
@@ -119,8 +121,10 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 authorisations.forEach(authorisation -> userProfileList.add(
                         UserProfileWithServiceName.builder()
                                 .serviceName(serviceNameToCodeMapping.get(authorisation.getServiceCode()))
-                                .userProfile(buildUserProfileDto(authorisation.getUserProfile()))
+                                .userProfile(buildUserProfileDto(authorisation.getUserProfile(), authorisations))
                                 .build()));
+
+
                 log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
                         + "for ccdServiceNames {}", loggingComponentName, ccdServiceNames);
                 return ResponseEntity
@@ -146,9 +150,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     }
 
 
-    private uk.gov.hmcts.reform.judicialapi.domain.UserProfile buildUserProfileDto(
-            UserProfile profile) {
-        return uk.gov.hmcts.reform.judicialapi.domain.UserProfile.builder()
+    private uk.gov.hmcts.reform.judicialapi.client.domain.UserProfile buildUserProfileDto(
+            UserProfile profile, Set<Authorisation> authorisations) {
+        return uk.gov.hmcts.reform.judicialapi.client.domain.UserProfile.builder()
                 .perId(profile.getPerId())
                 .personalCode(profile.getPersonalCode())
                 .appointment(profile.getAppointment())
@@ -167,7 +171,73 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .lastLoadedDate(profile.getLastLoadedDate())
                 .objectId(profile.getObjectId())
                 .sidamId(profile.getSidamId())
+                .appointments(getAppointmentList(profile.getAppointments()))
+                .authorisations(getAuthorisationList(authorisations, profile))
                 .build();
     }
+
+    private List<uk.gov.hmcts.reform.judicialapi.client.domain.Appointment> getAppointmentList(
+            List<Appointment> appointments) {
+
+        List<uk.gov.hmcts.reform.judicialapi.client.domain.Appointment> appointmentList = new ArrayList<>();
+        appointments.forEach(appt -> {
+            appointmentList.add(buildAppointmentDto(appt));
+        });
+        return appointmentList;
+    }
+
+    private uk.gov.hmcts.reform.judicialapi.client.domain.Appointment buildAppointmentDto(
+            Appointment appt) {
+        return uk.gov.hmcts.reform.judicialapi.client.domain.Appointment.builder()
+                .baseLocationType(buildBaseLocationDTO(appt.getBaseLocationType()))
+                .officeAppointmentId(appt.getOfficeAppointmentId())
+                .isPrincipleAppointment(appt.getIsPrincipleAppointment())
+                .startDate(appt.getStartDate())
+                .createdDate(appt.getCreatedDate())
+                .lastLoadedDate(appt.getLastLoadedDate())
+                .endDate(appt.getEndDate())
+                .activeFlag(appt.getActiveFlag())
+                .personalCode(appt.getPersonalCode())
+                .extractedDate(appt.getExtractedDate())
+                .build();
+    }
+
+    private uk.gov.hmcts.reform.judicialapi.client.domain.BaseLocationType buildBaseLocationDTO(
+            BaseLocationType baseLocationType) {
+        return uk.gov.hmcts.reform.judicialapi.client.domain.BaseLocationType.builder()
+                .baseLocationId(baseLocationType.getBaseLocationId())
+                .courtName(baseLocationType.getCourtName())
+                .courtType(baseLocationType.getCourtType())
+                .circuit(baseLocationType.getCircuit())
+                .areaOfExpertise(baseLocationType.getAreaOfExpertise())
+                .build();
+    }
+
+    private List<uk.gov.hmcts.reform.judicialapi.client.domain.Authorisation> getAuthorisationList(
+            Set<Authorisation> authorisations, UserProfile profile) {
+        List<uk.gov.hmcts.reform.judicialapi.client.domain.Authorisation> authorisationList = new ArrayList<>();
+
+        authorisations.stream().filter(auth -> auth.getPerId().equals(profile.getPerId()))
+                .forEach(authorisation -> authorisationList.add(buildAuthorisationDto(authorisation)));
+
+        return authorisationList;
+    }
+
+    private uk.gov.hmcts.reform.judicialapi.client.domain.Authorisation buildAuthorisationDto(
+            Authorisation auth) {
+        return uk.gov.hmcts.reform.judicialapi.client.domain.Authorisation.builder()
+                .officeAuthId(auth.getOfficeAuthId())
+                .jurisdiction(auth.getJurisdiction())
+                .lowerLevel(auth.getLowerLevel())
+                .serviceCode(auth.getServiceCode())
+                .startDate(auth.getStartDate())
+                .endDate(auth.getEndDate())
+                .createdDate(auth.getCreatedDate())
+                .lastUpdated(auth.getLastUpdated())
+                .ticketId(auth.getTicketId())
+                .personalCode(auth.getPersonalCode())
+                .build();
+    }
+
 
 }

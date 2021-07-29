@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.judicialapi.domain;
+package uk.gov.hmcts.reform.judicialapi.client.domain;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

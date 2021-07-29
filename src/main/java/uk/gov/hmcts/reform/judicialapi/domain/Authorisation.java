@@ -2,13 +2,16 @@ package uk.gov.hmcts.reform.judicialapi.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,6 +20,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Authorisation implements Serializable {
 
     @Id
@@ -46,7 +50,7 @@ public class Authorisation implements Serializable {
     @Size(max = 256)
     private String lowerLevel;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "per_id", referencedColumnName = "per_id",
             nullable = false, insertable = false, updatable = false)
     private UserProfile userProfile;

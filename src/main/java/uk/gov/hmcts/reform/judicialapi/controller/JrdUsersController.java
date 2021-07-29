@@ -24,7 +24,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfileWithServiceName;
+import uk.gov.hmcts.reform.judicialapi.client.domain.UserProfileWithServiceName;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 
@@ -149,10 +149,9 @@ public class JrdUsersController {
             )
     })
     @GetMapping(
-            path = "/",
+            path = "",
             produces = APPLICATION_JSON_VALUE
     )
-    @Secured({"jrd-system-user", "jrd-admin"})
     public ResponseEntity<Object> fetchUserProfileByServiceNames(
             @RequestParam(name = "ccd_service_names") @NotEmpty String ccdServiceNames,
             @RequestParam(name = "page_size", required = false) Integer pageSize,

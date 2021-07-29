@@ -1,8 +1,10 @@
 package uk.gov.hmcts.reform.judicialapi.domain;
 
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,14 +12,17 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.validation.constraints.Size;
 
 @Entity(name = "judicial_office_appointment")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Appointment implements Serializable {
 
     @Id
@@ -45,7 +50,7 @@ public class Appointment implements Serializable {
     @Column(name = "last_loaded_date")
     private LocalDateTime lastLoadedDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "per_id", referencedColumnName = "per_id",
             nullable = false, insertable = false, updatable = false)
     private UserProfile userProfile;

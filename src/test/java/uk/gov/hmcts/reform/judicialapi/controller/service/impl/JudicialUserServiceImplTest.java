@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
@@ -203,6 +204,9 @@ public class JudicialUserServiceImplTest {
 
     public UserProfile buildUserProfile() {
 
+        BaseLocationType baseLocationType = new BaseLocationType();
+        baseLocationType.setBaseLocationId("123");
+
         Appointment appointment = new Appointment();
         appointment.setOfficeAppointmentId(1L);
         appointment.setIsPrincipleAppointment(true);
@@ -212,8 +216,10 @@ public class JudicialUserServiceImplTest {
         appointment.setExtractedDate(LocalDateTime.now());
         appointment.setCreatedDate(LocalDateTime.now());
         appointment.setLastLoadedDate(LocalDateTime.now());
+        appointment.setBaseLocationType(baseLocationType);
 
         Authorisation authorisation = new Authorisation();
+        authorisation.setPerId("1");
         authorisation.setOfficeAuthId(1L);
         authorisation.setJurisdiction("Languages");
         authorisation.setTicketId(29611L);
