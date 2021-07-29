@@ -31,7 +31,6 @@ import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 
-
 import java.util.Collections;
 import java.util.List;
 
@@ -50,7 +49,7 @@ import static org.mockito.Mockito.when;
          FeignInterceptorConfiguration.class})
 @TestPropertySource(properties = {"defaultPageSize=10", "refresh.pageSize=10",
         "refresh.sortColumn=perId", "locationRefDataUrl=http://rd-location-ref-api-aat.service.core-compute-aat.internal",
-"loggingComponentName=test"})
+        "loggingComponentName=test"})
 @IgnoreNoPactsToVerify
 public class JrdApiProviderTest {
 
