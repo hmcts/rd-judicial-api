@@ -115,7 +115,7 @@ public class JrdUsersController {
 
     @ApiOperation(
             value = "This API returns the User profiles based on Service Name and Pagination parameters",
-            notes = "**IDAM Role to access API** :\n jrd-system-user,\n jrd-admin",
+            notes = "",
             authorizations = {
                     @Authorization(value = "ServiceAuthorization"),
                     @Authorization(value = "Authorization")
