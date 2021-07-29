@@ -44,8 +44,8 @@ import static org.mockito.Mockito.when;
 @Provider("referenceData_judicial")
 @PactBroker(scheme = "${PACT_BROKER_SCHEME:http}",
         host = "${PACT_BROKER_URL:localhost}",
-        port = "${PACT_BROKER_PORT:9292}", consumerVersionSelectors = {
-        @VersionSelector(tag = "Dev")})
+        port = "${PACT_BROKER_PORT:80}", consumerVersionSelectors = {
+        @VersionSelector(tag = "master")})
 @ContextConfiguration(classes = {JrdUsersController.class, JudicialUserServiceImpl.class,
          FeignInterceptorConfiguration.class})
 @TestPropertySource(properties = {"defaultPageSize=10", "refresh.pageSize=10",
