@@ -16,8 +16,6 @@ java:
     ENVIRONMENT_NAME: "{{ .Values.global.environment }}"
     image: 'hmctspublic.azurecr.io/rd/judicial-api:latest'
     LOCATION_REF_DATA_URL: http://rd-location-ref-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
-    REFRESH_PAGE_SIZE: 20
-    REFRESH_SORT_COLUMN: perId
 
   keyVaults:
     rd:
