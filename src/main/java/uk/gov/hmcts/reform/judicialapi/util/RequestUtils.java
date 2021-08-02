@@ -18,12 +18,10 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException
 import java.lang.reflect.Field;
 import java.util.Objects;
 
+@SuppressWarnings("HideUtilityClassConstructor")
 @Slf4j
 @Getter
 public class RequestUtils {
-
-    private RequestUtils() {
-    }
 
 
     public static PageRequest validateAndBuildPaginationObject(Integer pageNumber,
