@@ -12,6 +12,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapper;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ForbiddenException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 
 
 import static org.junit.Assert.assertEquals;
@@ -64,6 +65,19 @@ public class ExceptionMapperTest {
 
         assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
         assertEquals(exception.getMessage(), ((ErrorResponse)responseEntity.getBody()).getErrorDescription());
+
+    }
+
+    @Test
+    public void test_handle_json_feign_response_parsing_exception() {
+        UserProfileException exception = new UserProfileException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Parsing exception", "Parsing exception");
+
+        ResponseEntity<Object> responseEntity = exceptionMapper.handleJsonFeignResponseException(exception);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals(exception.getErrorMessage(), ((ErrorResponse)responseEntity.getBody()).getErrorDescription());
+        assertEquals(exception.getErrorDescription(), ((ErrorResponse)responseEntity.getBody()).getErrorDescription());
 
     }
 }

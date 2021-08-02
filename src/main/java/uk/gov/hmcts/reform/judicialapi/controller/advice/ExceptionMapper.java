@@ -90,4 +90,12 @@ public class ExceptionMapper {
 
         return new ResponseEntity<>(errorDetails, httpStatus);
     }
+
+    @ExceptionHandler(UserProfileException.class)
+    public ResponseEntity<Object> handleJsonFeignResponseException(UserProfileException ex) {
+        ErrorResponse errorDetails = new ErrorResponse(ex.getStatus().value(),ex.getStatus().getReasonPhrase(),
+                ex.getErrorMessage(), ex.getErrorDescription(), getTimeStamp());
+
+        return new ResponseEntity<>(errorDetails, ex.getStatus());
+    }
 }
