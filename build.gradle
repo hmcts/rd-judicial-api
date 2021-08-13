@@ -276,7 +276,10 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
+    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot)
+    {
+        exclude group: 'org.glassfish', module: 'jakarta.el'
+    }
 
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
@@ -296,13 +299,7 @@ dependencies {
     implementation (group: 'org.springframework.boot', name: 'spring-boot-starter-web'){
         exclude group: 'org.glassfish', module: 'jakarta.el'
     }
-    implementation (group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'){
-        exclude group: 'org.glassfish', module: 'jakarta.el'
-    }
 
-    implementation ('com.github.hmcts:data-ingestion-lib:0.5.0.0') {
-        exclude group: 'org.glassfish', module: 'jakarta.el'
-    }
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
 
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
@@ -310,7 +307,6 @@ dependencies {
 
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-    implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
     implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '6.5.1'
@@ -321,8 +317,10 @@ dependencies {
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
     implementation "io.github.openfeign:feign-httpclient:11.0"
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-
+    implementation ('org.springframework.boot:spring-boot-starter-validation')
+    {
+        exclude group: 'org.glassfish', module: 'jakarta.el'
+    }
 
     implementation group: 'com.google.guava', name: 'guava', version: '30.0-jre'
     //Fix for CVE-2021-29425
