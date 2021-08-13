@@ -300,6 +300,9 @@ dependencies {
         exclude group: 'org.glassfish', module: 'jakarta.el'
     }
 
+    implementation ('com.github.hmcts:data-ingestion-lib:0.5.0.0') {
+        exclude group: 'org.glassfish', module: 'jakarta.el'
+    }
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
 
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
