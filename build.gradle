@@ -12,7 +12,7 @@ plugins {
     id "info.solidsoft.pitest" version '1.5.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '3.1.1'
-    id 'org.springframework.boot' version '2.4.6'
+    id 'org.springframework.boot' version '2.4.9'
     id "org.flywaydb.flyway" version "6.5.1"
     id "io.freefair.lombok" version "4.1.6"
     id 'uk.gov.hmcts.java' version '0.12.0'
@@ -33,7 +33,7 @@ def versions = [
         reformS2sClient    : '4.0.0',
         serenity           : '2.0.76',
         sonarPitest        : '0.5',
-        springBoot         : '2.4.6',
+        springBoot         : '2.4.9',
         springHystrix      : '2.1.1.RELEASE',
         springfoxSwagger   : '2.9.2',
         restAssured        : '4.3.3',
@@ -276,10 +276,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
-    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot)
-    {
-        exclude group: 'org.glassfish', module: 'jakarta.el'
-    }
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
 
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
@@ -296,13 +293,6 @@ dependencies {
     compile group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     compile group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
 
-    implementation (group: 'org.springframework.boot', name: 'spring-boot-starter-web'){
-        exclude group: 'org.glassfish', module: 'jakarta.el'
-    }
-    implementation (group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'){
-        exclude group: 'org.glassfish', module: 'jakarta.el'
-    }
-
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
 
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
@@ -312,7 +302,6 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
     implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
-    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.5.1'
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '6.5.1'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
@@ -322,10 +311,8 @@ dependencies {
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
     implementation "io.github.openfeign:feign-httpclient:11.0"
-    implementation ('org.springframework.boot:spring-boot-starter-validation')
-    {
-        exclude group: 'org.glassfish', module: 'jakarta.el'
-    }
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 
     implementation group: 'com.google.guava', name: 'guava', version: '30.0-jre'
     //Fix for CVE-2021-29425
