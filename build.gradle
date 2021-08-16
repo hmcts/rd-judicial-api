@@ -310,7 +310,9 @@ dependencies {
 
     implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
+    implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
     implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.5.1'
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '6.5.1'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
