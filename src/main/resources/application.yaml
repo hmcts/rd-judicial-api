@@ -44,6 +44,7 @@ spring:
     enabled: true
     locations: ${JUDICIAL_DB:classpath:db/migration}
 
+
 ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
