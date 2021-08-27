@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "1.6.0"
+    }
+  }
+}
+
 locals {
   preview_vault_name      = join("-", [var.raw_product, "aat"])
   non_preview_vault_name  = join("-", [var.raw_product, var.env])
