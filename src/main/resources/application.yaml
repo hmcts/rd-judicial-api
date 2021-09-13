@@ -34,7 +34,7 @@ spring:
         registration:
           oidc:
             client-id: ${IDAM_CLIENT_ID:microservicekey-rd-judicial-api}
-            client-secret: ${S2S_SECRET:AAAAAAAAAAAAAAAA}
+            client-secret: ${JUDICIAL_API_S2S_SECRET:}
   cache:
     cache-names: token
     caffeine:
@@ -49,7 +49,7 @@ spring:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}
     username: ${POSTGRES_USERNAME:dbjuddata}
-    password: ${POSTGRES_PASSWORD:dbjuddata}
+    password: ${POSTGRES_PASSWORD:}
     min-idle: 1
     properties:
       charSet: UTF-8
@@ -92,7 +92,7 @@ security:
 ### dependency configuration
 idam:
   s2s-auth:
-    totp_secret: ${S2S_SECRET:AAAAAAAAAAAAAAAA}
+    totp_secret: ${JUDICIAL_API_S2S_SECRET:}
     microservice: rd_judicial_api
     url: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
   s2s-authorised:
