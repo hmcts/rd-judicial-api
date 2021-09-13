@@ -35,7 +35,7 @@ spring:
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:dbjuddata
     username: ${POSTGRES_USERNAME:dbjuddata}
-    password: ${POSTGRES_PASSWORD:dbjuddata}
+    password: ${POSTGRES_PASSWORD:}
     min-idle: 1
     properties:
       charSet: UTF-8
