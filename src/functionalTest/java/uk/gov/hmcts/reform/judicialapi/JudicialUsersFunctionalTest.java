@@ -43,6 +43,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
             + "sidam_id IN ('44862987-4b00-e2e7-4ff8-281b87f16bf9');";
 
     public static final String FETCH_USERS = "JrdUsersController.fetchUsers";
+    public static final String USERS_SEARCH = "JrdUsersController.searchUsers";
 
     public void cleanUp() {
         template.update(DELETE_TEST_USERS);
@@ -115,6 +116,55 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
 
         ErrorResponse errorResponse = (ErrorResponse)
                 judicialApiClient.fetchUserProfiles(getDummyUserRequest(), 10, 0, FORBIDDEN,
+                        ROLE_JRD_SYSTEM_USER);
+
+        assertThat(errorResponse).isNotNull();
+        assertThat(errorResponse.getErrorMessage()).isEqualTo(exceptionMessage);
+    }
+
+
+    @Test
+    @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
+    public void shouldReturn200WhenUserSearchIsSuccess() {
+        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
+            dbSetup();
+        }
+        List<OrmResponse> userProfiles = (List<OrmResponse>)
+                judicialApiClient.userSearch(getUserRequest(), 10, 0, OK,
+                        ROLE_JRD_SYSTEM_USER);
+
+        assertThat(userProfiles).isNotNull().hasSize(1);
+
+        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
+            cleanUp();
+        }
+    }
+
+    @Test
+    @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
+    public void shouldReturn404WhenUserSearchNotFound() {
+        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
+            dbSetup();
+        }
+        List<OrmResponse> userProfiles = (List<OrmResponse>)
+                judicialApiClient.userSearch(getUserRequest(), 10, 0, OK,
+                        ROLE_JRD_SYSTEM_USER);
+
+        assertThat(userProfiles).isNotNull().hasSize(1);
+
+        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
+            cleanUp();
+        }
+    }
+
+    @Test
+    @ToggleEnable(mapKey = USERS_SEARCH, withFeature = false)
+    public void shouldGet403WhenUserSearchApiToggledOff() {
+        String exceptionMessage = CustomSerenityRunner.getFeatureFlagName().concat(" ")
+                .concat(FeatureConditionEvaluation.FORBIDDEN_EXCEPTION_LD);
+
+        ErrorResponse errorResponse = (ErrorResponse)
+                judicialApiClient.userSearch(getDummyUserRequest(), 10, 0, FORBIDDEN,
                         ROLE_JRD_SYSTEM_USER);
 
         assertThat(errorResponse).isNotNull();
