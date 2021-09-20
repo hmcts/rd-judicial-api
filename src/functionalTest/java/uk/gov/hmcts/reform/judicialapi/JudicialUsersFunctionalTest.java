@@ -142,7 +142,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     }
 
     private UserSearchRequest getUserSearchRequest() {
-       return UserSearchRequest.builder()
+        return UserSearchRequest.builder()
                 .location("234")
                 .searchString("test")
                 .serviceCode("BFA1")
