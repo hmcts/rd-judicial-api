@@ -59,4 +59,7 @@ public class Authorisation implements Serializable {
 
     @Column(name = "service_code")
     private String serviceCode;
+
+    @Column(name = "object_id")
+    private String objectId;
 }

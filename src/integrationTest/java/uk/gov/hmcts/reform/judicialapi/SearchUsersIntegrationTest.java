@@ -75,7 +75,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     @Test
     public void shouldReturn400WhenSearchStringContainsOtherThanLetters() {
         userSearchRequest = UserSearchRequest.builder()
-                .searchString("test")
+                .searchString("test123")
                 .location("location")
                 .serviceCode("BFA1")
                 .build();
