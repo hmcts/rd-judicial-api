@@ -9,7 +9,9 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.util.CustomSerenityRunner;
 import uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation;
 import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
@@ -129,9 +131,9 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         if (getenv("execution_environment").equalsIgnoreCase("aat")) {
             dbSetup();
         }
-        List<OrmResponse> userProfiles = (List<OrmResponse>)
-                judicialApiClient.userSearch(getUserRequest(), 10, 0, OK,
-                        ROLE_JRD_SYSTEM_USER);
+        List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
+                judicialApiClient.userSearch(getUserSearchRequest(),
+                        ROLE_JRD_SYSTEM_USER, OK);
 
         assertThat(userProfiles).isNotNull().hasSize(1);
 
@@ -146,9 +148,9 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         if (getenv("execution_environment").equalsIgnoreCase("aat")) {
             dbSetup();
         }
-        List<OrmResponse> userProfiles = (List<OrmResponse>)
-                judicialApiClient.userSearch(getUserRequest(), 10, 0, OK,
-                        ROLE_JRD_SYSTEM_USER);
+        List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
+                judicialApiClient.userSearch(getUserSearchRequest(),
+                        ROLE_JRD_SYSTEM_USER, OK);
 
         assertThat(userProfiles).isNotNull().hasSize(1);
 
@@ -164,8 +166,8 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
                 .concat(FeatureConditionEvaluation.FORBIDDEN_EXCEPTION_LD);
 
         ErrorResponse errorResponse = (ErrorResponse)
-                judicialApiClient.userSearch(getDummyUserRequest(), 10, 0, FORBIDDEN,
-                        ROLE_JRD_SYSTEM_USER);
+                judicialApiClient.userSearch(getUserSearchRequest(),
+                        ROLE_JRD_SYSTEM_USER, FORBIDDEN);
 
         assertThat(errorResponse).isNotNull();
         assertThat(errorResponse.getErrorMessage()).isEqualTo(exceptionMessage);
@@ -187,6 +189,15 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         userIds.add("4asd32m3-5hu4-l2d3-6fd1-3h4ud7wj38d7");
 
         return new UserRequest(userIds);
+    }
+
+    private UserSearchRequest getUserSearchRequest() {
+       return UserSearchRequest.builder()
+                .location("234")
+                .searchString("test")
+                .serviceCode("BFA1")
+                .build();
+
     }
 
 }

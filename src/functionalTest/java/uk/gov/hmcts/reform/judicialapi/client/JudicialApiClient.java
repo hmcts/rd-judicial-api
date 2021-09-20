@@ -10,9 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
-
 
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.springframework.http.HttpStatus.OK;
@@ -35,6 +36,7 @@ public class JudicialApiClient {
     private final String s2sToken;
     private final IdamOpenIdClient idamOpenIdClient;
     private static String FETCH_USERS_URI = "/refdata/judicial/users/fetch?page_size=%s&page_number=%s";
+    private static String USERS_SEARCH_URI = "/refdata/judicial/users/search";
 
     public JudicialApiClient(String judicialApiUrl,
                              String s2sToken,
@@ -120,4 +122,22 @@ public class JudicialApiClient {
         }
     }
 
+    public Object userSearch(UserSearchRequest userSearchRequest, String role, HttpStatus expectedStatus) {
+        Response fetchResponse = getMultipleAuthHeadersInternal(role)
+                .body(userSearchRequest).log().body(true)
+                .post(USERS_SEARCH_URI)
+                .andReturn();
+
+        log.info("JRD get users search response: {}", fetchResponse.getStatusCode());
+
+        fetchResponse.then()
+                .assertThat()
+                .statusCode(expectedStatus.value());
+
+        if (expectedStatus.is2xxSuccessful()) {
+            return asList(fetchResponse.getBody().as(UserSearchResponse[].class));
+        } else {
+            return fetchResponse.getBody().as(ErrorResponse.class);
+        }
+    }
 }

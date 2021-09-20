@@ -3,7 +3,10 @@ package uk.gov.hmcts.reform.judicialapi.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,10 +20,10 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserProfile {
+public class UserProfile implements Serializable {
 
     @Id
-    @Column(name = "per_Id")
+    @Column(name = "per_id")
     private String perId;
 
     @Column(name = "personal_code")
@@ -84,9 +87,10 @@ public class UserProfile {
     private String sidamId;
 
     @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile")
+    @Fetch(FetchMode.SUBSELECT)
     private List<Appointment> appointments;
 
     @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile")
+    @Fetch(FetchMode.SUBSELECT)
     private List<Authorisation> authorisations;
-
 }

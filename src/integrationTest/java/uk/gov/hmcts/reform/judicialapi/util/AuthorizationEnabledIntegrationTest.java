@@ -75,6 +75,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
 
     @Before
     public void setUpClient() {
+        JudicialReferenceDataClient.setBearerToken("");
         judicialReferenceDataClient = new JudicialReferenceDataClient(port, issuer, expiration, serviceName);
         when(featureToggleServiceImpl.isFlagEnabled(anyString(), anyString())).thenReturn(true);
         flyway.clean();
@@ -119,6 +120,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
 
     @After
     public void cleanupTestData() {
+        JudicialReferenceDataClient.setBearerToken("");
     }
 
 
