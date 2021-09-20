@@ -32,19 +32,6 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
     @Test
-    public void shouldReturn400WhenSearchStringNotPresent() {
-        userSearchRequest = UserSearchRequest.builder()
-                .location("location")
-                .serviceCode("BFA1")
-                .build();
-        Map<String, Object> response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, "jrd-system-user", false);
-        assertThat(response).containsEntry("http_status", "400");
-        String responseBody = (String) response.get("response_body");
-        assertTrue(responseBody.contains("cannot be null"));
-    }
-
-    @Test
     public void shouldReturn400WhenSearchStringIsEmpty() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("")

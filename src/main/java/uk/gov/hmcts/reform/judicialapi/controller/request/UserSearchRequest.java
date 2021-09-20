@@ -31,6 +31,6 @@ public class UserSearchRequest {
     private String location;
 
     public void setSearchString(String searchString) {
-        this.searchString = searchString != null ? searchString.trim() : searchString;
+        this.searchString = searchString.trim();
     }
 }
