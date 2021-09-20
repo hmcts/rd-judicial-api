@@ -11,7 +11,6 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.util.CustomSerenityRunner;
 import uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation;
 import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
@@ -119,55 +118,6 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         ErrorResponse errorResponse = (ErrorResponse)
                 judicialApiClient.fetchUserProfiles(getDummyUserRequest(), 10, 0, FORBIDDEN,
                         ROLE_JRD_SYSTEM_USER);
-
-        assertThat(errorResponse).isNotNull();
-        assertThat(errorResponse.getErrorMessage()).isEqualTo(exceptionMessage);
-    }
-
-
-    @Test
-    @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
-    public void shouldReturn200WhenUserSearchIsSuccess() {
-        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
-            dbSetup();
-        }
-        List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
-                judicialApiClient.userSearch(getUserSearchRequest(),
-                        ROLE_JRD_SYSTEM_USER, OK);
-
-        assertThat(userProfiles).isNotNull().hasSize(1);
-
-        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
-            cleanUp();
-        }
-    }
-
-    @Test
-    @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
-    public void shouldReturn404WhenUserSearchNotFound() {
-        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
-            dbSetup();
-        }
-        List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
-                judicialApiClient.userSearch(getUserSearchRequest(),
-                        ROLE_JRD_SYSTEM_USER, OK);
-
-        assertThat(userProfiles).isNotNull().hasSize(1);
-
-        if (getenv("execution_environment").equalsIgnoreCase("aat")) {
-            cleanUp();
-        }
-    }
-
-    @Test
-    @ToggleEnable(mapKey = USERS_SEARCH, withFeature = false)
-    public void shouldGet403WhenUserSearchApiToggledOff() {
-        String exceptionMessage = CustomSerenityRunner.getFeatureFlagName().concat(" ")
-                .concat(FeatureConditionEvaluation.FORBIDDEN_EXCEPTION_LD);
-
-        ErrorResponse errorResponse = (ErrorResponse)
-                judicialApiClient.userSearch(getUserSearchRequest(),
-                        ROLE_JRD_SYSTEM_USER, FORBIDDEN);
 
         assertThat(errorResponse).isNotNull();
         assertThat(errorResponse.getErrorMessage()).isEqualTo(exceptionMessage);
