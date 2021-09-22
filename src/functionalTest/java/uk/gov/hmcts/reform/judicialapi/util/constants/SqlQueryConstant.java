@@ -2,9 +2,13 @@ package uk.gov.hmcts.reform.judicialapi.util.constants;
 
 public class SqlQueryConstant {
 
+    private SqlQueryConstant() {
+
+    }
+
     public static final String INSERT_JUD_USER_PROFILES
-            = "INSERT INTO judicial_user_profile " +
-            "(per_id, personal_code, appointment, known_as, surname, full_name, post_nominals, appointment_type, "
+            = "INSERT INTO judicial_user_profile "
+            + "(per_id, personal_code, appointment, known_as, surname, full_name, post_nominals, appointment_type, "
             + "work_pattern, ejudiciary_email, joining_date, "
             + "last_working_date, active_flag, extracted_date, created_date, "
             + "last_loaded_date, object_id, sidam_id) "
@@ -22,8 +26,8 @@ public class SqlQueryConstant {
             + "'1111122223333', '1111122223334');";
 
     public static final String INSERT_JUD_OFFICE_APPOINTMENT
-            = "INSERT INTO judicial_office_appointment\n" +
-            "(judicial_office_appointment_id, per_id, base_location_id, region_id, is_prinicple_appointment, "
+            = "INSERT INTO judicial_office_appointment "
+            + "(judicial_office_appointment_id, per_id, base_location_id, region_id, is_prinicple_appointment, "
             + "start_date, end_date, active_flag, extracted_date, created_date, last_loaded_date, personal_code, "
             + "epimms_id, service_code, object_id) "
             + "VALUES(179, '528', '1029', '1', true, '1995-03-27', NULL, true, '2021-07-14 12:25:26.330', "
