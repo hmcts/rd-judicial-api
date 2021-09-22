@@ -15,6 +15,8 @@ import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 
+import java.util.List;
+
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -128,14 +130,12 @@ public class JudicialApiClient {
                 .post(USERS_SEARCH_URI)
                 .andReturn();
 
-        log.info("JRD get users search response: {}", fetchResponse.getStatusCode());
-
         fetchResponse.then()
                 .assertThat()
                 .statusCode(expectedStatus.value());
 
         if (expectedStatus.is2xxSuccessful()) {
-            return asList(fetchResponse.getBody().as(UserSearchResponse[].class));
+            return List.of(fetchResponse.getBody().as(UserSearchResponse[].class));
         } else {
             return fetchResponse.getBody().as(ErrorResponse.class);
         }
