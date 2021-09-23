@@ -200,6 +200,12 @@ task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     }
 }
 
+task fortifyScan(type: JavaExec)  {
+  main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+  classpath += sourceSets.test.runtimeClasspath
+  jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+}
+
 jacoco {
     toolVersion = "0.8.5"
 }
@@ -341,6 +347,7 @@ dependencies {
     testCompile (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
     testCompile (group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity)
     testCompile (group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity)
+    testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
