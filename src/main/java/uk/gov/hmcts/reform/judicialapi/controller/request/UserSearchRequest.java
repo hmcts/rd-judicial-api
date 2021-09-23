@@ -25,12 +25,22 @@ public class UserSearchRequest {
     private String searchString;
 
     @JsonProperty("serviceCode")
+    @Pattern(regexp = "[a-zA-Z0-9]+", message = "should not be empty or contain special characters")
     private String serviceCode;
 
     @JsonProperty("location")
+    @Pattern(regexp = "[a-zA-Z0-9]+", message = "should not be empty or contain special characters")
     private String location;
 
     public void setSearchString(String searchString) {
         this.searchString = searchString.trim();
+    }
+
+    public void setServiceCode(String serviceCode) {
+        this.serviceCode = serviceCode != null ? serviceCode.trim().toLowerCase() : null;
+    }
+
+    public void setLocation(String location) {
+        this.location = location != null ? location.trim().toLowerCase() : null;
     }
 }
