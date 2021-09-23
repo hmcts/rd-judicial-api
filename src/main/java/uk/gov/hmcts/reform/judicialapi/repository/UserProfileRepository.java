@@ -25,7 +25,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
                    + "or (DATE(auth.endDate) >= CURRENT_DATE or DATE(auth.endDate) is null)) "
                    + "and ( (:serviceCode is not null and (lower(appt.serviceCode) = :serviceCode or "
                    + "lower(auth.serviceCode) = :serviceCode)) or :serviceCode is null ) "
-                   + "and ( :serviceCode = 'BFA1' or ((:locationCode is not null "
+                   + "and ( :serviceCode = 'bfa1' or ((:locationCode is not null "
                    + "and lower(appt.epimmsId) = :locationCode)"
                    + " or :locationCode is null)) "
                    + "and (lower(per.knownAs) like %:searchString% "
