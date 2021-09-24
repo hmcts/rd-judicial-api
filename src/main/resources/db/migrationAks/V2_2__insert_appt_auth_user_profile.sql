@@ -12,7 +12,7 @@ INSERT INTO judicial_user_profile
 work_pattern, ejudiciary_email, joining_date,
 last_working_date, active_flag, extracted_date, created_date,
 last_loaded_date, object_id, sidam_id)
-VALUES('528', '27', 'Magistrate', 'Joe', 'Bloggs', 'Joe Bloggs', 'Ms',
+VALUES('528', '27', 'Magistrate', 'Test2KA', 'Test2SN', 'Test2FN', 'Ms',
 'Voluntary', 'No Work Pattern (M to F)', 'EMP528@ejudiciary.net', '2017-03-06', NULL, true,
 '2021-07-14 12:25:28.763', '2021-08-11 09:10:44.682', '2021-08-11 09:10:44.682',
 '1111122223333', '1111122223333'),

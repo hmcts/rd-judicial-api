@@ -71,19 +71,19 @@ public class JudicialUserServiceImplTest {
 
     @Test
     public void shouldReturn200WhenUserFoundForTheSearchRequestProvided() {
-        UserSearchRequest userSearchRequest = UserSearchRequest
+        var userSearchRequest = UserSearchRequest
                 .builder()
                 .serviceCode("BFA1")
                 .location("12456")
                 .searchString("Test")
                 .build();
-        UserProfile userProfile = createUserProfile();
+        var userProfile = createUserProfile();
 
 
         when(userProfileRepository.findBySearchString(any(), any(), any()))
                 .thenReturn(List.of(userProfile));
 
-        ResponseEntity<Object> responseEntity =
+        var responseEntity =
                 judicialUserService.retrieveUserProfile(userSearchRequest);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(userProfileRepository, times(1)).findBySearchString(any(),any(), any());
@@ -92,7 +92,7 @@ public class JudicialUserServiceImplTest {
     @Test
     public void shouldReturn404WhenUserNotFoundForTheSearchRequestProvided() {
 
-        UserSearchRequest userSearchRequest = UserSearchRequest
+        var userSearchRequest = UserSearchRequest
                 .builder()
                 .serviceCode("BFA1")
                 .location("12456")

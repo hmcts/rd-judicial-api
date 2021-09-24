@@ -5,8 +5,6 @@ import org.junit.Test;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,7 +24,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
                 .location("location")
                 .serviceCode("BFA1")
                 .build();
-        Map<String, Object> response = judicialReferenceDataClient.searchUsers(
+        var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, "jrd-system-user", true);
         assertThat(response).containsEntry("http_status", "401");
     }
@@ -38,10 +36,10 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
                 .location("location")
                 .serviceCode("BFA1")
                 .build();
-        Map<String, Object> response = judicialReferenceDataClient.searchUsers(
+        var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "400");
-        String responseBody = (String) response.get("response_body");
+        var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("cannot be empty"));
     }
 
@@ -52,10 +50,10 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
                 .location("location")
                 .serviceCode("BFA1")
                 .build();
-        Map<String, Object> response = judicialReferenceDataClient.searchUsers(
+        var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "400");
-        String responseBody = (String) response.get("response_body");
+        var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("should have atleast 3 characters"));
     }
 
@@ -66,10 +64,10 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
                 .location("location")
                 .serviceCode("BFA1")
                 .build();
-        Map<String, Object> response = judicialReferenceDataClient.searchUsers(
+        var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "400");
-        String responseBody = (String) response.get("response_body");
+        var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("should contains letters only"));
     }
 }

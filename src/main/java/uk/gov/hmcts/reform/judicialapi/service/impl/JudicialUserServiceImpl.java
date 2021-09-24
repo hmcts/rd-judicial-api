@@ -54,7 +54,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @Override
     public ResponseEntity<Object> retrieveUserProfile(UserSearchRequest userSearchRequest) {
-        List<UserProfile> userProfiles = userProfileRepository
+        var userProfiles = userProfileRepository
                 .findBySearchString(userSearchRequest.getSearchString()
                 .toLowerCase(), userSearchRequest.getServiceCode(), userSearchRequest.getLocation());
 
@@ -62,7 +62,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             throw new ResourceNotFoundException(USER_DATA_NOT_FOUND);
         }
 
-        List<UserSearchResponse> userSearchResponses = userProfiles
+        var userSearchResponses = userProfiles
                 .stream()
                 .map(UserSearchResponse::new)
                 .collect(Collectors.toUnmodifiableList());

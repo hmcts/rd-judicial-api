@@ -81,11 +81,11 @@ public class ExceptionMapperTest {
 
     @Test
     public void test_handle_method_argument_not_valid_exception() {
-        FieldError fieldError =
+        var fieldError =
                 new FieldError("testObject", "testField", "testDefaultMessage");
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
-        ResponseEntity<Object> responseEntity = exceptionMapper
+        var responseEntity = exceptionMapper
                 .handleMethodArgumentNotValidException(methodArgumentNotValidException);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 

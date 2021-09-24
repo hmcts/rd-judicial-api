@@ -70,11 +70,11 @@ public class ExceptionMapper {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        List<String> errors = new ArrayList<>();
+        var errors = new ArrayList<String>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
             errors.add(error.getField() + " " + error.getDefaultMessage());
         }
-        ErrorResponse errorDetails = new ErrorResponse(BAD_REQUEST.value(), BAD_REQUEST.getReasonPhrase(),
+        var errorDetails = new ErrorResponse(BAD_REQUEST.value(), BAD_REQUEST.getReasonPhrase(),
                 INVALID_REQUEST_EXCEPTION.getErrorMessage(), errors.toString(), getTimeStamp());
 
         return new ResponseEntity<>(errorDetails, BAD_REQUEST);

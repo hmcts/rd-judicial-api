@@ -94,7 +94,7 @@ public class JrdUsersController {
 
     @ApiOperation(
             value = "This endpoint will be used for user search based on partial query. When the consumers "
-                    + "inputs the first 3 characters of the given string they will call this api to fetch "
+                    + "inputs any 3 characters, they will call this api to fetch "
                     + "the required result.",
             notes = "**Valid IDAM role is required to access this endpoint**",
             authorizations = {
@@ -105,7 +105,7 @@ public class JrdUsersController {
     @ApiResponses({
             @ApiResponse(
                     code = 200,
-                    message = "Retrieve the set of user profiles as per given request. ",
+                    message = "Retrieve the user profiles for the given request. ",
                     response = UserSearchResponse.class
             ),
             @ApiResponse(

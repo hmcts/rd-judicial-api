@@ -136,9 +136,10 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
                 judicialApiClient.userSearch(getUserSearchRequest(null, null, "test"),
                         ROLE_JRD_SYSTEM_USER, OK);
 
-        assertThat(userProfiles).isNotNull().hasSize(2);
-        assertEquals("EMP529@ejudiciary.net", userProfiles.get(0).getEmailId());
-        assertEquals("EMP530@ejudiciary.net", userProfiles.get(1).getEmailId());
+        assertThat(userProfiles).isNotNull().hasSize(3);
+        assertEquals("EMP528@ejudiciary.net", userProfiles.get(0).getEmailId());
+        assertEquals("EMP529@ejudiciary.net", userProfiles.get(1).getEmailId());
+        assertEquals("EMP530@ejudiciary.net", userProfiles.get(2).getEmailId());
     }
 
     @Test
@@ -148,8 +149,9 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
                 judicialApiClient.userSearch(getUserSearchRequest(null, "BFA1", "test"),
                         ROLE_JRD_SYSTEM_USER, OK);
 
-        assertThat(userProfiles).isNotNull().hasSize(1);
-        assertEquals("EMP530@ejudiciary.net", userProfiles.get(0).getEmailId());
+        assertThat(userProfiles).isNotNull().hasSize(2);
+        assertEquals("EMP528@ejudiciary.net", userProfiles.get(0).getEmailId());
+        assertEquals("EMP530@ejudiciary.net", userProfiles.get(1).getEmailId());
     }
 
     @Test
@@ -157,11 +159,24 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     public void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCodeAndLocation() {
         List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
                 judicialApiClient
-                        .userSearch(getUserSearchRequest("20013", "BFA2", "Joe"),
+                        .userSearch(getUserSearchRequest("20013", "BFA2", "test"),
                         ROLE_JRD_SYSTEM_USER, OK);
 
         assertThat(userProfiles).isNotNull().hasSize(1);
         assertEquals("EMP528@ejudiciary.net", userProfiles.get(0).getEmailId());
+    }
+
+    @Test
+    @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
+    public void shouldReturn200AndIgnoreLocationWhenServiceCodeIsBfa1() {
+        List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
+                judicialApiClient
+                        .userSearch(getUserSearchRequest("20013", "BFA1", "test"),
+                                ROLE_JRD_SYSTEM_USER, OK);
+
+        assertThat(userProfiles).isNotNull().hasSize(2);
+        assertEquals("EMP528@ejudiciary.net", userProfiles.get(0).getEmailId());
+        assertEquals("EMP530@ejudiciary.net", userProfiles.get(1).getEmailId());
     }
 
     @Test

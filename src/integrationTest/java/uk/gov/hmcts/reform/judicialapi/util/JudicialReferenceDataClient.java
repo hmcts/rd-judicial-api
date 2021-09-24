@@ -146,7 +146,7 @@ public class JudicialReferenceDataClient {
 
     public Map<String, Object> searchUsers(UserSearchRequest userSearchRequest, String role, boolean invalidTokens) {
         ResponseEntity<Object> responseEntity;
-        HttpEntity<?> request =
+        var request =
                 new HttpEntity<Object>(userSearchRequest, invalidTokens ? getInvalidAuthHeaders(role, null) :
                         getMultipleAuthHeaders(role, null));
 
@@ -155,7 +155,7 @@ public class JudicialReferenceDataClient {
             );
 
         } catch (RestClientResponseException ex) {
-            HashMap<String, Object> statusAndBody = new HashMap<>(2);
+            var statusAndBody = new HashMap<String, Object>(2);
             statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
             statusAndBody.put("response_body", ex.getResponseBodyAsString());
             return statusAndBody;

@@ -61,12 +61,12 @@ public class JrdUsersControllerTest {
 
     @Test
     public void shouldRetrieveUsersBasedOnSearch() {
-        UserSearchRequest userSearchRequest = UserSearchRequest.builder().build();
+        var userSearchRequest = UserSearchRequest.builder().build();
         responseEntity = ResponseEntity.ok().body(null);
         when(judicialUserServiceMock.retrieveUserProfile(any()))
                 .thenReturn(responseEntity);
 
-        ResponseEntity<?> actual = jrdUsersController
+        var actual = jrdUsersController
                 .searchUsers(userSearchRequest);
 
         assertNotNull(actual);
