@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import static java.util.Objects.nonNull;

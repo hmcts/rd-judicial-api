@@ -27,7 +27,6 @@ import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 
-
 import java.util.Collections;
 import java.util.List;
 
