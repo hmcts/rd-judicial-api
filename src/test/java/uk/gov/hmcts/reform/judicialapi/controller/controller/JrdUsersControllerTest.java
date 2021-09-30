@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.controller.JrdUsersController;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 
 import java.util.Arrays;
@@ -56,5 +57,20 @@ public class JrdUsersControllerTest {
     @Test(expected = InvalidRequestException.class)
     public void shouldThrowInvalidRequestExceptionForEmptyServiceName() {
         jrdUsersController.fetchUsers(10, 0, new UserRequest());
+    }
+
+    @Test
+    public void shouldRetrieveUsersBasedOnSearch() {
+        var userSearchRequest = UserSearchRequest.builder().build();
+        responseEntity = ResponseEntity.ok().body(null);
+        when(judicialUserServiceMock.retrieveUserProfile(any()))
+                .thenReturn(responseEntity);
+
+        var actual = jrdUsersController
+                .searchUsers(userSearchRequest);
+
+        assertNotNull(actual);
+        verify(judicialUserServiceMock, times(1))
+                .retrieveUserProfile(userSearchRequest);
     }
 }

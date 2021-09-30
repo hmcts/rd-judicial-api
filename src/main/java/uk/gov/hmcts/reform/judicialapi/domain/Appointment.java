@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -23,6 +24,9 @@ public class Appointment implements Serializable {
     @Id
     @Column(name = "judicial_office_appointment_Id")
     private Long officeAppointmentId;
+
+    @Column(name = "per_id")
+    private String perId;
 
     @Column(name = "is_prinicple_appointment")
     private Boolean isPrincipleAppointment;
@@ -45,8 +49,9 @@ public class Appointment implements Serializable {
     @Column(name = "last_loaded_date")
     private LocalDateTime lastLoadedDate;
 
-    @ManyToOne
-    @JoinColumn(name = "per_Id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "per_id", referencedColumnName = "per_id",
+            insertable = false, updatable = false, nullable = false)
     private UserProfile userProfile;
 
     @ManyToOne
@@ -60,4 +65,13 @@ public class Appointment implements Serializable {
     @Column(name = "personal_code")
     @Size(max = 32)
     private String personalCode;
+
+    @Column(name = "epimms_id")
+    private String epimmsId;
+
+    @Column(name = "service_code")
+    private String serviceCode;
+
+    @Column(name = "object_id")
+    private String objectId;
 }

@@ -38,14 +38,14 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
     @PostConstruct
     public void mapServiceToFlag() {
         launchDarklyMap = new HashMap<>();
-        launchDarklyMap.put("JrdUsersController.fetchUsers", "jrd-fetch-profiles");
+        launchDarklyMap.put("JrdUsersController.fetchUsers", "rd-judicial-api");
+        launchDarklyMap.put("JrdUsersController.searchUsers", "rd-judicial-api");
     }
 
     @Override
-    public boolean isFlagEnabled(String serviceName, String flagName) {
+    public boolean isFlagEnabled(String flagName) {
         LDUser user = new LDUser.Builder(userName)
             .firstName(userName)
-            .custom("servicename", serviceName)
             .custom("environment", environment)
             .build();
 
