@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.controller.service.impl;
 
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
@@ -65,6 +67,44 @@ public class JudicialUserServiceImplTest {
 
         when(userProfileRepository.findBySidamIdIn(sidamIds,pageable)).thenReturn(page);
         judicialUserService.fetchJudicialUsers(10,0, sidamIds);
+    }
+
+    @Test
+    public void shouldReturn200WhenUserFoundForTheSearchRequestProvided() {
+        var userSearchRequest = UserSearchRequest
+                .builder()
+                .serviceCode("BFA1")
+                .location("12456")
+                .searchString("Test")
+                .build();
+        var userProfile = createUserProfile();
+
+
+        when(userProfileRepository.findBySearchString(any(), any(), any()))
+                .thenReturn(List.of(userProfile));
+
+        var responseEntity =
+                judicialUserService.retrieveUserProfile(userSearchRequest);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(userProfileRepository, times(1)).findBySearchString(any(),any(), any());
+    }
+
+    @Test
+    public void shouldReturn404WhenUserNotFoundForTheSearchRequestProvided() {
+
+        var userSearchRequest = UserSearchRequest
+                .builder()
+                .serviceCode("BFA1")
+                .location("12456")
+                .searchString("Test")
+                .build();
+
+        when(userProfileRepository.findBySearchString(any(), any(), any()))
+                .thenReturn(Collections.emptyList());
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                judicialUserService.retrieveUserProfile(userSearchRequest));
+
     }
 
 
