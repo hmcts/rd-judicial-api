@@ -10,7 +10,7 @@ def component = "judicial-api"
 def appVault = "rd-aat"
 def secrets = [
   's2s-${env}': [
-    secret('microservicekey-rd-judicial-api', 'S2S_SECRET')
+    secret('microservicekey-rd-judicial-api', 'JUDICIAL_API_S2S_SECRET')
   ],
   'rd-${env}': [
           secret('OAUTH2-CLIENT-SECRET', 'OAUTH2_CLIENT_SECRET'),
