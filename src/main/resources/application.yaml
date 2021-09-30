@@ -34,7 +34,7 @@ spring:
         registration:
           oidc:
             client-id: ${IDAM_CLIENT_ID:microservicekey-rd-judicial-api}
-            client-secret: ${S2S_SECRET:AAAAAAAAAAAAAAAA}
+            client-secret: ${JUDICIAL_API_S2S_SECRET:}
   cache:
     cache-names: token
     caffeine:
@@ -92,7 +92,7 @@ security:
 ### dependency configuration
 idam:
   s2s-auth:
-    totp_secret: ${S2S_SECRET:AAAAAAAAAAAAAAAA}
+    totp_secret: ${JUDICIAL_API_S2S_SECRET:}
     microservice: rd_judicial_api
     url: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
   s2s-authorised:
