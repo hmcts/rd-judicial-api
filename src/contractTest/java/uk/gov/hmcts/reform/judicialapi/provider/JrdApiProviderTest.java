@@ -107,7 +107,7 @@ public class JrdApiProviderTest {
 
     @State({"User profile details exist for the search request provided"})
     public void toReturnUserProfilesDetailsForTheGivenSearchRequest() {
-        UserProfile userProfile = new UserProfile();
+        var userProfile = new UserProfile();
         userProfile.setSidamId("44362987-4b00-f2e7-4ff8-761b87f16bf9");
         userProfile.setFullName("testFullName");
         userProfile.setKnownAs("testKnownAs");
@@ -115,7 +115,7 @@ public class JrdApiProviderTest {
         userProfile.setEjudiciaryEmailId("test@test.com");
         userProfile.setPostNominals("Dr");
 
-        List<UserProfile> userProfiles = List.of(userProfile);
+        var userProfiles = List.of(userProfile);
 
         when(userProfileRepository.findBySearchString(any(),any(),any()))
                 .thenReturn(userProfiles);

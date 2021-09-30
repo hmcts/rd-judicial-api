@@ -132,7 +132,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @Test
     @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
     public void shouldReturn200WhenUserProfileRequestedForGivenSearchString() {
-        List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
+        var userProfiles = (List<UserSearchResponse>)
                 judicialApiClient.userSearch(getUserSearchRequest(null, null, "test"),
                         ROLE_JRD_SYSTEM_USER, OK);
 
@@ -145,7 +145,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @Test
     @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
     public void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCode() {
-        List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
+        var userProfiles = (List<UserSearchResponse>)
                 judicialApiClient.userSearch(getUserSearchRequest(null, "BFA1", "test"),
                         ROLE_JRD_SYSTEM_USER, OK);
 
@@ -157,7 +157,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @Test
     @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
     public void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCodeAndLocation() {
-        List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
+        var userProfiles = (List<UserSearchResponse>)
                 judicialApiClient
                         .userSearch(getUserSearchRequest("20013", "BFA2", "test"),
                         ROLE_JRD_SYSTEM_USER, OK);
@@ -169,7 +169,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @Test
     @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
     public void shouldReturn200AndIgnoreLocationWhenServiceCodeIsBfa1() {
-        List<UserSearchResponse> userProfiles = (List<UserSearchResponse>)
+        var userProfiles = (List<UserSearchResponse>)
                 judicialApiClient
                         .userSearch(getUserSearchRequest("20013", "BFA1", "test"),
                                 ROLE_JRD_SYSTEM_USER, OK);
@@ -182,7 +182,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @Test
     @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
     public void shouldReturn404WhenUserProfileRequestedForGivenSearchStringNotFound() {
-        ErrorResponse errorResponse = (ErrorResponse)
+        var errorResponse = (ErrorResponse)
                 judicialApiClient.userSearch(getUserSearchRequest(null, null, "invalid"),
                         ROLE_JRD_SYSTEM_USER, NOT_FOUND);
         assertThat(errorResponse).isNotNull();
@@ -192,7 +192,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @Test
     @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
     public void shouldReturn404WhenUserProfileRequestedForGivenLocationNotFound() {
-        ErrorResponse errorResponse = (ErrorResponse)
+        var errorResponse = (ErrorResponse)
                 judicialApiClient
                         .userSearch(getUserSearchRequest("20012", "BFA2", "Joe"),
                         ROLE_JRD_SYSTEM_USER, NOT_FOUND);
@@ -203,7 +203,7 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @Test
     @ToggleEnable(mapKey = USERS_SEARCH, withFeature = false)
     public void shouldGet403WhenUserSearchApiToggledOff() {
-        ErrorResponse errorResponse = (ErrorResponse)
+        var errorResponse = (ErrorResponse)
                 judicialApiClient.userSearch(getUserSearchRequest(null, null, "test"),
                         ROLE_JRD_SYSTEM_USER, FORBIDDEN);
         assertThat(errorResponse).isNotNull();

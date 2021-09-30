@@ -125,7 +125,7 @@ public class JudicialApiClient {
     }
 
     public Object userSearch(UserSearchRequest userSearchRequest, String role, HttpStatus expectedStatus) {
-        Response fetchResponse = getMultipleAuthHeadersInternal(role)
+        var fetchResponse = getMultipleAuthHeadersInternal(role)
                 .body(userSearchRequest).log().body(true)
                 .post(USERS_SEARCH_URI)
                 .andReturn();
