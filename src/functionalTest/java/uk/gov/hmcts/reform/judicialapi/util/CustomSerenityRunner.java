@@ -48,7 +48,7 @@ public class CustomSerenityRunner extends SpringIntegrationSerenityRunner {
             flagName = featureToggleService.getLaunchDarklyMap()
                 .get(toggleEnable.mapKey());
 
-            boolean isEnabledLD = featureToggleService.isFlagEnabled("rd_judicial_api", flagName);
+            boolean isEnabledLD = featureToggleService.isFlagEnabled(flagName);
 
             if (isEnabledLD) {
                 if (isNotTrue(toggleEnable.withFeature())) {

@@ -4,7 +4,7 @@ import java.util.Map;
 
 public interface FeatureToggleService {
 
-    boolean isFlagEnabled(String serviceName, String flagName);
+    boolean isFlagEnabled(String flagName);
 
     Map<String, String> getLaunchDarklyMap();
 }

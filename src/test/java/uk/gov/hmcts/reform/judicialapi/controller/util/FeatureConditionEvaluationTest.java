@@ -60,7 +60,7 @@ public class FeatureConditionEvaluationTest {
         String token = generateDummyS2SToken("rd_judicial_api");
         when(httpRequest.getHeader(FeatureConditionEvaluation.SERVICE_AUTHORIZATION))
                 .thenReturn(FeatureConditionEvaluation.BEARER + token);
-        when(featureToggleService.isFlagEnabled(anyString(),anyString())).thenReturn(true);
+        when(featureToggleService.isFlagEnabled(anyString())).thenReturn(true);
         assertTrue(featureConditionEvaluation.preHandle(httpRequest, httpServletResponse, handlerMethod));
         verify(featureConditionEvaluation, times(1))
                 .preHandle(httpRequest, httpServletResponse, handlerMethod);
@@ -75,7 +75,7 @@ public class FeatureConditionEvaluationTest {
         String token = generateDummyS2SToken("rd_judicial_api");
         when(httpRequest.getHeader(FeatureConditionEvaluation.SERVICE_AUTHORIZATION))
                 .thenReturn(FeatureConditionEvaluation.BEARER + token);
-        when(featureToggleService.isFlagEnabled(anyString(),anyString())).thenReturn(false);
+        when(featureToggleService.isFlagEnabled(anyString())).thenReturn(false);
         assertThrows(ForbiddenException.class,() -> featureConditionEvaluation.preHandle(httpRequest,
                 httpServletResponse, handlerMethod));
         verify(featureConditionEvaluation, times(1))
@@ -90,7 +90,7 @@ public class FeatureConditionEvaluationTest {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpRequest));
         String token = generateDummyS2SToken("rd_judicial_api");
         when(httpRequest.getHeader(FeatureConditionEvaluation.SERVICE_AUTHORIZATION)).thenReturn(token);
-        when(featureToggleService.isFlagEnabled(anyString(),anyString())).thenReturn(true);
+        when(featureToggleService.isFlagEnabled(anyString())).thenReturn(true);
         assertTrue(featureConditionEvaluation.preHandle(httpRequest, httpServletResponse, handlerMethod));
         verify(featureConditionEvaluation, times(1))
                 .preHandle(httpRequest, httpServletResponse, handlerMethod);
@@ -103,7 +103,7 @@ public class FeatureConditionEvaluationTest {
         when(featureToggleService.getLaunchDarklyMap()).thenReturn(launchDarklyMap);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpRequest));
         when(httpRequest.getHeader(FeatureConditionEvaluation.SERVICE_AUTHORIZATION)).thenReturn(StringUtils.EMPTY);
-        when(featureToggleService.isFlagEnabled(anyString(),anyString())).thenReturn(true);
+        when(featureToggleService.isFlagEnabled(anyString())).thenReturn(true);
         assertTrue(featureConditionEvaluation.preHandle(httpRequest, httpServletResponse, handlerMethod));
         verify(featureConditionEvaluation, times(1))
                 .preHandle(httpRequest, httpServletResponse, handlerMethod);
