@@ -5,12 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -62,6 +65,18 @@ public class ExceptionMapper {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<Object> handleMissingRequestParamException(Exception ex) {
         return errorDetailsResponseEntity(ex, BAD_REQUEST, INVALID_REQUEST_EXCEPTION.getErrorMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        var errors = new ArrayList<String>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.add(error.getField() + " " + error.getDefaultMessage());
+        }
+        var errorDetails = new ErrorResponse(BAD_REQUEST.value(), BAD_REQUEST.getReasonPhrase(),
+                INVALID_REQUEST_EXCEPTION.getErrorMessage(), errors.toString(), getTimeStamp());
+
+        return new ResponseEntity<>(errorDetails, BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

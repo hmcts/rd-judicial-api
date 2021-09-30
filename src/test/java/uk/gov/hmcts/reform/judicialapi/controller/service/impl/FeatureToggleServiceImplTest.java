@@ -19,7 +19,7 @@ public class FeatureToggleServiceImplTest {
     @Test
     public void testIsFlagDisabled() {
         flaFeatureToggleService = new FeatureToggleServiceImpl(ldClient, "rd");
-        assertFalse(flaFeatureToggleService.isFlagEnabled("test", "test"));
+        assertFalse(flaFeatureToggleService.isFlagEnabled("test"));
     }
 
     @Test
@@ -28,11 +28,10 @@ public class FeatureToggleServiceImplTest {
         ReflectionTestUtils.setField(flaFeatureToggleService, "environment", "executionEnvironment");
         LDUser user = new LDUser.Builder("rd")
                 .firstName("rd")
-                .custom("servicename", "rd")
                 .custom("environment", "executionEnvironment")
                 .build();
         when(ldClient.boolVariation("test1",user,false)).thenReturn(true);
-        assertTrue(flaFeatureToggleService.isFlagEnabled("rd", "test1"));
+        assertTrue(flaFeatureToggleService.isFlagEnabled("test1"));
     }
 
     @Test

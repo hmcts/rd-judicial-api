@@ -18,8 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
+
+import javax.validation.Valid;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -86,6 +90,53 @@ public class JrdUsersController {
         }
 
         return judicialUserService.fetchJudicialUsers(size, page, userRequest.getUserIds());
+    }
+
+    @ApiOperation(
+            value = "This endpoint will be used for user search based on partial query. When the consumers "
+                    + "inputs any 3 characters, they will call this api to fetch "
+                    + "the required result.",
+            notes = "**Valid IDAM role is required to access this endpoint**",
+            authorizations = {
+                    @Authorization(value = "ServiceAuthorization"),
+                    @Authorization(value = "Authorization")
+            }
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    code = 200,
+                    message = "Retrieve the user profiles for the given request. ",
+                    response = UserSearchResponse.class
+            ),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request"
+            ),
+            @ApiResponse(
+                    code = 401,
+                    message = "User Authentication Failed"
+            ),
+            @ApiResponse(
+                    code = 403,
+                    message = "Unauthorized"
+            ),
+            @ApiResponse(
+                    code = 404,
+                    message = "No Users Found"
+            ),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error"
+            )
+    })
+    @PostMapping(
+            path = "/search",
+            consumes = APPLICATION_JSON_VALUE,
+            produces = APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> searchUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {
+
+        return judicialUserService.retrieveUserProfile(userSearchRequest);
     }
 
 }
