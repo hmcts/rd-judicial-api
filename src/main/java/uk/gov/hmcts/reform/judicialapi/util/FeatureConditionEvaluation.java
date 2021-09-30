@@ -1,18 +1,13 @@
 package uk.gov.hmcts.reform.judicialapi.util;
 
-import com.auth0.jwt.JWT;
 import java.util.Map;
-import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ForbiddenException;
@@ -50,8 +45,7 @@ public class FeatureConditionEvaluation implements HandlerInterceptor {
         if (isNotTrue(launchDarklyUrlMap.isEmpty()) && nonNull(flagName)) {
 
             flagStatus = featureToggleService
-                    .isFlagEnabled(String.valueOf(getServiceName().orElse(StringUtils.EMPTY)),
-                                   launchDarklyUrlMap.get(clazz + "." + restMethod));
+                    .isFlagEnabled(launchDarklyUrlMap.get(clazz + "." + restMethod));
 
             if (!flagStatus) {
                 throw new ForbiddenException(flagName.concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD));
@@ -59,30 +53,4 @@ public class FeatureConditionEvaluation implements HandlerInterceptor {
         }
         return flagStatus;
     }
-
-    public Optional<Object> getServiceName() {
-
-        ServletRequestAttributes servletRequestAttributes =
-            ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
-
-        if (nonNull(servletRequestAttributes)) {
-            HttpServletRequest request = servletRequestAttributes.getRequest();
-
-            if (StringUtils.isNotEmpty(request.getHeader(SERVICE_AUTHORIZATION))) {
-                return Optional.ofNullable(JWT.decode(removeBearerFromToken(request
-                        .getHeader(SERVICE_AUTHORIZATION))).getSubject());
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    private String removeBearerFromToken(String token) {
-        if (isNotTrue(token.startsWith(BEARER))) {
-            return token;
-        } else {
-            return token.substring(BEARER.length());
-        }
-    }
-
 }

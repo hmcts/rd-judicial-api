@@ -80,7 +80,7 @@ public class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTe
     public void shouldReturn403WhenLdFeatureDisabled() {
         Map<String, String> launchDarklyMap = new HashMap<>();
         launchDarklyMap.put("JrdUsersController.fetchUsers", "test-jrd-flag");
-        when(featureToggleServiceImpl.isFlagEnabled(anyString(), anyString())).thenReturn(false);
+        when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(false);
         when(featureToggleServiceImpl.getLaunchDarklyMap()).thenReturn(launchDarklyMap);
         Map<String, Object> errorResponseMap = judicialReferenceDataClient
                 .fetchJudicialProfilesById(10, 0,
