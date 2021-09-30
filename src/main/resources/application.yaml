@@ -49,7 +49,7 @@ spring:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}
     username: ${POSTGRES_USERNAME:dbjuddata}
-    password: ${POSTGRES_PASSWORD:}
+    password: ${POSTGRES_PASSWORD:dbjuddata}
     min-idle: 1
     properties:
       charSet: UTF-8
