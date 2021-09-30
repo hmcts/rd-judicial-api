@@ -6,7 +6,7 @@ idam.api.url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
 oauth2.client.secret: ${OAUTH2_CLIENT_SECRET:}
 idam.auth.clientId: ${OAUTH2_CLIENT_ID:rd-judicial-api}
 idam.auth.redirectUrl: ${OAUTH2_REDIRECT_URI:https://rd-judicial-api-aat.service.core-compute-aat.internal/oauth2redirect}
-s2s-secret: ${S2S_SECRET:}
+s2s-secret: ${JUDICIAL_API_S2S_SECRET:}
 
 jrd.security.roles.hmcts-admin: jrd-admin
 jrd.security.roles.system-user: jrd-system-user
