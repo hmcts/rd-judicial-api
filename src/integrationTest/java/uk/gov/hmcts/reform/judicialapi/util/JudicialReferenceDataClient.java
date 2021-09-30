@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -141,5 +142,25 @@ public class JudicialReferenceDataClient {
 
     public static void setBearerToken(String bearerToken) {
         JudicialReferenceDataClient.bearerToken = bearerToken;
+    }
+
+    public Map<String, Object> searchUsers(UserSearchRequest userSearchRequest, String role, boolean invalidTokens) {
+        ResponseEntity<Object> responseEntity;
+        var request =
+                new HttpEntity<Object>(userSearchRequest, invalidTokens ? getInvalidAuthHeaders(role, null) :
+                        getMultipleAuthHeaders(role, null));
+
+        try {
+            responseEntity = restTemplate.exchange(baseUrl + "/users/search", HttpMethod.POST, request, Object.class
+            );
+
+        } catch (RestClientResponseException ex) {
+            var statusAndBody = new HashMap<String, Object>(2);
+            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("response_body", ex.getResponseBodyAsString());
+            return statusAndBody;
+        }
+
+        return getResponse(responseEntity);
     }
 }
