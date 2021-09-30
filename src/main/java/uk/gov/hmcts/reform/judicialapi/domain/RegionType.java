@@ -4,18 +4,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Entity(name = "region_type")
 @Getter
 @Setter
 @NoArgsConstructor
-public class RegionType {
+public class RegionType implements Serializable {
 
     @Id
     @Column(name = "region_Id")
