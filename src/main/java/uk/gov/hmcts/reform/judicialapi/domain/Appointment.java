@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 
 @Entity(name = "judicial_office_appointment")
 @Getter
@@ -45,8 +47,9 @@ public class Appointment implements Serializable {
     @Column(name = "last_loaded_date")
     private LocalDateTime lastLoadedDate;
 
-    @ManyToOne
-    @JoinColumn(name = "per_Id", nullable = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "per_Id", referencedColumnName = "per_id",
+            nullable = false, insertable = false, updatable = false)
     private UserProfile userProfile;
 
     @ManyToOne
@@ -60,4 +63,11 @@ public class Appointment implements Serializable {
     @Column(name = "personal_code")
     @Size(max = 32)
     private String personalCode;
+
+    @Column(name = "service_code")
+    @Size(max = 16)
+    private String serviceCode;
+
+    @Column(name = "per_id")
+    private String perId;
 }

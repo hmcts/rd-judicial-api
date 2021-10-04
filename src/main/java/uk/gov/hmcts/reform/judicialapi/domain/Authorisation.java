@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -46,11 +48,20 @@ public class Authorisation implements Serializable {
     @Size(max = 256)
     private String lowerLevel;
 
-    @ManyToOne
-    @JoinColumn(name = "per_Id", nullable = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "per_Id", referencedColumnName = "per_id",
+            nullable = false, insertable = false, updatable = false)
     private UserProfile userProfile;
 
     @Column(name = "personal_code")
     @Size(max = 32)
     private String personalCode;
+
+    @Column(name = "service_code")
+    @Size(max = 16)
+    private String serviceCode;
+
+    @Column(name = "per_id")
+    private String perId;
+
 }
