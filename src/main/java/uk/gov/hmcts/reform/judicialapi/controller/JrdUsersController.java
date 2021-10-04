@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,6 @@ import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.RefreshRoleResponse;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
-import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.BAD_REQUEST;
