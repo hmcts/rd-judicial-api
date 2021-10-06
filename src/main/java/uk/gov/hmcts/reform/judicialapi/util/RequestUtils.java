@@ -23,10 +23,10 @@ import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.SORT_COLUMN;
 public class RequestUtils {
 
 
-    public static PageRequest validateAndBuildPaginationObject(Integer pageNumber,
-                                                               Integer pageSize,
-                                                               String sortColumn,
+    public static PageRequest validateAndBuildPaginationObject(Integer pageSize,
+                                                               Integer pageNumber,
                                                                String sortDirection,
+                                                               String sortColumn,
                                                                int configPageSize,
                                                                String configSortColumn,
                                                                Class<?> entityClass) {

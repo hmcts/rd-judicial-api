@@ -16,7 +16,6 @@ import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ONLY_ONE_PAR
 @NoArgsConstructor
 public class RefreshUserValidator {
 
-
     public void shouldContainOnlyOneInputParameter(RefreshRoleRequest refreshRoleRequest) {
         if (null != refreshRoleRequest) {
             boolean ccdServiceNames = isCcdServiceNamesNotEmptyOrNull(refreshRoleRequest.getCcdServiceNames());

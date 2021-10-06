@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.service.impl;
 
 import feign.Response;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObj
 
 @Slf4j
 @Service
+@Setter
 public class JudicialUserServiceImpl implements JudicialUserService {
 
     @Autowired
@@ -98,8 +100,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                                      Integer pageNumber, String sortDirection, String sortColumn) {
 
         refreshUserValidator.shouldContainOnlyOneInputParameter(refreshRoleRequest);
-        PageRequest pageRequest = RequestUtils.validateAndBuildPaginationObject(pageNumber, pageSize,
-                sortColumn, sortDirection, configPageSize, configSortColumn,
+        PageRequest pageRequest = RequestUtils.validateAndBuildPaginationObject(pageSize, pageNumber,
+                sortDirection, sortColumn, configPageSize, configSortColumn,
                 UserProfile.class);
 
         if (refreshRoleRequest != null) {
