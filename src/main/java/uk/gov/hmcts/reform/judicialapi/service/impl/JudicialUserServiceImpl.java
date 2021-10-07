@@ -300,9 +300,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         List<AppointmentRefreshResponse> appointmentList
                 = new ArrayList<>();
-        appointments.forEach(appt -> {
-            appointmentList.add(buildAppointmentRefreshResponseDto(appt));
-        });
+        appointments.forEach(appt ->
+                appointmentList.add(buildAppointmentRefreshResponseDto(appt)));
         return appointmentList;
     }
 

@@ -8,7 +8,6 @@ import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import au.com.dius.pact.provider.junitsupport.loader.VersionSelector;
 import au.com.dius.pact.provider.spring.junit5.MockMvcTestTarget;
-import feign.RequestInterceptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,8 +18,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
-import uk.gov.hmcts.reform.judicialapi.configuration.FeignInterceptorConfiguration;
 import uk.gov.hmcts.reform.judicialapi.controller.JrdUsersController;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
@@ -30,6 +27,7 @@ import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
+import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,11 +43,8 @@ import static org.mockito.Mockito.when;
         host = "${PACT_BROKER_URL:localhost}",
         port = "${PACT_BROKER_PORT:80}", consumerVersionSelectors = {
         @VersionSelector(tag = "master")})
-@ContextConfiguration(classes = {JrdUsersController.class, JudicialUserServiceImpl.class,
-        FeignInterceptorConfiguration.class})
-@TestPropertySource(properties = {"defaultPageSize=10", "refresh.pageSize=10",
-        "refresh.sortColumn=objectId", "locationRefDataUrl=http://rd-location-ref-api-aat.service.core-compute-aat.internal",
-        "loggingComponentName=test"})
+@ContextConfiguration(classes = {JrdUsersController.class, JudicialUserServiceImpl.class})
+@TestPropertySource(properties = {"defaultPageSize=10", "refresh.pageSize=10"})
 @IgnoreNoPactsToVerify
 public class JrdApiProviderTest {
 
@@ -60,14 +55,10 @@ public class JrdApiProviderTest {
     UserProfileRepository userProfileRepository;
 
     @MockBean
+    RefreshUserValidator refreshUserValidator;
+
+    @MockBean
     LocationReferenceDataFeignClient locationReferenceDataFeignClient;
-
-    @MockBean
-    AuthTokenGenerator authTokenGenerator;
-
-    @MockBean
-    RequestInterceptor requestInterceptor;
-
 
     @TestTemplate
     @ExtendWith(PactVerificationInvocationContextProvider.class)
