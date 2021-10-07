@@ -213,7 +213,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             List<LrdOrgInfoServiceResponse> listLrdServiceMapping =
                     (List<LrdOrgInfoServiceResponse>) responseEntity.getBody();
 
-            if (!listLrdServiceMapping.isEmpty()) {
+            if (listLrdServiceMapping != null && !listLrdServiceMapping.isEmpty()) {
 
                 Map<String, String> ccdServiceNameToCodeMapping =
                         listLrdServiceMapping
