@@ -96,7 +96,7 @@ public class UserProfile implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private List<Appointment> appointments;
 
-    @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile", cascade = ALL,
+    @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile", cascade = ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<Authorisation> authorisations;
