@@ -52,7 +52,7 @@ def vaultOverrides = [
 
 withNightlyPipeline(type, product, component) {
 
-    env.TEST_URL = "http://rd-judicial-api-aat.service.core-compute-aat.internal"
+    env.TEST_URL = "http://rd-judicial-api-pr-175.service.core-compute-preview.internal"
     env.S2S_URL_FOR_TESTS = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
     env.Rules = params.SecurityRules
     env.execution_environment = "aat"
