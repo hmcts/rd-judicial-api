@@ -16,10 +16,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static uk.gov.hmcts.reform.judicialapi.util.JrdConstant.USER_DATA_NOT_FOUND;
 
 @RunWith(CustomSerenityRunner.class)
 @WithTags({@WithTag("testType:Functional")})
@@ -61,27 +59,6 @@ public class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
 
         assertThat(errorResponse).isNotNull();
         assertThat(errorResponse.getErrorMessage()).isEqualTo(exceptionMessage);
-    }
-
-    @Test
-    @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
-    public void shouldReturn404WhenUserProfileRequestedForGivenSearchStringNotFound() {
-        var errorResponse = (ErrorResponse)
-                judicialApiClient.userSearch(getUserSearchRequest(null, null, "invalid"),
-                        ROLE_JRD_SYSTEM_USER, NOT_FOUND);
-        assertThat(errorResponse).isNotNull();
-        assertEquals(USER_DATA_NOT_FOUND, errorResponse.getErrorDescription());
-    }
-
-    @Test
-    @ToggleEnable(mapKey = USERS_SEARCH, withFeature = true)
-    public void shouldReturn404WhenUserProfileRequestedForGivenLocationNotFound() {
-        var errorResponse = (ErrorResponse)
-                judicialApiClient
-                        .userSearch(getUserSearchRequest("20012", "BFA2", "Joe"),
-                        ROLE_JRD_SYSTEM_USER, NOT_FOUND);
-        assertThat(errorResponse).isNotNull();
-        assertEquals(USER_DATA_NOT_FOUND, errorResponse.getErrorDescription());
     }
 
     @Test
