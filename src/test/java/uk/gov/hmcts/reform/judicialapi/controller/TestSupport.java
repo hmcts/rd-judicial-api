@@ -59,7 +59,6 @@ public class TestSupport {
         UserProfile userProfile = new UserProfile();
         userProfile.setPerId("1");
         userProfile.setPersonalCode("personalCode");
-        userProfile.setAppointment("title");
         userProfile.setKnownAs("knownAs");
         userProfile.setSurname("surname");
         userProfile.setFullName("name");
