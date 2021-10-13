@@ -23,7 +23,6 @@ public class UserProfileTest {
         assertNotNull(userProfile.getCreatedDate());
         assertThat(userProfile.getPerId()).isEqualTo("1");
         assertThat(userProfile.getPersonalCode()).isEqualTo("personalCode");
-        assertThat(userProfile.getAppointment()).isEqualTo("title");
         assertThat(userProfile.getKnownAs()).isEqualTo("knownAs");
         assertThat(userProfile.getSurname()).isEqualTo("surname");
         assertThat(userProfile.getFullName()).isEqualTo("name");
