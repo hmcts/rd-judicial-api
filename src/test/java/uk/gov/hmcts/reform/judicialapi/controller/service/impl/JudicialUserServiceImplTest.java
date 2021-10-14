@@ -368,12 +368,12 @@ public class JudicialUserServiceImplTest {
         UserProfile userProfile = new UserProfile();
         userProfile.setPerId("1");
         userProfile.setPersonalCode("Emp");
-        userProfile.setAppointment("Magistrate");
+        //userProfile.setAppointment("Magistrate");
         userProfile.setKnownAs("TestEmp");
         userProfile.setSurname("Test");
         userProfile.setFullName("Test1");
         userProfile.setPostNominals("Test Test1");
-        userProfile.setAppointmentType("temp");
+        //userProfile.setAppointmentType("temp");
         userProfile.setWorkPattern("temp");
         userProfile.setEjudiciaryEmailId("abc@gmail.com");
         userProfile.setJoiningDate(LocalDate.now());
