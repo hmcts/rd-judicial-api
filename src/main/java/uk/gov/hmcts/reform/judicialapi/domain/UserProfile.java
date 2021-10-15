@@ -30,10 +30,6 @@ public class UserProfile implements Serializable {
     @Size(max = 32)
     private String personalCode;
 
-    @Column(name = "appointment")
-    @Size(max = 64)
-    private String appointment;
-
     @Column(name = "known_as")
     @Size(max = 64)
     private String knownAs;
@@ -49,10 +45,6 @@ public class UserProfile implements Serializable {
     @Column(name = "post_nominals")
     @Size(max = 32)
     private String postNominals;
-
-    @Column(name = "appointment_type")
-    @Size(max = 32)
-    private String appointmentType;
 
     @Column(name = "work_pattern")
     @Size(max = 32)
