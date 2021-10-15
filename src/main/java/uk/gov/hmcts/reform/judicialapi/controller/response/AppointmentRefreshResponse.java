@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.controller.response;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,8 +8,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @Getter
@@ -19,29 +17,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AppointmentRefreshResponse implements Serializable {
 
-    private Long officeAppointmentId;
+    private String baseLocationId;
+    private String epimmsId;
+    private String courtName;
+    private String regionId;
+    private String regionDescEn;
+    private String regionDescCy;
+    private String locationId;
+    private String location;
+    private String isPrincipleAppointment;
+    private String appointment;
+    private String appointmentType;
+    private String serviceCode;
+    private List<String> roles;
+    private String startDate;
+    private String endDate;
 
-    private Boolean isPrincipleAppointment;
-
-    private LocalDate startDate;
-
-    private LocalDate endDate;
-
-    private Boolean activeFlag;
-
-    private LocalDateTime extractedDate;
-
-    private LocalDateTime createdDate;
-
-    private LocalDateTime lastLoadedDate;
-
-    private BaseLocationTypeRefreshResponse baseLocationType;
-
-    @JsonIgnore
-    private RegionTypeRefreshResponse regionType;
-
-    private String personalCode;
-
-    @JsonIgnore
-    private String perId;
 }

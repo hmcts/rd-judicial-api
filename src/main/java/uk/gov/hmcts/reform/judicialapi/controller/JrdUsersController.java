@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.BAD_REQUEST;
@@ -29,7 +30,6 @@ import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.FORBIDDEN_ER
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.NO_DATA_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.INTERNAL_SERVER_ERROR;
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.response.RefreshRoleResponse;
 
 import javax.validation.Valid;
 
@@ -160,7 +160,7 @@ public class JrdUsersController {
             @ApiResponse(
                     code = 200,
                     message = "The User profiles have been retrieved successfully",
-                    response = RefreshRoleResponse.class
+                    response = UserProfileRefreshResponse.class
             ),
             @ApiResponse(
                     code = 400,

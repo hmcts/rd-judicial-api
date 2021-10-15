@@ -28,6 +28,8 @@ import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
+import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
@@ -229,7 +231,9 @@ public class JudicialUserServiceImplTest {
         PageRequest pageRequest = getPageRequest();
 
         PageImpl<UserProfile> page = new PageImpl<>(Collections.singletonList(userProfile));
-        when(userProfileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), pageRequest))
+
+        when(userProfileRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
+        when(userProfileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
                 .thenReturn(page);
         RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null);
@@ -269,8 +273,9 @@ public class JudicialUserServiceImplTest {
         PageRequest pageRequest = getPageRequest();
 
         PageImpl<UserProfile> page = new PageImpl<>(Collections.emptyList());
-        when(userProfileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), pageRequest))
+        when(userProfileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
                 .thenReturn(page);
+        when(userProfileRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
         RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null);
         ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
@@ -341,6 +346,11 @@ public class JudicialUserServiceImplTest {
         BaseLocationType baseLocationType = new BaseLocationType();
         baseLocationType.setBaseLocationId("123");
 
+        RegionType regionType = new RegionType();
+        regionType.setRegionId("1");
+        regionType.setRegionDescCy("National");
+        regionType.setRegionDescEn("National");
+
         Appointment appointment = new Appointment();
         appointment.setOfficeAppointmentId(1L);
         appointment.setIsPrincipleAppointment(true);
@@ -351,6 +361,7 @@ public class JudicialUserServiceImplTest {
         appointment.setCreatedDate(LocalDateTime.now());
         appointment.setLastLoadedDate(LocalDateTime.now());
         appointment.setBaseLocationType(baseLocationType);
+        appointment.setRegionType(regionType);
 
         Authorisation authorisation = new Authorisation();
         authorisation.setPerId("1");
@@ -363,17 +374,20 @@ public class JudicialUserServiceImplTest {
         authorisation.setLastUpdated(LocalDateTime.now());
         authorisation.setLowerLevel("Welsh");
         authorisation.setPersonalCode("");
-        authorisation.setServiceCode("BFA1");
+
+        JudicialRoleType judicialRoleType = new JudicialRoleType();
+        judicialRoleType.setRoleId("1");
+        judicialRoleType.setPerId("1");
+        judicialRoleType.setTitle("Test1");
+        judicialRoleType.setLocation("west");
 
         UserProfile userProfile = new UserProfile();
         userProfile.setPerId("1");
         userProfile.setPersonalCode("Emp");
-        //userProfile.setAppointment("Magistrate");
         userProfile.setKnownAs("TestEmp");
         userProfile.setSurname("Test");
         userProfile.setFullName("Test1");
         userProfile.setPostNominals("Test Test1");
-        //userProfile.setAppointmentType("temp");
         userProfile.setWorkPattern("temp");
         userProfile.setEjudiciaryEmailId("abc@gmail.com");
         userProfile.setJoiningDate(LocalDate.now());
@@ -389,6 +403,7 @@ public class JudicialUserServiceImplTest {
 
         userProfile.setAppointments(singletonList(appointment));
         userProfile.setAuthorisations(singletonList(authorisation));
+        userProfile.setJudicialRoleTypes(singletonList(judicialRoleType));
 
         return userProfile;
     }

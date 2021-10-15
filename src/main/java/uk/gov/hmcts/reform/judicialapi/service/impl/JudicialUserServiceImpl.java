@@ -21,10 +21,9 @@ import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.response.RefreshRoleResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
-import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
+import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
@@ -34,18 +33,15 @@ import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.AppointmentRefreshResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.response.BaseLocationTypeRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.AuthorisationRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.util.JrdConstant.USER_DATA_NOT_FOUND;
@@ -129,13 +125,17 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 UserProfile.class);
 
         if (refreshRoleRequest != null) {
-            if (refreshUserValidator.isNotEmptyOrNull(refreshRoleRequest.getSidamIds())) {
+            if (refreshUserValidator.isCcdServiceNamesNotEmptyOrNull(refreshRoleRequest.getCcdServiceNames())) {
+                log.info("starting refreshUserProfileBasedOnCcdServiceNames");
+                return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
+            } else if (refreshUserValidator.isNotEmptyOrNull(refreshRoleRequest.getSidamIds())) {
+                log.info("starting refreshUserProfileBasedOnSidamIds");
                 return refreshUserProfileBasedOnSidamIds(refreshRoleRequest.getSidamIds(), pageRequest);
             } else if (refreshUserValidator.isNotEmptyOrNull(refreshRoleRequest.getObjectIds())) {
+                log.info("starting refreshUserProfileBasedOnObjectIds");
                 return refreshUserProfileBasedOnObjectIds(refreshRoleRequest.getObjectIds(), pageRequest);
-            } else if (refreshUserValidator.isCcdServiceNamesNotEmptyOrNull(refreshRoleRequest.getCcdServiceNames())) {
-                return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
             } else {
+                log.info("starting refreshUserProfileBasedOnAll");
                 return refreshUserProfileBasedOnAll(pageRequest);
             }
         } else {
@@ -148,6 +148,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                                                       PageRequest pageRequest) {
         Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileByObjectIds(
                 objectIds, pageRequest);
+        log.info("userProfilePage size fetched for refreshUserProfileBasedOnObjectIds is = {}",
+                userProfilePage.getTotalElements());
         if (userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the objectIds {}",
                     loggingComponentName, objectIds);
@@ -176,19 +178,15 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             log.error("{}:: No data found in JRD {}", loggingComponentName);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
         }
-        return getRefreshRoleResponseEntity(userProfilePage, null, "");
+        return getRefreshRoleResponseEntity(userProfilePage, null, "All");
     }
 
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
-                                                                Collection<?> collection, String collectionName) {
-        List<RefreshRoleResponse> userProfileList = new ArrayList<>();
+                                                                Object collection, String collectionName) {
+        List<UserProfileRefreshResponse> userProfileList = new ArrayList<>();
 
         userProfilePage.forEach(userProfile -> userProfileList.add(
-                RefreshRoleResponse.builder()
-                        .userProfileRefreshResponse(buildUserProfileRefreshResponseDto(
-                                userProfile, new HashSet<>(userProfile.getAuthorisations())))
-                        .build()));
-
+                buildUserProfileRefreshResponseDto(userProfile, new HashSet<>(userProfile.getAuthorisations()))));
 
         log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
                 + "for" + collectionName + " {}", loggingComponentName, collection);
@@ -223,8 +221,10 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                 .collect(Collectors.toMap(LrdOrgInfoServiceResponse::getServiceCode,
                                         LrdOrgInfoServiceResponse::getCcdServiceName));
 
+                List<String> ticketCode = fetchTicketCodeFromServiceCode(ccdServiceNameToCodeMapping.keySet());
+
                 Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileByServiceNames(
-                        ccdServiceNameToCodeMapping.keySet(), pageRequest);
+                        ccdServiceNameToCodeMapping.keySet(), ticketCode, pageRequest);
 
                 if (userProfilePage.isEmpty()) {
                     log.error("{}:: No data found in JRD for the ccdServiceNames {}",
@@ -232,7 +232,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                     throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
                 }
 
-                List<RefreshRoleResponse> userProfileList = new ArrayList<>();
+                /*List<RefreshRoleResponse> userProfileList = new ArrayList<>();
                 Set<Authorisation> authorisations = new LinkedHashSet<>();
 
                 userProfilePage.forEach(userProfile -> userProfile.getAuthorisations()
@@ -252,8 +252,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 return ResponseEntity
                         .ok()
                         .header("total_records", String.valueOf(userProfilePage.getTotalElements()))
-                        .body(userProfileList);
-
+                        .body(userProfileList);*/
+                return getRefreshRoleResponseEntity(userProfilePage, ccdServiceNames, "ccdServiceNames");
             }
         }
 
@@ -280,53 +280,39 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .surname(profile.getSurname())
                 .fullName(profile.getFullName())
                 .postNominals(profile.getPostNominals())
-                .ejudiciaryEmailId(profile.getEjudiciaryEmailId())
-                /*.personalCode(profile.getPersonalCode())
-                .appointment(profile.getAppointment())
-                .appointmentType(profile.getAppointmentType())
-                .workPattern(profile.getWorkPattern())
-                .joiningDate(profile.getJoiningDate())
-                .lastWorkingDate(profile.getLastWorkingDate())
-                .activeFlag(profile.getActiveFlag())
-                .extractedDate(profile.getExtractedDate())
-                .createdDate(profile.getCreatedDate())
-                .lastLoadedDate(profile.getLastLoadedDate())*/
-                .appointments(getAppointmentRefreshResponseList(profile.getAppointments()))
+                .emailId(profile.getEjudiciaryEmailId())
+                .appointments(getAppointmentRefreshResponseList(profile))
                 .authorisations(getAuthorisationRefreshResponseList(authorisations, profile))
                 .build();
     }
 
-    private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(List<Appointment> appointments) {
+    private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(UserProfile profile) {
 
         List<AppointmentRefreshResponse> appointmentList
                 = new ArrayList<>();
-        appointments.forEach(appt ->
-                appointmentList.add(buildAppointmentRefreshResponseDto(appt)));
+        profile.getAppointments().forEach(appt ->
+                appointmentList.add(buildAppointmentRefreshResponseDto(appt, profile)));
         return appointmentList;
     }
 
-    private AppointmentRefreshResponse buildAppointmentRefreshResponseDto(Appointment appt) {
+    private AppointmentRefreshResponse buildAppointmentRefreshResponseDto(Appointment appt,
+                                                                          UserProfile profile) {
         return AppointmentRefreshResponse.builder()
-                .baseLocationType(buildBaseLocationRefreshResponseDTO(appt.getBaseLocationType()))
-                .officeAppointmentId(appt.getOfficeAppointmentId())
-                .isPrincipleAppointment(appt.getIsPrincipleAppointment())
-                .startDate(appt.getStartDate())
-                .createdDate(appt.getCreatedDate())
-                .lastLoadedDate(appt.getLastLoadedDate())
-                .endDate(appt.getEndDate())
-                .activeFlag(appt.getActiveFlag())
-                .personalCode(appt.getPersonalCode())
-                .extractedDate(appt.getExtractedDate())
-                .build();
-    }
-
-    private BaseLocationTypeRefreshResponse buildBaseLocationRefreshResponseDTO(BaseLocationType baseLocationType) {
-        return BaseLocationTypeRefreshResponse.builder()
-                .baseLocationId(baseLocationType.getBaseLocationId())
-                .courtName(baseLocationType.getCourtName())
-                .courtType(baseLocationType.getCourtType())
-                .circuit(baseLocationType.getCircuit())
-                .areaOfExpertise(baseLocationType.getAreaOfExpertise())
+                .baseLocationId(appt.getBaseLocationType().getBaseLocationId())
+                .epimmsId(appt.getEpimmsId())
+                .courtName(appt.getBaseLocationType().getCourtName())
+                .regionId(appt.getRegionType().getRegionId())
+                .regionDescEn(appt.getRegionType().getRegionDescEn())
+                .regionDescCy(appt.getRegionType().getRegionDescCy())
+                .locationId(appt.getBaseLocationType().getBaseLocationId())
+                .location(appt.getBaseLocationType().getCircuit())
+                .isPrincipleAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
+                .appointment(appt.getAppointment())
+                .appointmentType(appt.getAppointmentType())
+                .serviceCode(appt.getServiceCode())
+                .roles(getRoleIdList(profile.getJudicialRoleTypes()))
+                .startDate(String.valueOf(appt.getStartDate()))
+                .endDate(String.valueOf(appt.getEndDate()))
                 .build();
     }
 
@@ -342,18 +328,21 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private AuthorisationRefreshResponse buildAuthorisationRefreshResponseDto(Authorisation auth) {
         return AuthorisationRefreshResponse.builder()
-                .officeAuthId(auth.getOfficeAuthId())
                 .jurisdiction(auth.getJurisdiction())
-                .lowerLevel(auth.getLowerLevel())
-                .serviceCode(auth.getServiceCode())
-                .startDate(auth.getStartDate())
-                .endDate(auth.getEndDate())
-                .createdDate(auth.getCreatedDate())
-                .lastUpdated(auth.getLastUpdated())
-                .ticketId(auth.getTicketId())
-                .personalCode(auth.getPersonalCode())
+                .ticketDescription(auth.getLowerLevel())
+                .ticketCode(auth.getTicketCode())
+                .startDate(String.valueOf(auth.getStartDate()))
+                .endDate(String.valueOf(auth.getEndDate()))
                 .build();
     }
 
+    private List<String> fetchTicketCodeFromServiceCode(Set<String> serviceCode) {
+        return userProfileRepository.fetchTicketCodeFromServiceCode(serviceCode);
+    }
+
+    private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {
+        return judicialRoleTypes.stream().map(judicialRoleType ->
+               judicialRoleType.getRoleId()).collect(Collectors.toList());
+    }
 
 }

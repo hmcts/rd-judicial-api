@@ -11,9 +11,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Size;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
+import javax.validation.constraints.Size;
 
 @Entity(name = "judicial_office_authorisation")
 @Getter
@@ -60,9 +60,10 @@ public class Authorisation implements Serializable {
     @Size(max = 32)
     private String personalCode;
 
-    @Column(name = "service_code")
-    private String serviceCode;
+    @Column(name = "ticket_code")
+    private String ticketCode;
 
     @Column(name = "object_id")
     private String objectId;
+
 }
