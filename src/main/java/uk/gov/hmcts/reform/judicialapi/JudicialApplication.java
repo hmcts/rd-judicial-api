@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.judicialapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import uk.gov.hmcts.reform.authorisation.ServiceAuthorisationApi;
 import uk.gov.hmcts.reform.idam.client.IdamApi;
@@ -10,6 +11,7 @@ import uk.gov.hmcts.reform.idam.client.IdamApi;
 @EnableFeignClients(basePackages = { "uk.gov.hmcts.reform.judicialapi" },
         basePackageClasses = { IdamApi.class, ServiceAuthorisationApi.class }
 )
+@EnableCaching
 @SuppressWarnings("HideUtilityClassConstructor") // Spring needs a constructor, its not a utility class
 public class JudicialApplication {
 
