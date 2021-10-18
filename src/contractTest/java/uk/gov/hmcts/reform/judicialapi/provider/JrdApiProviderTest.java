@@ -23,7 +23,9 @@ import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
+import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 
@@ -51,6 +53,9 @@ public class JrdApiProviderTest {
 
     @MockBean
     UserProfileRepository userProfileRepository;
+
+    @MockBean
+    ServiceCodeMappingRepository serviceCodeMappingRepository;
 
     @TestTemplate
     @ExtendWith(PactVerificationInvocationContextProvider.class)
@@ -115,9 +120,15 @@ public class JrdApiProviderTest {
         userProfile.setEjudiciaryEmailId("test@test.com");
         userProfile.setPostNominals("Dr");
 
+        var serviceCodeMapping = ServiceCodeMapping
+                .builder()
+                .ticketCode("testTicketCode")
+                .build();
+
         var userProfiles = List.of(userProfile);
 
-        when(userProfileRepository.findBySearchString(any(),any(),any()))
+        when(serviceCodeMappingRepository.findByServiceCodeIgnoreCase(any())).thenReturn(List.of(serviceCodeMapping));
+        when(userProfileRepository.findBySearchString(any(),any(),any(), anyList()))
                 .thenReturn(userProfiles);
     }
 
