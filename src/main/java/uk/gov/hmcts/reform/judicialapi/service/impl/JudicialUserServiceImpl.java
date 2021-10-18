@@ -12,7 +12,6 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundExcepti
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
-import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
@@ -63,7 +62,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         var ticketCode = new ArrayList<String>();
 
         if (userSearchRequest.getServiceCode() != null) {
-            List<ServiceCodeMapping> serviceCodeMappings = serviceCodeMappingRepository
+            var serviceCodeMappings = serviceCodeMappingRepository
                     .findByServiceCodeIgnoreCase(userSearchRequest.getServiceCode());
 
             serviceCodeMappings
