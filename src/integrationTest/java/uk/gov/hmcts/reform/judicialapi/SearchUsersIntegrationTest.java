@@ -41,7 +41,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location("20013")
-                .serviceCode("BFA2")
+                .serviceCode("BBA3")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, "jrd-system-user", false);

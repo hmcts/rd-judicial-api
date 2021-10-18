@@ -12,10 +12,13 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundExcepti
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
+import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +31,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @Autowired
     private UserProfileRepository userProfileRepository;
+
+    @Autowired
+    private ServiceCodeMappingRepository serviceCodeMappingRepository;
 
     @Value("${defaultPageSize}")
     Integer defaultPageSize;
@@ -54,9 +60,19 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @Override
     public ResponseEntity<Object> retrieveUserProfile(UserSearchRequest userSearchRequest) {
+        var ticketCode = new ArrayList<String>();
+
+        if (userSearchRequest.getServiceCode() != null) {
+            List<ServiceCodeMapping> serviceCodeMappings = serviceCodeMappingRepository
+                    .findByServiceCodeIgnoreCase(userSearchRequest.getServiceCode());
+
+            serviceCodeMappings
+                    .forEach(s -> ticketCode.add(s.getTicketCode()));
+        }
+
         var userProfiles = userProfileRepository
-                .findBySearchString(userSearchRequest.getSearchString()
-                .toLowerCase(), userSearchRequest.getServiceCode(), userSearchRequest.getLocation());
+                .findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
+                        userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode);
 
         if (CollectionUtils.isEmpty(userProfiles)) {
             throw new ResourceNotFoundException(USER_DATA_NOT_FOUND);
