@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserProfileRefreshResponse implements Serializable {
 
+    private String perId;
     private String sidamId;
     private String objectId;
     private String knownAs;

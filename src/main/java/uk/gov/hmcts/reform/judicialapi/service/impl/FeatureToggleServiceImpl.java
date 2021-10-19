@@ -40,6 +40,7 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
         launchDarklyMap = new HashMap<>();
         launchDarklyMap.put("JrdUsersController.fetchUsers", "rd-judicial-api");
         launchDarklyMap.put("JrdUsersController.searchUsers", "rd-judicial-api");
+        launchDarklyMap.put("JrdUsersController.refreshUserProfile", "rd-judicial-api");
     }
 
     @Override

@@ -44,8 +44,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "LEFT JOIN FETCH judicial_role_type jrt \n"
             + "ON jup.perId = jrt.perId \n"
             + "where (jup.objectId != '' and jup.objectId is not null)  \n"
-            + "and ((DATE(appt.endDate) >= CURRENT_DATE or DATE(appt.endDate) is null) \n"
-            + "or (DATE(auth.endDate) >= CURRENT_DATE or DATE(auth.endDate) is null)) \n"
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) \n"
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) \n"
             + "and (jup.objectId IN :objectIds)")
     Page<UserProfile> fetchUserProfileByObjectIds(List<String> objectIds, Pageable pageable);
 
@@ -57,8 +57,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "LEFT JOIN FETCH judicial_role_type jrt \n"
             + "ON jup.perId = jrt.perId \n"
             + "where (jup.objectId != '' or jup.objectId is not null)  \n"
-            + "and ((DATE(appt.endDate) >= CURRENT_DATE or DATE(appt.endDate) is null) \n"
-            + "or (DATE(auth.endDate) >= CURRENT_DATE or DATE(auth.endDate) is null)) \n"
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) \n"
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) \n"
             + "and (appt.serviceCode IN :ccdServiceCode or auth.ticketCode IN :ticketCode )")
     Page<UserProfile> fetchUserProfileByServiceNames(Set<String> ccdServiceCode,
                                                      List<String> ticketCode, Pageable pageable);
@@ -71,8 +71,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "LEFT JOIN FETCH judicial_role_type jrt \n"
             + "ON jup.perId = jrt.perId \n"
             + "where (jup.objectId != '' or jup.objectId is not null)  \n"
-            + "and ((DATE(appt.endDate) >= CURRENT_DATE or DATE(appt.endDate) is null) \n"
-            + "or (DATE(auth.endDate) >= CURRENT_DATE or DATE(auth.endDate) is null)) \n"
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) \n"
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) \n"
             + "and (jup.sidamId IN :sidamIds)")
     Page<UserProfile> fetchUserProfileBySidamIds(List<String> sidamIds, Pageable pageable);
 
@@ -84,8 +84,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "LEFT JOIN FETCH judicial_role_type jrt \n"
             + "ON jup.perId = jrt.perId \n"
             + "where (jup.objectId != '' or jup.objectId is not null)  \n"
-            + "and ((DATE(appt.endDate) >= CURRENT_DATE or DATE(appt.endDate) is null) \n"
-            + "or (DATE(auth.endDate) >= CURRENT_DATE or DATE(auth.endDate) is null))")
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) \n"
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null))")
     Page<UserProfile> fetchUserProfileByAll(Pageable pageable);
 
     @Query(value = "select ticketCode from judicial_service_code_mapping where serviceCode IN :ccdServiceCode")

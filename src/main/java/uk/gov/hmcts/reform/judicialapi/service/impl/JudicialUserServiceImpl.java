@@ -42,6 +42,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.util.JrdConstant.USER_DATA_NOT_FOUND;
@@ -124,20 +127,19 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 sortDirection, sortColumn, refreshDefaultPageSize, refreshDefaultSortColumn,
                 UserProfile.class);
 
-        if (refreshRoleRequest != null) {
-            if (refreshUserValidator.isCcdServiceNamesNotEmptyOrNull(refreshRoleRequest.getCcdServiceNames())) {
-                log.info("starting refreshUserProfileBasedOnCcdServiceNames");
-                return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
-            } else if (refreshUserValidator.isNotEmptyOrNull(refreshRoleRequest.getSidamIds())) {
-                log.info("starting refreshUserProfileBasedOnSidamIds");
-                return refreshUserProfileBasedOnSidamIds(refreshRoleRequest.getSidamIds(), pageRequest);
-            } else if (refreshUserValidator.isNotEmptyOrNull(refreshRoleRequest.getObjectIds())) {
-                log.info("starting refreshUserProfileBasedOnObjectIds");
-                return refreshUserProfileBasedOnObjectIds(refreshRoleRequest.getObjectIds(), pageRequest);
-            } else {
-                log.info("starting refreshUserProfileBasedOnAll");
-                return refreshUserProfileBasedOnAll(pageRequest);
-            }
+        return (refreshRoleRequest != null) ? getRefreshUserProfileBasedOnParam(refreshRoleRequest, pageRequest)
+                : refreshUserProfileBasedOnAll(pageRequest);
+
+    }
+
+    private ResponseEntity<Object> getRefreshUserProfileBasedOnParam(RefreshRoleRequest refreshRoleRequest,
+                                                                     PageRequest pageRequest) {
+        if (refreshUserValidator.isCcdServiceNamesNotEmptyOrNull(refreshRoleRequest.getCcdServiceNames())) {
+            return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
+        } else if (refreshUserValidator.isNotEmptyOrNull(refreshRoleRequest.getSidamIds())) {
+            return refreshUserProfileBasedOnSidamIds(refreshRoleRequest.getSidamIds(), pageRequest);
+        } else if (refreshUserValidator.isNotEmptyOrNull(refreshRoleRequest.getObjectIds())) {
+            return refreshUserProfileBasedOnObjectIds(refreshRoleRequest.getObjectIds(), pageRequest);
         } else {
             return refreshUserProfileBasedOnAll(pageRequest);
         }
@@ -146,21 +148,23 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnObjectIds(List<String> objectIds,
                                                                       PageRequest pageRequest) {
+        log.info("starting refreshUserProfile BasedOn ObjectIds");
         Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileByObjectIds(
                 objectIds, pageRequest);
-        log.info("userProfilePage size fetched for refreshUserProfileBasedOnObjectIds is = {}",
-                userProfilePage.getTotalElements());
+
         if (userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the objectIds {}",
                     loggingComponentName, objectIds);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
         }
+
         return getRefreshRoleResponseEntity(userProfilePage, objectIds, "objectIds");
     }
 
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnSidamIds(List<String> sidamIds,
                                                                      PageRequest pageRequest) {
+        log.info("starting refreshUserProfile BasedOn SidamIds");
         Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileBySidamIds(
                 sidamIds, pageRequest);
         if (userProfilePage.isEmpty()) {
@@ -173,12 +177,16 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnAll(PageRequest pageRequest) {
+        log.info("starting refreshUserProfile BasedOn All");
+
         Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileByAll(pageRequest);
+
         if (userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD {}", loggingComponentName);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
         }
-        return getRefreshRoleResponseEntity(userProfilePage, null, "All");
+
+        return getRefreshRoleResponseEntity(userProfilePage, "", "All");
     }
 
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
@@ -188,18 +196,28 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         userProfilePage.forEach(userProfile -> userProfileList.add(
                 buildUserProfileRefreshResponseDto(userProfile, new HashSet<>(userProfile.getAuthorisations()))));
 
+        List<UserProfileRefreshResponse> distinctElements = userProfileList.stream()
+                .filter(distinctByKey(p -> p.getPerId()))
+                .collect(Collectors.toList());
+
         log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
-                + "for" + collectionName + " {}", loggingComponentName, collection);
+                + "for " + collectionName + " {}", loggingComponentName, collection);
         return ResponseEntity
                 .ok()
-                .header("total_records", String.valueOf(userProfilePage.getTotalElements()))
-                .body(userProfileList);
+                .header("total_records", String.valueOf(distinctElements.size()))
+                .body(distinctElements);
 
+    }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
+        Map<Object, Boolean> map = new ConcurrentHashMap<>();
+        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnCcdServiceNames(String ccdServiceNames,
                                                                             PageRequest pageRequest) {
+        log.info("starting refreshUserProfile BasedOn CcdServiceNames");
         Response lrdOrgInfoServiceResponse =
                 locationReferenceDataFeignClient.getLocationRefServiceMapping(ccdServiceNames);
         HttpStatus httpStatus = HttpStatus.valueOf(lrdOrgInfoServiceResponse.status());
@@ -232,27 +250,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                     throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
                 }
 
-                /*List<RefreshRoleResponse> userProfileList = new ArrayList<>();
-                Set<Authorisation> authorisations = new LinkedHashSet<>();
-
-                userProfilePage.forEach(userProfile -> userProfile.getAuthorisations()
-                        .stream()
-                        .filter(auth -> ccdServiceNameToCodeMapping.containsKey(auth.getServiceCode()))
-                        .forEach(authorisations::add));
-
-                authorisations.forEach(authorisation -> userProfileList.add(
-                        RefreshRoleResponse.builder()
-                                .userProfileRefreshResponse(buildUserProfileRefreshResponseDto(
-                                        authorisation.getUserProfile(), authorisations))
-                                .build()));
-
-
-                log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
-                        + "for ccdServiceNames {}", loggingComponentName, ccdServiceNames);
-                return ResponseEntity
-                        .ok()
-                        .header("total_records", String.valueOf(userProfilePage.getTotalElements()))
-                        .body(userProfileList);*/
                 return getRefreshRoleResponseEntity(userProfilePage, ccdServiceNames, "ccdServiceNames");
             }
         }
@@ -274,6 +271,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(UserProfile profile,
                                                                           Set<Authorisation> authorisations) {
         return UserProfileRefreshResponse.builder()
+                .perId(profile.getPerId())
                 .sidamId(profile.getSidamId())
                 .objectId(profile.getObjectId())
                 .knownAs(profile.getKnownAs())

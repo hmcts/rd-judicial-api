@@ -195,7 +195,9 @@ public class JrdUsersController {
             @RequestHeader(name = "sort_direction", required = false) String sortDirection,
             @RequestHeader(name = "sort_column", required = false) String sortColumn
     ) {
-        log.info("starting refreshUserProfile ");
+        log.info("starting refreshUserProfile with RefreshRoleRequest {}, pageSize = {}, pageNumber = {}, "
+                + "sortDirection = {}, sortColumn = {}", refreshRoleRequest,
+                pageSize, pageNumber,sortDirection,sortColumn);
 
         return judicialUserService.refreshUserProfile(refreshRoleRequest, pageSize, pageNumber,
                 sortDirection, sortColumn);
