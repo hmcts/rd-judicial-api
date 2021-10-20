@@ -39,11 +39,9 @@ import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -210,8 +208,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                                                 Object collection, String collectionName) {
         List<UserProfileRefreshResponse> userProfileList = new ArrayList<>();
 
-        userProfilePage.forEach(userProfile -> userProfileList.add(
-                buildUserProfileRefreshResponseDto(userProfile, new HashSet<>(userProfile.getAuthorisations()))));
+        userProfilePage.forEach(userProfile -> userProfileList.add(buildUserProfileRefreshResponseDto(userProfile)));
 
         List<UserProfileRefreshResponse> distinctElements = userProfileList.stream()
                 .filter(distinctByKey(p -> p.getPerId()))
@@ -221,7 +218,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 + "for " + collectionName + " {}", loggingComponentName, collection);
         return ResponseEntity
                 .ok()
-                .header("total_records", String.valueOf(distinctElements.size()))
+                .header("total_records", String.valueOf(userProfilePage.getTotalElements()))
                 .body(distinctElements);
 
     }
@@ -285,8 +282,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         }
     }
 
-    private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(UserProfile profile,
-                                                                          Set<Authorisation> authorisations) {
+    private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(UserProfile profile) {
         return UserProfileRefreshResponse.builder()
                 .perId(profile.getPerId())
                 .sidamId(profile.getSidamId())
@@ -297,22 +293,24 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .postNominals(profile.getPostNominals())
                 .emailId(profile.getEjudiciaryEmailId())
                 .appointments(getAppointmentRefreshResponseList(profile))
-                .authorisations(getAuthorisationRefreshResponseList(authorisations, profile))
+                .authorisations(getAuthorisationRefreshResponseList(profile))
                 .build();
     }
 
     private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(UserProfile profile) {
 
-        List<AppointmentRefreshResponse> appointmentList
-                = new ArrayList<>();
-        profile.getAppointments().forEach(appt ->
-                appointmentList.add(buildAppointmentRefreshResponseDto(appt, profile)));
+        List<AppointmentRefreshResponse> appointmentList = new ArrayList<>();
+
+        profile.getAppointments().stream()
+                .filter(appt -> appt.getPerId().equals(profile.getPerId()))
+                .forEach(appointment -> appointmentList.add(buildAppointmentRefreshResponseDto(appointment, profile)));
         return appointmentList;
     }
 
     private AppointmentRefreshResponse buildAppointmentRefreshResponseDto(Appointment appt,
                                                                           UserProfile profile) {
         return AppointmentRefreshResponse.builder()
+                .perId(appt.getPerId())
                 .baseLocationId(appt.getBaseLocationType().getBaseLocationId())
                 .epimmsId(appt.getEpimmsId())
                 .courtName(appt.getBaseLocationType().getCourtName())
@@ -331,11 +329,11 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .build();
     }
 
-    private List<AuthorisationRefreshResponse> getAuthorisationRefreshResponseList(Set<Authorisation> authorisations,
-                                                                                   UserProfile profile) {
+    private List<AuthorisationRefreshResponse> getAuthorisationRefreshResponseList(UserProfile profile) {
         List<AuthorisationRefreshResponse> authorisationList = new ArrayList<>();
 
-        authorisations.stream().filter(auth -> auth.getPerId().equals(profile.getPerId()))
+        profile.getAuthorisations().stream()
+                .filter(auth -> auth.getPerId().equals(profile.getPerId()))
                 .forEach(authorisation -> authorisationList.add(buildAuthorisationRefreshResponseDto(authorisation)));
 
         return authorisationList;
@@ -343,6 +341,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private AuthorisationRefreshResponse buildAuthorisationRefreshResponseDto(Authorisation auth) {
         return AuthorisationRefreshResponse.builder()
+                .perId(auth.getPerId())
                 .jurisdiction(auth.getJurisdiction())
                 .ticketDescription(auth.getLowerLevel())
                 .ticketCode(auth.getTicketCode())
@@ -357,7 +356,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {
         return judicialRoleTypes.stream().map(judicialRoleType ->
-               judicialRoleType.getRoleId()).collect(Collectors.toList());
+                judicialRoleType.getRoleId()).collect(Collectors.toList());
     }
 
 }

@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AppointmentRefreshResponse implements Serializable {
 
+    private String perId;
     private String baseLocationId;
     private String epimmsId;
     private String courtName;

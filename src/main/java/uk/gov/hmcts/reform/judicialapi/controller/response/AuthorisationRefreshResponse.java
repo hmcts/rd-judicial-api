@@ -15,6 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class AuthorisationRefreshResponse implements Serializable {
 
+    private String perId;
     private String jurisdiction;
     private String ticketDescription;
     private String ticketCode;

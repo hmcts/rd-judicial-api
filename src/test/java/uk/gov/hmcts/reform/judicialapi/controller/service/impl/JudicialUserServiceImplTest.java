@@ -365,6 +365,7 @@ public class JudicialUserServiceImplTest {
         regionType.setRegionDescEn("National");
 
         Appointment appointment = new Appointment();
+        appointment.setPerId("1");
         appointment.setOfficeAppointmentId(1L);
         appointment.setIsPrincipleAppointment(true);
         appointment.setStartDate(LocalDate.now());
