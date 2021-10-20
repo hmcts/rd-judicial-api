@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
@@ -32,7 +31,6 @@ public class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTe
     }
 
     @Test
-    @Ignore
     public void shouldReturn200WithValidParameters() {
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, "jrd-system-user", false);
