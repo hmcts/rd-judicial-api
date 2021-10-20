@@ -134,12 +134,14 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private ResponseEntity<Object> getRefreshUserProfileBasedOnParam(RefreshRoleRequest refreshRoleRequest,
                                                                      PageRequest pageRequest) {
-        if (refreshUserValidator.isCcdServiceNamesNotEmptyOrNull(refreshRoleRequest.getCcdServiceNames())) {
+        if (refreshUserValidator.isStringNotEmptyOrNotNull(refreshRoleRequest.getCcdServiceNames())) {
             return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
-        } else if (refreshUserValidator.isNotEmptyOrNull(refreshRoleRequest.getSidamIds())) {
-            return refreshUserProfileBasedOnSidamIds(refreshRoleRequest.getSidamIds(), pageRequest);
-        } else if (refreshUserValidator.isNotEmptyOrNull(refreshRoleRequest.getObjectIds())) {
-            return refreshUserProfileBasedOnObjectIds(refreshRoleRequest.getObjectIds(), pageRequest);
+        } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds())) {
+            return refreshUserProfileBasedOnSidamIds(
+                    refreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getSidamIds()), pageRequest);
+        } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getObjectIds())) {
+            return refreshUserProfileBasedOnObjectIds(
+                    refreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getObjectIds()), pageRequest);
         } else {
             return refreshUserProfileBasedOnAll(pageRequest);
         }

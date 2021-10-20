@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ONLY_ONE_PARAMETER_REQUIRED;
 
@@ -18,9 +19,9 @@ public class RefreshUserValidator {
 
     public void shouldContainOnlyOneInputParameter(RefreshRoleRequest refreshRoleRequest) {
         if (null != refreshRoleRequest) {
-            boolean ccdServiceNames = isCcdServiceNamesNotEmptyOrNull(refreshRoleRequest.getCcdServiceNames());
-            boolean objectIds = isNotEmptyOrNull(refreshRoleRequest.getObjectIds());
-            boolean sidamIds = isNotEmptyOrNull(refreshRoleRequest.getSidamIds());
+            boolean ccdServiceNames = isStringNotEmptyOrNotNull(refreshRoleRequest.getCcdServiceNames());
+            boolean objectIds = isListNotEmptyOrNotNull(refreshRoleRequest.getObjectIds());
+            boolean sidamIds = isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds());
 
             if (ccdServiceNames ? (objectIds || sidamIds) : (objectIds && sidamIds)) {
                 throw new InvalidRequestException(ONLY_ONE_PARAMETER_REQUIRED);
@@ -28,16 +29,23 @@ public class RefreshUserValidator {
         }
     }
 
-    public boolean isCcdServiceNamesNotEmptyOrNull(String ccdServiceNames) {
-        return StringUtils.isNotEmpty(ccdServiceNames);
+    public boolean isStringNotEmptyOrNotNull(String value) {
+        return ((null != value) && (StringUtils.isNotEmpty(value.trim())));
     }
 
-    public boolean isNotEmptyOrNull(Collection<?> collection) {
-        if (collection != null) {
-            collection.removeIf(item -> item == null || "".equals(item));
-            return !collection.isEmpty();
+    public boolean isListNotEmptyOrNotNull(List<String> values) {
+        if (values != null) {
+            return !removeEmptyOrNullFromList(values).isEmpty();
         }
         return false;
     }
+
+    public List<String> removeEmptyOrNullFromList(List<String> values) {
+        if (values != null && values.size() > 0) {
+            values = values.stream().filter(s -> isStringNotEmptyOrNotNull(s)).collect(Collectors.toList());
+        }
+        return values;
+    }
+
 
 }

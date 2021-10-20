@@ -27,18 +27,4 @@ public class UserProfileRefreshResponse implements Serializable {
     private List<AppointmentRefreshResponse> appointments;
     private List<AuthorisationRefreshResponse> authorisations;
 
-
-    /*private String perId;
-    private String personalCode;
-    private String appointment;
-    private String appointmentType;
-    private String workPattern;
-    private LocalDate joiningDate;
-    private LocalDate lastWorkingDate;
-    private Boolean activeFlag;
-    private LocalDateTime extractedDate;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastLoadedDate;*/
-
-
 }
