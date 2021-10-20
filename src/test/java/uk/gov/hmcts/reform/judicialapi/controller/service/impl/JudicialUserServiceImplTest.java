@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
+import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 
@@ -21,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,6 +39,9 @@ public class JudicialUserServiceImplTest {
 
     @Mock
     UserProfileRepository userProfileRepository;
+
+    @Mock
+    ServiceCodeMappingRepository serviceCodeMappingRepository;
 
     @Test
     public void shouldFetchJudicialUsers() {
@@ -79,14 +85,22 @@ public class JudicialUserServiceImplTest {
                 .build();
         var userProfile = createUserProfile();
 
+        var serviceCodeMapping = ServiceCodeMapping
+                .builder()
+                .ticketCode("testTicketCode")
+                .build();
 
-        when(userProfileRepository.findBySearchString(any(), any(), any()))
+        when(serviceCodeMappingRepository.findByServiceCodeIgnoreCase(userSearchRequest.getServiceCode()))
+                .thenReturn(List.of(serviceCodeMapping));
+        when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
+                userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode")))
                 .thenReturn(List.of(userProfile));
 
         var responseEntity =
                 judicialUserService.retrieveUserProfile(userSearchRequest);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(userProfileRepository, times(1)).findBySearchString(any(),any(), any());
+        verify(userProfileRepository, times(1)).findBySearchString(any(),any(),
+                any(), anyList());
     }
 
     @Test
@@ -94,12 +108,11 @@ public class JudicialUserServiceImplTest {
 
         var userSearchRequest = UserSearchRequest
                 .builder()
-                .serviceCode("BFA1")
                 .location("12456")
                 .searchString("Test")
                 .build();
 
-        when(userProfileRepository.findBySearchString(any(), any(), any()))
+        when(userProfileRepository.findBySearchString(any(), any(), any(), any()))
                 .thenReturn(Collections.emptyList());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () ->
