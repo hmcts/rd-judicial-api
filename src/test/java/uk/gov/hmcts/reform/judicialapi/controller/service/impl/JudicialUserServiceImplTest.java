@@ -13,48 +13,51 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
+import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
+import org.springframework.data.domain.PageRequest;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
-import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
-import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Arrays;
+import static java.nio.charset.Charset.defaultCharset;
+import static java.util.Collections.singletonList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Set;
 
-import static java.nio.charset.Charset.defaultCharset;
-import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserProfile;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
+import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class JudicialUserServiceImplTest {
@@ -64,6 +67,9 @@ public class JudicialUserServiceImplTest {
 
     @Mock
     UserProfileRepository userProfileRepository;
+
+    @Mock
+    ServiceCodeMappingRepository serviceCodeMappingRepository;
 
     @Mock
     private LocationReferenceDataFeignClient locationReferenceDataFeignClient;
@@ -119,14 +125,22 @@ public class JudicialUserServiceImplTest {
                 .build();
         var userProfile = createUserProfile();
 
+        var serviceCodeMapping = ServiceCodeMapping
+                .builder()
+                .ticketCode("testTicketCode")
+                .build();
 
-        when(userProfileRepository.findBySearchString(any(), any(), any()))
+        when(serviceCodeMappingRepository.findByServiceCodeIgnoreCase(userSearchRequest.getServiceCode()))
+                .thenReturn(List.of(serviceCodeMapping));
+        when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
+                userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode")))
                 .thenReturn(List.of(userProfile));
 
         var responseEntity =
                 judicialUserService.retrieveUserProfile(userSearchRequest);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(userProfileRepository, times(1)).findBySearchString(any(),any(), any());
+        verify(userProfileRepository, times(1)).findBySearchString(any(),any(),
+                any(), anyList());
     }
 
     @Test
@@ -134,12 +148,11 @@ public class JudicialUserServiceImplTest {
 
         var userSearchRequest = UserSearchRequest
                 .builder()
-                .serviceCode("BFA1")
                 .location("12456")
                 .searchString("Test")
                 .build();
 
-        when(userProfileRepository.findBySearchString(any(), any(), any()))
+        when(userProfileRepository.findBySearchString(any(), any(), any(), any()))
                 .thenReturn(Collections.emptyList());
 
         Assertions.assertThrows(ResourceNotFoundException.class, () ->
@@ -407,6 +420,5 @@ public class JudicialUserServiceImplTest {
 
         return userProfile;
     }
-
 
 }

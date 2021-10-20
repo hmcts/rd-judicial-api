@@ -1,20 +1,20 @@
 package uk.gov.hmcts.reform.judicialapi.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.io.Serializable;
 
-@Entity(name = "judicial_service_code_mapping")
 @Getter
-@Setter
+@Entity(name = "judicial_service_code_mapping")
+@Builder
 @NoArgsConstructor
-public class JudicialServiceCodeMapping implements Serializable {
-
+@AllArgsConstructor
+public class ServiceCodeMapping {
     @Id
     @Column(name = "service_id")
     private Long serviceId;
@@ -27,6 +27,4 @@ public class JudicialServiceCodeMapping implements Serializable {
 
     @Column(name = "service_description")
     private String serviceDescription;
-
-
 }

@@ -22,10 +22,10 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "LEFT JOIN FETCH judicial_office_authorisation auth "
             + "on per.perId = auth.perId "
             + "where (per.objectId != '' and per.objectId is not null) "
-            + "and ((DATE(appt.endDate) >= CURRENT_DATE or DATE(appt.endDate) is null) "
-            + "or (DATE(auth.endDate) >= CURRENT_DATE or DATE(auth.endDate) is null)) "
-            + "and ( (:serviceCode is not null and (lower(appt.serviceCode) = :serviceCode "
-            + ")) or :serviceCode is null ) "
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "and ( (:serviceCode is not null and (lower(appt.serviceCode) = :serviceCode or "
+            + "auth.ticketCode in :ticketCode)) or :serviceCode is null ) "
             + "and ( :serviceCode = 'bfa1' or ((:locationCode is not null "
             + "and lower(appt.epimmsId) = :locationCode)"
             + " or :locationCode is null)) "
@@ -33,8 +33,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "or lower(per.surname) like %:searchString% "
             + "or lower(per.fullName)  like %:searchString% "
             + ")")
-    List<UserProfile> findBySearchString(String searchString, String serviceCode, String locationCode);
-
+    List<UserProfile> findBySearchString(String searchString, String serviceCode, String locationCode,
+                                         List<String> ticketCode);
 
     @Query(value = "select jup from judicial_user_profile jup \n"
             + "JOIN FETCH judicial_office_authorisation auth \n"
@@ -90,5 +90,4 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
 
     @Query(value = "select ticketCode from judicial_service_code_mapping where serviceCode IN :ccdServiceCode")
     List<String> fetchTicketCodeFromServiceCode(Set<String> ccdServiceCode);
-
 }
