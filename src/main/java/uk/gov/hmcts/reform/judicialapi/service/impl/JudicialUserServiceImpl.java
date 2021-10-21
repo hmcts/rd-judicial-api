@@ -42,9 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.util.JrdConstant.USER_DATA_NOT_FOUND;
@@ -207,25 +204,16 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
                                                                 Object collection, String collectionName) {
         List<UserProfileRefreshResponse> userProfileList = new ArrayList<>();
-
         userProfilePage.forEach(userProfile -> userProfileList.add(buildUserProfileRefreshResponseDto(userProfile)));
-
-        List<UserProfileRefreshResponse> distinctElements = userProfileList.stream()
-                .filter(distinctByKey(p -> p.getPerId()))
-                .collect(Collectors.toList());
+        log.info("userProfileList size = {}", userProfileList.size());
 
         log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
                 + "for " + collectionName + " {}", loggingComponentName, collection);
         return ResponseEntity
                 .ok()
                 .header("total_records", String.valueOf(userProfilePage.getTotalElements()))
-                .body(distinctElements);
+                .body(userProfileList);
 
-    }
-
-    public static <T> Predicate<T> distinctByKey(Function<? super T, Object> keyExtractor) {
-        Map<Object, Boolean> map = new ConcurrentHashMap<>();
-        return t -> map.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
     @SuppressWarnings("unchecked")
@@ -253,6 +241,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                 .collect(Collectors.toMap(LrdOrgInfoServiceResponse::getServiceCode,
                                         LrdOrgInfoServiceResponse::getCcdServiceName));
 
+                log.info("ccdServiceNameToCodeMapping keySet {}", ccdServiceNameToCodeMapping.keySet());
                 List<String> ticketCode = fetchTicketCodeFromServiceCode(ccdServiceNameToCodeMapping.keySet());
 
                 Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileByServiceNames(
@@ -302,7 +291,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         List<AppointmentRefreshResponse> appointmentList = new ArrayList<>();
 
         profile.getAppointments().stream()
-                .filter(appt -> appt.getPerId().equals(profile.getPerId()))
                 .forEach(appointment -> appointmentList.add(buildAppointmentRefreshResponseDto(appointment, profile)));
         return appointmentList;
     }
@@ -311,6 +299,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                                                           UserProfile profile) {
         return AppointmentRefreshResponse.builder()
                 .perId(appt.getPerId())
+                .officeAppointmentId(String.valueOf(appt.getOfficeAppointmentId()))
                 .baseLocationId(appt.getBaseLocationType().getBaseLocationId())
                 .epimmsId(appt.getEpimmsId())
                 .courtName(appt.getBaseLocationType().getCourtName())
@@ -333,7 +322,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         List<AuthorisationRefreshResponse> authorisationList = new ArrayList<>();
 
         profile.getAuthorisations().stream()
-                .filter(auth -> auth.getPerId().equals(profile.getPerId()))
                 .forEach(authorisation -> authorisationList.add(buildAuthorisationRefreshResponseDto(authorisation)));
 
         return authorisationList;
@@ -342,6 +330,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private AuthorisationRefreshResponse buildAuthorisationRefreshResponseDto(Authorisation auth) {
         return AuthorisationRefreshResponse.builder()
                 .perId(auth.getPerId())
+                .officeAuthId(String.valueOf(auth.getOfficeAuthId()))
                 .jurisdiction(auth.getJurisdiction())
                 .ticketDescription(auth.getLowerLevel())
                 .ticketCode(auth.getTicketCode())

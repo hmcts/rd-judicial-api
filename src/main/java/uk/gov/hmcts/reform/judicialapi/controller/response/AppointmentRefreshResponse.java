@@ -18,6 +18,7 @@ import java.util.List;
 public class AppointmentRefreshResponse implements Serializable {
 
     private String perId;
+    private String officeAppointmentId;
     private String baseLocationId;
     private String epimmsId;
     private String courtName;

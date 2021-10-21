@@ -36,7 +36,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
     List<UserProfile> findBySearchString(String searchString, String serviceCode, String locationCode,
                                          List<String> ticketCode);
 
-    @Query(value = "select jup from judicial_user_profile jup \n"
+    @Query(value = "select distinct jup from judicial_user_profile jup \n"
             + "JOIN FETCH judicial_office_authorisation auth \n"
             + "ON jup.perId = auth.perId \n"
             + "JOIN FETCH judicial_office_appointment appt \n"
@@ -49,7 +49,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "and (jup.objectId IN :objectIds)")
     Page<UserProfile> fetchUserProfileByObjectIds(List<String> objectIds, Pageable pageable);
 
-    @Query(value = "select jup from judicial_user_profile jup \n"
+    @Query(value = "select distinct jup from judicial_user_profile jup \n"
             + "JOIN FETCH judicial_office_authorisation auth \n"
             + "ON jup.perId = auth.perId \n"
             + "JOIN FETCH judicial_office_appointment appt \n"
@@ -63,7 +63,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
     Page<UserProfile> fetchUserProfileByServiceNames(Set<String> ccdServiceCode,
                                                      List<String> ticketCode, Pageable pageable);
 
-    @Query(value = "select jup from judicial_user_profile jup \n"
+    @Query(value = "select distinct jup from judicial_user_profile jup \n"
             + "JOIN FETCH judicial_office_authorisation auth \n"
             + "ON jup.perId = auth.perId \n"
             + "JOIN FETCH judicial_office_appointment appt \n"
@@ -76,7 +76,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "and (jup.sidamId IN :sidamIds)")
     Page<UserProfile> fetchUserProfileBySidamIds(List<String> sidamIds, Pageable pageable);
 
-    @Query(value = "select jup from judicial_user_profile jup \n"
+    @Query(value = "select distinct jup from judicial_user_profile jup \n"
             + "JOIN FETCH judicial_office_authorisation auth \n"
             + "ON jup.perId = auth.perId \n"
             + "JOIN FETCH judicial_office_appointment appt \n"

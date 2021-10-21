@@ -16,6 +16,7 @@ import java.io.Serializable;
 public class AuthorisationRefreshResponse implements Serializable {
 
     private String perId;
+    private String officeAuthId;
     private String jurisdiction;
     private String ticketDescription;
     private String ticketCode;

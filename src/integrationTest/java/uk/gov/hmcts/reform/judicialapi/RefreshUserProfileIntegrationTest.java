@@ -69,32 +69,6 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
         String request = "{\n"
                 + "  \"ccdServiceName\": \"\",\n"
                 + "  \"object_ids\": [\n"
-                + "    \"1111122223333\"\n"
-                + "  ],\n"
-                + "  \"sidam_ids\": [\n"
-                + "    \"\"\n"
-                + "  ]\n"
-                + "}";
-
-        refreshRoleRequest = convertRequestStringToObj(request);
-
-        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
-                0,"ASC", "objectId", "jrd-system-user", false);
-        assertThat(response).containsEntry("http_status", "200 OK");
-
-        List<?> userProfileList = (List<?>) response.get("body");
-        assertThat(userProfileList).hasSize(2);
-
-        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
-        assertThat((List<?>) values.get("appointments")).hasSize(3);
-        assertThat((List<?>) values.get("authorisations")).hasSize(2);
-    }
-
-    @Test
-    public void shouldReturn_200_ValidParameters_objectIds_02() {
-        String request = "{\n"
-                + "  \"ccdServiceName\": \"\",\n"
-                + "  \"object_ids\": [\n"
                 + "    \"1111\"\n"
                 + "  ],\n"
                 + "  \"sidam_ids\": [\n"
@@ -143,27 +117,40 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
         assertThat((List<?>) values.get("authorisations")).hasSize(1);
     }
 
+    @Test
+    public void shouldReturn_200_ValidParameters_objectIds_02() {
+        String request = "{\n"
+                + "  \"ccdServiceName\": \"\",\n"
+                + "  \"object_ids\": [\n"
+                + "    \"1111122223333\"\n"
+                + "  ],\n"
+                + "  \"sidam_ids\": [\n"
+                + "    \"\"\n"
+                + "  ]\n"
+                + "}";
 
+        refreshRoleRequest = convertRequestStringToObj(request);
 
-    /*@Test
-    public void shouldReturn403WhenLdFeatureDisabled() {
-
-        refreshRoleRequest = new RefreshRoleRequest("",
-                Arrays.asList("aa57907b-6d8f-4d2a-9950-7dde95059d05"),
-                null);
-
-        Map<String, String> launchDarklyMap = new HashMap<>();
-        launchDarklyMap.put("JrdUsersController.refreshUserProfile", "test-jrd-flag");
-        when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(false);
-        when(featureToggleServiceImpl.getLaunchDarklyMap()).thenReturn(launchDarklyMap);
-
-        Map<String, Object> errorResponseMap = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
+        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
                 0,"ASC", "objectId", "jrd-system-user", false);
+        assertThat(response).containsEntry("http_status", "200 OK");
 
-        assertThat(errorResponseMap).containsEntry("http_status", "403");
-        assertThat((String) errorResponseMap.get("response_body"))
-                .contains("test-jrd-flag".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD));
-    }*/
+        List<?> userProfileList = (List<?>) response.get("body");
+        assertThat(userProfileList).hasSize(2);
+
+        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        values.forEach((key, value) -> {
+            if (key.equals("perid") && values.equals(528)){
+                assertThat((List<?>) values.get("appointments")).hasSize(3);
+                assertThat((List<?>) values.get("authorisations")).hasSize(2);
+            }else{
+                assertThat((List<?>) values.get("appointments")).hasSize(1);
+                assertThat((List<?>) values.get("authorisations")).hasSize(1);
+            }
+        });
+
+
+    }
 
 
 }
