@@ -88,6 +88,4 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null))")
     Page<UserProfile> fetchUserProfileByAll(Pageable pageable);
 
-    @Query(value = "select ticketCode from judicial_service_code_mapping where serviceCode IN :ccdServiceCode")
-    List<String> fetchTicketCodeFromServiceCode(Set<String> ccdServiceCode);
 }

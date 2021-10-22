@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.service.impl;
 
-import feign.Response;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -39,7 +38,6 @@ import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Set;
 
@@ -133,7 +131,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                                      Integer pageNumber, String sortDirection, String sortColumn) {
 
         refreshUserValidator.shouldContainOnlyOneInputParameter(refreshRoleRequest);
-        PageRequest pageRequest = RequestUtils.validateAndBuildPaginationObject(pageSize, pageNumber,
+        var pageRequest = RequestUtils.validateAndBuildPaginationObject(pageSize, pageNumber,
                 sortDirection, sortColumn, refreshDefaultPageSize, refreshDefaultSortColumn,
                 UserProfile.class);
 
@@ -161,7 +159,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private ResponseEntity<Object> refreshUserProfileBasedOnObjectIds(List<String> objectIds,
                                                                       PageRequest pageRequest) {
         log.info("starting refreshUserProfile BasedOn ObjectIds");
-        Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileByObjectIds(
+        var userProfilePage = userProfileRepository.fetchUserProfileByObjectIds(
                 objectIds, pageRequest);
 
         if (userProfilePage.isEmpty()) {
@@ -177,7 +175,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private ResponseEntity<Object> refreshUserProfileBasedOnSidamIds(List<String> sidamIds,
                                                                      PageRequest pageRequest) {
         log.info("starting refreshUserProfile BasedOn SidamIds");
-        Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileBySidamIds(
+        var userProfilePage = userProfileRepository.fetchUserProfileBySidamIds(
                 sidamIds, pageRequest);
         if (userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the sidamIds {}",
@@ -191,7 +189,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private ResponseEntity<Object> refreshUserProfileBasedOnAll(PageRequest pageRequest) {
         log.info("starting refreshUserProfile BasedOn All");
 
-        Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileByAll(pageRequest);
+        var userProfilePage = userProfileRepository.fetchUserProfileByAll(pageRequest);
 
         if (userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD {}", loggingComponentName);
@@ -203,8 +201,10 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
                                                                 Object collection, String collectionName) {
-        List<UserProfileRefreshResponse> userProfileList = new ArrayList<>();
+        var userProfileList = new ArrayList<UserProfileRefreshResponse>();
+
         userProfilePage.forEach(userProfile -> userProfileList.add(buildUserProfileRefreshResponseDto(userProfile)));
+
         log.info("userProfileList size = {}", userProfileList.size());
 
         log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
@@ -220,20 +220,20 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private ResponseEntity<Object> refreshUserProfileBasedOnCcdServiceNames(String ccdServiceNames,
                                                                             PageRequest pageRequest) {
         log.info("starting refreshUserProfile BasedOn CcdServiceNames");
-        Response lrdOrgInfoServiceResponse =
+        var lrdOrgInfoServiceResponse =
                 locationReferenceDataFeignClient.getLocationRefServiceMapping(ccdServiceNames);
-        HttpStatus httpStatus = HttpStatus.valueOf(lrdOrgInfoServiceResponse.status());
+        var httpStatus = HttpStatus.valueOf(lrdOrgInfoServiceResponse.status());
 
         if (httpStatus.is2xxSuccessful()) {
             ResponseEntity<Object> responseEntity = JsonFeignResponseUtil.toResponseEntityWithListBody(
                     lrdOrgInfoServiceResponse, LrdOrgInfoServiceResponse.class);
 
-            List<LrdOrgInfoServiceResponse> listLrdServiceMapping =
+            var listLrdServiceMapping =
                     (List<LrdOrgInfoServiceResponse>) responseEntity.getBody();
 
             if (listLrdServiceMapping != null && !listLrdServiceMapping.isEmpty()) {
 
-                Map<String, String> ccdServiceNameToCodeMapping =
+                var ccdServiceNameToCodeMapping =
                         listLrdServiceMapping
                                 .stream()
                                 .filter(r -> StringUtils.isNotBlank(r.getServiceCode())
@@ -242,9 +242,12 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                         LrdOrgInfoServiceResponse::getCcdServiceName));
 
                 log.info("ccdServiceNameToCodeMapping keySet {}", ccdServiceNameToCodeMapping.keySet());
-                List<String> ticketCode = fetchTicketCodeFromServiceCode(ccdServiceNameToCodeMapping.keySet());
 
-                Page<UserProfile> userProfilePage = userProfileRepository.fetchUserProfileByServiceNames(
+                var ticketCode = fetchTicketCodeFromServiceCode(ccdServiceNameToCodeMapping.keySet());
+
+                log.info("ticketCode {}", ticketCode);
+
+                var userProfilePage = userProfileRepository.fetchUserProfileByServiceNames(
                         ccdServiceNameToCodeMapping.keySet(), ticketCode, pageRequest);
 
                 if (userProfilePage.isEmpty()) {
@@ -259,9 +262,10 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         log.error("{}:: Error in getting the data from LRD for the ccdServiceNames {} :: Status code {}",
                 loggingComponentName, ccdServiceNames, httpStatus);
-        ResponseEntity<Object> responseEntity = JsonFeignResponseUtil.toResponseEntity(lrdOrgInfoServiceResponse,
+        var responseEntity = JsonFeignResponseUtil.toResponseEntity(lrdOrgInfoServiceResponse,
                 ErrorResponse.class);
-        Object responseBody = responseEntity.getBody();
+        var responseBody = responseEntity.getBody();
+
         if (nonNull(responseBody) && responseBody instanceof ErrorResponse) {
             ErrorResponse errorResponse = (ErrorResponse) responseBody;
             throw new UserProfileException(httpStatus, errorResponse.getErrorMessage(),
@@ -288,7 +292,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(UserProfile profile) {
 
-        List<AppointmentRefreshResponse> appointmentList = new ArrayList<>();
+        var appointmentList = new ArrayList<AppointmentRefreshResponse>();
 
         profile.getAppointments().stream()
                 .forEach(appointment -> appointmentList.add(buildAppointmentRefreshResponseDto(appointment, profile)));
@@ -319,7 +323,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     }
 
     private List<AuthorisationRefreshResponse> getAuthorisationRefreshResponseList(UserProfile profile) {
-        List<AuthorisationRefreshResponse> authorisationList = new ArrayList<>();
+        var authorisationList = new ArrayList<AuthorisationRefreshResponse>();
 
         profile.getAuthorisations().stream()
                 .forEach(authorisation -> authorisationList.add(buildAuthorisationRefreshResponseDto(authorisation)));
@@ -340,7 +344,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     }
 
     private List<String> fetchTicketCodeFromServiceCode(Set<String> serviceCode) {
-        return userProfileRepository.fetchTicketCodeFromServiceCode(serviceCode);
+        return serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(serviceCode);
     }
 
     private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {

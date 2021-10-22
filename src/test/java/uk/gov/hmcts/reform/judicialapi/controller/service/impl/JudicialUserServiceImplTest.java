@@ -245,7 +245,7 @@ public class JudicialUserServiceImplTest {
 
         PageImpl<UserProfile> page = new PageImpl<>(Collections.singletonList(userProfile));
 
-        when(userProfileRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
+        when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
         when(userProfileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
                 .thenReturn(page);
         RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
@@ -288,7 +288,7 @@ public class JudicialUserServiceImplTest {
         PageImpl<UserProfile> page = new PageImpl<>(Collections.emptyList());
         when(userProfileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
                 .thenReturn(page);
-        when(userProfileRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
+        when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
         RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null);
         ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,

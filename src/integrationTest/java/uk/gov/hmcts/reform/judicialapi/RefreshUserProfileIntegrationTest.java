@@ -117,5 +117,67 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
         assertThat((List<?>) values.get("authorisations")).hasSize(1);
     }
 
-    
+    @Test
+    public void shouldReturn_200_ValidParameters_objectIds_02() {
+        String request = "{\n"
+                + "  \"ccdServiceName\": \"\",\n"
+                + "  \"object_ids\": [\n"
+                + "    \"1111122223333\"\n"
+                + "  ],\n"
+                + "  \"sidam_ids\": [\n"
+                + "    \"\"\n"
+                + "  ]\n"
+                + "}";
+
+        refreshRoleRequest = convertRequestStringToObj(request);
+
+        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
+                0,"ASC", "objectId", "jrd-system-user", false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+
+        List<?> userProfileList = (List<?>) response.get("body");
+        assertThat(userProfileList).hasSize(2);
+
+        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        values.forEach((key, value) -> {
+            if (key.equals("perid") && values.equals(528)) {
+                assertThat((List<?>) values.get("appointments")).hasSize(3);
+                assertThat((List<?>) values.get("authorisations")).hasSize(2);
+            } else {
+                assertThat((List<?>) values.get("appointments")).hasSize(1);
+                assertThat((List<?>) values.get("authorisations")).hasSize(1);
+            }
+        });
+    }
+
+    @Test
+    public void shouldReturn_200_ValidParameters_objectIds_sample_01() {
+        String request = "{\n"
+                + "  \"ccdServiceName\": \"\",\n"
+                + "  \"object_ids\": [\n"
+                + "    \"d4774030-32cc-4b64-894f-d475b0b1129c\"\n"
+                + "  ],\n"
+                + "  \"sidam_ids\": [\n"
+                + "    \"\"\n"
+                + "  ]\n"
+                + "}";
+
+        refreshRoleRequest = convertRequestStringToObj(request);
+
+        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
+                0, "ASC", "objectId", "jrd-system-user", false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+
+        List<?> userProfileList = (List<?>) response.get("body");
+        assertThat(userProfileList).hasSize(1);
+
+        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        values.forEach((key, value) -> {
+            if (key.equals("perid") && values.equals(40399)) {
+                assertThat((List<?>) values.get("appointments")).hasSize(1);
+                assertThat((List<?>) values.get("authorisations")).hasSize(1);
+            }
+        });
+    }
+
 }
