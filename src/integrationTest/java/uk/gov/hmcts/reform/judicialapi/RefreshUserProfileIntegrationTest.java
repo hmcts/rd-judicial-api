@@ -140,10 +140,10 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
 
         LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         values.forEach((key, value) -> {
-            if (key.equals("perid") && values.equals(528)){
+            if (key.equals("perid") && values.equals(528)) {
                 assertThat((List<?>) values.get("appointments")).hasSize(3);
                 assertThat((List<?>) values.get("authorisations")).hasSize(2);
-            }else{
+            } else {
                 assertThat((List<?>) values.get("appointments")).hasSize(1);
                 assertThat((List<?>) values.get("authorisations")).hasSize(1);
             }
