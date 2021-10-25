@@ -136,16 +136,19 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
         assertThat(response).containsEntry("http_status", "200 OK");
 
         List<?> userProfileList = (List<?>) response.get("body");
-        assertThat(userProfileList).hasSize(2);
+        assertThat(userProfileList).hasSize(3);
 
         LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         values.forEach((key, value) -> {
             if (key.equals("perid") && values.equals(528)) {
                 assertThat((List<?>) values.get("appointments")).hasSize(3);
                 assertThat((List<?>) values.get("authorisations")).hasSize(2);
-            } else {
+            } else if (key.equals("perid") && values.equals(529)) {
+                assertThat((List<?>) values.get("appointments")).hasSize(3);
+                assertThat((List<?>) values.get("authorisations")).hasSize(2);
+            } else if (key.equals("perid") && values.equals(530)) {
                 assertThat((List<?>) values.get("appointments")).hasSize(1);
-                assertThat((List<?>) values.get("authorisations")).hasSize(1);
+                assertThat((List<?>) values.get("authorisations")).hasSize(0);
             }
         });
     }
