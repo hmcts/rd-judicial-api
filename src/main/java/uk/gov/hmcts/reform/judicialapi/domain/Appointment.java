@@ -77,10 +77,8 @@ public class Appointment implements Serializable {
     private String objectId;
 
     @Column(name = "appointment")
-    @Size(max = 64)
     private String appointment;
 
     @Column(name = "appointment_type")
-    @Size(max = 64)
     private String appointmentType;
 }
