@@ -150,7 +150,7 @@ public class JrdUsersController {
     @ApiOperation(
             value = "This API to return judicial user profiles along with their active appointments "
                     + "and authorisations for the given request CCD Service Name or Objectid or SIDAMID",
-            notes = "",
+            notes = "**IDAM Roles to access API** :\n jrd-system-user,\n jrd-admin",
             authorizations = {
                     @Authorization(value = "ServiceAuthorization"),
                     @Authorization(value = "Authorization")
