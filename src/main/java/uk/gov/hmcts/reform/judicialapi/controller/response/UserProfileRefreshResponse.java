@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.controller.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,8 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserProfileRefreshResponse implements Serializable {
 
-    @JsonIgnore
-    private String perId;
     private String sidamId;
     private String objectId;
     private String knownAs;

@@ -10,7 +10,6 @@ import uk.gov.hmcts.reform.judicialapi.util.JudicialReferenceDataClient;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.LinkedHashMap;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -42,7 +41,7 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
     @Test
     public void shouldReturn_403_UnauthorisedUsers() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
-        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
                 0,"ASC", "objectId", "test-user-role", false);
         assertThat(response).containsEntry("http_status", "403");
         JudicialReferenceDataClient.setBearerToken(EMPTY);
@@ -51,7 +50,7 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
     @Test
     public void shouldReturn_401_InvalidTokens() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
-        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
                 0,"ASC", "objectId", "test-user-role", true);
         assertThat(response).containsEntry("http_status", "401");
         JudicialReferenceDataClient.setBearerToken(EMPTY);
@@ -59,7 +58,7 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
 
     @Test
     public void shouldReturn_400_WithMultipleParameters() {
-        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
                 0,"ASC", "objectId", "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "400");
     }
@@ -78,14 +77,14 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
 
         refreshRoleRequest = convertRequestStringToObj(request);
 
-        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
                 0,"ASC", "objectId", "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "200 OK");
 
-        List<?> userProfileList = (List<?>) response.get("body");
+        var userProfileList = (List<?>) response.get("body");
         assertThat(userProfileList).hasSize(1);
 
-        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         assertThat((List<?>) values.get("appointments")).hasSize(1);
         assertThat((List<?>) values.get("authorisations")).hasSize(1);
 
@@ -105,14 +104,14 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
 
         refreshRoleRequest = convertRequestStringToObj(request);
 
-        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,20,
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,20,
                 0,"ASC", "objectId", "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "200 OK");
 
-        List<?> userProfileList = (List<?>) response.get("body");
+        var userProfileList = (List<?>) response.get("body");
         assertThat(userProfileList).hasSize(1);
 
-        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         assertThat((List<?>) values.get("appointments")).hasSize(1);
         assertThat((List<?>) values.get("authorisations")).hasSize(1);
     }
@@ -131,14 +130,14 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
 
         refreshRoleRequest = convertRequestStringToObj(request);
 
-        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
                 0,"ASC", "objectId", "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "200 OK");
 
-        List<?> userProfileList = (List<?>) response.get("body");
+        var userProfileList = (List<?>) response.get("body");
         assertThat(userProfileList).hasSize(3);
 
-        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         values.forEach((key, value) -> {
             if (key.equals("emailId") && value.equals("test528@test.net")) {
                 assertThat((List<?>) values.get("appointments")).hasSize(3);
@@ -167,14 +166,14 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
 
         refreshRoleRequest = convertRequestStringToObj(request);
 
-        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
                 0, "ASC", "objectId", "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "200 OK");
 
-        List<?> userProfileList = (List<?>) response.get("body");
+        var userProfileList = (List<?>) response.get("body");
         assertThat(userProfileList).hasSize(1);
 
-        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         values.forEach((key, value) -> {
             if (key.equals("emailId") && value.equals("EMP40399@ejudiciary.net")) {
                 assertThat((List<?>) values.get("appointments")).hasSize(1);
@@ -197,14 +196,14 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
 
         refreshRoleRequest = convertRequestStringToObj(request);
 
-        Map<String, Object> response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
                 0, "ASC", "objectId", "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "200 OK");
 
-        List<?> userProfileList = (List<?>) response.get("body");
+        var userProfileList = (List<?>) response.get("body");
         assertThat(userProfileList).hasSize(1);
 
-        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         values.forEach((key, value) -> {
             if (key.equals("emailId") && value.equals("EMP40704@ejudiciary.net")) {
                 assertThat((List<?>) values.get("appointments")).hasSize(1);

@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.judicialapi.controller.util;
 import feign.Request;
 import feign.Response;
 import org.junit.Test;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
@@ -14,11 +13,9 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
-import java.util.Map;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,13 +31,13 @@ public class JsonFeignResponseUtilTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testDecode() {
-        Map<String, Collection<String>> header = new HashMap<>();
-        Collection<String> list = new ArrayList<>();
+        var header = new HashMap<String, Collection<String>>();
+        var list = new ArrayList<String>();
         header.put("content-encoding", list);
 
-        Response response = Response.builder().status(200).reason("OK").headers(header)
+        var response = Response.builder().status(200).reason("OK").headers(header)
                 .body("{\"userIdentifier\": 1}", UTF_8).request(mock(Request.class)).build();
-        Optional<Object> createUserProfileResponseOptional = JsonFeignResponseUtil.decode(response,
+        var createUserProfileResponseOptional = JsonFeignResponseUtil.decode(response,
                 UserProfileCreationResponse.class);
 
         assertThat(createUserProfileResponseOptional).isNotEmpty();
@@ -49,12 +46,12 @@ public class JsonFeignResponseUtilTest {
     @Test
     @SuppressWarnings("unchecked")
     public void test_Decode_fails_with_ioException() {
-        Map<String, Collection<String>> header = new HashMap<>();
-        Collection<String> list = new ArrayList<>();
+        var header = new HashMap<String, Collection<String>>();
+        var list = new ArrayList<String>();
         header.put("content-encoding", list);
 
         Response.Body bodyMock = mock(Response.Body.class);
-        Response response = Response.builder().status(200).reason("OK").headers(header).body(bodyMock)
+        var response = Response.builder().status(200).reason("OK").headers(header).body(bodyMock)
                 .request(mock(Request.class)).build();
 
         try {
@@ -64,22 +61,22 @@ public class JsonFeignResponseUtilTest {
             e.printStackTrace();
         }
 
-        Optional<Object> createUserProfileResponseOptional = JsonFeignResponseUtil.decode(response,
+        var createUserProfileResponseOptional = JsonFeignResponseUtil.decode(response,
                 UserProfileCreationResponse.class);
         assertThat(createUserProfileResponseOptional).isEmpty();
     }
 
     @Test
     public void test_convertHeaders() {
-        Map<String, Collection<String>> header = new HashMap<>();
-        Collection<String> list = new ArrayList<>(Arrays.asList("gzip", "request-context", "x-powered-by",
+        var header = new HashMap<String, Collection<String>>();
+        var list = new ArrayList<>(Arrays.asList("gzip", "request-context", "x-powered-by",
                 "content-length"));
         header.put("content-encoding", list);
 
         MultiValueMap<String, String> responseHeader = JsonFeignResponseUtil.convertHeaders(header);
         assertThat(responseHeader).isNotEmpty();
 
-        Collection<String> emptylist = new ArrayList<>();
+        var emptylist = new ArrayList<String>();
         header.put("content-encoding", emptylist);
         MultiValueMap<String, String> responseHeader1 = JsonFeignResponseUtil.convertHeaders(header);
 
@@ -88,13 +85,13 @@ public class JsonFeignResponseUtilTest {
 
     @Test
     public void test_toResponseEntity_with_payload_not_empty() {
-        Map<String, Collection<String>> header = new HashMap<>();
-        Collection<String> list = new ArrayList<>(Arrays.asList("a", "b"));
+        var header = new HashMap<String, Collection<String>>();
+        var list = new ArrayList<>(Arrays.asList("a", "b"));
         header.put("content-encoding", list);
 
-        Response response = Response.builder().status(200).reason("OK").headers(header)
+        var response = Response.builder().status(200).reason("OK").headers(header)
                 .body("{\"idamId\": 1}", UTF_8).request(mock(Request.class)).build();
-        ResponseEntity entity = JsonFeignResponseUtil.toResponseEntity(response, UserProfileCreationResponse.class);
+        var entity = JsonFeignResponseUtil.toResponseEntity(response, UserProfileCreationResponse.class);
         assertThat(entity).isNotNull();
         assertThat(entity.getStatusCode().value()).isEqualTo(200);
         assertThat(entity.getHeaders()).isNotEmpty();
@@ -112,8 +109,8 @@ public class JsonFeignResponseUtilTest {
     @Test
     @SuppressWarnings("unchecked")
     public void test_mapObjectToList() {
-        Map<String, Collection<String>> header = new HashMap<>();
-        Collection<String> list = new ArrayList<>();
+        var header = new HashMap<String, Collection<String>>();
+        var list = new ArrayList<String>();
         header.put("content-encoding", list);
         String responseBody = "[\n"
                 + "  {\n"
@@ -134,24 +131,24 @@ public class JsonFeignResponseUtilTest {
                 + "  }\n"
                 + "]";
 
-        Response response = Response.builder().status(200).reason("OK").headers(header)
+        var response = Response.builder().status(200).reason("OK").headers(header)
                 .body(responseBody, UTF_8).request(mock(Request.class)).build();
-        ResponseEntity<Object> responseEntity =
+        var responseEntity =
                 JsonFeignResponseUtil.toResponseEntityWithListBody(
                         response,
                         LrdOrgInfoServiceResponse.class);
-        List<LrdOrgInfoServiceResponse> listLrdServiceMapping =
+        var listLrdServiceMapping =
                 (List<LrdOrgInfoServiceResponse>)responseEntity.getBody();
         assertFalse(listLrdServiceMapping.isEmpty());
     }
 
     @Test(expected = UserProfileException.class)
     public void test_mapObjectToEmptyList() {
-        Map<String, Collection<String>> header = new HashMap<>();
-        Collection<String> list = new ArrayList<>();
+        var header = new HashMap<String, Collection<String>>();
+        var list = new ArrayList<String>();
         header.put("content-encoding", list);
         String responseBody = "";
-        Response response = Response.builder().status(200).reason("OK").headers(header)
+        var response = Response.builder().status(200).reason("OK").headers(header)
                 .body(responseBody, UTF_8).request(mock(Request.class)).build();
         JsonFeignResponseUtil.toResponseEntityWithListBody(
                 response,

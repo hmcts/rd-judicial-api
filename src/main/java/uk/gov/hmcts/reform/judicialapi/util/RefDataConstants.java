@@ -25,12 +25,5 @@ public class RefDataConstants {
     public static final String LRD_ERROR = "An error occurred while retrieving data from Location Reference Data";
 
     public static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
-    public static final String COMMA = ",";
-    public static final String EXCEPTION_MSG_SPCL_CHAR = "Param contains special characters. "
-            + "',' comma and '_' underscore allowed only";
-    public static final String REG_EXP_COMMA_DILIMETER = ",(?!\\\\s)";
-    public static final String REG_EXP_WHITE_SPACE = "\\s";
-    public static final String REG_EXP_SPCL_CHAR = "^[^<>{}\"/|;:.~!?@#$%^=&*\\]\\\\()\\[¿§«»ω⊙¤°℃℉€¥£¢¡®©09+]*$";
-
 
 }

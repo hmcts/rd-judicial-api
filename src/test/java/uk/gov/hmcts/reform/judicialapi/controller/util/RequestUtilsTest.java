@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.controller.util;
 
 import org.junit.Test;
-import org.springframework.data.domain.PageRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
@@ -13,7 +12,7 @@ public class RequestUtilsTest {
 
     @Test
     public void testValidateAndBuildPaginationObject() {
-        PageRequest pageRequest =
+        var pageRequest =
                 RequestUtils.validateAndBuildPaginationObject(1, 0,
                         "ASC", "objectId",
                         20, "id", UserProfile.class);
@@ -44,7 +43,7 @@ public class RequestUtilsTest {
 
     @Test
     public void testConfigValueWhenPaginationParametersNotProvided() {
-        PageRequest pageRequest =
+        var pageRequest =
                 RequestUtils.validateAndBuildPaginationObject(null, null,
                         null, null,
                         20, "objectId", UserProfile.class);

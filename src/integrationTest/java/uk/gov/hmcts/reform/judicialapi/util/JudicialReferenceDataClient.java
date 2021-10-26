@@ -169,7 +169,7 @@ public class JudicialReferenceDataClient {
                                                   Integer pageNumber, String sortDirection, String sortColumn,
                                                   String role, boolean invalidTokens) {
 
-        StringBuilder stringBuilder = new StringBuilder();
+        var stringBuilder = new StringBuilder();
 
         ResponseEntity<Object> responseEntity;
         HttpEntity<?> request =
@@ -188,7 +188,7 @@ public class JudicialReferenceDataClient {
             );
 
         } catch (RestClientResponseException ex) {
-            HashMap<String, Object> statusAndBody = new HashMap<>(2);
+            var statusAndBody = new HashMap<String, Object>(2);
             statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
             statusAndBody.put("response_body", ex.getResponseBodyAsString());
             return statusAndBody;
@@ -209,7 +209,7 @@ public class JudicialReferenceDataClient {
     private HttpHeaders getMultipleAuthHeadersForRefreshUserProfile(String role, String userId,
                                                                     Integer pageSize, Integer pageNumber,
                                                                     String sortDirection, String sortColumn) {
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);
         if (StringUtils.isBlank(JWT_TOKEN)) {
 

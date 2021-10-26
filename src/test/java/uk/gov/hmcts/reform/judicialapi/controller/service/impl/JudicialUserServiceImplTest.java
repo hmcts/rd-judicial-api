@@ -163,7 +163,7 @@ public class JudicialUserServiceImplTest {
     @Test(expected = InvalidRequestException.class)
     public void test_refreshUserProfile_Two_Input_01() throws JsonProcessingException {
 
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, Arrays.asList("test", "test"));
         judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
@@ -172,7 +172,7 @@ public class JudicialUserServiceImplTest {
     @Test(expected = InvalidRequestException.class)
     public void test_refreshUserProfile_Two_Input_02() throws JsonProcessingException {
 
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), null);
         judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
@@ -181,7 +181,7 @@ public class JudicialUserServiceImplTest {
     @Test(expected = InvalidRequestException.class)
     public void test_refreshUserProfile_Two_Input_03() throws JsonProcessingException {
 
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("",
+        var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"));
         judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
@@ -190,7 +190,7 @@ public class JudicialUserServiceImplTest {
     @Test(expected = InvalidRequestException.class)
     public void test_refreshUserProfile_Multiple_Input() throws JsonProcessingException {
 
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"));
         judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
@@ -198,15 +198,15 @@ public class JudicialUserServiceImplTest {
 
     @Test
     public void test_refreshUserProfile_BasedOnSidamIds_200() throws JsonProcessingException {
-        UserProfile userProfile = buildUserProfile();
+        var userProfile = buildUserProfile();
 
-        PageRequest pageRequest = getPageRequest();
-        PageImpl<UserProfile> page = new PageImpl<>(Collections.singletonList(userProfile));
+        var pageRequest = getPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
         when(userProfileRepository.fetchUserProfileBySidamIds(List.of("test", "test"), pageRequest))
                 .thenReturn(page);
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("",
+        var refreshRoleRequest = new RefreshRoleRequest("",
                 null, Arrays.asList("test", "test"));
-        ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
@@ -214,15 +214,15 @@ public class JudicialUserServiceImplTest {
 
     @Test
     public void test_refreshUserProfile_BasedOnObjectIds_200() throws JsonProcessingException {
-        UserProfile userProfile = buildUserProfile();
+        var userProfile = buildUserProfile();
 
-        PageRequest pageRequest = getPageRequest();
-        PageImpl<UserProfile> page = new PageImpl<>(Collections.singletonList(userProfile));
+        var pageRequest = getPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
         when(userProfileRepository.fetchUserProfileByObjectIds(List.of("test", "test"), pageRequest))
                 .thenReturn(page);
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("",
+        var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), null);
-        ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
@@ -230,27 +230,27 @@ public class JudicialUserServiceImplTest {
 
     @Test
     public void test_refreshUserProfile_BasedOnCcdServiceNames_200() throws JsonProcessingException {
-        LrdOrgInfoServiceResponse lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
+        var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
         lrdOrgInfoServiceResponse.setServiceCode("BFA1");
         lrdOrgInfoServiceResponse.setCcdServiceName("cmc");
-        String body = mapper.writeValueAsString(List.of(lrdOrgInfoServiceResponse));
+        var body = mapper.writeValueAsString(List.of(lrdOrgInfoServiceResponse));
 
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
                 .thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
 
-        UserProfile userProfile = buildUserProfile();
+        var userProfile = buildUserProfile();
 
-        PageRequest pageRequest = getPageRequest();
+        var pageRequest = getPageRequest();
 
-        PageImpl<UserProfile> page = new PageImpl<>(Collections.singletonList(userProfile));
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
 
         when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
         when(userProfileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
                 .thenReturn(page);
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null);
-        ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
@@ -259,14 +259,14 @@ public class JudicialUserServiceImplTest {
     @Test(expected = UserProfileException.class)
     public void test_refreshUserProfile_BasedOnCcdServiceNames_when_LrdResponse_IsNon_200() {
 
-        PageRequest pageRequest = getPageRequest();
+        var pageRequest = getPageRequest();
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
                 .thenReturn(Response.builder()
                         .request(mock(Request.class)).body("body", defaultCharset()).status(400).build());
 
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null);
-        ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
     }
@@ -274,24 +274,24 @@ public class JudicialUserServiceImplTest {
     @Test(expected = ResourceNotFoundException.class)
     public void test_refreshUserProfile_BasedOnCcdServiceNames_when_Response_Empty() throws JsonProcessingException {
 
-        LrdOrgInfoServiceResponse lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
+        var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
         lrdOrgInfoServiceResponse.setServiceCode("BFA1");
         lrdOrgInfoServiceResponse.setCcdServiceName("cmc");
-        String body = mapper.writeValueAsString(List.of(lrdOrgInfoServiceResponse));
+        var body = mapper.writeValueAsString(List.of(lrdOrgInfoServiceResponse));
 
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
                 .thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
 
-        PageRequest pageRequest = getPageRequest();
+        var pageRequest = getPageRequest();
 
-        PageImpl<UserProfile> page = new PageImpl<>(Collections.emptyList());
+        var page = new PageImpl<UserProfile>(Collections.emptyList());
         when(userProfileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
                 .thenReturn(page);
         when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null);
-        ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
     }
 
@@ -299,49 +299,49 @@ public class JudicialUserServiceImplTest {
     public void test_refreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseIsEmpty()
             throws JsonProcessingException {
 
-        String body = mapper.writeValueAsString(Collections.emptyList());
+        var body = mapper.writeValueAsString(Collections.emptyList());
 
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
                 .thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null);
-        ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
     }
 
     @Test(expected = UserProfileException.class)
     public void test_refreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseReturns400()
             throws JsonProcessingException {
-        ErrorResponse errorResponse = ErrorResponse
+        var errorResponse = ErrorResponse
                 .builder()
                 .errorCode(400)
                 .errorDescription("testErrorDesc")
                 .errorMessage("testErrorMsg")
                 .build()
                 ;
-        String body = mapper.writeValueAsString(errorResponse);
+        var body = mapper.writeValueAsString(errorResponse);
 
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
                 .thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(400).build());
-        PageRequest pageRequest = getPageRequest();
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc",
+        var pageRequest = getPageRequest();
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null);
-        ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
     }
 
     @Test
     public void test_refreshUserProfile_BasedOn_All_200() throws JsonProcessingException {
-        UserProfile userProfile = buildUserProfile();
+        var userProfile = buildUserProfile();
 
-        PageRequest pageRequest = getPageRequest();
-        PageImpl<UserProfile> page = new PageImpl<>(Collections.singletonList(userProfile));
+        var pageRequest = getPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
         when(userProfileRepository.fetchUserProfileByAll(pageRequest))
                 .thenReturn(page);
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("",  null, null);
-        ResponseEntity<Object> responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+        var refreshRoleRequest = new RefreshRoleRequest("",  null, null);
+        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
@@ -356,15 +356,15 @@ public class JudicialUserServiceImplTest {
 
     public UserProfile buildUserProfile() {
 
-        BaseLocationType baseLocationType = new BaseLocationType();
+        var baseLocationType = new BaseLocationType();
         baseLocationType.setBaseLocationId("123");
 
-        RegionType regionType = new RegionType();
+        var regionType = new RegionType();
         regionType.setRegionId("1");
         regionType.setRegionDescCy("National");
         regionType.setRegionDescEn("National");
 
-        Appointment appointment = new Appointment();
+        var appointment = new Appointment();
         appointment.setPerId("1");
         appointment.setOfficeAppointmentId(1L);
         appointment.setIsPrincipleAppointment(true);
@@ -377,7 +377,7 @@ public class JudicialUserServiceImplTest {
         appointment.setBaseLocationType(baseLocationType);
         appointment.setRegionType(regionType);
 
-        Authorisation authorisation = new Authorisation();
+        var authorisation = new Authorisation();
         authorisation.setPerId("1");
         authorisation.setOfficeAuthId(1L);
         authorisation.setJurisdiction("Languages");
@@ -389,13 +389,13 @@ public class JudicialUserServiceImplTest {
         authorisation.setLowerLevel("Welsh");
         authorisation.setPersonalCode("");
 
-        JudicialRoleType judicialRoleType = new JudicialRoleType();
+        var judicialRoleType = new JudicialRoleType();
         judicialRoleType.setRoleId("1");
         judicialRoleType.setPerId("1");
         judicialRoleType.setTitle("Test1");
         judicialRoleType.setLocation("west");
 
-        UserProfile userProfile = new UserProfile();
+        var userProfile = new UserProfile();
         userProfile.setPerId("1");
         userProfile.setPersonalCode("Emp");
         userProfile.setKnownAs("TestEmp");

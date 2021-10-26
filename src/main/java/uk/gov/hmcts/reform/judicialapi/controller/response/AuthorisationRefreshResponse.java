@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.controller.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,10 +15,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class AuthorisationRefreshResponse implements Serializable {
 
-    @JsonIgnore
-    private String perId;
-    @JsonIgnore
-    private String officeAuthId;
     private String jurisdiction;
     private String ticketDescription;
     private String ticketCode;

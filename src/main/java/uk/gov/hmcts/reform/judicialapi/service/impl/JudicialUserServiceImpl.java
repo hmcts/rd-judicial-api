@@ -277,7 +277,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(UserProfile profile) {
         return UserProfileRefreshResponse.builder()
-                .perId(profile.getPerId())
                 .sidamId(profile.getSidamId())
                 .objectId(profile.getObjectId())
                 .knownAs(profile.getKnownAs())
@@ -302,8 +301,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private AppointmentRefreshResponse buildAppointmentRefreshResponseDto(Appointment appt,
                                                                           UserProfile profile) {
         return AppointmentRefreshResponse.builder()
-                .perId(appt.getPerId())
-                .officeAppointmentId(String.valueOf(appt.getOfficeAppointmentId()))
                 .baseLocationId(appt.getBaseLocationType().getBaseLocationId())
                 .epimmsId(appt.getEpimmsId())
                 .courtName(appt.getBaseLocationType().getCourtName())
@@ -333,8 +330,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private AuthorisationRefreshResponse buildAuthorisationRefreshResponseDto(Authorisation auth) {
         return AuthorisationRefreshResponse.builder()
-                .perId(auth.getPerId())
-                .officeAuthId(String.valueOf(auth.getOfficeAuthId()))
                 .jurisdiction(auth.getJurisdiction())
                 .ticketDescription(auth.getLowerLevel())
                 .ticketCode(auth.getTicketCode())
