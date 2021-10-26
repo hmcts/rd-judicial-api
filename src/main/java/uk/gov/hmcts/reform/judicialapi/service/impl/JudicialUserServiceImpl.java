@@ -162,7 +162,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         var userProfilePage = userProfileRepository.fetchUserProfileByObjectIds(
                 objectIds, pageRequest);
 
-        if (userProfilePage.isEmpty()) {
+        if (userProfilePage == null || userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the objectIds {}",
                     loggingComponentName, objectIds);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
@@ -177,7 +177,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         log.info("starting refreshUserProfile BasedOn SidamIds");
         var userProfilePage = userProfileRepository.fetchUserProfileBySidamIds(
                 sidamIds, pageRequest);
-        if (userProfilePage.isEmpty()) {
+        if (userProfilePage == null || userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the sidamIds {}",
                     loggingComponentName, sidamIds);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
@@ -191,7 +191,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         var userProfilePage = userProfileRepository.fetchUserProfileByAll(pageRequest);
 
-        if (userProfilePage.isEmpty()) {
+        if (userProfilePage == null || userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD {}", loggingComponentName);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
         }
@@ -250,7 +250,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 var userProfilePage = userProfileRepository.fetchUserProfileByServiceNames(
                         ccdServiceNameToCodeMapping.keySet(), ticketCode, pageRequest);
 
-                if (userProfilePage.isEmpty()) {
+                if (userProfilePage == null || userProfilePage.isEmpty()) {
                     log.error("{}:: No data found in JRD for the ccdServiceNames {}",
                             loggingComponentName, ccdServiceNames);
                     throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
