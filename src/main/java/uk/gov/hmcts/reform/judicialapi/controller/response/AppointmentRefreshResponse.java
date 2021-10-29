@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.controller.response;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,20 +18,47 @@ import java.util.List;
 @AllArgsConstructor
 public class AppointmentRefreshResponse implements Serializable {
 
+
+    @JsonProperty("baseLocationId")
     private String baseLocationId;
+
+    @JsonProperty("epimms_id")
     private String epimmsId;
+
+    @JsonProperty("courtName")
     private String courtName;
-    private String regionId;
-    private String regionDescEn;
-    private String regionDescCy;
+
+    @JsonProperty("CFTRegionID")
+    private String cftRegionID;
+
+    @JsonProperty("CFTRegion")
+    private String cftRegion;
+
+    @JsonProperty("locationId")
     private String locationId;
+
+    @JsonProperty("location")
     private String location;
-    private String isPrincipleAppointment;
+
+    @JsonProperty("isPrincipalAppointment")
+    private String isPrincipalAppointment;
+
+    @JsonProperty("appointment")
     private String appointment;
+
+    @JsonProperty("appointment_type")
     private String appointmentType;
+
+    @JsonProperty("service_code")
     private String serviceCode;
+
+    @JsonProperty("roles")
     private List<String> roles;
+
+    @JsonProperty("start_date")
     private String startDate;
+
+    @JsonProperty("end_date")
     private String endDate;
 
 }

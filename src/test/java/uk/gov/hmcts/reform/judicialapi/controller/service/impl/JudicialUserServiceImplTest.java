@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.repository.RegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
@@ -70,6 +71,9 @@ public class JudicialUserServiceImplTest {
 
     @Mock
     ServiceCodeMappingRepository serviceCodeMappingRepository;
+
+    @Mock
+    RegionMappingRepository regionMappingRepository;
 
     @Mock
     private LocationReferenceDataFeignClient locationReferenceDataFeignClient;

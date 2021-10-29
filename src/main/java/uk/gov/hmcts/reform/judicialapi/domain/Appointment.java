@@ -56,11 +56,13 @@ public class Appointment implements Serializable {
     private UserProfile userProfile;
 
     @ManyToOne
-    @JoinColumn(name = "base_location_Id")
+    @JoinColumn(name = "base_location_Id", referencedColumnName = "base_location_Id",
+            insertable = false, updatable = false, nullable = false)
     private BaseLocationType baseLocationType;
 
     @ManyToOne
-    @JoinColumn(name = "region_Id")
+    @JoinColumn(name = "region_Id", referencedColumnName = "region_Id",
+            insertable = false, updatable = false, nullable = false)
     private RegionType regionType;
 
     @Column(name = "personal_code")
@@ -81,4 +83,11 @@ public class Appointment implements Serializable {
 
     @Column(name = "appointment_type")
     private String appointmentType;
+
+    @Column(name = "base_location_Id")
+    private String baseLocationId;
+
+    @Column(name = "region_Id")
+    private String regionId;
+
 }

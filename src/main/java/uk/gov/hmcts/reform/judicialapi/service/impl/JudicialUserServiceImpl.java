@@ -24,7 +24,10 @@ import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.domain.RegionMapping;
+import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.repository.RegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
@@ -55,6 +58,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @Autowired
     private ServiceCodeMappingRepository serviceCodeMappingRepository;
+
+    @Autowired
+    private RegionMappingRepository regionMappingRepository;
 
     @Value("${defaultPageSize}")
     Integer defaultPageSize;
@@ -203,8 +209,14 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                                                 Object collection, String collectionName) {
         var userProfileList = new ArrayList<UserProfileRefreshResponse>();
 
-        userProfilePage.forEach(userProfile -> userProfileList.add(buildUserProfileRefreshResponseDto(userProfile)));
+        var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();
+        log.info("serviceCodeMappings size = {}", serviceCodeMappings.size());
 
+        var regionMappings = regionMappingRepository.findAllRegionMappingData();
+        log.info("regionMappings size = {}", regionMappings.size());
+
+        userProfilePage.forEach(userProfile -> userProfileList.add(
+                buildUserProfileRefreshResponseDto(userProfile,serviceCodeMappings,regionMappings)));
         log.info("userProfileList size = {}", userProfileList.size());
 
         log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
@@ -240,11 +252,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                         && StringUtils.isNotBlank(r.getCcdServiceName()))
                                 .collect(Collectors.toMap(LrdOrgInfoServiceResponse::getServiceCode,
                                         LrdOrgInfoServiceResponse::getCcdServiceName));
-
                 log.info("ccdServiceNameToCodeMapping keySet {}", ccdServiceNameToCodeMapping.keySet());
 
                 var ticketCode = fetchTicketCodeFromServiceCode(ccdServiceNameToCodeMapping.keySet());
-
                 log.info("ticketCode {}", ticketCode);
 
                 var userProfilePage = userProfileRepository.fetchUserProfileByServiceNames(
@@ -275,7 +285,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         }
     }
 
-    private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(UserProfile profile) {
+    private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(
+            UserProfile profile, List<ServiceCodeMapping> serviceCodeMappings, List<RegionMapping> regionMappings) {
         return UserProfileRefreshResponse.builder()
                 .sidamId(profile.getSidamId())
                 .objectId(profile.getObjectId())
@@ -284,32 +295,38 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .fullName(profile.getFullName())
                 .postNominals(profile.getPostNominals())
                 .emailId(profile.getEjudiciaryEmailId())
-                .appointments(getAppointmentRefreshResponseList(profile))
-                .authorisations(getAuthorisationRefreshResponseList(profile))
+                .appointments(getAppointmentRefreshResponseList(profile,regionMappings))
+                .authorisations(getAuthorisationRefreshResponseList(profile,serviceCodeMappings))
                 .build();
     }
 
-    private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(UserProfile profile) {
+    private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(
+            UserProfile profile, List<RegionMapping> regionMappings) {
 
         var appointmentList = new ArrayList<AppointmentRefreshResponse>();
 
         profile.getAppointments().stream()
-                .forEach(appointment -> appointmentList.add(buildAppointmentRefreshResponseDto(appointment, profile)));
+                .forEach(appointment -> appointmentList.add(
+                        buildAppointmentRefreshResponseDto(appointment, profile, regionMappings)));
         return appointmentList;
     }
 
-    private AppointmentRefreshResponse buildAppointmentRefreshResponseDto(Appointment appt,
-                                                                          UserProfile profile) {
+    private AppointmentRefreshResponse buildAppointmentRefreshResponseDto(
+            Appointment appt, UserProfile profile, List<RegionMapping> regionMappings) {
+
+        RegionMapping regionMapping = regionMappings.stream()
+                .filter(rm -> rm.getJrdRegionId().equalsIgnoreCase(appt.getRegionId()))
+                .findFirst()
+                .orElse(null);
+
         return AppointmentRefreshResponse.builder()
-                .baseLocationId(appt.getBaseLocationType().getBaseLocationId())
+                .baseLocationId(appt.getBaseLocationId())
                 .epimmsId(appt.getEpimmsId())
                 .courtName(appt.getBaseLocationType().getCourtName())
-                .regionId(appt.getRegionType().getRegionId())
-                .regionDescEn(appt.getRegionType().getRegionDescEn())
-                .regionDescCy(appt.getRegionType().getRegionDescCy())
-                .locationId(appt.getBaseLocationType().getBaseLocationId())
-                .location(appt.getBaseLocationType().getCircuit())
-                .isPrincipleAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
+                .cftRegionID(null != regionMapping ? regionMapping.getRegionId() : null)
+                .cftRegion(null != regionMapping ? regionMapping.getRegion() : null)
+                .locationId(appt.getRegionId())
+                .location(null != regionMapping ? regionMapping.getJrdRegion() : null)
                 .appointment(appt.getAppointment())
                 .appointmentType(appt.getAppointmentType())
                 .serviceCode(appt.getServiceCode())
@@ -319,20 +336,30 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .build();
     }
 
-    private List<AuthorisationRefreshResponse> getAuthorisationRefreshResponseList(UserProfile profile) {
+    private List<AuthorisationRefreshResponse> getAuthorisationRefreshResponseList(
+            UserProfile profile, List<ServiceCodeMapping> serviceCodeMappings) {
         var authorisationList = new ArrayList<AuthorisationRefreshResponse>();
 
         profile.getAuthorisations().stream()
-                .forEach(authorisation -> authorisationList.add(buildAuthorisationRefreshResponseDto(authorisation)));
+                .forEach(authorisation -> authorisationList.add(
+                        buildAuthorisationRefreshResponseDto(authorisation, serviceCodeMappings)));
 
         return authorisationList;
     }
 
-    private AuthorisationRefreshResponse buildAuthorisationRefreshResponseDto(Authorisation auth) {
+    private AuthorisationRefreshResponse buildAuthorisationRefreshResponseDto(
+            Authorisation auth, List<ServiceCodeMapping> serviceCodeMappings) {
+
+        String serviceCode = serviceCodeMappings.stream()
+                .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode()))
+                .map(scm -> scm.getServiceCode())
+                .collect(Collectors.joining(","));
+
         return AuthorisationRefreshResponse.builder()
                 .jurisdiction(auth.getJurisdiction())
                 .ticketDescription(auth.getLowerLevel())
                 .ticketCode(auth.getTicketCode())
+                .serviceCode(serviceCode)
                 .startDate(String.valueOf(auth.getStartDate()))
                 .endDate(String.valueOf(auth.getEndDate()))
                 .build();
