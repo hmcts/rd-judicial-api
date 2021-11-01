@@ -56,12 +56,12 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
                 var idamUserFeignResponse = idamUserFeignClient.createUserProfile(idamUser);
 
                 if(HttpStatus.CREATED.equals(idamUserFeignResponse.status())){
-                    createIdamUserProfileFail(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_SUCCESS);
+                    setIdamuserCreationMsg(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_SUCCESS);
                 } else {
-                    createIdamUserProfileFail(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_FAIL);
+                    setIdamuserCreationMsg(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_FAIL);
                 }
             }catch (Exception exception){
-                createIdamUserProfileFail(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_FAIL);
+                setIdamuserCreationMsg(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_FAIL);
             }
         });
 
@@ -70,9 +70,9 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
                 .body(idamUserProfileResponses);
     }
 
-    private void createIdamUserProfileFail(TestUserRequest idamUser, ArrayList<IdamUserProfileResponse> idamUserProfileResponses, String idamUserCreatedFail) {
+    private void setIdamuserCreationMsg(TestUserRequest idamUser, ArrayList<IdamUserProfileResponse> idamUserProfileResponses, String idamUserCreatedMsg) {
         var idamUserProfileSuccessResponse = createIdamUserProfileResponse(idamUser);
-        idamUserProfileSuccessResponse.setMessage(idamUserCreatedFail);
+        idamUserProfileSuccessResponse.setMessage(idamUserCreatedMsg);
         idamUserProfileResponses.add(idamUserProfileSuccessResponse);
     }
 
