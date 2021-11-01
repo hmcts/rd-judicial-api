@@ -11,4 +11,6 @@ public interface JudicialUserService {
     ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page, List<String> sidamIds);
 
     ResponseEntity<Object> retrieveUserProfile(UserSearchRequest userSearchRequest);
+
+    public ResponseEntity<Object> createIdamUserProfiles();
 }

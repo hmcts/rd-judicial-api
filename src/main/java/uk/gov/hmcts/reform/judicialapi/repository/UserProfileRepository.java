@@ -34,4 +34,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
                    + ")")
     List<UserProfile> findBySearchString(String searchString, String serviceCode, String locationCode,
                                          List<String> ticketCode);
+
+    @Override
+    List<UserProfile> findAll();
 }

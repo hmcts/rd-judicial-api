@@ -39,6 +39,7 @@ public class JudicialApiClient {
     private final IdamOpenIdClient idamOpenIdClient;
     private static String FETCH_USERS_URI = "/refdata/judicial/users/fetch?page_size=%s&page_number=%s";
     private static String USERS_SEARCH_URI = "/refdata/judicial/users/search";
+    private static String IDAM_USERS_CREATE_URI = "/refdata/judicial/users/testing-support/sidam/actions/create-users";
 
     public JudicialApiClient(String judicialApiUrl,
                              String s2sToken,
@@ -128,6 +129,32 @@ public class JudicialApiClient {
         var fetchResponse = getMultipleAuthHeadersInternal(role)
                 .body(userSearchRequest).log().body(true)
                 .post(USERS_SEARCH_URI)
+                .andReturn();
+
+        fetchResponse.then()
+                .assertThat()
+                .statusCode(expectedStatus.value());
+
+        if (expectedStatus.is2xxSuccessful()) {
+            return List.of(fetchResponse.getBody().as(UserSearchResponse[].class));
+        } else {
+            return fetchResponse.getBody().as(ErrorResponse.class);
+        }
+    }
+
+    public Object createIdamUserProfiles(String role, HttpStatus expectedStatus){
+        var fetchResponse = retrieveAllUserProfiles(role,expectedStatus);
+
+        if((fetchResponse instanceof List)){
+            var idamUserProfilesResult = fetchResponse;
+            return idamUserProfilesResult;
+        }
+        return fetchResponse;
+    }
+    public Object retrieveAllUserProfiles(String role, HttpStatus expectedStatus) {
+        var fetchResponse = getMultipleAuthHeadersInternal(role)
+                //.body(userSearchRequest).log().body(true)
+                .get(IDAM_USERS_CREATE_URI)
                 .andReturn();
 
         fetchResponse.then()
