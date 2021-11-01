@@ -12,6 +12,11 @@ management:
     health:
       show-details: "always"
 
+testing:
+  support:
+    enabled: false
+    idamUrl: https://idam-api.demo.platform.hmcts.net
+
 spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
