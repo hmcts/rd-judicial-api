@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
+import uk.gov.hmcts.reform.judicialapi.controller.response.IdamUserProfileResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
@@ -162,7 +163,7 @@ public class JudicialApiClient {
                 .statusCode(expectedStatus.value());
 
         if (expectedStatus.is2xxSuccessful()) {
-            return List.of(fetchResponse.getBody().as(UserSearchResponse[].class));
+            return List.of(fetchResponse.getBody().as(IdamUserProfileResponse[].class));
         } else {
             return fetchResponse.getBody().as(ErrorResponse.class);
         }
