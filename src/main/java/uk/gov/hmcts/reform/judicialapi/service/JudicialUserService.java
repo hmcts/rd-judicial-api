@@ -12,5 +12,4 @@ public interface JudicialUserService {
 
     ResponseEntity<Object> retrieveUserProfile(UserSearchRequest userSearchRequest);
 
-    public ResponseEntity<Object> createIdamUserProfiles();
 }

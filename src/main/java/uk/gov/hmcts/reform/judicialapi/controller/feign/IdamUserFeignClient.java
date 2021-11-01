@@ -20,8 +20,7 @@ public interface IdamUserFeignClient {
 
     @PostMapping(value = "/testing-support/accounts")
     @RequestLine("POST /testing-support/accounts")
-    @Headers({"Authorization: {authorization}", "ServiceAuthorization: {serviceAuthorization}",
-            "Content-Type: application/json"})
+    @Headers({"Content-Type: application/json"})
     Response createUserProfile(@RequestBody TestUserRequest request);
 
 }
