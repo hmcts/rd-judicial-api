@@ -46,16 +46,20 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
                 .collect(Collectors.toUnmodifiableList());
 
         var idamUserProfileResponses = new ArrayList<IdamUserProfileResponse>();
-        //TODO to test for singleUserCreation
+        //TODO to test for singleUserCreation and adding test at emailId
 
         ArrayList<TestUserRequest> idamSingleUsers = new ArrayList<>();
-        idamSingleUsers.add(idamTestUsers.get(0));
+       // idamSingleUsers.add(idamTestUsers.get(0));
 
+        var idamTestUser = idamTestUsers.get(0);
+        String testEmailId = "test"+idamTestUser.getEmail();
+        idamTestUser.setEmail(testEmailId);
+        idamSingleUsers.add(idamTestUser);
         idamSingleUsers.forEach(idamUser->{
             try{
                 var idamUserFeignResponse = idamUserFeignClient.createUserProfile(idamUser);
 
-                if(HttpStatus.CREATED.equals(idamUserFeignResponse.status())){
+                if(HttpStatus.CREATED.value() == idamUserFeignResponse.status()){
                     setIdamuserCreationMsg(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_SUCCESS);
                 } else {
                     setIdamuserCreationMsg(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_FAIL);
@@ -82,7 +86,7 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
         accountDetails.setEmail(userProfile.getEjudiciaryEmailId());
         accountDetails.setForename(userProfile.getFullName());
         accountDetails.setPassword(DEFAULT_USER_PASSWORD);
-        accountDetails.setId(userProfile.getObjectId());
+        accountDetails.setSsoId(userProfile.getObjectId());
 
         accountDetails.setSurname(userProfile.getSurname());
 

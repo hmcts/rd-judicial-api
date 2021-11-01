@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.controller.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IdamUserProfileResponse implements Serializable{
     @JsonProperty
     private String title;
