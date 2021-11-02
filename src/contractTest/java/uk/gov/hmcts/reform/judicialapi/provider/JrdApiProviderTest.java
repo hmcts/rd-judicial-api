@@ -29,6 +29,7 @@ import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
+import uk.gov.hmcts.reform.judicialapi.domain.RegionMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
@@ -144,6 +145,20 @@ public class JrdApiProviderTest {
                         .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
 
         when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(any())).thenReturn(List.of("373"));
+
+        var serviceCodeMapping = new ServiceCodeMapping();
+        serviceCodeMapping.setServiceId(1L);
+        serviceCodeMapping.setTicketCode("368");
+        serviceCodeMapping.setServiceCode("BBA3");
+        serviceCodeMapping.setServiceDescription("Social Security and Child Support");
+
+        when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
+        var regionMapping = new RegionMapping();
+        regionMapping.setJrdRegion("1");
+        regionMapping.setRegionId("1");
+        regionMapping.setRegion("National");
+        regionMapping.setJrdRegion("National");
+        when(regionMappingRepository.findAllRegionMappingData()).thenReturn(List.of(regionMapping));
 
         Page<UserProfile> pagedUserProfiles = getPageUserProfiles();
         when(userProfileRepository.fetchUserProfileByObjectIds(anyList(),any())).thenReturn(pagedUserProfiles);

@@ -327,6 +327,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .cftRegion(null != regionMapping ? regionMapping.getRegion() : null)
                 .locationId(appt.getRegionId())
                 .location(null != regionMapping ? regionMapping.getJrdRegion() : null)
+                .isPrincipalAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
                 .appointment(appt.getAppointment())
                 .appointmentType(appt.getAppointmentType())
                 .serviceCode(appt.getServiceCode())
