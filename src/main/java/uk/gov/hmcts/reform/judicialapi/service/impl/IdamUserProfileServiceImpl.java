@@ -56,6 +56,11 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
         idamTestUser.setEmail(testEmailId);
         idamTestUser.setSsoId(null);
         idamSingleUsers.add(idamTestUser);
+        idamTestUser = idamTestUsers.get(1);
+         testEmailId = "test" + idamTestUser.getEmail();
+        idamTestUser.setEmail(testEmailId);
+        //idamTestUser.setSsoId(null);
+        idamSingleUsers.add(idamTestUser);
         //TODO refactort after testing
         var idamUserProfileResponses = new ArrayList<IdamUserProfileResponse>();
         idamSingleUsers.forEach(idamUser -> {
