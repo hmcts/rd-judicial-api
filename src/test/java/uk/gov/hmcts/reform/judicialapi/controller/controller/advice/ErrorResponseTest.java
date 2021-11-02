@@ -11,7 +11,7 @@ class ErrorResponseTest {
     @Test
     void test_ErrorResponse() {
 
-        int code = 1;
+        final int code = 1;
         final String status = "status";
         final String expectMsg = "msg";
         final String expectDesc = "desc";
@@ -42,7 +42,7 @@ class ErrorResponseTest {
     @Test
     void test_ErrorResponseWithConstructor() {
 
-        int code = 1;
+        final int code = 1;
         final String status = "status";
         final String expectMsg = "msg";
         final String expectDesc = "desc";
