@@ -18,6 +18,7 @@ import uk.gov.hmcts.reform.judicialapi.service.IdamUserProfileService;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequestMapping(path = "/refdata/judicial/users")
+@ConditionalOnExpression("${testing.support.enabled:false}")
 public class TestingSupportController {
 
     @Autowired
