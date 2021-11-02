@@ -14,8 +14,8 @@ management:
 
 testing:
   support:
-    enabled: false
-    idamUrl: https://idam-api.demo.platform.hmcts.net
+    enabled: ${TEST_IDAM_ENABLED:false}
+    idamUrl: ${TEST_IDAM_URL:}
 
 spring:
   jpa:
