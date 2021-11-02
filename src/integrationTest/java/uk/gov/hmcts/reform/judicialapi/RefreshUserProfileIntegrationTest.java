@@ -11,9 +11,14 @@ import uk.gov.hmcts.reform.judicialapi.util.JudicialReferenceDataClient;
 import java.util.Arrays;
 import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.HashMap;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.apache.commons.lang3.StringUtils.SPACE;
+import static uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation.FORBIDDEN_EXCEPTION_LD;
 
 public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
@@ -210,6 +215,33 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
                 assertThat((List<?>) values.get("authorisations")).hasSize(8);
             }
         });
+    }
+
+    @Test
+    public void shouldReturn403WhenLdFeatureDisabled() {
+        var launchDarklyMap = new HashMap<String, String>();
+        launchDarklyMap.put("JrdUsersController.refreshUserProfile", "test-jrd-flag");
+        when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(false);
+        when(featureToggleServiceImpl.getLaunchDarklyMap()).thenReturn(launchDarklyMap);
+
+        String request = "{\n"
+                + "  \"ccdServiceName\": \"\",\n"
+                + "  \"object_ids\": [\n"
+                + "    \"fcb4f03c-4b3f-4c3c-bf3a-662b4557b470\"\n"
+                + "  ],\n"
+                + "  \"sidam_ids\": [\n"
+                + "    \"\"\n"
+                + "  ]\n"
+                + "}";
+
+        refreshRoleRequest = convertRequestStringToObj(request);
+
+        var errorResponseMap = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
+                0, "ASC", "objectId", "jrd-system-user", false);
+
+        assertThat(errorResponseMap).containsEntry("http_status", "403");
+        assertThat((String) errorResponseMap.get("response_body"))
+                .contains("test-jrd-flag".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD));
     }
 
 }
