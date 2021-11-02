@@ -11,8 +11,6 @@ import static java.util.Objects.nonNull;
 @Slf4j
 @Getter
 public class RefDataUtil {
-    public static final String DEFAULT_USER_PASSWORD = "Hmcts1234";
-    public static final String DEFAULT_USER_ROLE = "judiciary";
 
     private RefDataUtil() {
     }

@@ -17,13 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.DEFAULT_USER_PASSWORD;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.DEFAULT_USER_ROLE;
-
 
 @Slf4j
 @Service
 public class IdamUserProfileServiceImpl implements IdamUserProfileService {
+
+    private static final String DEFAULT_USER_PASSWORD = "Hmcts1234";
+    private static final String DEFAULT_USER_ROLE = "judiciary";
+
 
     private static final String IDAM_USER_CREATED_SUCCESS = "Idam user profile create successfully";
     private static final String IDAM_USER_CREATED_FAIL = "Idam user creation failed";
