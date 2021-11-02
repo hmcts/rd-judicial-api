@@ -1,18 +1,13 @@
 package uk.gov.hmcts.reform.judicialapi.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
+
+import java.util.List;
+import javax.validation.Valid;
 
 @Validated
 @Data
@@ -34,7 +29,5 @@ public class TestUserRequest {
     private List<RoleDetail> roles = null;
     @JsonProperty("userGroup")
     private RoleDetail userGroup = null;
-
-
 
 }

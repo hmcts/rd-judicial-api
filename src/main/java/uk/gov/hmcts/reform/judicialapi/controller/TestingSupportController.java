@@ -19,9 +19,7 @@ import uk.gov.hmcts.reform.judicialapi.service.IdamUserProfileService;
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
-@RequestMapping(
-        path = "/refdata/judicial/users"
-)
+@RequestMapping(path = "/refdata/judicial/users")
 public class TestingSupportController {
 
     @Autowired

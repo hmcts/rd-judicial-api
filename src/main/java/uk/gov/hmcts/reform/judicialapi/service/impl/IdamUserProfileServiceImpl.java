@@ -45,26 +45,29 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
                 .map(this::createTestUser)
                 .collect(Collectors.toUnmodifiableList());
 
-        var idamUserProfileResponses = new ArrayList<IdamUserProfileResponse>();
+
         //TODO to test for singleUserCreation and adding test at emailId
 
         ArrayList<TestUserRequest> idamSingleUsers = new ArrayList<>();
-       // idamSingleUsers.add(idamTestUsers.get(0));
+        // idamSingleUsers.add(idamTestUsers.get(0));
 
         var idamTestUser = idamTestUsers.get(0);
-        String testEmailId = "test"+idamTestUser.getEmail();
+        String testEmailId = "test" + idamTestUser.getEmail();
         idamTestUser.setEmail(testEmailId);
+        idamTestUser.setSsoId(null);
         idamSingleUsers.add(idamTestUser);
-        idamSingleUsers.forEach(idamUser->{
-            try{
+        //TODO refactort after testing
+        var idamUserProfileResponses = new ArrayList<IdamUserProfileResponse>();
+        idamSingleUsers.forEach(idamUser -> {
+            try {
                 var idamUserFeignResponse = idamUserFeignClient.createUserProfile(idamUser);
 
-                if(HttpStatus.CREATED.value() == idamUserFeignResponse.status()){
+                if (HttpStatus.CREATED.value() == idamUserFeignResponse.status()) {
                     setIdamuserCreationMsg(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_SUCCESS);
                 } else {
                     setIdamuserCreationMsg(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_FAIL);
                 }
-            }catch (Exception exception){
+            } catch (Exception exception) {
                 setIdamuserCreationMsg(idamUser, idamUserProfileResponses, IDAM_USER_CREATED_FAIL);
             }
         });
@@ -74,13 +77,15 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
                 .body(idamUserProfileResponses);
     }
 
-    private void setIdamuserCreationMsg(TestUserRequest idamUser, ArrayList<IdamUserProfileResponse> idamUserProfileResponses, String idamUserCreatedMsg) {
+    private void setIdamuserCreationMsg(TestUserRequest idamUser,
+                                        ArrayList<IdamUserProfileResponse> idamUserProfileResponses,
+                                        String idamUserCreatedMsg) {
         var idamUserProfileSuccessResponse = createIdamUserProfileResponse(idamUser);
         idamUserProfileSuccessResponse.setMessage(idamUserCreatedMsg);
         idamUserProfileResponses.add(idamUserProfileSuccessResponse);
     }
 
-    public  TestUserRequest createTestUser(UserProfile userProfile){
+    public  TestUserRequest createTestUser(UserProfile userProfile) {
         TestUserRequest accountDetails = new TestUserRequest();
 
         accountDetails.setEmail(userProfile.getEjudiciaryEmailId());
@@ -102,7 +107,7 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
         return accountDetails;
     }
 
-    public  IdamUserProfileResponse createIdamUserProfileResponse(TestUserRequest userProfile){
+    public  IdamUserProfileResponse createIdamUserProfileResponse(TestUserRequest userProfile) {
 
         IdamUserProfileResponse idamUserProfileResponse = new IdamUserProfileResponse();
 
