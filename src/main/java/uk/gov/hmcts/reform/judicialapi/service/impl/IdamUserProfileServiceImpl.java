@@ -46,24 +46,8 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
                 .collect(Collectors.toUnmodifiableList());
 
 
-        //TODO to test for singleUserCreation and adding test at emailId
-
-        ArrayList<TestUserRequest> idamSingleUsers = new ArrayList<>();
-        // idamSingleUsers.add(idamTestUsers.get(0));
-
-        var idamTestUser = idamTestUsers.get(0);
-        String testEmailId = "test" + idamTestUser.getEmail();
-        idamTestUser.setEmail(testEmailId);
-        idamTestUser.setSsoId(null);
-        idamSingleUsers.add(idamTestUser);
-        idamTestUser = idamTestUsers.get(1);
-        testEmailId = "test" + idamTestUser.getEmail();
-        idamTestUser.setEmail(testEmailId);
-        //idamTestUser.setSsoId(null);
-        idamSingleUsers.add(idamTestUser);
-        //TODO refactort after testing
         var idamUserProfileResponses = new ArrayList<IdamUserProfileResponse>();
-        idamSingleUsers.forEach(idamUser -> {
+        idamTestUsers.forEach(idamUser -> {
             try {
                 var idamUserFeignResponse = idamUserFeignClient.createUserProfile(idamUser);
 

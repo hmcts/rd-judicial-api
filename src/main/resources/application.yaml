@@ -14,7 +14,6 @@ management:
 
 testing:
   support:
-    enabled: false
     idamUrl: https://idam-api.demo.platform.hmcts.net
 
 spring:

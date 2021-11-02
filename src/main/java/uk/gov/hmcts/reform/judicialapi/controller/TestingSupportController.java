@@ -14,8 +14,6 @@ import uk.gov.hmcts.reform.judicialapi.service.IdamUserProfileService;
 
 
 @RestController
-@ConditionalOnExpression("${testing.support.enabled:false}")
-//@Api(tags = {SwaggerConfig.TESTING_SUPPORT})
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
