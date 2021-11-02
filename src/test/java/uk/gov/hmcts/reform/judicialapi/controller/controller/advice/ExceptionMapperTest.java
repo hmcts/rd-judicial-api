@@ -1,11 +1,10 @@
 package uk.gov.hmcts.reform.judicialapi.controller.controller.advice;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,12 +18,12 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.UNKNOWN_EXCEPTION;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ExceptionMapperTest {
+@ExtendWith(MockitoExtension.class)
+class ExceptionMapperTest {
 
     @InjectMocks
     private ExceptionMapper exceptionMapper;
@@ -37,19 +36,19 @@ public class ExceptionMapperTest {
 
 
     @Test
-    public void test_handle_invalid_request_exception() {
+    void test_handle_invalid_request_exception() {
         InvalidRequestException invalidRequestException = new InvalidRequestException("Invalid Request");
 
         ResponseEntity<Object> responseEntity = exceptionMapper.customValidationError(invalidRequestException);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        Assert.assertEquals(invalidRequestException.getMessage(), ((ErrorResponse) responseEntity.getBody())
+        assertEquals(invalidRequestException.getMessage(), ((ErrorResponse) responseEntity.getBody())
                 .getErrorDescription());
 
     }
 
     @Test
-    public void test_handle_launchDarkly_exception() {
+    void test_handle_launchDarkly_exception() {
         ForbiddenException forbiddenException = new ForbiddenException("LD Forbidden Exception");
         ResponseEntity<Object> responseEntity = exceptionMapper.handleLaunchDarklyException(forbiddenException);
         assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
@@ -58,7 +57,7 @@ public class ExceptionMapperTest {
     }
 
     @Test
-    public void test_handle_general_exception() {
+    void test_handle_general_exception() {
         Exception exception = new Exception("General Exception");
         ResponseEntity<Object> responseEntity = exceptionMapper.handleException(exception);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
@@ -69,7 +68,7 @@ public class ExceptionMapperTest {
     }
 
     @Test
-    public void test_handle_forbidden_error_exception() {
+    void test_handle_forbidden_error_exception() {
         AccessDeniedException exception = new AccessDeniedException("Access Denied");
 
         ResponseEntity<Object> responseEntity = exceptionMapper.handleForbiddenException(exception);
@@ -80,7 +79,7 @@ public class ExceptionMapperTest {
     }
 
     @Test
-    public void test_handle_method_argument_not_valid_exception() {
+    void test_handle_method_argument_not_valid_exception() {
         var fieldError =
                 new FieldError("testObject", "testField", "testDefaultMessage");
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
