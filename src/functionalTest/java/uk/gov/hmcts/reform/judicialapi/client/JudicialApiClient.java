@@ -143,15 +143,16 @@ public class JudicialApiClient {
         }
     }
 
-    public Object createIdamUserProfiles(String role, HttpStatus expectedStatus){
+    public Object createIdamUserProfiles(String role, HttpStatus expectedStatus) {
         var fetchResponse = retrieveAllUserProfiles(role,expectedStatus);
 
-        if((fetchResponse instanceof List)){
+        if ((fetchResponse instanceof List)) {
             var idamUserProfilesResult = fetchResponse;
             return idamUserProfilesResult;
         }
         return fetchResponse;
     }
+
     public Object retrieveAllUserProfiles(String role, HttpStatus expectedStatus) {
         var fetchResponse = getMultipleAuthHeadersInternal(role)
                 //.body(userSearchRequest).log().body(true)
