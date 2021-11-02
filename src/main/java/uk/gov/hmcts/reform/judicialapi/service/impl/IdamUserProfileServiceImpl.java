@@ -37,7 +37,7 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
 
     @Override
     public ResponseEntity<Object> createIdamUserProfiles() {
-        var userProfiles = idamUserProfileRepository.findAll();
+        var userProfiles = idamUserProfileRepository.findAllJudicialUserProfiles();
 
 
         var idamTestUsers = userProfiles
@@ -57,7 +57,7 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
         idamTestUser.setSsoId(null);
         idamSingleUsers.add(idamTestUser);
         idamTestUser = idamTestUsers.get(1);
-         testEmailId = "test" + idamTestUser.getEmail();
+        testEmailId = "test" + idamTestUser.getEmail();
         idamTestUser.setEmail(testEmailId);
         //idamTestUser.setSsoId(null);
         idamSingleUsers.add(idamTestUser);
