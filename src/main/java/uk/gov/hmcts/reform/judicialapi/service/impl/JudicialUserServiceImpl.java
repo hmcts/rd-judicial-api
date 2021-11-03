@@ -372,7 +372,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {
         return judicialRoleTypes.stream().map(judicialRoleType ->
-                judicialRoleType.getRoleId()).collect(Collectors.toList());
+                judicialRoleType.getTitle()).collect(Collectors.toList());
     }
 
 }
