@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.judicialapi.controller.service.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
@@ -31,8 +32,8 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserProfile;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
 
-@RunWith(MockitoJUnitRunner.class)
-public class JudicialUserServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+class JudicialUserServiceImplTest {
 
     @InjectMocks
     JudicialUserServiceImpl judicialUserService;
@@ -44,7 +45,7 @@ public class JudicialUserServiceImplTest {
     ServiceCodeMappingRepository serviceCodeMappingRepository;
 
     @Test
-    public void shouldFetchJudicialUsers() {
+    void shouldFetchJudicialUsers() {
         List<String> sidamIds = new ArrayList<>();
         sidamIds.add("sidamId1");
         sidamIds.add("sidamId2");
@@ -58,12 +59,12 @@ public class JudicialUserServiceImplTest {
 
         ResponseEntity<Object> responseEntity =
                 judicialUserService.fetchJudicialUsers(10,0, sidamIds);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         verify(userProfileRepository, times(1)).findBySidamIdIn(any(),any());
     }
 
-    @Test(expected = ResourceNotFoundException.class)
-    public void shouldFetchJudicialUsersFailure() {
+    @Test
+    void shouldFetchJudicialUsersFailure() {
         List<String> sidamIds = new ArrayList<>();
         sidamIds.add("sidamId1");
         sidamIds.add("sidamId2");
@@ -72,11 +73,12 @@ public class JudicialUserServiceImplTest {
         PageImpl<UserProfile> page = new PageImpl<>(userProfiles);
 
         when(userProfileRepository.findBySidamIdIn(sidamIds,pageable)).thenReturn(page);
-        judicialUserService.fetchJudicialUsers(10,0, sidamIds);
+        assertThrows(ResourceNotFoundException.class,
+            () -> judicialUserService.fetchJudicialUsers(10,0, sidamIds));
     }
 
     @Test
-    public void shouldReturn200WhenUserFoundForTheSearchRequestProvided() {
+    void shouldReturn200WhenUserFoundForTheSearchRequestProvided() {
         var userSearchRequest = UserSearchRequest
                 .builder()
                 .serviceCode("BFA1")
@@ -98,13 +100,13 @@ public class JudicialUserServiceImplTest {
 
         var responseEntity =
                 judicialUserService.retrieveUserProfile(userSearchRequest);
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         verify(userProfileRepository, times(1)).findBySearchString(any(),any(),
                 any(), anyList());
     }
 
     @Test
-    public void shouldReturn404WhenUserNotFoundForTheSearchRequestProvided() {
+    void shouldReturn404WhenUserNotFoundForTheSearchRequestProvided() {
 
         var userSearchRequest = UserSearchRequest
                 .builder()
@@ -117,8 +119,5 @@ public class JudicialUserServiceImplTest {
 
         Assertions.assertThrows(ResourceNotFoundException.class, () ->
                 judicialUserService.retrieveUserProfile(userSearchRequest));
-
     }
-
-
 }
