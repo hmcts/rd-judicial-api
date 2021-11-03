@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.controller.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,24 +15,19 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class AuthorisationRefreshResponse implements Serializable {
 
-    @JsonProperty("jurisdiction")
     private String jurisdiction;
 
-    @JsonProperty("ticketDescription")
     private String ticketDescription;
 
-    @JsonProperty("ticketCode")
     private String ticketCode;
 
-    @JsonProperty("serviceCode")
     private String serviceCode;
 
-    @JsonProperty("start_date")
     private String startDate;
 
-    @JsonProperty("end_date")
     private String endDate;
 
 }
