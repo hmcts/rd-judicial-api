@@ -168,6 +168,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         var userProfilePage = userProfileRepository.fetchUserProfileByObjectIds(
                 objectIds, pageRequest);
 
+
         if (userProfilePage == null || userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the objectIds {}",
                     loggingComponentName, objectIds);
@@ -332,8 +333,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .appointmentType(appt.getAppointmentType())
                 .serviceCode(appt.getServiceCode())
                 .roles(getRoleIdList(profile.getJudicialRoleTypes()))
-                .startDate(String.valueOf(appt.getStartDate()))
-                .endDate(String.valueOf(appt.getEndDate()))
+                .startDate(null != appt.getStartDate() ? String.valueOf(appt.getStartDate()) : null)
+                .endDate(null != appt.getEndDate() ? String.valueOf(appt.getEndDate()) : null)
                 .build();
     }
 
@@ -361,8 +362,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .ticketDescription(auth.getLowerLevel())
                 .ticketCode(auth.getTicketCode())
                 .serviceCode(serviceCode)
-                .startDate(String.valueOf(auth.getStartDate()))
-                .endDate(String.valueOf(auth.getEndDate()))
+                .startDate(null != auth.getStartDate() ? String.valueOf(auth.getStartDate()) : null)
+                .endDate(null != auth.getEndDate() ? String.valueOf(auth.getEndDate()) : null)
                 .build();
     }
 
