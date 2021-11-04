@@ -41,6 +41,7 @@ import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.Set;
 
@@ -209,6 +210,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
                                                                 Object collection, String collectionName) {
         var userProfileList = new ArrayList<UserProfileRefreshResponse>();
+        var refreshResponse = new ArrayList<UserProfileRefreshResponse>();
 
         var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();
         log.info("serviceCodeMappings size = {}", serviceCodeMappings.size());
@@ -218,6 +220,27 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         userProfilePage.forEach(userProfile -> userProfileList.add(
                 buildUserProfileRefreshResponseDto(userProfile,serviceCodeMappings,regionMappings)));
+
+        Map<String, List<UserProfileRefreshResponse>> groupedUserProfiles = userProfileList
+                .stream()
+                .collect(Collectors.groupingBy(UserProfileRefreshResponse::getEmailId));
+
+        groupedUserProfiles.forEach((k, v) -> refreshResponse.add(UserProfileRefreshResponse.builder()
+                .surname(v.get(0).getSurname())
+                .fullName(v.get(0).getFullName())
+                .emailId(v.get(0).getEmailId())
+                .sidamId(v.get(0).getSidamId())
+                .objectId(v.get(0).getObjectId())
+                .knownAs(v.get(0).getKnownAs())
+                .postNominals(v.get(0).getPostNominals())
+                .appointments(v.stream()
+                        .flatMap(i -> i.getAppointments().stream())
+                        .collect(Collectors.toList()))
+                .authorisations(v.stream()
+                        .flatMap(i -> i.getAuthorisations().stream())
+                        .collect(Collectors.toList()))
+                .build()));
+        
         log.info("userProfileList size = {}", userProfileList.size());
 
         log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
@@ -225,7 +248,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         return ResponseEntity
                 .ok()
                 .header("total_records", String.valueOf(userProfilePage.getTotalElements()))
-                .body(userProfileList);
+                .body(refreshResponse);
 
     }
 
