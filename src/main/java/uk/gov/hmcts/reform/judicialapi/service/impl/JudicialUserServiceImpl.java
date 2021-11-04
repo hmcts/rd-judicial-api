@@ -210,7 +210,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
                                                                 Object collection, String collectionName) {
         var userProfileList = new ArrayList<UserProfileRefreshResponse>();
-        var refreshResponse = new ArrayList<UserProfileRefreshResponse>();
 
         var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();
         log.info("serviceCodeMappings size = {}", serviceCodeMappings.size());
@@ -224,6 +223,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         Map<String, List<UserProfileRefreshResponse>> groupedUserProfiles = userProfileList
                 .stream()
                 .collect(Collectors.groupingBy(UserProfileRefreshResponse::getEmailId));
+
+        var refreshResponse = new ArrayList<UserProfileRefreshResponse>();
 
         groupedUserProfiles.forEach((k, v) -> refreshResponse.add(UserProfileRefreshResponse.builder()
                 .surname(v.get(0).getSurname())
@@ -240,7 +241,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                         .flatMap(i -> i.getAuthorisations().stream())
                         .collect(Collectors.toList()))
                 .build()));
-        
+
         log.info("userProfileList size = {}", userProfileList.size());
 
         log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
