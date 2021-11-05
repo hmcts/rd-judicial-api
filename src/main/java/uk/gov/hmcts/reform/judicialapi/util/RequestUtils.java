@@ -17,11 +17,12 @@ import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.PAGE_SIZE;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.SORT_DIRECTION;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.SORT_COLUMN;
 
-@SuppressWarnings("HideUtilityClassConstructor")
 @Slf4j
 @Getter
 public class RequestUtils {
 
+    private RequestUtils() {
+    }
 
     public static PageRequest validateAndBuildPaginationObject(Integer pageSize,
                                                                Integer pageNumber,

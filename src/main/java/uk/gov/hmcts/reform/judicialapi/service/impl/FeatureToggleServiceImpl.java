@@ -2,14 +2,14 @@ package uk.gov.hmcts.reform.judicialapi.service.impl;
 
 import com.launchdarkly.sdk.LDUser;
 import com.launchdarkly.sdk.server.LDClient;
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.judicialapi.service.FeatureToggleService;
+
+import java.util.HashMap;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 
 @Service
 public class FeatureToggleServiceImpl implements FeatureToggleService {
@@ -37,10 +37,11 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
      */
     @PostConstruct
     public void mapServiceToFlag() {
+        String key = "rd-judicial-api";
         launchDarklyMap = new HashMap<>();
-        launchDarklyMap.put("JrdUsersController.fetchUsers", "rd-judicial-api");
-        launchDarklyMap.put("JrdUsersController.searchUsers", "rd-judicial-api");
-        launchDarklyMap.put("JrdUsersController.refreshUserProfile", "rd-judicial-api");
+        launchDarklyMap.put("JrdUsersController.fetchUsers", key);
+        launchDarklyMap.put("JrdUsersController.searchUsers", key);
+        launchDarklyMap.put("JrdUsersController.refreshUserProfile", key);
     }
 
     @Override

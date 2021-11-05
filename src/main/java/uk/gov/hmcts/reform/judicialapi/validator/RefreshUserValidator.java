@@ -41,8 +41,8 @@ public class RefreshUserValidator {
     }
 
     public List<String> removeEmptyOrNullFromList(List<String> values) {
-        if (values != null && values.size() > 0) {
-            values = values.stream().filter(s -> isStringNotEmptyOrNotNull(s)).collect(Collectors.toList());
+        if (values != null && !values.isEmpty()) {
+            values = values.stream().filter(this::isStringNotEmptyOrNotNull).collect(Collectors.toList());
         }
         return values;
     }

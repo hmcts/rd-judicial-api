@@ -378,7 +378,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         String serviceCode = serviceCodeMappings.stream()
                 .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode()))
-                .map(scm -> scm.getServiceCode())
+                .map(ServiceCodeMapping::getServiceCode)
                 .collect(Collectors.joining(","));
 
         return AuthorisationRefreshResponse.builder()
@@ -396,8 +396,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     }
 
     private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {
-        return judicialRoleTypes.stream().map(judicialRoleType ->
-                judicialRoleType.getTitle()).collect(Collectors.toList());
+        return judicialRoleTypes.stream().map(JudicialRoleType::getTitle).collect(Collectors.toList());
     }
 
 }

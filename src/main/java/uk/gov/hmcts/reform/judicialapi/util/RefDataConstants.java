@@ -1,9 +1,10 @@
 package uk.gov.hmcts.reform.judicialapi.util;
 
 
-@SuppressWarnings("HideUtilityClassConstructor")
 public class RefDataConstants {
 
+    private RefDataConstants() {
+    }
 
     public static final String BAD_REQUEST = "Bad Request";
     public static final String FORBIDDEN_ERROR = "Forbidden Error: Access denied for invalid permissions";
