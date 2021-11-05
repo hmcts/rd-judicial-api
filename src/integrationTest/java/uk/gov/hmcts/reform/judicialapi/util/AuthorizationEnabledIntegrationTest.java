@@ -11,9 +11,9 @@ import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.flywaydb.core.Flyway;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,7 +73,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     @Autowired
     Flyway flyway;
 
-    @Before
+    @BeforeEach
     public void setUpClient() {
         JudicialReferenceDataClient.setBearerToken("");
         judicialReferenceDataClient = new JudicialReferenceDataClient(port, issuer, expiration, serviceName);
@@ -82,7 +82,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
         flyway.migrate();
     }
 
-    @Before
+    @BeforeEach
     public void setupIdamStubs() throws Exception {
 
         s2sService.stubFor(get(urlEqualTo("/details"))
@@ -118,7 +118,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
                         .withBody(getDynamicJwksResponse())));
     }
 
-    @After
+    @AfterEach
     public void cleanupTestData() {
         JudicialReferenceDataClient.setBearerToken("");
     }
