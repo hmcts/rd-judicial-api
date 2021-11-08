@@ -79,7 +79,7 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
         TestUserRequest accountDetails = new TestUserRequest();
 
         accountDetails.setEmail(userProfile.getEjudiciaryEmailId());
-        accountDetails.setForename(userProfile.getFullName());
+        accountDetails.setForename(userProfile.getKnownAs());
         accountDetails.setPassword(DEFAULT_USER_PASSWORD);
         accountDetails.setSsoId(userProfile.getObjectId());
 
