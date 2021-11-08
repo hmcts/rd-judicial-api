@@ -102,7 +102,7 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
         IdamUserProfileResponse idamUserProfileResponse = new IdamUserProfileResponse();
 
         idamUserProfileResponse.setSurname(userProfile.getSurname());
-        idamUserProfileResponse.setFullName(userProfile.getForename());
+        idamUserProfileResponse.setKnownAs(userProfile.getForename());
         idamUserProfileResponse.setEmailId(userProfile.getEmail());
 
         return idamUserProfileResponse;
