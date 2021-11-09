@@ -6,4 +6,5 @@ public final class JrdConstant {
     }
 
     public static final String USER_DATA_NOT_FOUND = "User data not found for the request provided";
+
 }

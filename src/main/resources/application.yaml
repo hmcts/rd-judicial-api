@@ -12,6 +12,11 @@ management:
     health:
       show-details: "always"
 
+testing:
+  support:
+    enabled: ${TEST_IDAM_ENABLED:false}
+    idamUrl: ${TEST_IDAM_URL:}
+
 spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
