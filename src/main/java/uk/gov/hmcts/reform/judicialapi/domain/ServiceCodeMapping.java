@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Getter
+@Setter
 @Entity(name = "judicial_service_code_mapping")
 @Builder
 @NoArgsConstructor
