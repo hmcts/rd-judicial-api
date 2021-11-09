@@ -26,6 +26,7 @@ public class LaunchDarklyConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(featureConditionEvaluation)
             .addPathPatterns("/refdata/judicial/users/fetch")
             .addPathPatterns("/refdata/judicial/users/search")
-            .addPathPatterns("/refdata/judicial/users/testing-support/sidam/actions/create-users");
+            .addPathPatterns("/refdata/judicial/users/testing-support/sidam/actions/create-users")
+            .addPathPatterns("/refdata/judicial/users");
     }
 }
