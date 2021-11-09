@@ -140,4 +140,5 @@ public class JudicialApiClient {
             return fetchResponse.getBody().as(ErrorResponse.class);
         }
     }
+
 }
