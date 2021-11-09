@@ -16,12 +16,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestHeader;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.BAD_REQUEST;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.UNAUTHORIZED_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.FORBIDDEN_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.NO_DATA_FOUND;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.INTERNAL_SERVER_ERROR;
+import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 
 import javax.validation.Valid;
 
@@ -138,5 +146,62 @@ public class JrdUsersController {
 
         return judicialUserService.retrieveUserProfile(userSearchRequest);
     }
+
+    @ApiOperation(
+            value = "This API to return judicial user profiles along with their active appointments "
+                    + "and authorisations for the given request CCD Service Name or Objectid or SIDAMID",
+            notes = "**IDAM Roles to access API** :\n jrd-system-user,\n jrd-admin",
+            authorizations = {
+                    @Authorization(value = "ServiceAuthorization"),
+                    @Authorization(value = "Authorization")
+            }
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    code = 200,
+                    message = "The User profiles have been retrieved successfully",
+                    response = UserProfileRefreshResponse.class
+            ),
+            @ApiResponse(
+                    code = 400,
+                    message = BAD_REQUEST
+            ),
+            @ApiResponse(
+                    code = 401,
+                    message = UNAUTHORIZED_ERROR
+            ),
+            @ApiResponse(
+                    code = 403,
+                    message = FORBIDDEN_ERROR
+            ),
+            @ApiResponse(
+                    code = 404,
+                    message = NO_DATA_FOUND
+            ),
+            @ApiResponse(
+                    code = 500,
+                    message = INTERNAL_SERVER_ERROR
+            )
+    })
+    @PostMapping(
+            path = "",
+            produces = APPLICATION_JSON_VALUE
+    )
+    @Secured({"jrd-system-user", "jrd-admin"})
+    public ResponseEntity<Object> refreshUserProfile(
+            @RequestBody RefreshRoleRequest refreshRoleRequest,
+            @RequestHeader(name = "page_size", required = false) Integer pageSize,
+            @RequestHeader(name = "page_number", required = false) Integer pageNumber,
+            @RequestHeader(name = "sort_direction", required = false) String sortDirection,
+            @RequestHeader(name = "sort_column", required = false) String sortColumn
+    ) {
+        log.info("starting refreshUserProfile with RefreshRoleRequest {}, pageSize = {}, pageNumber = {}, "
+                + "sortDirection = {}, sortColumn = {}", refreshRoleRequest,
+                pageSize, pageNumber,sortDirection,sortColumn);
+
+        return judicialUserService.refreshUserProfile(refreshRoleRequest, pageSize, pageNumber,
+                sortDirection, sortColumn);
+    }
+
 
 }

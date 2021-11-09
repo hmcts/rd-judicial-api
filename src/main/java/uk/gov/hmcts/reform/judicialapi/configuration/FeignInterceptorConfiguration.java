@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
+import uk.gov.hmcts.reform.judicialapi.util.RefDataConstants;
 
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter.AUTHORISATION;
@@ -49,6 +50,8 @@ public class FeignInterceptorConfiguration {
                     log.warn("{}:: FeignHeadConfiguration {}", loggingComponentName, "Failed to get request header!");
                 }
             }
+            requestTemplate.header(RefDataConstants.SERVICE_AUTHORIZATION,
+                    authTokenGenerator.generate());
         };
     }
 }
