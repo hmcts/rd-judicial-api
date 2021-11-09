@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.validation.constraints.Size;
 
 @Entity(name = "judicial_office_authorisation")
@@ -49,8 +51,9 @@ public class Authorisation implements Serializable {
     @Size(max = 256)
     private String lowerLevel;
 
-    @ManyToOne
-    @JoinColumn(name = "per_id", insertable = false, updatable = false, nullable = false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "per_id", referencedColumnName = "per_id",
+            insertable = false, updatable = false, nullable = false)
     private UserProfile userProfile;
 
     @Column(name = "personal_code")

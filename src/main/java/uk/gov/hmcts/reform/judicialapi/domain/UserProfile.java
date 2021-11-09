@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -14,12 +15,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
 import javax.validation.constraints.Size;
+
+import static javax.persistence.CascadeType.ALL;
 
 @Entity(name = "judicial_user_profile")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserProfile implements Serializable {
 
     @Id
@@ -78,11 +83,18 @@ public class UserProfile implements Serializable {
     @Column(name = "sidam_id")
     private String sidamId;
 
-    @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile")
+    @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile", cascade = ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<Appointment> appointments;
 
-    @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile")
+    @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile", cascade = ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<Authorisation> authorisations;
+
+    @OneToMany(targetEntity = JudicialRoleType.class, mappedBy = "userProfile", cascade = ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<JudicialRoleType> judicialRoleTypes;
 }
