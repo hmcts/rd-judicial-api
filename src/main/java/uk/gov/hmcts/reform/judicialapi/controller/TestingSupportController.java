@@ -25,7 +25,7 @@ public class TestingSupportController {
     IdamUserProfileService idamUserProfileService;
 
     @GetMapping(path = "/testing-support/sidam/actions/create-users", produces = "application/json")
-    @Secured({"jrd-system-user", "jrd-admin"})
+    //@Secured({"jrd-system-user", "jrd-admin"})
     public ResponseEntity<Object> createIdamUserProfiles() {
         return idamUserProfileService.createIdamUserProfiles();
     }
