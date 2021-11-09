@@ -37,10 +37,12 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
      */
     @PostConstruct
     public void mapServiceToFlag() {
+        String judApi = "rd-judicial-api";
         launchDarklyMap = new HashMap<>();
-        launchDarklyMap.put("JrdUsersController.fetchUsers", "rd-judicial-api");
-        launchDarklyMap.put("JrdUsersController.searchUsers", "rd-judicial-api");
+        launchDarklyMap.put("JrdUsersController.fetchUsers", judApi);
+        launchDarklyMap.put("JrdUsersController.searchUsers", judApi);
         launchDarklyMap.put("TestingSupportController.createIdamUserProfiles", "rd-judicial-api-test-idam-users");
+        launchDarklyMap.put("JrdUsersController.refreshUserProfile", judApi);
     }
 
     @Override
