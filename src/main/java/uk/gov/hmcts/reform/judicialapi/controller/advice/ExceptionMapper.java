@@ -84,6 +84,14 @@ public class ExceptionMapper {
         return errorDetailsResponseEntity(ex, INTERNAL_SERVER_ERROR, UNKNOWN_EXCEPTION.getErrorMessage());
     }
 
+    @ExceptionHandler(UserProfileException.class)
+    public ResponseEntity<Object> handleJsonFeignResponseException(UserProfileException ex) {
+        ErrorResponse errorDetails = new ErrorResponse(ex.getStatus().value(),ex.getStatus().getReasonPhrase(),
+                ex.getErrorMessage(), ex.getErrorDescription(), getTimeStamp());
+
+        return new ResponseEntity<>(errorDetails, ex.getStatus());
+    }
+
     private String getTimeStamp() {
         return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS", Locale.ENGLISH).format(new Date());
     }

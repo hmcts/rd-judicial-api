@@ -119,3 +119,8 @@ launchdarkly:
     environment: ${LAUNCH_DARKLY_ENV:preview}
     user: rd
 
+locationRefDataUrl: ${LOCATION_REF_DATA_URL:http://rd-location-ref-api-aat.service.core-compute-aat.internal}
+refresh:
+  pageSize: ${REFRESH_PAGE_SIZE:20}
+  sortColumn: ${REFRESH_SORT_COLUMN:objectId}
+
