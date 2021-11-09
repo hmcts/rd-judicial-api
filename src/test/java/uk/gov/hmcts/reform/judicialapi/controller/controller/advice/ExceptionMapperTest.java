@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ExceptionMapper;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ForbiddenException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 
 import java.util.List;
 
@@ -88,6 +89,19 @@ public class ExceptionMapperTest {
         var responseEntity = exceptionMapper
                 .handleMethodArgumentNotValidException(methodArgumentNotValidException);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+    }
+
+    @Test
+    public void test_handle_json_feign_response_parsing_exception() {
+        var exception = new UserProfileException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Parsing exception", "Parsing exception");
+
+        ResponseEntity<Object> responseEntity = exceptionMapper.handleJsonFeignResponseException(exception);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals(exception.getErrorMessage(), ((ErrorResponse)responseEntity.getBody()).getErrorDescription());
+        assertEquals(exception.getErrorDescription(), ((ErrorResponse)responseEntity.getBody()).getErrorDescription());
 
     }
 }
