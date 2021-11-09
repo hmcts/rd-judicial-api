@@ -12,7 +12,7 @@ plugins {
     id "info.solidsoft.pitest" version '1.5.2'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '3.1.1'
-    id 'org.springframework.boot' version '2.4.9'
+    id 'org.springframework.boot' version '2.4.12'
     id "org.flywaydb.flyway" version "6.5.1"
     id "io.freefair.lombok" version "4.1.6"
     id 'uk.gov.hmcts.java' version '0.12.0'
@@ -33,7 +33,7 @@ def versions = [
         reformS2sClient    : '4.0.0',
         serenity           : '2.0.76',
         sonarPitest        : '0.5',
-        springBoot         : '2.4.9',
+        springBoot         : '2.4.12',
         springHystrix      : '2.1.1.RELEASE',
         springfoxSwagger   : '2.9.2',
         restAssured        : '4.3.3',
@@ -225,7 +225,10 @@ pitest {
     excludedClasses = [
             'uk.gov.hmcts.reform.judicialapi.configuration.*',
             'uk.gov.hmcts.reform.judicialapi.controller.*',
-            'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
+            'uk.gov.hmcts.reform.judicialapi.JudicialApplication',
+            'uk.gov.hmcts.reform.judicialapi.repository.IdamUserProfileRepository',
+            'uk.gov.hmcts.reform.judicialapi.service.impl.IdamUserProfileServiceImpl'
+
     ]
     threads = 10
     enableDefaultIncrementalAnalysis = true
@@ -250,7 +253,12 @@ sonarqube {
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/judicialapi/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/JudicialApplication.java,"+
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/domain/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/request/**"
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/request/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/TestingSupportController.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/feign/IdamUserFeignClient.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/IdamUserProfileServiceImpl.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java"
     }
 }
 
