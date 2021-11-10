@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 public class IdamUserProfileServiceImpl implements IdamUserProfileService {
 
-    private static final String DEFAULT_USER_PASSWORD = "Hmcts1234";
+    private static final String DEFAULT_USER_PASS = "Hmcts1234";
     private static final String DEFAULT_USER_ROLE = "judiciary";
 
 
@@ -80,7 +80,7 @@ public class IdamUserProfileServiceImpl implements IdamUserProfileService {
 
         accountDetails.setEmail(userProfile.getEjudiciaryEmailId());
         accountDetails.setForename(userProfile.getKnownAs());
-        accountDetails.setPassword(DEFAULT_USER_PASSWORD);
+        accountDetails.setPass(DEFAULT_USER_PASS);
         accountDetails.setSsoId(userProfile.getObjectId());
 
         accountDetails.setSurname(userProfile.getSurname());
