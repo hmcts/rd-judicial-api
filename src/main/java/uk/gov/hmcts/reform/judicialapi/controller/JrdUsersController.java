@@ -115,6 +115,7 @@ public class JrdUsersController {
                     code = 200,
                     message = "Retrieve the user profiles for the given request. ",
                     response = UserSearchResponse.class
+
             ),
             @ApiResponse(
                     code = 400,
