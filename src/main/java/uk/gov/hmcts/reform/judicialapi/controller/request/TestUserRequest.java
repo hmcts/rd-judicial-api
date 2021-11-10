@@ -22,7 +22,7 @@ public class TestUserRequest {
     private String forename = null;
     @JsonProperty("surname")
     private String surname = null;
-    @JsonProperty("pass")
+    @JsonProperty("password")
     private String pass = null;
     @JsonProperty("roles")
     @Valid
