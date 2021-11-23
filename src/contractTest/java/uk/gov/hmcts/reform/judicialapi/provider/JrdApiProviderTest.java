@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResp
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
+import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
@@ -58,7 +59,7 @@ import static java.nio.charset.Charset.defaultCharset;
         port = "${PACT_BROKER_PORT:80}", consumerVersionSelectors = {
         @VersionSelector(tag = "master")})
 @ContextConfiguration(classes = {JrdUsersController.class, JudicialUserServiceImpl.class})
-@TestPropertySource(properties = {"defaultPageSize=10", "refresh.pageSize=10"})
+@TestPropertySource(properties = {"defaultPageSize=10", "refresh.pageSize=10", "refresh.sortColumn=objectId"})
 @IgnoreNoPactsToVerify
 public class JrdApiProviderTest {
 
@@ -154,7 +155,7 @@ public class JrdApiProviderTest {
 
         when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
         var regionMapping = new RegionMapping();
-        regionMapping.setJrdRegion("1");
+        regionMapping.setJrdRegionId("1");
         regionMapping.setRegionId("1");
         regionMapping.setRegion("National");
         regionMapping.setJrdRegion("National");
@@ -185,6 +186,7 @@ public class JrdApiProviderTest {
         appointment.setOfficeAppointmentId(12L);
         appointment.setBaseLocationType(baseLocationType);
         appointment.setRegionType(regionType);
+        appointment.setRegionId("1");
         appointment.setIsPrincipleAppointment(Boolean.TRUE);
 
         var authorisation = new Authorisation();
@@ -199,6 +201,10 @@ public class JrdApiProviderTest {
         userProfile.setObjectId("fcb4f03c-4b3f-4c3c-bf3a-662b4557b470");
         userProfile.setAppointments(appointments);
         userProfile.setAuthorisations(authorisations);
+        userProfile.setEjudiciaryEmailId("e@mail.com");
+
+        var judicialRoleType = new JudicialRoleType();
+        userProfile.setJudicialRoleTypes(Collections.singletonList(judicialRoleType));
 
         var userProfiles = Collections.singletonList(userProfile);
 
