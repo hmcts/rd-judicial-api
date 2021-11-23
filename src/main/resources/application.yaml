@@ -121,6 +121,6 @@ launchdarkly:
 
 locationRefDataUrl: ${LOCATION_REF_DATA_URL:http://rd-location-ref-api-aat.service.core-compute-aat.internal}
 refresh:
-  pageSize: ${REFRESH_PAGE_SIZE:20}
+  pageSize: ${REFRESH_PAGE_SIZE:200}
   sortColumn: ${REFRESH_SORT_COLUMN:objectId}
 
