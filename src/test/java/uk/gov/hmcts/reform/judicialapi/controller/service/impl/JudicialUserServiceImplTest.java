@@ -40,7 +40,6 @@ import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
 import static java.nio.charset.Charset.defaultCharset;
-import static java.util.Collections.singletonList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -419,9 +418,9 @@ public class JudicialUserServiceImplTest {
 
         authorisation.setUserProfile(userProfile);
 
-        userProfile.setAppointments(singletonList(appointment));
-        userProfile.setAuthorisations(singletonList(authorisation));
-        userProfile.setJudicialRoleTypes(singletonList(judicialRoleType));
+        userProfile.setAppointments(List.of(appointment));
+        userProfile.setAuthorisations(List.of(authorisation));
+        userProfile.setJudicialRoleTypes(List.of(judicialRoleType));
 
         return userProfile;
     }
