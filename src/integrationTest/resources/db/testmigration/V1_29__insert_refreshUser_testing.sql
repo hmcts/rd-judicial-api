@@ -56,5 +56,5 @@ INSERT INTO judicial_role_type
 (role_id, per_Id, title ,location, start_date, end_date)
 values
 (1,'1001','testTitle', 'testLocation', '2021-08-11 09:14:30.054', '2021-08-11 09:14:30.054'),
-(2,'1001','testTitle1', 'testLocation', '2021-08-11 09:14:30.054', CURRENT_TIMESTAMP + interval '1 month'),
+(2,'1001','testTitle1', 'testLocation', '2021-08-11 09:14:30.054', current_timestamp + interval '30' day),
 (3,'1001','testTitle2', 'testLocation', '2021-08-11 09:14:30.054', null);
