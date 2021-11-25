@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation.FORBIDDEN_EXCEPTION_LD;
 
+
 class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
     private UserRequest userRequest;
