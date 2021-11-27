@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
+import javax.persistence.CascadeType;
 
 @Entity(name = "judicial_office_appointment")
 @Getter
@@ -49,17 +50,19 @@ public class Appointment implements Serializable {
     @Column(name = "last_loaded_date")
     private LocalDateTime lastLoadedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "per_id", referencedColumnName = "per_id",
             insertable = false, updatable = false, nullable = false)
     private UserProfile userProfile;
 
     @ManyToOne
-    @JoinColumn(name = "base_location_Id")
+    @JoinColumn(name = "base_location_Id", referencedColumnName = "base_location_Id",
+            insertable = false, updatable = false, nullable = false)
     private BaseLocationType baseLocationType;
 
     @ManyToOne
-    @JoinColumn(name = "region_Id")
+    @JoinColumn(name = "region_Id", referencedColumnName = "region_Id",
+            insertable = false, updatable = false, nullable = false)
     private RegionType regionType;
 
     @Column(name = "personal_code")
@@ -74,4 +77,17 @@ public class Appointment implements Serializable {
 
     @Column(name = "object_id")
     private String objectId;
+
+    @Column(name = "appointment")
+    private String appointment;
+
+    @Column(name = "appointment_type")
+    private String appointmentType;
+
+    @Column(name = "base_location_Id")
+    private String baseLocationId;
+
+    @Column(name = "region_Id")
+    private String regionId;
+
 }
