@@ -398,7 +398,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {
         return judicialRoleTypes.stream()
-                .filter(e -> e.getEndDate() == null || !e.getEndDate().isBefore(LocalDate.now().atStartOfDay()))
+                .filter(e -> e.getEndDate() == null || !e.getEndDate().toLocalDate().isBefore(LocalDate.now()))
                 .map(JudicialRoleType::getTitle).collect(Collectors.toList());
     }
 
