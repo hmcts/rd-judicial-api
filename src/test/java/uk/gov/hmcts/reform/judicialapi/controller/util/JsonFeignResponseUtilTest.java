@@ -2,7 +2,8 @@ package uk.gov.hmcts.reform.judicialapi.controller.util;
 
 import feign.Request;
 import feign.Response;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.util.MultiValueMap;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
@@ -142,16 +143,19 @@ public class JsonFeignResponseUtilTest {
         assertFalse(listLrdServiceMapping.isEmpty());
     }
 
-    @Test(expected = UserProfileException.class)
+    @Test
     public void test_mapObjectToEmptyList() {
         var header = new HashMap<String, Collection<String>>();
         var list = new ArrayList<String>();
         header.put("content-encoding", list);
         String responseBody = "";
-        var response = Response.builder().status(200).reason("OK").headers(header)
-                .body(responseBody, UTF_8).request(mock(Request.class)).build();
-        JsonFeignResponseUtil.toResponseEntityWithListBody(
-                response,
-                LrdOrgInfoServiceResponse.class);
+        Assertions.assertThrows(UserProfileException.class, () -> {
+            var response = Response.builder().status(200).reason("OK").headers(header)
+                    .body(responseBody, UTF_8).request(mock(Request.class)).build();
+            JsonFeignResponseUtil.toResponseEntityWithListBody(
+                    response,
+                    LrdOrgInfoServiceResponse.class);
+        });
+
     }
 }

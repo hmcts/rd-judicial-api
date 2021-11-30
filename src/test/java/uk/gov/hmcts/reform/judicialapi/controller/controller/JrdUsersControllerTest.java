@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.judicialapi.controller.controller;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.controller.JrdUsersController;
@@ -20,14 +20,15 @@ import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 import java.util.Arrays;
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class JrdUsersControllerTest {
+@ExtendWith(MockitoExtension.class)
+class JrdUsersControllerTest {
 
     @InjectMocks
     private JrdUsersController jrdUsersController;
@@ -38,14 +39,14 @@ public class JrdUsersControllerTest {
     ResponseEntity<Object> responseEntity;
     UserRequest userRequest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         userRequest = new UserRequest(Arrays.asList(
         UUID.randomUUID().toString(), UUID.randomUUID().toString()));
     }
 
     @Test
-    public void shouldFetchJudicialUsers() {
+    void shouldFetchJudicialUsers() {
         responseEntity = ResponseEntity.ok().body(null);
         when(judicialUserServiceMock.fetchJudicialUsers(any(), any(), any()))
                 .thenReturn(responseEntity);
@@ -58,19 +59,21 @@ public class JrdUsersControllerTest {
                 .fetchJudicialUsers(10, 0, userRequest.getUserIds());
     }
 
-    @Test(expected = InvalidRequestException.class)
-    public void shouldThrowInvalidRequestExceptionForEmptyServiceName() {
-        jrdUsersController.fetchUsers(10, 0, new UserRequest());
+    @Test
+    void shouldThrowInvalidRequestExceptionForEmptyServiceName() {
+        final var userRequest = new UserRequest();
+        assertThrows(InvalidRequestException.class,
+            () -> jrdUsersController.fetchUsers(10, 0, userRequest));
     }
 
     @Test
-    public void shouldRetrieveUsersBasedOnSearch() {
-        var userSearchRequest = UserSearchRequest.builder().build();
+    void shouldRetrieveUsersBasedOnSearch() {
+        final var userSearchRequest = UserSearchRequest.builder().build();
         responseEntity = ResponseEntity.ok().body(null);
         when(judicialUserServiceMock.retrieveUserProfile(any()))
                 .thenReturn(responseEntity);
 
-        var actual = jrdUsersController
+        final var actual = jrdUsersController
                 .searchUsers(userSearchRequest);
 
         assertNotNull(actual);
