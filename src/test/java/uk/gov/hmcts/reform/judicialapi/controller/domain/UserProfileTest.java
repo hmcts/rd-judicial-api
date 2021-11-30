@@ -1,10 +1,10 @@
 package uk.gov.hmcts.reform.judicialapi.controller.domain;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserProfile;
 
 public class UserProfileTest {
@@ -21,17 +21,17 @@ public class UserProfileTest {
         assertNotNull(userProfile.getLastLoadedDate());
         assertNotNull(userProfile.getExtractedDate());
         assertNotNull(userProfile.getCreatedDate());
-        assertThat(userProfile.getPerId()).isEqualTo("1");
-        assertThat(userProfile.getPersonalCode()).isEqualTo("personalCode");
-        assertThat(userProfile.getKnownAs()).isEqualTo("knownAs");
-        assertThat(userProfile.getSurname()).isEqualTo("surname");
-        assertThat(userProfile.getFullName()).isEqualTo("name");
-        assertThat(userProfile.getPostNominals()).isEqualTo("postNominals");
-        assertThat(userProfile.getWorkPattern()).isEqualTo("workPattern");
-        assertThat(userProfile.getEjudiciaryEmailId()).isEqualTo("emailId");
-        assertThat(userProfile.getActiveFlag()).isEqualTo(Boolean.TRUE);
-        assertThat(userProfile.getObjectId()).isEqualTo("objectId");
-        assertThat(userProfile.getSidamId()).isEqualTo("sidamId");
+        assertEquals("1", userProfile.getPerId());
+        assertEquals("personalCode", userProfile.getPersonalCode());
+        assertEquals("knownAs", userProfile.getKnownAs());
+        assertEquals("surname", userProfile.getSurname());
+        assertEquals("name", userProfile.getFullName());
+        assertEquals("postNominals", userProfile.getPostNominals());
+        assertEquals("workPattern", userProfile.getWorkPattern());
+        assertEquals("emailId", userProfile.getEjudiciaryEmailId());
+        assertEquals(Boolean.TRUE, userProfile.getActiveFlag());
+        assertEquals("objectId", userProfile.getObjectId());
+        assertEquals("sidamId", userProfile.getSidamId());
     }
 
 }

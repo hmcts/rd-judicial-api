@@ -1,24 +1,24 @@
 package uk.gov.hmcts.reform.judicialapi.controller.domain;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createBaseLocationType;
 
-public class BaseLocationTypeTest {
+class BaseLocationTypeTest {
 
     @Test
-    public void testBaseLocationType() {
+    void testBaseLocationType() {
         BaseLocationType baseLocationType = createBaseLocationType();
 
         assertNotNull(baseLocationType);
         assertNotNull(baseLocationType.getAppointments());
-        assertThat(baseLocationType.getBaseLocationId()).isEqualTo("0");
-        assertThat(baseLocationType.getCourtType()).isEqualTo("Court Type");
-        assertThat(baseLocationType.getCourtName()).isEqualTo("Court Name");
-        assertThat(baseLocationType.getCircuit()).isEqualTo("Circuit");
-        assertThat(baseLocationType.getAreaOfExpertise()).isEqualTo("Area of Expertise");
+        assertEquals("0", baseLocationType.getBaseLocationId());
+        assertEquals("Court Type", baseLocationType.getCourtType());
+        assertEquals("Court Name", baseLocationType.getCourtName());
+        assertEquals("Circuit", baseLocationType.getCircuit());
+        assertEquals("Area of Expertise", baseLocationType.getAreaOfExpertise());
     }
 }
