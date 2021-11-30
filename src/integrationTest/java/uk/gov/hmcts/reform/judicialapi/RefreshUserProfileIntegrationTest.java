@@ -87,11 +87,15 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
         assertThat(response).containsEntry("http_status", "200 OK");
 
         var userProfileList = (List<?>) response.get("body");
+
         assertThat(userProfileList).hasSize(1);
 
         var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+
         assertThat((List<?>) values.get("appointments")).hasSize(1);
         assertThat((List<?>) values.get("authorisations")).hasSize(1);
+        var appointment = (LinkedHashMap<String, Object>)((List<?>) values.get("appointments")).get(0);
+        assertThat((List<?>)appointment.get("roles")).hasSize(2);
 
     }
 
@@ -119,6 +123,8 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
         var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         assertThat((List<?>) values.get("appointments")).hasSize(1);
         assertThat((List<?>) values.get("authorisations")).hasSize(1);
+        var appointment = (LinkedHashMap<String, Object>)((List<?>) values.get("appointments")).get(0);
+        assertThat((List<?>)appointment.get("roles")).hasSize(2);
     }
 
     @Test
