@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
+import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
@@ -49,9 +50,10 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Set;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
@@ -370,6 +372,8 @@ class JudicialUserServiceImplTest {
                 0, "ASC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
+        UserProfileRefreshResponse profile = (UserProfileRefreshResponse) ((List<?>) responseEntity.getBody()).get(0);
+        assertThat(profile.getAppointments().get(0).getRoles(), containsInAnyOrder("Test1","Test3"));
     }
 
     @NotNull
@@ -420,6 +424,20 @@ class JudicialUserServiceImplTest {
         judicialRoleType.setTitle("Test1");
         judicialRoleType.setLocation("west");
 
+        var judicialRoleType1 = new JudicialRoleType();
+        judicialRoleType1.setRoleId("2");
+        judicialRoleType1.setPerId("1");
+        judicialRoleType1.setTitle("Test2");
+        judicialRoleType1.setLocation("east");
+        judicialRoleType1.setEndDate(LocalDateTime.now().minusDays(3));
+
+        var judicialRoleType2 = new JudicialRoleType();
+        judicialRoleType2.setRoleId("3");
+        judicialRoleType2.setPerId("1");
+        judicialRoleType2.setTitle("Test3");
+        judicialRoleType2.setLocation("north");
+        judicialRoleType2.setEndDate(LocalDateTime.now().plusDays(3));
+
         var userProfile = new UserProfile();
         userProfile.setPerId("1");
         userProfile.setPersonalCode("Emp");
@@ -442,7 +460,7 @@ class JudicialUserServiceImplTest {
 
         userProfile.setAppointments(List.of(appointment));
         userProfile.setAuthorisations(List.of(authorisation));
-        userProfile.setJudicialRoleTypes(List.of(judicialRoleType));
+        userProfile.setJudicialRoleTypes(List.of(judicialRoleType,judicialRoleType1,judicialRoleType2));
 
         return userProfile;
     }
