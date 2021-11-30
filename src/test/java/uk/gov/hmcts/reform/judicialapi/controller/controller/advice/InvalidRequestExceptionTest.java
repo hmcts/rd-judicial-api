@@ -1,18 +1,18 @@
 package uk.gov.hmcts.reform.judicialapi.controller.controller.advice;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class InvalidRequestExceptionTest {
+class InvalidRequestExceptionTest {
 
     @Test
-    public void test_handle_invalid_request_exception() {
+    void test_handle_invalid_request_exception() {
         InvalidRequestException invalidRequestException = new InvalidRequestException("Bad Request");
-        assertThat(invalidRequestException).isNotNull();
+        assertNotNull(invalidRequestException);
         assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), invalidRequestException.getMessage());
     }
 }

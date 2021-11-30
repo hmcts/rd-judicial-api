@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
 
@@ -12,17 +12,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
+class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
     private UserSearchRequest userSearchRequest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         super.setUpClient();
     }
 
     @Test
-    public void shouldReturn200WhenUserProfileRequestedForGivenSearchString() {
+    void shouldReturn200WhenUserProfileRequestedForGivenSearchString() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .build();
@@ -37,7 +37,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
     @Test
-    public void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCodeAndLocation() {
+    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCodeAndLocation() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location("20013")
@@ -52,7 +52,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
     @Test
-    public void shouldReturn200AndIgnoreLocationWhenServiceCodeIsBfa1() {
+    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsBfa1() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location("20012")
@@ -68,7 +68,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
     @Test
-    public void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndLocation() {
+    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndLocation() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location("20012")
@@ -82,7 +82,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
     @Test
-    public void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCode() {
+    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCode() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .serviceCode("BFA1")
@@ -97,7 +97,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
     @Test
-    public void shouldReturn401ForInvalidTokens() {
+    void shouldReturn401ForInvalidTokens() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location("location")
@@ -109,7 +109,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
     @Test
-    public void shouldReturn400WhenSearchStringIsEmpty() {
+    void shouldReturn400WhenSearchStringIsEmpty() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("")
                 .location("location")
@@ -123,7 +123,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
     @Test
-    public void shouldReturn400WhenSearchStringDoesNotContainRequiredLength() {
+    void shouldReturn400WhenSearchStringDoesNotContainRequiredLength() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("te")
                 .location("location")
@@ -137,7 +137,7 @@ public class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
     @Test
-    public void shouldReturn400WhenSearchStringContainsOtherThanLetters() {
+    void shouldReturn400WhenSearchStringContainsOtherThanLetters() {
         userSearchRequest = UserSearchRequest.builder()
                 .searchString("test123")
                 .location("location")
