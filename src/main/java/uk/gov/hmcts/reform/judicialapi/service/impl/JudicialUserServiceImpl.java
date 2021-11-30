@@ -39,6 +39,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.response.AppointmentRefreshRes
 import uk.gov.hmcts.reform.judicialapi.controller.response.AuthorisationRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -396,7 +397,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     }
 
     private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {
-        return judicialRoleTypes.stream().map(JudicialRoleType::getTitle).collect(Collectors.toList());
+        return judicialRoleTypes.stream()
+                .filter(e -> e.getEndDate() == null || !e.getEndDate().toLocalDate().isBefore(LocalDate.now()))
+                .map(JudicialRoleType::getTitle).collect(Collectors.toList());
     }
 
 }
