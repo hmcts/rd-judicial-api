@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.controller.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
@@ -20,25 +21,31 @@ public class RequestUtilsTest {
         assertEquals(1, pageRequest.first().getPageSize());
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test
     public void testInvalidRequestExceptionForInvalidPageNumber() {
-        RequestUtils.validateAndBuildPaginationObject(-1, 1,
-                "ASC", "objectId",
-                20, "id", UserProfile.class);
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            RequestUtils.validateAndBuildPaginationObject(-1, 1,
+                    "ASC", "objectId",
+                    20, "id", UserProfile.class);
+        });
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test
     public void testInvalidRequestExceptionForInvalidPageSize() {
-        RequestUtils.validateAndBuildPaginationObject(0, -1,
-                "ASC", "objectId",
-                20, "id", UserProfile.class);
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            RequestUtils.validateAndBuildPaginationObject(0, -1,
+                    "ASC", "objectId",
+                    20, "id", UserProfile.class);
+        });
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test
     public void testInvalidRequestExceptionForInvalidSortDirection() {
-        RequestUtils.validateAndBuildPaginationObject(0, 1,
-                "ASC", "Invalid",
-                20, "id", UserProfile.class);
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            RequestUtils.validateAndBuildPaginationObject(0, 1,
+                    "ASC", "Invalid",
+                    20, "id", UserProfile.class);
+        });
     }
 
     @Test
@@ -53,10 +60,12 @@ public class RequestUtilsTest {
         assertTrue(pageRequest.getSort().get().anyMatch(i -> i.getProperty().equals("objectId")));
     }
 
-    @Test(expected = InvalidRequestException.class)
+    @Test
     public void testInvalidRequestExceptionForInvalidSortColumn() {
-        RequestUtils.validateAndBuildPaginationObject(0, 1,
-                "invalid", "objectId",
-                20, "invalid", UserProfile.class);
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            RequestUtils.validateAndBuildPaginationObject(0, 1,
+                    "invalid", "objectId",
+                    20, "invalid", UserProfile.class);
+        });
     }
 }

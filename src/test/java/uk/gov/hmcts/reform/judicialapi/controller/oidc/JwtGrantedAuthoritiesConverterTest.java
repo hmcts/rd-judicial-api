@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.controller.oidc;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
@@ -12,23 +12,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class JwtGrantedAuthoritiesConverterTest {
+class JwtGrantedAuthoritiesConverterTest {
 
     JwtGrantedAuthoritiesConverter converter;
     IdamRepository idamRepositoryMock;
     UserInfo userInfoMock;
     Jwt jwtMock;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         idamRepositoryMock = mock(IdamRepository.class);
         userInfoMock = mock(UserInfo.class);
         jwtMock = mock(Jwt.class);
@@ -36,8 +36,8 @@ public class JwtGrantedAuthoritiesConverterTest {
     }
 
     @Test
-    public void test_shouldReturnEmptyAuthorities() {
-        Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
+    void test_shouldReturnEmptyAuthorities() {
+        final Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
 
         assertNotNull(authorities);
         assertEquals(0, authorities.size());
@@ -45,10 +45,10 @@ public class JwtGrantedAuthoritiesConverterTest {
     }
 
     @Test
-    public void test_shouldReturnEmptyAuthoritiesWhenClaimNotAvailable() {
+    void test_shouldReturnEmptyAuthoritiesWhenClaimNotAvailable() {
         when(jwtMock.containsClaim(anyString())).thenReturn(false);
 
-        Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
+        final Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
 
         assertNotNull(authorities);
         assertEquals(0, authorities.size());
@@ -57,11 +57,11 @@ public class JwtGrantedAuthoritiesConverterTest {
     }
 
     @Test
-    public void test_shouldReturnEmptyAuthoritiesWhenClaimValueNotEquals() {
+    void test_shouldReturnEmptyAuthoritiesWhenClaimValueNotEquals() {
         when(jwtMock.containsClaim(anyString())).thenReturn(true);
         when(jwtMock.getClaim(anyString())).thenReturn("Test");
 
-        Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
+        final Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
 
         assertNotNull(authorities);
         assertEquals(0, authorities.size());
@@ -71,7 +71,7 @@ public class JwtGrantedAuthoritiesConverterTest {
     }
 
     @Test
-    public void test_shouldReturnEmptyAuthoritiesWhenIdamReturnsNoUsers() {
+    void test_shouldReturnEmptyAuthoritiesWhenIdamReturnsNoUsers() {
         List<String> roles = new ArrayList<>();
 
         when(jwtMock.containsClaim(anyString())).thenReturn(true);
@@ -80,7 +80,7 @@ public class JwtGrantedAuthoritiesConverterTest {
         when(userInfoMock.getRoles()).thenReturn(roles);
         when(idamRepositoryMock.getUserInfo(anyString())).thenReturn(userInfoMock);
 
-        Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
+        final Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
 
         assertNotNull(authorities);
         assertEquals(0, authorities.size());
@@ -93,16 +93,15 @@ public class JwtGrantedAuthoritiesConverterTest {
     }
 
     @Test
-    public void test_shouldReturnEmptyAuthoritiesWhenIdamReturnsUsers() {
-        List<String> roles = new ArrayList<>();
-        roles.add("lrd-admin");
+    void test_shouldReturnEmptyAuthoritiesWhenIdamReturnsUsers() {
+        List<String> roles = List.of("lrd-admin");
         when(jwtMock.containsClaim(anyString())).thenReturn(true);
         when(jwtMock.getClaim(anyString())).thenReturn("access_token");
         when(jwtMock.getTokenValue()).thenReturn("access_token");
         when(userInfoMock.getRoles()).thenReturn(roles);
         when(idamRepositoryMock.getUserInfo(anyString())).thenReturn(userInfoMock);
 
-        Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
+        final Collection<GrantedAuthority> authorities = converter.convert(jwtMock);
 
         assertNotNull(authorities);
         assertEquals(1, authorities.size());
@@ -112,7 +111,7 @@ public class JwtGrantedAuthoritiesConverterTest {
         verify(userInfoMock, times(1)).getRoles();
         verify(idamRepositoryMock, times(1)).getUserInfo(anyString());
 
-        UserInfo userInfo = converter.getUserInfo();
+        final UserInfo userInfo = converter.getUserInfo();
 
         assertNotNull(userInfo);
     }
