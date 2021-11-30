@@ -1,31 +1,35 @@
 package uk.gov.hmcts.reform.judicialapi.controller.constants;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.EMPTY_RESULT_DATA_ACCESS;
 import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.INVALID_REQUEST_EXCEPTION;
 import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.MALFORMED_JSON;
 import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.UNSUPPORTED_MEDIA_TYPES;
 
 
-public class ErrorConstantsTest {
+class ErrorConstantsTest {
 
     @Test
-    public void test_shouldReturnMsgWhenMsgPassed() {
+    void test_shouldReturnMsgWhenMsgPassed() {
         ErrorConstants mailFormedJson = MALFORMED_JSON;
-        assertThat(mailFormedJson).isNotNull();
-        assertThat(mailFormedJson.getErrorMessage()).isEqualTo(MALFORMED_JSON.getErrorMessage());
+        assertNotNull(mailFormedJson);
+        assertEquals(MALFORMED_JSON.getErrorMessage(), mailFormedJson.getErrorMessage());
+
         ErrorConstants mediaTypes = UNSUPPORTED_MEDIA_TYPES;
-        assertThat(mediaTypes).isNotNull();
-        assertThat(mediaTypes.getErrorMessage()).isEqualTo("2 : Unsupported Media Type");
+        assertNotNull(mediaTypes);
+        assertEquals("2 : Unsupported Media Type", mediaTypes.getErrorMessage());
+
         ErrorConstants invalidExp = INVALID_REQUEST_EXCEPTION;
-        assertThat(invalidExp).isNotNull();
-        assertThat(invalidExp.getErrorMessage())
-                .isEqualTo("3 : There is a problem with your request. Please check and try again");
+        assertNotNull(invalidExp);
+        assertEquals("3 : There is a problem with your request. Please check and try again",
+                invalidExp.getErrorMessage());
+
         ErrorConstants emptyResultDataAccess = EMPTY_RESULT_DATA_ACCESS;
-        assertThat(emptyResultDataAccess).isNotNull();
-        assertThat(emptyResultDataAccess.getErrorMessage()).isEqualTo("4 : Resource not found");
+        assertNotNull(emptyResultDataAccess);
+        assertEquals("4 : Resource not found", emptyResultDataAccess.getErrorMessage());
     }
 }
