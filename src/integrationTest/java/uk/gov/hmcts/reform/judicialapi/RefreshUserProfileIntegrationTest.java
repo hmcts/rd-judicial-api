@@ -2,8 +2,8 @@ package uk.gov.hmcts.reform.judicialapi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.util.JudicialReferenceDataClient;
@@ -25,7 +25,7 @@ public class RefreshUserProfileIntegrationTest extends AuthorizationEnabledInteg
     private RefreshRoleRequest refreshRoleRequest;
     private ObjectMapper mapper = new ObjectMapper();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         super.setUpClient();
         refreshRoleRequest = new RefreshRoleRequest("BFA1",
