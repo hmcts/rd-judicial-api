@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.util.JudicialReferenceDataClient;
@@ -19,26 +19,27 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation.FORBIDDEN_EXCEPTION_LD;
 
-public class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
+
+class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
     private UserRequest userRequest;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         super.setUpClient();
         userRequest = new UserRequest(Arrays.asList("44862987-4b00-e2e7-4ff8-281b87f16bf9",
                 "4c0ff6a3-8fd6-803b-301a-29d9dacccca8"));
     }
 
     @Test
-    public void shouldReturn200WithValidParameters() {
+    void shouldReturn200WithValidParameters() {
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
     @Test
-    public void shouldReturn403ForUnauthorisedUsers() {
+    void shouldReturn403ForUnauthorisedUsers() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, "test-user-role", false);
@@ -47,7 +48,7 @@ public class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTe
     }
 
     @Test
-    public void shouldReturn401ForInvalidTokens() {
+    void shouldReturn401ForInvalidTokens() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, "jrd-system-user", true);
@@ -56,7 +57,7 @@ public class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTe
     }
 
     @Test
-    public void shouldReturn400ForEmptyUserIds() {
+    void shouldReturn400ForEmptyUserIds() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         userRequest = new UserRequest();
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
@@ -66,7 +67,7 @@ public class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTe
     }
 
     @Test
-    public void shouldReturn404WhenNoUsersFound() {
+    void shouldReturn404WhenNoUsersFound() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         userRequest = new UserRequest(Collections.singletonList(UUID.randomUUID().toString()));
 
@@ -77,7 +78,7 @@ public class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTe
     }
 
     @Test
-    public void shouldReturn403WhenLdFeatureDisabled() {
+    void shouldReturn403WhenLdFeatureDisabled() {
         Map<String, String> launchDarklyMap = new HashMap<>();
         launchDarklyMap.put("JrdUsersController.fetchUsers", "test-jrd-flag");
         when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(false);

@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.controller.controller.response;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.controller.response.AppointmentResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.AuthorisationResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;

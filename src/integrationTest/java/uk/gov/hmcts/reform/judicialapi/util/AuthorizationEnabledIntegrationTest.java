@@ -5,16 +5,13 @@ import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.extension.ResponseTransformer;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.Response;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.launchdarkly.sdk.server.LDClient;
-import net.serenitybdd.junit.spring.integration.SpringIntegrationSerenityRunner;
 import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.flywaydb.core.Flyway;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -23,6 +20,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.judicialapi.configuration.RestTemplateConfiguration;
 import uk.gov.hmcts.reform.judicialapi.service.impl.FeatureToggleServiceImpl;
+import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 
 import java.util.LinkedList;
 
@@ -30,7 +28,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static java.lang.String.format;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -39,7 +36,6 @@ import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRole
 import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResponse;
 
 @Configuration
-@RunWith(SpringIntegrationSerenityRunner.class)
 @WithTags({@WithTag("testType:Integration")})
 @TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
 @ContextConfiguration(classes = {RestTemplateConfiguration.class})
@@ -60,20 +56,19 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     @Value("${idam.s2s-authorised.services}")
     private String serviceName;
 
-    @ClassRule
-    public static WireMockRule s2sService = new WireMockRule(wireMockConfig().port(8990));
+    @RegisterExtension
+    protected WireMockExtension s2sService = new WireMockExtension(8990);
 
-    @ClassRule
-    public static WireMockRule sidamService = new WireMockRule(wireMockConfig().port(5000)
-            .extensions(JudicialTransformer.class));
+    @RegisterExtension
+    protected WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
 
-    @ClassRule
-    public static WireMockRule mockHttpServerForOidc = new WireMockRule(wireMockConfig().port(7000));
+    @RegisterExtension
+    protected WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
 
     @Autowired
     Flyway flyway;
 
-    @Before
+    @BeforeEach
     public void setUpClient() {
         JudicialReferenceDataClient.setBearerToken("");
         judicialReferenceDataClient = new JudicialReferenceDataClient(port, issuer, expiration, serviceName);
@@ -82,7 +77,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
         flyway.migrate();
     }
 
-    @Before
+    @BeforeEach
     public void setupIdamStubs() throws Exception {
 
         s2sService.stubFor(get(urlEqualTo("/details"))
@@ -118,7 +113,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
                         .withBody(getDynamicJwksResponse())));
     }
 
-    @After
+    @AfterEach
     public void cleanupTestData() {
         JudicialReferenceDataClient.setBearerToken("");
     }
