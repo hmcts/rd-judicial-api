@@ -153,7 +153,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void shouldReturn404WhenUserNotFoundForTheSearchRequestProvided() {
+    void shouldReturn200WithEmptyResponseWhenUserNotFoundForTheSearchRequestProvided() {
 
         var userSearchRequest = UserSearchRequest
                 .builder()
@@ -164,8 +164,12 @@ class JudicialUserServiceImplTest {
         when(userProfileRepository.findBySearchString(any(), any(), any(), any()))
                 .thenReturn(Collections.emptyList());
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () ->
-                judicialUserService.retrieveUserProfile(userSearchRequest));
+        var responseEntity =
+                judicialUserService.retrieveUserProfile(userSearchRequest);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(Collections.EMPTY_LIST, responseEntity.getBody());
+        verify(userProfileRepository, times(1)).findBySearchString(any(),any(),
+                any(), anyList());
     }
 
     @Test
