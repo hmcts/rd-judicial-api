@@ -47,7 +47,6 @@ import java.util.stream.Collectors;
 import java.util.Set;
 
 import static java.util.Objects.nonNull;
-import static uk.gov.hmcts.reform.judicialapi.util.JrdConstant.USER_DATA_NOT_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
 
 @Slf4j
@@ -117,10 +116,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         var userProfiles = userProfileRepository
                 .findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
                         userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode);
-
-        if (CollectionUtils.isEmpty(userProfiles)) {
-            throw new ResourceNotFoundException(USER_DATA_NOT_FOUND);
-        }
 
         var userSearchResponses = userProfiles
                 .stream()
