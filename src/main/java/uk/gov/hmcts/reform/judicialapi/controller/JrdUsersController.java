@@ -129,10 +129,6 @@ public class JrdUsersController {
                     message = "Unauthorized"
             ),
             @ApiResponse(
-                    code = 404,
-                    message = "No Users Found"
-            ),
-            @ApiResponse(
                     code = 500,
                     message = "Internal Server Error"
             )
