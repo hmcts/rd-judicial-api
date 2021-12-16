@@ -12,6 +12,11 @@ management:
     health:
       show-details: "always"
 
+testing:
+  support:
+    enabled: ${TEST_IDAM_ENABLED:false}
+    idamUrl: ${TEST_IDAM_URL:}
+
 spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -113,4 +118,9 @@ launchdarkly:
     key: ${LD_SDK_KEY:}
     environment: ${LAUNCH_DARKLY_ENV:preview}
     user: rd
+
+locationRefDataUrl: ${LOCATION_REF_DATA_URL:http://rd-location-ref-api-aat.service.core-compute-aat.internal}
+refresh:
+  pageSize: ${REFRESH_PAGE_SIZE:200}
+  sortColumn: ${REFRESH_SORT_COLUMN:objectId}
 
