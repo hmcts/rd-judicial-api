@@ -329,7 +329,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
-    implementation "io.github.openfeign:feign-httpclient:11.0"
+    implementation "io.github.openfeign:feign-httpclient:11.8"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 
