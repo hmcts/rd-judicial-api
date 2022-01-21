@@ -269,7 +269,6 @@ project.tasks['sonarqube'].group = "Verification"
 
 repositories {
     mavenLocal()
-    jcenter()
     mavenCentral()
     maven {
         url 'https://jitpack.io'
