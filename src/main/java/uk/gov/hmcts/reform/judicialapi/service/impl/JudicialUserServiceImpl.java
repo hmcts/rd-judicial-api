@@ -133,7 +133,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     public ResponseEntity<Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,
                                                      Integer pageNumber, String sortDirection, String sortColumn) {
 
-        refreshUserValidator.shouldContainOnlyOneInputParameter(refreshRoleRequest);
+        refreshUserValidator.shouldContainOnlyOneNotEmptyInputParameter(refreshRoleRequest);
         var pageRequest = RequestUtils.validateAndBuildPaginationObject(pageSize, pageNumber,
                 sortDirection, sortColumn, refreshDefaultPageSize, refreshDefaultSortColumn,
                 UserProfile.class);

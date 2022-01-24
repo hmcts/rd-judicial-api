@@ -132,7 +132,7 @@ public class JrdApiProviderTest {
     @State({"return judicial user profiles along with their active appointments and authorisations"})
     public void toReturnUserProfilesDetailsForRefreshUserProfile() throws JsonProcessingException {
 
-        doNothing().when(refreshUserValidator).shouldContainOnlyOneInputParameter(any());
+        doNothing().when(refreshUserValidator).shouldContainOnlyOneNotEmptyInputParameter(any());
         when(refreshUserValidator.isStringNotEmptyOrNotNull(any())).thenReturn(Boolean.TRUE);
         when(refreshUserValidator.isListNotEmptyOrNotNull(any())).thenReturn(Boolean.FALSE);
 

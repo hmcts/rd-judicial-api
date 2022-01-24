@@ -17,15 +17,21 @@ import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ONLY_ONE_PAR
 @NoArgsConstructor
 public class RefreshUserValidator {
 
-    public void shouldContainOnlyOneInputParameter(RefreshRoleRequest refreshRoleRequest) {
+    public void shouldContainOnlyOneNotEmptyInputParameter(RefreshRoleRequest refreshRoleRequest) {
         if (null != refreshRoleRequest) {
             boolean ccdServiceNames = isStringNotEmptyOrNotNull(refreshRoleRequest.getCcdServiceNames());
             boolean objectIds = isListNotEmptyOrNotNull(refreshRoleRequest.getObjectIds());
             boolean sidamIds = isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds());
 
+            if (!ccdServiceNames && !objectIds && !sidamIds) {
+                throw new InvalidRequestException("Request Body cannot be empty");
+            }
+
             if (ccdServiceNames ? (objectIds || sidamIds) : (objectIds && sidamIds)) {
                 throw new InvalidRequestException(ONLY_ONE_PARAMETER_REQUIRED);
             }
+        } else {
+            throw new InvalidRequestException("Request Body cannot be Null");
         }
     }
 

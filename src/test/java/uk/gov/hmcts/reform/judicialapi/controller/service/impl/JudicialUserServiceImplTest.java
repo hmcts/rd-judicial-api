@@ -55,6 +55,7 @@ import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
@@ -364,20 +365,16 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_BasedOn_All_200() throws JsonProcessingException {
+    public void test_refreshUserProfile_BasedOn_All_400() throws JsonProcessingException {
         var userProfile = buildUserProfile();
 
         var pageRequest = getPageRequest();
         var page = new PageImpl<>(Collections.singletonList(userProfile));
-        when(userProfileRepository.fetchUserProfileByAll(pageRequest))
-                .thenReturn(page);
         var refreshRoleRequest = new RefreshRoleRequest("",  null, null);
-        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
-                0, "ASC", "objectId");
-
-        assertEquals(200, responseEntity.getStatusCodeValue());
-        UserProfileRefreshResponse profile = (UserProfileRefreshResponse) ((List<?>) responseEntity.getBody()).get(0);
-        assertThat(profile.getAppointments().get(0).getRoles(), containsInAnyOrder("Test1","Test3"));
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
     }
 
     @NotNull
