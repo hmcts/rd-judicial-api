@@ -24,7 +24,7 @@ public class RefreshUserValidator {
             boolean sidamIds = isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds());
 
             if (!ccdServiceNames && !objectIds && !sidamIds) {
-                throw new InvalidRequestException("Request Body cannot be empty");
+                throw new InvalidRequestException("Request Body or given Param cannot be empty");
             }
 
             if (ccdServiceNames ? (objectIds || sidamIds) : (objectIds && sidamIds)) {
