@@ -322,7 +322,6 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
     implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
 
-
     compile group: 'org.flywaydb', name: 'flyway-core', version: '7.10.0'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
     compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
