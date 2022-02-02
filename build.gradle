@@ -13,7 +13,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '3.3'
     id 'org.springframework.boot' version '2.4.12'
-    id "org.flywaydb.flyway" version "8.2.3"
+    id "org.flywaydb.flyway" version "8.3.0"
     id "io.freefair.lombok" version "5.3.3.3"
     id 'uk.gov.hmcts.java' version '0.12.12'
     id 'au.com.dius.pact' version '4.1.7'
@@ -321,6 +321,9 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
     implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
+
+    implementation group: 'org.owasp', name: 'dependency-check-maven', version: '6.5.3'
+
 
     compile group: 'org.flywaydb', name: 'flyway-core', version: '7.10.0'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
