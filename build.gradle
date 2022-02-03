@@ -288,26 +288,26 @@ dependencies {
 
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
 
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
-    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-hystrix', version: versions.springHystrix
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
-    compile group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.1'
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.2'
-    compile group: 'javax.inject', name: 'javax.inject', version: '1'
-    compile "org.springframework.boot:spring-boot-starter-oauth2-client"
-    compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
-    compile group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0'
-    compile group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
-    compile group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.13.1'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.2'
+    implementation group: 'javax.inject', name: 'javax.inject', version: '1'
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    implementation group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0'
+    implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
+    implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
@@ -322,13 +322,13 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
     implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
 
-    compile group: 'org.flywaydb', name: 'flyway-core', version: '7.10.0'
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
-    compile group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
-    compile group: 'commons-lang', name: 'commons-lang', version: '2.6'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
-    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-    compile group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '7.10.0'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
+    implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
+    implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
     implementation "io.github.openfeign:feign-httpclient:11.0"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
@@ -356,11 +356,11 @@ dependencies {
     testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
 
-    testCompile (group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity)
-    testCompile (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
-    testCompile (group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity)
-    testCompile (group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity)
-    testCompile 'com.github.hmcts:fortify-client:1.2.0:all'
+    testImplementation (group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity)
+    testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
+    testImplementation (group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity)
+    testImplementation (group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity)
+    testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
@@ -383,11 +383,11 @@ dependencies {
         }
     }
 
-    contractTestCompile group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
-    contractTestRuntime group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
 
-    contractTestCompile("org.junit.jupiter:junit-jupiter-api:5.7.1")
-    contractTestRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    contractTestImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    contractTestImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.1")
     contractTestImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
@@ -402,11 +402,11 @@ dependencies {
     smokeTestImplementation sourceSets.main.runtimeClasspath
     smokeTestImplementation sourceSets.test.runtimeClasspath
 
-    contractTestCompile sourceSets.main.runtimeClasspath
-    contractTestCompile sourceSets.test.runtimeClasspath
+    contractTestImplementation sourceSets.main.runtimeClasspath
+    contractTestImplementation sourceSets.test.runtimeClasspath
 
-    pactTestCompile sourceSets.main.runtimeClasspath
-    pactTestCompile sourceSets.test.runtimeClasspath
+    pactTestImplementation sourceSets.main.runtimeClasspath
+    pactTestImplementation sourceSets.test.runtimeClasspath
 }
 
 dependencyManagement {
@@ -460,3 +460,20 @@ tasks.withType(Test) {
         exceptionFormat = 'full'
     }
 }
+
+rootProject.tasks.named("processSmokeTestResources") {
+    duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processFunctionalTestResources") {
+    duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processIntegrationTestResources") {
+    duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("processContractTestResources") {
+    duplicatesStrategy = 'include'
+}
+
