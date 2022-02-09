@@ -40,7 +40,7 @@ class JrdUsersControllerTest {
     UserRequest userRequest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         userRequest = new UserRequest(Arrays.asList(
         UUID.randomUUID().toString(), UUID.randomUUID().toString()));
     }
@@ -82,7 +82,7 @@ class JrdUsersControllerTest {
     }
 
     @Test
-    public void shouldRefreshUserProfile() {
+    void shouldRefreshUserProfile() {
         responseEntity = ResponseEntity.ok().body(null);
         when(judicialUserServiceMock.refreshUserProfile(any(),any(),any(),any(), any()))
                 .thenReturn(responseEntity);
