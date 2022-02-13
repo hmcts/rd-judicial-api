@@ -7,10 +7,10 @@ import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createAuthorisation;
 
-public class AuthorisationResponseTest {
+class AuthorisationResponseTest {
 
     @Test
-    public void test_AuthorisationResponseTest() {
+    void test_AuthorisationResponseTest() {
         Authorisation authorisation = createAuthorisation();
         AuthorisationResponse authorisationResponse = new AuthorisationResponse(authorisation);
 
@@ -19,7 +19,7 @@ public class AuthorisationResponseTest {
     }
 
     @Test
-    public void test_AuthorisationResponseSetter() {
+    void test_AuthorisationResponseSetter() {
         AuthorisationResponse authorisationResponse = new AuthorisationResponse();
 
         authorisationResponse.setAuthorisationId("authorisationId");
