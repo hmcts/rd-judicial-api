@@ -22,16 +22,17 @@ import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-public class JsonFeignResponseUtilTest {
+class JsonFeignResponseUtilTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testDecode() {
+    void testDecode() {
         var header = new HashMap<String, Collection<String>>();
         var list = new ArrayList<String>();
         header.put("content-encoding", list);
@@ -46,7 +47,7 @@ public class JsonFeignResponseUtilTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void test_Decode_fails_with_ioException() {
+    void test_Decode_fails_with_ioException() {
         var header = new HashMap<String, Collection<String>>();
         var list = new ArrayList<String>();
         header.put("content-encoding", list);
@@ -68,7 +69,7 @@ public class JsonFeignResponseUtilTest {
     }
 
     @Test
-    public void test_convertHeaders() {
+    void test_convertHeaders() {
         var header = new HashMap<String, Collection<String>>();
         var list = new ArrayList<>(Arrays.asList("gzip", "request-context", "x-powered-by",
                 "content-length"));
@@ -85,7 +86,7 @@ public class JsonFeignResponseUtilTest {
     }
 
     @Test
-    public void test_toResponseEntity_with_payload_not_empty() {
+    void test_toResponseEntity_with_payload_not_empty() {
         var header = new HashMap<String, Collection<String>>();
         var list = new ArrayList<>(Arrays.asList("a", "b"));
         header.put("content-encoding", list);
@@ -100,7 +101,7 @@ public class JsonFeignResponseUtilTest {
     }
 
     @Test
-    public void test_privateConstructor() throws Exception {
+    void test_privateConstructor() throws Exception {
         Constructor<JsonFeignResponseUtil> constructor = JsonFeignResponseUtil.class.getDeclaredConstructor();
         assertTrue(Modifier.isPrivate(constructor.getModifiers()));
         constructor.setAccessible(true);
@@ -109,7 +110,7 @@ public class JsonFeignResponseUtilTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void test_mapObjectToList() {
+    void test_mapObjectToList() {
         var header = new HashMap<String, Collection<String>>();
         var list = new ArrayList<String>();
         header.put("content-encoding", list);
@@ -144,14 +145,14 @@ public class JsonFeignResponseUtilTest {
     }
 
     @Test
-    public void test_mapObjectToEmptyList() {
+    void test_mapObjectToEmptyList() {
         var header = new HashMap<String, Collection<String>>();
         var list = new ArrayList<String>();
         header.put("content-encoding", list);
         String responseBody = "";
+        final var response = Response.builder().status(200).reason("OK").headers(header)
+                .body(responseBody, UTF_8).request(mock(Request.class)).build();
         Assertions.assertThrows(UserProfileException.class, () -> {
-            var response = Response.builder().status(200).reason("OK").headers(header)
-                    .body(responseBody, UTF_8).request(mock(Request.class)).build();
             JsonFeignResponseUtil.toResponseEntityWithListBody(
                     response,
                     LrdOrgInfoServiceResponse.class);
