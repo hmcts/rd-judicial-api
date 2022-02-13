@@ -12,22 +12,22 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserProfile;
 
-public class OrmResponseTest {
+class OrmResponseTest {
 
     @Test
-    public void test_OrmResponseTest() {
+    void test_OrmResponseTest() {
         UserProfile userProfile = createUserProfile();
 
         OrmResponse ormResponse = new OrmResponse(userProfile);
 
         assertThat(ormResponse.getIdamId()).isEqualTo(userProfile.getSidamId());
-        assertThat(ormResponse.getAppointments().size()).isEqualTo(1);
-        assertThat(ormResponse.getAuthorisations().size()).isEqualTo(1);
+        assertThat(ormResponse.getAppointments()).hasSize(1);
+        assertThat(ormResponse.getAuthorisations()).hasSize(1);
 
     }
 
     @Test
-    public void test_OrmResponseSetter() {
+    void test_OrmResponseSetter() {
         OrmResponse ormResponse = new OrmResponse();
         List<AppointmentResponse> appointmentResponseList = Collections.singletonList(new AppointmentResponse());
         List<AuthorisationResponse> authorisationResponseList = Collections.singletonList(new AuthorisationResponse());
