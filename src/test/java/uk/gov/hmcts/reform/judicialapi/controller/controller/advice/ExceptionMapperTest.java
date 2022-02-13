@@ -92,7 +92,7 @@ class ExceptionMapperTest {
     }
 
     @Test
-    public void test_handle_json_feign_response_parsing_exception() {
+    void test_handle_json_feign_response_parsing_exception() {
         var exception = new UserProfileException(HttpStatus.INTERNAL_SERVER_ERROR,
                 "Parsing exception", "Parsing exception");
 

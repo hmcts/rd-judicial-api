@@ -7,11 +7,11 @@ import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createAppointment;
 
-public class AppointmentResponseTest {
+class AppointmentResponseTest {
 
 
     @Test
-    public void test_AppointmentResponseTest() {
+    void test_AppointmentResponseTest() {
         Appointment appointment = createAppointment();
 
         AppointmentResponse appointmentResponse = new AppointmentResponse(appointment);
@@ -28,7 +28,7 @@ public class AppointmentResponseTest {
     }
 
     @Test
-    public void test_AppointmentResponseSetter() {
+    void test_AppointmentResponseSetter() {
         AppointmentResponse appointmentResponse = new AppointmentResponse();
 
         appointmentResponse.setAppointmentId("appointmentId");
