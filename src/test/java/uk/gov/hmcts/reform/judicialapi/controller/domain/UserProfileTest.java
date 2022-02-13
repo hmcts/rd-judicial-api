@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserProfile;
 
-public class UserProfileTest {
+class UserProfileTest {
 
     @Test
-    public void testUserProfile() {
+    void testUserProfile() {
         UserProfile userProfile = createUserProfile();
 
         assertNotNull(userProfile);

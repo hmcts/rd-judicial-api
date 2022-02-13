@@ -86,7 +86,7 @@ class JudicialUserServiceImplTest {
     ObjectMapper mapper = new ObjectMapper();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         refreshUserValidatorMock = new RefreshUserValidator();
         judicialUserService.setRefreshUserValidator(refreshUserValidatorMock);
     }
@@ -173,7 +173,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_Two_Input_01() throws JsonProcessingException {
+    void test_refreshUserProfile_Two_Input_01() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, Arrays.asList("test", "test"));
@@ -185,7 +185,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_Two_Input_02() throws JsonProcessingException {
+    void test_refreshUserProfile_Two_Input_02() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), null);
@@ -196,7 +196,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_Two_Input_03() throws JsonProcessingException {
+    void test_refreshUserProfile_Two_Input_03() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"));
@@ -207,7 +207,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_Multiple_Input() throws JsonProcessingException {
+    void test_refreshUserProfile_Multiple_Input() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"));
@@ -218,7 +218,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_BasedOnSidamIds_200() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnSidamIds_200() throws JsonProcessingException {
         var userProfile = buildUserProfile();
 
         var pageRequest = getPageRequest();
@@ -234,7 +234,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_BasedOnObjectIds_200() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnObjectIds_200() throws JsonProcessingException {
         var userProfile = buildUserProfile();
 
         var pageRequest = getPageRequest();
@@ -250,7 +250,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_BasedOnCcdServiceNames_200() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnCcdServiceNames_200() throws JsonProcessingException {
         var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
         lrdOrgInfoServiceResponse.setServiceCode("BFA1");
         lrdOrgInfoServiceResponse.setCcdServiceName("cmc");
@@ -278,7 +278,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_BasedOnCcdServiceNames_when_LrdResponse_IsNon_200() {
+    void test_refreshUserProfile_BasedOnCcdServiceNames_when_LrdResponse_IsNon_200() {
 
         var pageRequest = getPageRequest();
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
@@ -295,7 +295,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_BasedOnCcdServiceNames_when_Response_Empty() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnCcdServiceNames_when_Response_Empty() throws JsonProcessingException {
 
         var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
         lrdOrgInfoServiceResponse.setServiceCode("BFA1");
@@ -321,7 +321,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseIsEmpty()
+    void test_refreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseIsEmpty()
             throws JsonProcessingException {
 
         var body = mapper.writeValueAsString(Collections.emptyList());
@@ -339,7 +339,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseReturns400()
+    void test_refreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseReturns400()
             throws JsonProcessingException {
         var errorResponse = ErrorResponse
                 .builder()
@@ -364,7 +364,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    public void test_refreshUserProfile_BasedOn_All_200() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOn_All_200() throws JsonProcessingException {
         var userProfile = buildUserProfile();
 
         var pageRequest = getPageRequest();
@@ -387,7 +387,7 @@ class JudicialUserServiceImplTest {
                 20, "id", UserProfile.class);
     }
 
-    public UserProfile buildUserProfile() {
+    UserProfile buildUserProfile() {
 
         var baseLocationType = new BaseLocationType();
         baseLocationType.setBaseLocationId("123");
