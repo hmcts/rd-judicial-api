@@ -6,13 +6,14 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class RequestUtilsTest {
+
+class RequestUtilsTest {
 
     @Test
-    public void testValidateAndBuildPaginationObject() {
+    void testValidateAndBuildPaginationObject() {
         var pageRequest =
                 RequestUtils.validateAndBuildPaginationObject(1, 0,
                         "ASC", "objectId",
@@ -22,7 +23,7 @@ public class RequestUtilsTest {
     }
 
     @Test
-    public void testInvalidRequestExceptionForInvalidPageNumber() {
+    void testInvalidRequestExceptionForInvalidPageNumber() {
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             RequestUtils.validateAndBuildPaginationObject(-1, 1,
                     "ASC", "objectId",
@@ -31,7 +32,7 @@ public class RequestUtilsTest {
     }
 
     @Test
-    public void testInvalidRequestExceptionForInvalidPageSize() {
+    void testInvalidRequestExceptionForInvalidPageSize() {
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             RequestUtils.validateAndBuildPaginationObject(0, -1,
                     "ASC", "objectId",
@@ -40,7 +41,7 @@ public class RequestUtilsTest {
     }
 
     @Test
-    public void testInvalidRequestExceptionForInvalidSortDirection() {
+    void testInvalidRequestExceptionForInvalidSortDirection() {
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             RequestUtils.validateAndBuildPaginationObject(0, 1,
                     "ASC", "Invalid",
@@ -49,7 +50,7 @@ public class RequestUtilsTest {
     }
 
     @Test
-    public void testConfigValueWhenPaginationParametersNotProvided() {
+    void testConfigValueWhenPaginationParametersNotProvided() {
         var pageRequest =
                 RequestUtils.validateAndBuildPaginationObject(null, null,
                         null, null,
@@ -61,7 +62,7 @@ public class RequestUtilsTest {
     }
 
     @Test
-    public void testInvalidRequestExceptionForInvalidSortColumn() {
+    void testInvalidRequestExceptionForInvalidSortColumn() {
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             RequestUtils.validateAndBuildPaginationObject(0, 1,
                     "invalid", "objectId",
