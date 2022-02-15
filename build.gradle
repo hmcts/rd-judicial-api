@@ -29,8 +29,7 @@ def versions = [
         gradlePitest       : '1.5.1',
         pitest             : '1.7.0',
         reformHealthStarter: '0.0.5',
-        reformLogging      : '5.1.7',
-        reformS2sClient    : '4.0.0',
+        reformLogging      : '5.1.9',
         serenity           : '2.0.76',
         sonarPitest        : '0.5',
         springBoot         : '2.4.12',
@@ -269,7 +268,6 @@ project.tasks['sonarqube'].group = "Verification"
 
 repositories {
     mavenLocal()
-    jcenter()
     mavenCentral()
     maven {
         url 'https://jitpack.io'
@@ -308,6 +306,7 @@ dependencies {
     implementation group: 'uk.gov.hmcts.reform', name: 'idam-client', version: '2.0.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
+
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
@@ -317,10 +316,10 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging', version: versions.reformLogging
-    implementation group: 'uk.gov.hmcts.reform', name: 'logging-appinsights', version: versions.reformLogging
-    implementation group: 'uk.gov.hmcts.reform', name: 'properties-volume-spring-boot-starter', version: '0.1.0'
-    implementation group: 'uk.gov.hmcts.reform', name: 'service-auth-provider-client', version: versions.reformS2sClient
+    implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
+    implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
+    implementation 'com.github.hmcts:properties-volume-spring-boot-starter:0.1.0'
+    implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '7.10.0'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.1'
