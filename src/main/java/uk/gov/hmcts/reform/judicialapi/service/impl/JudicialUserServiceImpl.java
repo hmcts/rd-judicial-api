@@ -133,6 +133,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     public ResponseEntity<Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,
                                                      Integer pageNumber, String sortDirection, String sortColumn) {
 
+        log.info("{} : starting refreshUserProfile ", loggingComponentName);
         refreshUserValidator.shouldContainOnlyOneInputParameter(refreshRoleRequest);
         var pageRequest = RequestUtils.validateAndBuildPaginationObject(pageSize, pageNumber,
                 sortDirection, sortColumn, refreshDefaultPageSize, refreshDefaultSortColumn,
@@ -145,6 +146,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private ResponseEntity<Object> getRefreshUserProfileBasedOnParam(RefreshRoleRequest refreshRoleRequest,
                                                                      PageRequest pageRequest) {
+        log.info("{} : starting getRefreshUserProfile Based On Param ", loggingComponentName);
         if (refreshUserValidator.isStringNotEmptyOrNotNull(refreshRoleRequest.getCcdServiceNames())) {
             return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
         } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds())) {
@@ -161,7 +163,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnObjectIds(List<String> objectIds,
                                                                       PageRequest pageRequest) {
-        log.info("starting refreshUserProfile BasedOn ObjectIds");
+        log.info("{} : starting refreshUserProfile BasedOn ObjectIds ", loggingComponentName);
         var userProfilePage = userProfileRepository.fetchUserProfileByObjectIds(
                 objectIds, pageRequest);
 
@@ -178,7 +180,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnSidamIds(List<String> sidamIds,
                                                                      PageRequest pageRequest) {
-        log.info("starting refreshUserProfile BasedOn SidamIds");
+        log.info("{} : starting refreshUserProfile BasedOn SidamIds ", loggingComponentName);
         var userProfilePage = userProfileRepository.fetchUserProfileBySidamIds(
                 sidamIds, pageRequest);
         if (userProfilePage == null || userProfilePage.isEmpty()) {
@@ -191,7 +193,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnAll(PageRequest pageRequest) {
-        log.info("starting refreshUserProfile BasedOn All");
+        log.info("{} : starting refreshUserProfile BasedOn All ", loggingComponentName);
 
         var userProfilePage = userProfileRepository.fetchUserProfileByAll(pageRequest);
 
@@ -205,6 +207,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
                                                                 Object collection, String collectionName) {
+        log.info("{} : starting getRefresh Role Response Entity ", loggingComponentName);
         var userProfileList = new ArrayList<UserProfileRefreshResponse>();
 
         var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();
@@ -252,7 +255,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnCcdServiceNames(String ccdServiceNames,
                                                                             PageRequest pageRequest) {
-        log.info("starting refreshUserProfile BasedOn CcdServiceNames");
+        log.info("{} : starting refreshUserProfile BasedOn CcdServiceNames ", loggingComponentName);
         var lrdOrgInfoServiceResponse =
                 locationReferenceDataFeignClient.getLocationRefServiceMapping(ccdServiceNames);
         var httpStatus = HttpStatus.valueOf(lrdOrgInfoServiceResponse.status());
