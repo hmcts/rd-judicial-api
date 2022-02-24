@@ -97,8 +97,9 @@ public class JudicialApiClient {
                 .header(AUTHORIZATION_HEADER, "Bearer " + userToken);
     }
 
-    public RequestSpecification getMultipleAuthHeaders(String userToken,int pageSize, int pageNumber,
+    public RequestSpecification getMultipleAuthHeaders(String role,int pageSize, int pageNumber,
                                                        String sortColumn,String sortDirection) {
+        String userToken = idamOpenIdClient.getOpenIdTokenByRole(role);
         return SerenityRest.with()
                 .relaxedHTTPSValidation()
                 .baseUri(judicialApiUrl)
