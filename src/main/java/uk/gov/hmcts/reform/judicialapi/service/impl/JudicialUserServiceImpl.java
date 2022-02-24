@@ -311,6 +311,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(
             UserProfile profile, List<ServiceCodeMapping> serviceCodeMappings, List<RegionMapping> regionMappings) {
+        log.info("{} : starting build User Profile Refresh Response Dto ", loggingComponentName);
         return UserProfileRefreshResponse.builder()
                 .sidamId(profile.getSidamId())
                 .objectId(profile.getObjectId())
@@ -326,6 +327,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(
             UserProfile profile, List<RegionMapping> regionMappings) {
+        log.info("{} : starting get Appointment Refresh Response List ", loggingComponentName);
 
         var appointmentList = new ArrayList<AppointmentRefreshResponse>();
 
@@ -337,6 +339,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private AppointmentRefreshResponse buildAppointmentRefreshResponseDto(
             Appointment appt, UserProfile profile, List<RegionMapping> regionMappings) {
+        log.info("{} : starting build Appointment Refresh Response Dto ", loggingComponentName);
 
         RegionMapping regionMapping = regionMappings.stream()
                 .filter(rm -> rm.getJrdRegionId().equalsIgnoreCase(appt.getRegionId()))
@@ -363,6 +366,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private List<AuthorisationRefreshResponse> getAuthorisationRefreshResponseList(
             UserProfile profile, List<ServiceCodeMapping> serviceCodeMappings) {
+        log.info("{} : starting get Authorisation Refresh Response List ", loggingComponentName);
+
         var authorisationList = new ArrayList<AuthorisationRefreshResponse>();
 
         profile.getAuthorisations().stream()
@@ -374,6 +379,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private AuthorisationRefreshResponse buildAuthorisationRefreshResponseDto(
             Authorisation auth, List<ServiceCodeMapping> serviceCodeMappings) {
+        log.info("{} : starting build Authorisation Refresh Response Dto ", loggingComponentName);
 
         String serviceCode = serviceCodeMappings.stream()
                 .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode()))
@@ -391,10 +397,12 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     }
 
     private List<String> fetchTicketCodeFromServiceCode(Set<String> serviceCode) {
+        log.info("{} : starting fetch Ticket CodeFrom Service Code ", loggingComponentName);
         return serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(serviceCode);
     }
 
     private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {
+        log.info("{} : starting get RoleId List ", loggingComponentName);
         return judicialRoleTypes.stream()
                 .filter(e -> e.getEndDate() == null || !e.getEndDate().toLocalDate().isBefore(LocalDate.now()))
                 .map(JudicialRoleType::getTitle).collect(Collectors.toList());
