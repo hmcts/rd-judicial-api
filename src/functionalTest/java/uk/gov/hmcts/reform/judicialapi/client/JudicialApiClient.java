@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 
 import java.util.List;
@@ -160,7 +161,7 @@ public class JudicialApiClient {
         }
     }
 
-    public Boolean refreshUserProfiles(RefreshRoleRequest refreshRoleRequest, int pageSize, int pageNumber,
+    public Object refreshUserProfiles(RefreshRoleRequest refreshRoleRequest, int pageSize, int pageNumber,
                                        String sortColumn,String sortDirection, HttpStatus expectedStatus,
                                       String role) {
 
@@ -176,9 +177,9 @@ public class JudicialApiClient {
                 .statusCode(expectedStatus.value());
 
         if (expectedStatus.is2xxSuccessful()) {
-            return Boolean.TRUE;
+            return List.of(refreshResponse.getBody().as(UserProfile[].class));
         } else {
-            return Boolean.FALSE;
+            return refreshResponse.getBody().as(ErrorResponse.class);
         }
     }
 

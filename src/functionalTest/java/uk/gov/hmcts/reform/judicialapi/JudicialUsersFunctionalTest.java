@@ -22,11 +22,9 @@ import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
 import static uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtension.getToggledOffMessage;
 
 @SerenityTest
@@ -103,7 +101,7 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     @ExtendWith(FeatureToggleConditionExtension.class)
     @ToggleEnable(mapKey = REFRESH_USER, withFeature = true)
-    void shouldReturn_200Status_RefreshUserProfile(String role) {
+    void refreshUserProfile(String role) {
 
         RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
@@ -111,10 +109,10 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
                 .objectIds(Collections.emptyList())
                 .build();
 
-        var response = judicialApiClient.refreshUserProfiles(refreshRoleRequest, 1, 1,
-                "objectId", "ASC", OK, role);
+        var response = judicialApiClient.refreshUserProfiles(refreshRoleRequest, 1, 0,
+                "objectId", "ASC", NOT_FOUND, role);
 
-        assertTrue(response);
+        assertNotNull(response);
     }
 
     @DisplayName("Scenario: Full list of Judicial user is sorted based on the descending order")
@@ -122,7 +120,7 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     @ExtendWith(FeatureToggleConditionExtension.class)
     @ToggleEnable(mapKey = REFRESH_USER, withFeature = true)
-    void shouldReturn_200Status_RefreshUserProfileSortDesc(String role) {
+    void refreshUserProfileSortDesc(String role) {
 
         RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
@@ -130,10 +128,10 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
                 .objectIds(Collections.emptyList())
                 .build();
 
-        var response = judicialApiClient.refreshUserProfiles(refreshRoleRequest, 2, 0,
-                "objectId", "DESC", OK, role);
+        var response = judicialApiClient.refreshUserProfiles(refreshRoleRequest, 1, 0,
+                "objectId", "DESC", NOT_FOUND, role);
 
-        assertTrue(response);
+        assertNotNull(response);
     }
 
     private UserRequest getDummyUserRequest() {
