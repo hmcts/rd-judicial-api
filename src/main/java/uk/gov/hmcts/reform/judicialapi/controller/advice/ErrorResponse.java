@@ -3,10 +3,12 @@ package uk.gov.hmcts.reform.judicialapi.controller.advice;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Getter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ErrorResponse {
 
     private int errorCode;
@@ -19,12 +21,4 @@ public class ErrorResponse {
 
     private String timeStamp;
 
-    public ErrorResponse(int errorCode, String status,String errorMessage, String errorDescription,
-                         String timeStamp) {
-        this.errorCode = errorCode;
-        this.status = status;
-        this.errorMessage = errorMessage;
-        this.errorDescription = errorDescription;
-        this.timeStamp = timeStamp;
-    }
 }
