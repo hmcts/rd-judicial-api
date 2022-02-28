@@ -177,10 +177,8 @@ class JudicialUserServiceImplTest {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, Arrays.asList("test", "test"));
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
 
     }
 
@@ -189,10 +187,8 @@ class JudicialUserServiceImplTest {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test
@@ -200,10 +196,8 @@ class JudicialUserServiceImplTest {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"));
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test
@@ -211,10 +205,8 @@ class JudicialUserServiceImplTest {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"));
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test

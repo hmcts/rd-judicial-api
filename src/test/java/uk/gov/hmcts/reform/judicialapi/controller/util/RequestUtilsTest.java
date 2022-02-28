@@ -24,29 +24,23 @@ class RequestUtilsTest {
 
     @Test
     void testInvalidRequestExceptionForInvalidPageNumber() {
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            RequestUtils.validateAndBuildPaginationObject(-1, 1,
-                    "ASC", "objectId",
-                    20, "id", UserProfile.class);
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> RequestUtils.validateAndBuildPaginationObject(-1, 1,
+                "ASC", "objectId",
+                20, "id", UserProfile.class));
     }
 
     @Test
     void testInvalidRequestExceptionForInvalidPageSize() {
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            RequestUtils.validateAndBuildPaginationObject(0, -1,
-                    "ASC", "objectId",
-                    20, "id", UserProfile.class);
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> RequestUtils.validateAndBuildPaginationObject(0, -1,
+                "ASC", "objectId",
+                20, "id", UserProfile.class));
     }
 
     @Test
     void testInvalidRequestExceptionForInvalidSortDirection() {
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            RequestUtils.validateAndBuildPaginationObject(0, 1,
-                    "ASC", "Invalid",
-                    20, "id", UserProfile.class);
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> RequestUtils.validateAndBuildPaginationObject(0, 1,
+                "ASC", "Invalid",
+                20, "id", UserProfile.class));
     }
 
     @Test
@@ -63,10 +57,8 @@ class RequestUtilsTest {
 
     @Test
     void testInvalidRequestExceptionForInvalidSortColumn() {
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            RequestUtils.validateAndBuildPaginationObject(0, 1,
-                    "invalid", "objectId",
-                    20, "invalid", UserProfile.class);
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> RequestUtils.validateAndBuildPaginationObject(0, 1,
+                "invalid", "objectId",
+                20, "invalid", UserProfile.class));
     }
 }
