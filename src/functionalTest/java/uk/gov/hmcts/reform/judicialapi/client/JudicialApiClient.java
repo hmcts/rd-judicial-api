@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 
 import java.util.List;
@@ -37,8 +39,10 @@ public class JudicialApiClient {
     private final String judicialApiUrl;
     private final String s2sToken;
     private final IdamOpenIdClient idamOpenIdClient;
-    private static String FETCH_USERS_URI = "/refdata/judicial/users/fetch?page_size=%s&page_number=%s";
-    private static String USERS_SEARCH_URI = "/refdata/judicial/users/search";
+    private static final String FETCH_USERS_URI = "/refdata/judicial/users/fetch?page_size=%s&page_number=%s";
+    private static final String USERS_SEARCH_URI = "/refdata/judicial/users/search";
+    private static final String REFRESH_ROLE_URI = "/refdata/judicial/users";
+
 
     public JudicialApiClient(String judicialApiUrl,
                              String s2sToken,
@@ -94,6 +98,22 @@ public class JudicialApiClient {
                 .header(AUTHORIZATION_HEADER, "Bearer " + userToken);
     }
 
+    public RequestSpecification getMultipleAuthHeaders(String role,int pageSize, int pageNumber,
+                                                       String sortColumn,String sortDirection) {
+        String userToken = idamOpenIdClient.getOpenIdTokenByRole(role);
+        return SerenityRest.with()
+                .relaxedHTTPSValidation()
+                .baseUri(judicialApiUrl)
+                .header("Content-Type", APPLICATION_JSON_VALUE)
+                .header("Accepts", APPLICATION_JSON_VALUE)
+                .header(SERVICE_HEADER, "Bearer " + s2sToken)
+                .header(AUTHORIZATION_HEADER, "Bearer " + userToken)
+                .header("page_size", pageSize)
+                .header("page_number", pageNumber)
+                .header("sort_column", sortColumn)
+                .header("sort_direction", sortDirection);
+    }
+
     public RequestSpecification getMultipleAuthHeaders(String userToken) {
         return SerenityRest.with()
                 .relaxedHTTPSValidation()
@@ -138,6 +158,28 @@ public class JudicialApiClient {
             return List.of(fetchResponse.getBody().as(UserSearchResponse[].class));
         } else {
             return fetchResponse.getBody().as(ErrorResponse.class);
+        }
+    }
+
+    public Object refreshUserProfiles(RefreshRoleRequest refreshRoleRequest, int pageSize, int pageNumber,
+                                       String sortColumn,String sortDirection, HttpStatus expectedStatus,
+                                      String role) {
+
+        Response refreshResponse = getMultipleAuthHeaders(role,pageSize,pageNumber,sortColumn,sortDirection)
+                .body(refreshRoleRequest).log().body(true)
+                .post(REFRESH_ROLE_URI)
+                .andReturn();
+
+        log.info("JRD get refreshResponse response: {}", refreshResponse.getStatusCode());
+
+        refreshResponse.then()
+                .assertThat()
+                .statusCode(expectedStatus.value());
+
+        if (expectedStatus.is2xxSuccessful()) {
+            return List.of(refreshResponse.getBody().as(UserProfile[].class));
+        } else {
+            return refreshResponse.getBody().as(ErrorResponse.class);
         }
     }
 
