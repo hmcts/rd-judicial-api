@@ -1,7 +1,11 @@
 package uk.gov.hmcts.reform.judicialapi;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.util.JudicialReferenceDataClient;
@@ -10,15 +14,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation.FORBIDDEN_EXCEPTION_LD;
-
 
 class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
@@ -26,18 +31,82 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        super.setUpClient();
         userRequest = new UserRequest(Arrays.asList("44862987-4b00-e2e7-4ff8-281b87f16bf9",
                 "4c0ff6a3-8fd6-803b-301a-29d9dacccca8"));
     }
 
-    @Test
-    void shouldReturn200WithValidParameters() {
+
+    @DisplayName("Scenario-Retrieve using one UserRequest")
+    @ParameterizedTest
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
+    void retrieveJudicialProfileBasedOnId(String role) {
+
+        userRequest = new UserRequest(Arrays.asList("44862987-4b00-e2e7-4ff8-281b87f16bf9"));
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
-                userRequest, "jrd-system-user", false);
+                userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
     }
 
+    @DisplayName("Scenario-Retrieve using multiple UserRequest")
+    @ParameterizedTest
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
+    void shouldReturn200WithValidParameters(String role) {
+
+        Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
+                userRequest, role, false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(2, profiles.size());
+    }
+
+
+    @DisplayName("Scenario: Full list of Judicial user details is retrieved based on the page_number")
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn_200_ValidParameters_ccdPageNumber(String role) {
+
+        Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(1, 1,
+                userRequest, role, false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+
+    }
+
+    @DisplayName("Scenario: Full list of Judicial user details is retrieved based on the pageSize")
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn_200_ValidParameters_PageSize(String role) {
+
+        Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(2, 0,
+                userRequest, role, false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(2, profiles.size());
+
+    }
+
+    @DisplayName("Scenario-Response header  total_records scenario")
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-admin"})
+    void shouldReturn_200_ValidParameters_ResponseHeader(String role) {
+
+        Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
+                userRequest, role, false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(2, profiles.size());
+        String headers = (String) response.get("headers");
+
+        Assertions.assertFalse(headers.contains("total_records"));
+    }
+
+
+    @DisplayName("Scenario-UnauthorisedUsers")
     @Test
     void shouldReturn403ForUnauthorisedUsers() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
@@ -47,6 +116,7 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
 
+    @DisplayName("Scenario-InvalidTokens")
     @Test
     void shouldReturn401ForInvalidTokens() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
@@ -56,6 +126,7 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
 
+    @DisplayName("Scenario-EmptyUserIds")
     @Test
     void shouldReturn400ForEmptyUserIds() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
@@ -66,6 +137,7 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
 
+    @DisplayName("Scenario-NoUsersFound")
     @Test
     void shouldReturn404WhenNoUsersFound() {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
@@ -77,6 +149,7 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
 
+    @DisplayName("Scenario-FeatureDisabled")
     @Test
     void shouldReturn403WhenLdFeatureDisabled() {
         Map<String, String> launchDarklyMap = new HashMap<>();
@@ -91,5 +164,4 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         assertThat((String) errorResponseMap.get("response_body"))
                 .contains("test-jrd-flag".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD));
     }
-
 }
