@@ -10,7 +10,8 @@ import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,7 @@ import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResp
 @WithTags({@WithTag("testType:Integration")})
 @TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
 @ContextConfiguration(classes = {RestTemplateConfiguration.class})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AuthorizationEnabledIntegrationTest extends SpringBootIntegrationTest {
 
     @MockBean
@@ -68,7 +70,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     @Autowired
     Flyway flyway;
 
-    @BeforeEach
+    @BeforeAll
     public void setUpClient() {
         JudicialReferenceDataClient.setBearerToken("");
         judicialReferenceDataClient = new JudicialReferenceDataClient(port, issuer, expiration, serviceName);
@@ -77,7 +79,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
         flyway.migrate();
     }
 
-    @BeforeEach
+    @BeforeAll
     public void setupIdamStubs() throws Exception {
 
         s2sService.stubFor(get(urlEqualTo("/details"))
