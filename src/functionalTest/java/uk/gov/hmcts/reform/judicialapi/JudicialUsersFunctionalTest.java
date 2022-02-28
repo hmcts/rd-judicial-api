@@ -18,13 +18,13 @@ import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
 import uk.gov.hmcts.reform.judicialapi.util.serenity5.SerenityTest;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtension.getToggledOffMessage;
 
@@ -107,11 +107,11 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
-                .objectIds(Arrays.asList(UUID.randomUUID().toString()))
+                .objectIds(Collections.emptyList())
                 .build();
 
         var response = judicialApiClient.refreshUserProfiles(refreshRoleRequest, 1, 0,
-                "objectId", "ASC", NOT_FOUND, role);
+                "objectId", "ASC", OK, role);
 
         assertNotNull(response);
     }
@@ -126,11 +126,11 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
-                .objectIds(Arrays.asList(UUID.randomUUID().toString()))
+                .objectIds(Collections.emptyList())
                 .build();
 
         var response = judicialApiClient.refreshUserProfiles(refreshRoleRequest, 1, 0,
-                "objectId", "DESC", NOT_FOUND, role);
+                "objectId", "DESC", OK, role);
 
         assertNotNull(response);
     }

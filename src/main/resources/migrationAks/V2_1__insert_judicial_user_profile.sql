@@ -1,0 +1,3 @@
+INSERT INTO judicial_user_profile(per_id, personal_code, known_as, surname, full_name, post_nominals,work_pattern, ejudiciary_email, joining_date,last_working_date, active_flag, extracted_date, created_date,last_loaded_date, object_id, sidam_id)
+VALUES('1001', '29', 'Refresh1KA', 'Refresh1SN', 'Refresh1FN', 'Ms', 'No Work Pattern (M to F)', 'test1001@test.net', '2017-03-06',NULL, true, '2021-07-14 12:25:28.763', '2021-08-11 09:10:44.682', '2021-08-11 09:10:44.682','1111', '1111');
+COMMIT;
