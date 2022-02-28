@@ -59,13 +59,13 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     private String serviceName;
 
     @RegisterExtension
-    protected WireMockExtension s2sService = new WireMockExtension(8990);
+    protected final WireMockExtension s2sService = new WireMockExtension(8990);
 
     @RegisterExtension
-    protected WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
+    protected final WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
 
     @RegisterExtension
-    protected WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
+    protected final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
 
     @Autowired
     Flyway flyway;
@@ -129,7 +129,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
 
             String token = request.getHeader("Authorization");
             String tokenBody = decodeJwtToken(token.split(" ")[1]);
-            LinkedList tokenInfo = getUserIdAndRoleFromToken(tokenBody);
+            var tokenInfo = getUserIdAndRoleFromToken(tokenBody);
             formatResponse = format(formatResponse, tokenInfo.get(1), tokenInfo.get(1), tokenInfo.get(0));
 
             return Response.Builder.like(response)

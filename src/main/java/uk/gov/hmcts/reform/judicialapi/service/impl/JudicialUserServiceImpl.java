@@ -198,7 +198,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         var userProfilePage = userProfileRepository.fetchUserProfileByAll(pageRequest);
 
         if (userProfilePage == null || userProfilePage.isEmpty()) {
-            log.error("{}:: No data found in JRD {}", loggingComponentName);
+            log.error("{}:: No data found in JRD ", loggingComponentName);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
         }
 
