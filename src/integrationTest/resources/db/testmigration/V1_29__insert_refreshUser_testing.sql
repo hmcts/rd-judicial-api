@@ -33,7 +33,7 @@ last_updated, lower_level, personal_code, ticket_code, object_id)
 VALUES
 (1001, '1001', 'Authorisation Magistrate', 25374, '2002-09-09', NULL,
 '2021-08-11 09:14:30.054', '2021-08-11 09:14:30.054', 'Family Court', '28', '364', '1111'),
-(1002, '40399', 'Authorisation Tribunals', 31000, '2006-12-11 00:00:00.000', '2020-02-14',
+(1002, '40399', 'Authorisation Tribunals', 31000, '2006-12-11 00:00:00.000', NULL,
 '2021-08-11 09:14:30.054', '2021-08-11 09:14:30.054', 'First Tier - Immigration and Asylum', '4923413', '364', 'd4774030-32cc-4b64-894f-d475b0b1129c'),
 (1003, '40704', 'Authorisation Tribunals', 35970, '2018-09-10 00:00:00.000', '2020-02-14 00:00:00.000',
 '2021-08-11 09:14:30.054', '2021-08-11 09:14:30.054', 'Criminal Injuries Compensations', '4923818', '364', 'fcb4f03c-4b3f-4c3c-bf3a-662b4557b470'),

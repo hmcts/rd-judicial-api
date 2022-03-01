@@ -164,7 +164,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
         assertThat(response).containsEntry("http_status", "200 OK");
 
         var userProfileList = (List<?>) response.get("body");
-        assertThat(userProfileList).hasSize(3);
+        assertThat(userProfileList).hasSize(2);
 
     }
 
