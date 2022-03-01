@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 class FeatureToggleServiceImplTest {
 
-    final LDClient ldClient = mock(LDClient.class);
+    LDClient ldClient = mock(LDClient.class);
     FeatureToggleServiceImpl flaFeatureToggleService = mock(FeatureToggleServiceImpl.class);
 
     @Test

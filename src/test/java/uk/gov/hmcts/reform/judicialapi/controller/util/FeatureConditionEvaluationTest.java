@@ -35,13 +35,13 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class FeatureConditionEvaluationTest {
 
-    final FeatureToggleServiceImpl featureToggleService = mock(FeatureToggleServiceImpl.class);
+    FeatureToggleServiceImpl featureToggleService = mock(FeatureToggleServiceImpl.class);
     @Spy
     FeatureConditionEvaluation featureConditionEvaluation = new FeatureConditionEvaluation(featureToggleService);
-    final HttpServletRequest httpRequest = mock(HttpServletRequest.class);
-    final HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
-    final HandlerMethod handlerMethod = mock(HandlerMethod.class);
-    final Method method = mock(Method.class);
+    HttpServletRequest httpRequest = mock(HttpServletRequest.class);
+    HttpServletResponse httpServletResponse = mock(HttpServletResponse.class);
+    HandlerMethod handlerMethod = mock(HandlerMethod.class);
+    Method method = mock(Method.class);
 
     @BeforeEach
     void before() {

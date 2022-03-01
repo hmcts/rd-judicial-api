@@ -25,12 +25,12 @@ public final class TestMethodAnnotations {
     }
 
     public String specifiedDriver() {
-        Preconditions.checkArgument(isDriverSpecified());
+        Preconditions.checkArgument(isDriverSpecified() == true);
         return (method.getAnnotation(WithDriver.class).value());
     }
 
     public String driverOptions() {
-        Preconditions.checkArgument(isDriverSpecified());
+        Preconditions.checkArgument(isDriverSpecified() == true);
         return Optional.ofNullable(method.getAnnotation(DriverOptions.class)).map(DriverOptions::value).orElse("");
     }
 
