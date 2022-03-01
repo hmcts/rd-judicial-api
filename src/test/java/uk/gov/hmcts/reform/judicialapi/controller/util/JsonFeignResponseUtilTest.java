@@ -152,9 +152,11 @@ class JsonFeignResponseUtilTest {
         String responseBody = "";
         final var response = Response.builder().status(200).reason("OK").headers(header)
                 .body(responseBody, UTF_8).request(mock(Request.class)).build();
-        Assertions.assertThrows(UserProfileException.class, () -> JsonFeignResponseUtil.toResponseEntityWithListBody(
-                response,
-                LrdOrgInfoServiceResponse.class));
+        Assertions.assertThrows(UserProfileException.class, () -> {
+            JsonFeignResponseUtil.toResponseEntityWithListBody(
+                    response,
+                    LrdOrgInfoServiceResponse.class);
+        });
 
     }
 }
