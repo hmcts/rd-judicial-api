@@ -14,7 +14,6 @@ import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 
 import java.util.List;
@@ -161,26 +160,18 @@ public class JudicialApiClient {
         }
     }
 
-    public Object refreshUserProfiles(RefreshRoleRequest refreshRoleRequest, int pageSize, int pageNumber,
-                                       String sortColumn,String sortDirection, HttpStatus expectedStatus,
-                                      String role) {
+    public Response refreshUserProfiles(RefreshRoleRequest refreshRoleRequest, int pageSize, int pageNumber,
+                                        String sortColumn,String sortDirection,
+                                        String role) {
 
         Response refreshResponse = getMultipleAuthHeaders(role,pageSize,pageNumber,sortColumn,sortDirection)
                 .body(refreshRoleRequest).log().body(true)
                 .post(REFRESH_ROLE_URI)
                 .andReturn();
 
-        log.info("JRD get refreshResponse response: {}", refreshResponse.getStatusCode());
+        log.info("JRD get refreshResponse status code: {}", refreshResponse.getStatusCode());
 
-        refreshResponse.then()
-                .assertThat()
-                .statusCode(expectedStatus.value());
-
-        if (expectedStatus.is2xxSuccessful()) {
-            return List.of(refreshResponse.getBody().as(UserProfile[].class));
-        } else {
-            return refreshResponse.getBody().as(ErrorResponse.class);
-        }
+        return refreshResponse;
     }
 
 }
