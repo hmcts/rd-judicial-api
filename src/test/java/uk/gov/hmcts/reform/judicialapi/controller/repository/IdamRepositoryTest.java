@@ -37,7 +37,7 @@ class IdamRepositoryTest {
     void test_getUserInfo() {
         UserInfo userInfo = mock(UserInfo.class);
         CaffeineCache caffeineCacheMock = mock(CaffeineCache.class);
-        Cache cache = mock(Cache.class);
+        var cache = mock(Cache.class);
 
         when(idamClient.getUserInfo(anyString())).thenReturn(userInfo);
         when(cacheManager.getCache(anyString())).thenReturn(caffeineCacheMock);

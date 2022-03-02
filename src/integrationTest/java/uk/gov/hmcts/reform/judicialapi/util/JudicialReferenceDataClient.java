@@ -35,10 +35,10 @@ public class JudicialReferenceDataClient {
     private static String JWT_TOKEN = null;
     private final RestTemplate restTemplate = new RestTemplate();
     static String bearerToken;
-    private String serviceName;
-    private String baseUrl;
-    private String issuer;
-    private long expiration;
+    private final String  serviceName;
+    private final String baseUrl;
+    private final String issuer;
+    private final long expiration;
 
     public JudicialReferenceDataClient(int port, String issuer, Long tokenExpirationInterval, String serviceName) {
         this.baseUrl = "http://localhost:" + port + APP_BASE_PATH;
@@ -87,7 +87,7 @@ public class JudicialReferenceDataClient {
 
     private Map<String, Object> getResponse(ResponseEntity<Object> responseEntity) {
 
-        Map<String, Object> response = new HashMap();
+        var response = new HashMap();
 
         response.put("http_status", responseEntity.getStatusCode().toString());
         response.put("headers", responseEntity.getHeaders().toString());
@@ -137,7 +137,7 @@ public class JudicialReferenceDataClient {
                 .compact();
     }
 
-    private final String getBearerToken(String userId, String role) {
+    private String getBearerToken(String userId, String role) {
         return generateToken(issuer, expiration, userId, role);
     }
 
@@ -182,7 +182,7 @@ public class JudicialReferenceDataClient {
         try {
 
             responseEntity = restTemplate.exchange(
-                    baseUrl + "/users" + stringBuilder.toString(),
+                    baseUrl + "/users" + stringBuilder,
                     HttpMethod.POST, request,
                     Object.class
             );
