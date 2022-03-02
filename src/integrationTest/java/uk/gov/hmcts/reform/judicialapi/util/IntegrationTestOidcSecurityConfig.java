@@ -20,7 +20,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 @TestPropertySource(properties = {"OPEN_ID_API_BASE_URI:http://0.0.0.0:6000/o"})
 public class IntegrationTestOidcSecurityConfig extends ContextCleanupListener {
 
-    public static WireMockExtension mockHttpServerForOidc = new WireMockExtension(6000);
+    public static final WireMockExtension mockHttpServerForOidc = new WireMockExtension(6000);
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() throws JsonProcessingException, JOSEException {
