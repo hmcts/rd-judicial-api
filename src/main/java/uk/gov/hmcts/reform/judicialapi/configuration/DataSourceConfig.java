@@ -28,7 +28,7 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        var dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName(driverClass);
         dataSourceBuilder.url(url);
         dataSourceBuilder.username(userName);
