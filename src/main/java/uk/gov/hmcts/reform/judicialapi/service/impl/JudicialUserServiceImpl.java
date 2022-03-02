@@ -133,6 +133,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     public ResponseEntity<Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,
                                                      Integer pageNumber, String sortDirection, String sortColumn) {
 
+        log.info("{} : starting refreshUserProfile ", loggingComponentName);
         refreshUserValidator.shouldContainOnlyOneInputParameter(refreshRoleRequest);
         var pageRequest = RequestUtils.validateAndBuildPaginationObject(pageSize, pageNumber,
                 sortDirection, sortColumn, refreshDefaultPageSize, refreshDefaultSortColumn,
@@ -145,6 +146,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private ResponseEntity<Object> getRefreshUserProfileBasedOnParam(RefreshRoleRequest refreshRoleRequest,
                                                                      PageRequest pageRequest) {
+        log.info("{} : starting getRefreshUserProfile Based On Param ", loggingComponentName);
         if (refreshUserValidator.isStringNotEmptyOrNotNull(refreshRoleRequest.getCcdServiceNames())) {
             return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
         } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds())) {
@@ -161,7 +163,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnObjectIds(List<String> objectIds,
                                                                       PageRequest pageRequest) {
-        log.info("starting refreshUserProfile BasedOn ObjectIds");
+        log.info("{} : starting refreshUserProfile BasedOn ObjectIds ", loggingComponentName);
         var userProfilePage = userProfileRepository.fetchUserProfileByObjectIds(
                 objectIds, pageRequest);
 
@@ -178,7 +180,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnSidamIds(List<String> sidamIds,
                                                                      PageRequest pageRequest) {
-        log.info("starting refreshUserProfile BasedOn SidamIds");
+        log.info("{} : starting refreshUserProfile BasedOn SidamIds ", loggingComponentName);
         var userProfilePage = userProfileRepository.fetchUserProfileBySidamIds(
                 sidamIds, pageRequest);
         if (userProfilePage == null || userProfilePage.isEmpty()) {
@@ -191,12 +193,12 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnAll(PageRequest pageRequest) {
-        log.info("starting refreshUserProfile BasedOn All");
+        log.info("{} : starting refreshUserProfile BasedOn All ", loggingComponentName);
 
         var userProfilePage = userProfileRepository.fetchUserProfileByAll(pageRequest);
 
         if (userProfilePage == null || userProfilePage.isEmpty()) {
-            log.error("{}:: No data found in JRD {}", loggingComponentName);
+            log.error("{}:: No data found in JRD ", loggingComponentName);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
         }
 
@@ -205,6 +207,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
                                                                 Object collection, String collectionName) {
+        log.info("{} : starting getRefresh Role Response Entity ", loggingComponentName);
         var userProfileList = new ArrayList<UserProfileRefreshResponse>();
 
         var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();
@@ -252,7 +255,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnCcdServiceNames(String ccdServiceNames,
                                                                             PageRequest pageRequest) {
-        log.info("starting refreshUserProfile BasedOn CcdServiceNames");
+        log.info("{} : starting refreshUserProfile BasedOn CcdServiceNames ", loggingComponentName);
         var lrdOrgInfoServiceResponse =
                 locationReferenceDataFeignClient.getLocationRefServiceMapping(ccdServiceNames);
         var httpStatus = HttpStatus.valueOf(lrdOrgInfoServiceResponse.status());
@@ -308,6 +311,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(
             UserProfile profile, List<ServiceCodeMapping> serviceCodeMappings, List<RegionMapping> regionMappings) {
+        log.info("{} : starting build User Profile Refresh Response Dto ", loggingComponentName);
         return UserProfileRefreshResponse.builder()
                 .sidamId(profile.getSidamId())
                 .objectId(profile.getObjectId())
@@ -323,6 +327,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(
             UserProfile profile, List<RegionMapping> regionMappings) {
+        log.info("{} : starting get Appointment Refresh Response List ", loggingComponentName);
 
         var appointmentList = new ArrayList<AppointmentRefreshResponse>();
 
@@ -334,6 +339,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private AppointmentRefreshResponse buildAppointmentRefreshResponseDto(
             Appointment appt, UserProfile profile, List<RegionMapping> regionMappings) {
+        log.info("{} : starting build Appointment Refresh Response Dto ", loggingComponentName);
 
         RegionMapping regionMapping = regionMappings.stream()
                 .filter(rm -> rm.getJrdRegionId().equalsIgnoreCase(appt.getRegionId()))
@@ -360,6 +366,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private List<AuthorisationRefreshResponse> getAuthorisationRefreshResponseList(
             UserProfile profile, List<ServiceCodeMapping> serviceCodeMappings) {
+        log.info("{} : starting get Authorisation Refresh Response List ", loggingComponentName);
+
         var authorisationList = new ArrayList<AuthorisationRefreshResponse>();
 
         profile.getAuthorisations().stream()
@@ -371,6 +379,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     private AuthorisationRefreshResponse buildAuthorisationRefreshResponseDto(
             Authorisation auth, List<ServiceCodeMapping> serviceCodeMappings) {
+        log.info("{} : starting build Authorisation Refresh Response Dto ", loggingComponentName);
 
         String serviceCode = serviceCodeMappings.stream()
                 .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode()))
@@ -388,10 +397,12 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     }
 
     private List<String> fetchTicketCodeFromServiceCode(Set<String> serviceCode) {
+        log.info("{} : starting fetch Ticket CodeFrom Service Code ", loggingComponentName);
         return serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(serviceCode);
     }
 
     private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {
+        log.info("{} : starting get RoleId List ", loggingComponentName);
         return judicialRoleTypes.stream()
                 .filter(e -> e.getEndDate() == null || !e.getEndDate().toLocalDate().isBefore(LocalDate.now()))
                 .map(JudicialRoleType::getTitle).collect(Collectors.toList());
