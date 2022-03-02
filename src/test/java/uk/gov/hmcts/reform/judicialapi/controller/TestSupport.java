@@ -12,8 +12,8 @@ import java.util.Collections;
 
 public class TestSupport {
 
-    private static LocalDate date = LocalDate.now();
-    private static LocalDateTime dateTime = LocalDateTime.now();
+    private static final LocalDate date = LocalDate.now();
+    private static final LocalDateTime dateTime = LocalDateTime.now();
 
     private TestSupport() {
 
