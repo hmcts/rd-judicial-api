@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -93,7 +92,7 @@ public class ExceptionMapper {
     }
 
     private String getTimeStamp() {
-        return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss.SSS", Locale.ENGLISH).format(new Date());
+        return (LocalDateTime.now()).format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss.SSS"));
     }
 
     private static Throwable getRootException(Throwable exception) {
