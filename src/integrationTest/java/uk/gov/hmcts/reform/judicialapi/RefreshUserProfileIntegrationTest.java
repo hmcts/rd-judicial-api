@@ -166,7 +166,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @DisplayName("Get Bad Request When CCDServiceName Contain Comma Separated")
     @ParameterizedTest
     @ValueSource(strings = { "jrd-admin"})
-    void shouldReturn_200_ValidParameters_ResponseHeader(String role) {
+    void shouldReturn_400_ValidParameters_ResponseHeader(String role) {
 
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("ALL,all")

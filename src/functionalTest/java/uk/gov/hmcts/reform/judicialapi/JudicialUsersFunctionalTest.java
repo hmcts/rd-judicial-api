@@ -14,21 +14,18 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtension;
 import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
 import uk.gov.hmcts.reform.judicialapi.util.serenity5.SerenityTest;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtension.getToggledOffMessage;
 
@@ -101,7 +98,7 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         assertNotNull(errorResponse);
     }
 
-    @DisplayName("Scenario: Full list of Judicial user based on page size and page number")
+    @DisplayName("Scenario: Get Bad Request when ccdServiceName is ALL")
     @ParameterizedTest
     @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     @ExtendWith(FeatureToggleConditionExtension.class)
@@ -109,7 +106,7 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
     void refreshUserProfile(String role) {
 
         RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
-                .ccdServiceNames("")
+                .ccdServiceNames("ALL")
                 .sidamIds(Collections.emptyList())
                 .objectIds(Collections.emptyList())
                 .build();
@@ -117,17 +114,10 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         Response refreshResponse = judicialApiClient.refreshUserProfiles(refreshRoleRequest, 1, 1,
                 "objectId", "ASC",role);
 
-        if (OK.value() == refreshResponse.getStatusCode()) {
-            List<UserProfileRefreshResponse> userProfiles = asList(refreshResponse.getBody()
-                    .as(UserProfileRefreshResponse[].class));
-            log.info("JRD get refreshResponse response: {}", userProfiles.get(0).getObjectId());
-            assertNotNull(userProfiles.get(0).getObjectId());
-        } else {
-            assertEquals(NOT_FOUND.value(),refreshResponse.getStatusCode());
-        }
+        assertEquals(BAD_REQUEST.value(),refreshResponse.getStatusCode());
     }
 
-    @DisplayName("Scenario: Full list of Judicial user is sorted based on the descending order")
+    @DisplayName("Scenario: Get Bad Request when input params are empty")
     @ParameterizedTest
     @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     @ExtendWith(FeatureToggleConditionExtension.class)
@@ -143,15 +133,7 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         Response refreshResponse = judicialApiClient.refreshUserProfiles(refreshRoleRequest, 1, 0,
                 "objectId", "DESC",role);
 
-        if (OK.value() == refreshResponse.getStatusCode()) {
-            List<UserProfileRefreshResponse> userProfiles = asList(refreshResponse.getBody()
-                    .as(UserProfileRefreshResponse[].class));
-
-            log.info("JRD get refreshResponse response: {}", userProfiles.get(0).getObjectId());
-            assertNotNull(userProfiles.get(0).getObjectId());
-        } else {
-            assertEquals(NOT_FOUND.value(),refreshResponse.getStatusCode());
-        }
+        assertEquals(BAD_REQUEST.value(),refreshResponse.getStatusCode());
     }
 
     private UserRequest getDummyUserRequest() {
