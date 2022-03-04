@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -59,6 +60,14 @@ class RefreshUserValidatorTest {
         var refreshUserValidator = new RefreshUserValidator();
 
         assertNull(refreshUserValidator.removeEmptyOrNullFromList(null));
+    }
+
+    @Test
+    void shouldReturnEmptyWhenListIsEmpty() {
+        var refreshUserValidator = new RefreshUserValidator();
+
+        assertEquals(Collections.emptyList(),
+                refreshUserValidator.removeEmptyOrNullFromList(Collections.emptyList()));
     }
 
 }

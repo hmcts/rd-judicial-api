@@ -69,4 +69,13 @@ class RequestUtilsTest {
                     20, "invalid", UserProfile.class);
         });
     }
+
+    @Test
+    void testInvalidRequestExceptionWhenPageSizeIsNull() {
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            RequestUtils.validateAndBuildPaginationObject(null, -1,
+                    "ASC", "objectId",
+                    20, "id", UserProfile.class);
+        });
+    }
 }
