@@ -10,6 +10,8 @@ import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ATLEAST_ONE_PARAMETER_REQUIRED;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.COMMA_SEPARATED_AND_ALL_NOT_ALLOWED;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ONLY_ONE_PARAMETER_REQUIRED;
 
 @Component
@@ -25,6 +27,13 @@ public class RefreshUserValidator {
 
             if (ccdServiceNames ? (objectIds || sidamIds) : (objectIds && sidamIds)) {
                 throw new InvalidRequestException(ONLY_ONE_PARAMETER_REQUIRED);
+            }
+            if (ccdServiceNames && (refreshRoleRequest.getCcdServiceNames().split(",").length > 1
+                    || refreshRoleRequest.getCcdServiceNames().equalsIgnoreCase("ALL"))) {
+                throw new InvalidRequestException(COMMA_SEPARATED_AND_ALL_NOT_ALLOWED);
+            }
+            if (!ccdServiceNames && !objectIds && !sidamIds) {
+                throw new InvalidRequestException(ATLEAST_ONE_PARAMETER_REQUIRED);
             }
         }
     }
