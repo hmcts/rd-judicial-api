@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -20,6 +21,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.UNKNOWN_EXCEPTION;
 
@@ -36,6 +38,7 @@ class ExceptionMapperTest {
     BindingResult bindingResult;
 
 
+
     @Test
     void test_handle_invalid_request_exception() {
         InvalidRequestException invalidRequestException = new InvalidRequestException("Invalid Request");
@@ -47,6 +50,18 @@ class ExceptionMapperTest {
                 .getErrorDescription());
 
     }
+
+
+    @Test
+    void test_handle_invalid_serialization_exception() {
+        HttpMessageNotReadableException exception = mock(HttpMessageNotReadableException.class);
+
+        ResponseEntity<Object> responseEntity = exceptionMapper.customSerializationError(exception);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+    }
+
 
     @Test
     void test_handle_launchDarkly_exception() {
