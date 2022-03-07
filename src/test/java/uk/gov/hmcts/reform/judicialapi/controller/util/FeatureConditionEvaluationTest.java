@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation;
 
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -128,6 +129,12 @@ class FeatureConditionEvaluationTest {
         assertTrue(featureConditionEvaluation.preHandle(httpRequest, httpServletResponse, handlerMethod));
         verify(featureConditionEvaluation, times(1))
                 .preHandle(httpRequest, httpServletResponse, handlerMethod);
+    }
+
+    @Test
+    void testPreHandleWhenLdIsEmpty() throws Exception {
+        when(featureToggleService.getLaunchDarklyMap()).thenReturn(new HashMap<>());
+        assertTrue(featureConditionEvaluation.preHandle(httpRequest, httpServletResponse, handlerMethod));
     }
 
     public static String generateDummyS2SToken(String serviceName) {
