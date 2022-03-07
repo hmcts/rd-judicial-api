@@ -43,7 +43,7 @@ class RequestUtilsTest {
     @Test
     void testInvalidRequestExceptionForInvalidSortDirection() {
         Assertions.assertThrows(InvalidRequestException.class, () -> {
-            RequestUtils.validateAndBuildPaginationObject(0, 1,
+            RequestUtils.validateAndBuildPaginationObject(1, 1,
                     "ASC", "Invalid",
                     20, "id", UserProfile.class);
         });
@@ -64,9 +64,18 @@ class RequestUtilsTest {
     @Test
     void testInvalidRequestExceptionForInvalidSortColumn() {
         Assertions.assertThrows(InvalidRequestException.class, () -> {
-            RequestUtils.validateAndBuildPaginationObject(0, 1,
+            RequestUtils.validateAndBuildPaginationObject(1, 1,
                     "invalid", "objectId",
                     20, "invalid", UserProfile.class);
+        });
+    }
+
+    @Test
+    void testInvalidRequestExceptionWhenPageSizeIsNull() {
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            RequestUtils.validateAndBuildPaginationObject(null, -1,
+                    "ASC", "objectId",
+                    20, "id", UserProfile.class);
         });
     }
 }
