@@ -45,4 +45,3 @@ ALTER TABLE judicial_office_appointment ADD COLUMN mrd_created_time TIMESTAMP;
 ALTER TABLE judicial_office_appointment ADD COLUMN mrd_updated_time TIMESTAMP;
 ALTER TABLE judicial_office_appointment ADD COLUMN mrd_deleted_time TIMESTAMP;
 COMMIT;
-
