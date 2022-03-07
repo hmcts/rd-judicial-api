@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
@@ -50,8 +49,6 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -364,20 +361,12 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOn_All_200() throws JsonProcessingException {
-        var userProfile = buildUserProfile();
-
-        var pageRequest = getPageRequest();
-        var page = new PageImpl<>(Collections.singletonList(userProfile));
-        when(userProfileRepository.fetchUserProfileByAll(pageRequest))
-                .thenReturn(page);
-        var refreshRoleRequest = new RefreshRoleRequest("",  null, null);
-        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
-                0, "ASC", "objectId");
-
-        assertEquals(200, responseEntity.getStatusCodeValue());
-        UserProfileRefreshResponse profile = (UserProfileRefreshResponse) ((List<?>) responseEntity.getBody()).get(0);
-        assertThat(profile.getAppointments().get(0).getRoles(), containsInAnyOrder("Test1","Test3"));
+    void test_refreshUserProfile_BasedOn_All_400() throws JsonProcessingException {
+        var refreshRoleRequest = new RefreshRoleRequest("", null, null);
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
     }
 
     @NotNull
