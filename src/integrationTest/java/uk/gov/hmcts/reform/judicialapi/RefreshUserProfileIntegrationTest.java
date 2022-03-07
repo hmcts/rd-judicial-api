@@ -17,11 +17,12 @@ import java.util.HashMap;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 import static uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation.FORBIDDEN_EXCEPTION_LD;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ATLEAST_ONE_PARAMETER_REQUIRED;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.COMMA_SEPARATED_AND_ALL_NOT_ALLOWED;
 
 class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
@@ -88,7 +89,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     }
 
 
-    @DisplayName("AC4  - Scenario- Full list of all the Judicial user details is paginated as per the input page size")
+    @DisplayName("AC4  - Scenario- Get Bad Request when all params are empty")
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_ValidParameters_ccdPageSize(String role) {
@@ -99,12 +100,11 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
                 .objectIds(Collections.emptyList())
                 .build();
         // pageSize 2
-        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,2,
+        var errorResponseMap = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,2,
                 0,"", "objectId", role, false);
-        assertThat(response).containsEntry("http_status", "200 OK");
-
-        var userProfileList = (List<?>) response.get("body");
-        assertThat(userProfileList).hasSize(2);
+        assertThat(errorResponseMap).containsEntry("http_status", "400");
+        assertThat((String) errorResponseMap.get("response_body"))
+                .contains(ATLEAST_ONE_PARAMETER_REQUIRED);
 
     }
 
@@ -116,7 +116,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
-                .objectIds(Collections.emptyList())
+                .objectIds(Arrays.asList("1111122223333"))
                 .build();
         // sort rows in ascending order
         var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,3,
@@ -148,56 +148,37 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
 
     }
 
-    @DisplayName("AC8 - Scenario: Full list of Judicial user details is retrieved based on the page_number")
+    @DisplayName("AC9 - Scenario: Get Bad Request when no parameter is passed")
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
-     void shouldReturn_200_ValidParameters_ccdPageNumber(String role) {
-
-        refreshRoleRequest = RefreshRoleRequest.builder()
-                 .ccdServiceNames("")
-                 .sidamIds(Arrays.asList(""))
-                 .objectIds(Collections.emptyList())
-                .build();
-
-        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,3,
-                1,"ASC", "objectId", role, false);
-        assertThat(response).containsEntry("http_status", "200 OK");
-
-        var userProfileList = (List<?>) response.get("body");
-        assertThat(userProfileList).hasSize(2);
-
-    }
-
-    @DisplayName("AC9 - Scenario: Full list of Judicial user details is retrieved when no parameter is passed")
-    @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
-     void shouldReturn_200_ValidParameters_ccdServiceEmpty(String role) {
+     void shouldReturn_400_ValidParameters_ccdServiceEmpty(String role) {
 
         refreshRoleRequest = RefreshRoleRequest.builder().build();
 
-        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,3,
+        var errorResponseMap = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,3,
                 0,"ASC", "objectId", role, false);
-        assertThat(response).containsEntry("http_status", "200 OK");
+        assertThat(errorResponseMap).containsEntry("http_status", "400");
+        assertThat((String) errorResponseMap.get("response_body"))
+                .contains(ATLEAST_ONE_PARAMETER_REQUIRED);
 
     }
 
-    @DisplayName("Scenario-Response header scenario")
+    @DisplayName("Get Bad Request When CCDServiceName Contain Comma Separated")
     @ParameterizedTest
     @ValueSource(strings = { "jrd-admin"})
-    void shouldReturn_200_ValidParameters_ResponseHeader(String role) {
+    void shouldReturn_400_ValidParameters_ResponseHeader(String role) {
 
         refreshRoleRequest = RefreshRoleRequest.builder()
-                .ccdServiceNames("")
+                .ccdServiceNames("ALL,all")
                 .sidamIds(Arrays.asList(""))
                 .objectIds(Collections.emptyList())
                 .build();
 
-        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,3,
+        var errorResponseMap = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,3,
                 0,"ASC", "objectId", role, false);
-        assertThat(response).containsEntry("http_status", "200 OK");
-        String headers = (String) response.get("headers");
-
-        assertTrue(headers.contains("total_records"));
+        assertThat(errorResponseMap).containsEntry("http_status", "400");
+        assertThat((String) errorResponseMap.get("response_body"))
+                .contains(COMMA_SEPARATED_AND_ALL_NOT_ALLOWED);
     }
 
     @DisplayName("AC26 - Scenario : Judge has an Active IAC Appointment with an Active IAC Authorisation")
