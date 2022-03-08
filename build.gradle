@@ -8,12 +8,12 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'pmd'
-    id 'com.github.ben-manes.versions' version '0.27.0'
+    id 'com.github.ben-manes.versions' version '0.41.0'
     id "info.solidsoft.pitest" version '1.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '3.3'
     id 'org.springframework.boot' version '2.4.12'
-    id "org.flywaydb.flyway" version "8.3.0"
+    id "org.flywaydb.flyway" version "8.4.2"
     id "io.freefair.lombok" version "5.3.3.3"
     id 'uk.gov.hmcts.java' version '0.12.12'
     id 'au.com.dius.pact' version '4.1.7'
@@ -25,7 +25,7 @@ apply plugin: 'project-report'
 apply plugin: 'idea'
 
 def versions = [
-        lombok             : '1.18.20',
+        lombok             : '1.18.22',
         gradlePitest       : '1.5.1',
         pitest             : '1.7.0',
         reformHealthStarter: '0.0.5',
@@ -312,7 +312,7 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
-    implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '2.3.3'
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '3.0.2'
 
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
@@ -329,14 +329,14 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
-    implementation "io.github.openfeign:feign-httpclient:11.0"
+    implementation "io.github.openfeign:feign-httpclient:11.8"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
     implementation group: 'org.springframework', name: 'spring-core', version: '5.3.15'
 
 
-    implementation group: 'com.google.guava', name: 'guava', version: '30.0-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
 
@@ -350,14 +350,14 @@ dependencies {
     testImplementation group: 'com.h2database', name: 'h2'
     testImplementation "com.github.tomakehurst:wiremock:2.21.0"
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.4.6'
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.4.6'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '4.3.0'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
     testImplementation group: 'com.github.mifmif', name: 'generex', version: '1.0.2'
 
     testImplementation 'org.codehaus.sonar-plugins:sonar-pitest-plugin:0.5'
     testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
-    testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
+    testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.7.0'
 
     testImplementation (group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity)
     testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
