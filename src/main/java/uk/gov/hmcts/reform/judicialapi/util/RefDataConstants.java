@@ -13,7 +13,7 @@ public class RefDataConstants {
     public static final String NO_DATA_FOUND = "The User Profile data could not be found";
     public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
     public static final String ONLY_ONE_PARAMETER_REQUIRED =
-            "At a time only one param should be allowed of ccdServiceName, Sidam_ids or Object_Ids";
+            "At a time only one param should be allowed of ccdServiceName, Sidam_ids , Object_Ids or Personal_Codes";
     public static final String COMMA_SEPARATED_AND_ALL_NOT_ALLOWED =
             "Comma Separated List and ALL Keyword is not allowed";
     public static final String ATLEAST_ONE_PARAMETER_REQUIRED =

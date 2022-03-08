@@ -83,6 +83,15 @@ public class UserProfile implements Serializable {
     @Column(name = "sidam_id")
     private String sidamId;
 
+    @Column(name = "is_judge")
+    private Boolean isJudge;
+
+    @Column(name = "is_panel_member")
+    private Boolean isPanelMember;
+
+    @Column(name = "is_magistrate")
+    private Boolean isMagistrate;
+
     @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile", cascade = ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)

@@ -32,6 +32,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
      void setUp() {
         refreshRoleRequest = new RefreshRoleRequest("BFA1",
                 Arrays.asList("aa57907b-6d8f-4d2a-9950-7dde95059d05"),
+                Arrays.asList("ba57907b-6d8f-4d2a-9950-7dde95059d06"),
                 Arrays.asList("ba57907b-6d8f-4d2a-9950-7dde95059d06"));
     }
 

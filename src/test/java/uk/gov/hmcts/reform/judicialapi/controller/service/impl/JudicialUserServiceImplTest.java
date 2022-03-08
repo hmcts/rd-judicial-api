@@ -173,7 +173,7 @@ class JudicialUserServiceImplTest {
     void test_refreshUserProfile_Two_Input_01() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
-                null, Arrays.asList("test", "test"));
+                null, Arrays.asList("test", "test"),null);
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "ASC", "objectId");
@@ -185,7 +185,7 @@ class JudicialUserServiceImplTest {
     void test_refreshUserProfile_Two_Input_02() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
-                Arrays.asList("test", "test"), null);
+                Arrays.asList("test", "test"), null,null);
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "ASC", "objectId");
@@ -196,7 +196,7 @@ class JudicialUserServiceImplTest {
     void test_refreshUserProfile_Two_Input_03() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
-                Arrays.asList("test", "test"), Arrays.asList("test", "test"));
+                Arrays.asList("test", "test"), Arrays.asList("test", "test"),null);
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "ASC", "objectId");
@@ -207,7 +207,7 @@ class JudicialUserServiceImplTest {
     void test_refreshUserProfile_Multiple_Input() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
-                Arrays.asList("test", "test"), Arrays.asList("test", "test"));
+                Arrays.asList("test", "test"), Arrays.asList("test", "test"),null);
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "ASC", "objectId");
@@ -223,7 +223,7 @@ class JudicialUserServiceImplTest {
         when(userProfileRepository.fetchUserProfileBySidamIds(List.of("test", "test"), pageRequest))
                 .thenReturn(page);
         var refreshRoleRequest = new RefreshRoleRequest("",
-                null, Arrays.asList("test", "test"));
+                null, Arrays.asList("test", "test"),null);
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
@@ -239,7 +239,7 @@ class JudicialUserServiceImplTest {
         when(userProfileRepository.fetchUserProfileByObjectIds(List.of("test", "test"), pageRequest))
                 .thenReturn(page);
         var refreshRoleRequest = new RefreshRoleRequest("",
-                Arrays.asList("test", "test"), null);
+                Arrays.asList("test", "test"), null,null);
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
@@ -267,7 +267,7 @@ class JudicialUserServiceImplTest {
         when(userProfileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
                 .thenReturn(page);
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
-                null, null);
+                null, null,null);
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
@@ -283,7 +283,7 @@ class JudicialUserServiceImplTest {
                         .request(mock(Request.class)).body("body", defaultCharset()).status(400).build());
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
-                null, null);
+                null, null,null);
         Assertions.assertThrows(UserProfileException.class, () -> {
             var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "ASC", "objectId");
@@ -310,7 +310,7 @@ class JudicialUserServiceImplTest {
                 .thenReturn(page);
         when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
-                null, null);
+                null, null,null);
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "ASC", "objectId");
@@ -327,7 +327,7 @@ class JudicialUserServiceImplTest {
                 .thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
-                null, null);
+                null, null,null);
 
         Assertions.assertThrows(UserProfileException.class, () -> {
             var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
@@ -352,7 +352,7 @@ class JudicialUserServiceImplTest {
                         .request(mock(Request.class)).body(body, defaultCharset()).status(400).build());
         var pageRequest = getPageRequest();
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
-                null, null);
+                null, null,null);
 
         Assertions.assertThrows(UserProfileException.class, () -> {
             var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
@@ -362,7 +362,7 @@ class JudicialUserServiceImplTest {
 
     @Test
     void test_refreshUserProfile_BasedOn_All_400() throws JsonProcessingException {
-        var refreshRoleRequest = new RefreshRoleRequest("", null, null);
+        var refreshRoleRequest = new RefreshRoleRequest("", null, null,null);
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "ASC", "objectId");
