@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.controller.controller.advice;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,8 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ForbiddenException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,9 +38,13 @@ class ExceptionMapperTest {
     MethodArgumentNotValidException methodArgumentNotValidException;
 
     @Mock
+    HttpMessageNotReadableException httpMessageNotReadableException;
+
+    @Mock
     BindingResult bindingResult;
 
-
+    @Mock
+    LinkedList<JsonMappingException.Reference> path = new LinkedList<>();
 
     @Test
     void test_handle_invalid_request_exception() {
@@ -54,9 +61,15 @@ class ExceptionMapperTest {
 
     @Test
     void test_handle_invalid_serialization_exception() {
-        HttpMessageNotReadableException exception = mock(HttpMessageNotReadableException.class);
 
-        ResponseEntity<Object> responseEntity = exceptionMapper.customSerializationError(exception);
+        JsonMappingException jm = mock(JsonMappingException.class);
+        JsonMappingException.Reference rf = mock(JsonMappingException.Reference.class);
+        when(httpMessageNotReadableException.getCause()).thenReturn(jm);
+        when(jm.getPath()).thenReturn(Collections.unmodifiableList(path));
+        when(jm.getPath().get(0)).thenReturn(rf);
+        when(jm.getPath().get(0).getFieldName()).thenReturn("field");
+        ResponseEntity<Object> responseEntity = exceptionMapper
+            .customSerializationError(httpMessageNotReadableException);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
