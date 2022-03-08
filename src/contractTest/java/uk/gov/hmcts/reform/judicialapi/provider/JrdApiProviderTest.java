@@ -40,6 +40,8 @@ import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -174,7 +176,9 @@ public class JrdApiProviderTest {
     private Page<UserProfile> getPageUserProfiles() {
         var baseLocationType = new BaseLocationType();
         baseLocationType.setBaseLocationId("1");
-        baseLocationType.setBaseLocationId("Social Entitlement");
+        baseLocationType.setCourtName("Social Entitlement");
+        baseLocationType.setCourtType("Test court type");
+        baseLocationType.setAreaOfExpertise("Test area of expertise");
         baseLocationType.setCircuit("First Tier Tribunal");
 
         var regionType = new RegionType();
@@ -184,14 +188,38 @@ public class JrdApiProviderTest {
 
         var appointment = new Appointment();
         appointment.setOfficeAppointmentId(12L);
+        appointment.setPerId("testPerId");
+        appointment.setStartDate(LocalDate.now());
+        appointment.setEndDate(LocalDate.now());
+        appointment.setActiveFlag(Boolean.TRUE);
+        appointment.setExtractedDate(LocalDateTime.now());
+        appointment.setCreatedDate(LocalDateTime.now());
+        appointment.setLastLoadedDate(LocalDateTime.now());
         appointment.setBaseLocationType(baseLocationType);
         appointment.setRegionType(regionType);
         appointment.setRegionId("1");
         appointment.setIsPrincipleAppointment(Boolean.TRUE);
+        appointment.setPersonalCode("testPersonalCode");
+        appointment.setEpimmsId("testEpimmsId");
+        appointment.setServiceCode("testServiceCode");
+        appointment.setObjectId("testObjectId");
+        appointment.setAppointment("testApp");
+        appointment.setAppointmentType("testAppType");
+        appointment.setBaseLocationId("testBaseLocID");
 
         var authorisation = new Authorisation();
         authorisation.setOfficeAuthId(1234L);
+        authorisation.setPerId("testPerId");
+        authorisation.setTicketId(1234L);
         authorisation.setJurisdiction("Languages");
+        authorisation.setStartDate(LocalDateTime.now());
+        authorisation.setEndDate(LocalDateTime.now());
+        authorisation.setCreatedDate(LocalDateTime.now());
+        authorisation.setLastUpdated(LocalDateTime.now());
+        authorisation.setLowerLevel("lower level");
+        authorisation.setPersonalCode("Personal code");
+        authorisation.setTicketCode("Ticket code");
+        authorisation.setObjectId("Object id");
 
         var authorisations = Collections.singletonList(authorisation);
         var appointments = Collections.singletonList(appointment);
@@ -202,8 +230,28 @@ public class JrdApiProviderTest {
         userProfile.setAppointments(appointments);
         userProfile.setAuthorisations(authorisations);
         userProfile.setEjudiciaryEmailId("e@mail.com");
+        userProfile.setPerId("testPerId");
+        userProfile.setPersonalCode("testPersonalCode");
+        userProfile.setKnownAs("testKnownAs");
+        userProfile.setSurname("testSurname");
+        userProfile.setFullName("testFullName");
+        userProfile.setPostNominals("testPostNominals");
+        userProfile.setWorkPattern("testWorkPattern");
+        userProfile.setJoiningDate(LocalDate.now());
+        userProfile.setLastWorkingDate(LocalDate.now());
+        userProfile.setExtractedDate(LocalDateTime.now());
+        userProfile.setCreatedDate(LocalDateTime.now());
+        userProfile.setLastLoadedDate(LocalDateTime.now());
+        userProfile.setActiveFlag(Boolean.TRUE);
+        userProfile.setActiveFlag(Boolean.TRUE);
 
         var judicialRoleType = new JudicialRoleType();
+        judicialRoleType.setRoleId("testRoleId");
+        judicialRoleType.setPerId("testPerId");
+        judicialRoleType.setTitle("testTitle");
+        judicialRoleType.setLocation("testLocation");
+        judicialRoleType.setStartDate(LocalDateTime.now());
+        judicialRoleType.setEndDate(LocalDateTime.now());
         userProfile.setJudicialRoleTypes(Collections.singletonList(judicialRoleType));
 
         var userProfiles = Collections.singletonList(userProfile);
