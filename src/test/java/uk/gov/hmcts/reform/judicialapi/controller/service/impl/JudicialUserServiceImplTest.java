@@ -204,10 +204,54 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
+    void test_refreshUserProfile_Two_Input_04() throws JsonProcessingException {
+
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                Arrays.asList("test", "test"), null,Arrays.asList("test", "test"));
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
+    @Test
     void test_refreshUserProfile_Multiple_Input() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"),null);
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
+    @Test
+    void test_refreshUserProfile_No_Input() throws JsonProcessingException {
+
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, null,null);
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
+    @Test
+    void test_refreshUserProfile_WhenCcdServiceNameContainComma() throws JsonProcessingException {
+
+        var refreshRoleRequest = new RefreshRoleRequest("abc,def",
+                null, null,null);
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
+    @Test
+    void test_refreshUserProfile_WhenCcdServiceNameContainAll() throws JsonProcessingException {
+
+        var refreshRoleRequest = new RefreshRoleRequest("all",
+                null, null,null);
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "ASC", "objectId");
@@ -240,6 +284,22 @@ class JudicialUserServiceImplTest {
                 .thenReturn(page);
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), null,null);
+        var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId");
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void test_refreshUserProfile_BasedOnPersonalCodes_200() throws JsonProcessingException {
+        var userProfile = buildUserProfile();
+
+        var pageRequest = getPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+        when(userProfileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(page);
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, null, Arrays.asList("Emp", "Emp"));
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 

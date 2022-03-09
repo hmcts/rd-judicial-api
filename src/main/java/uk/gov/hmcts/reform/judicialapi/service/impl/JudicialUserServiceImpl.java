@@ -139,8 +139,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 sortDirection, sortColumn, refreshDefaultPageSize, refreshDefaultSortColumn,
                 UserProfile.class);
 
-        return (refreshRoleRequest != null) ? getRefreshUserProfileBasedOnParam(refreshRoleRequest, pageRequest)
-                : refreshUserProfileBasedOnAll(pageRequest);
+        return getRefreshUserProfileBasedOnParam(refreshRoleRequest, pageRequest);
 
     }
 
@@ -158,9 +157,8 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getPersonalCodes())) {
             return refreshUserProfileBasedOnPersonalCodes(refreshUserValidator.removeEmptyOrNullFromList(
                     refreshRoleRequest.getPersonalCodes()), pageRequest);
-        } else {
-            return refreshUserProfileBasedOnAll(pageRequest);
         }
+        return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
     @SuppressWarnings("unchecked")
@@ -206,20 +204,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
         }
         return getRefreshRoleResponseEntity(userProfilePage, personalCodes, "personalCodes");
-    }
-
-    @SuppressWarnings("unchecked")
-    private ResponseEntity<Object> refreshUserProfileBasedOnAll(PageRequest pageRequest) {
-        log.info("{} : starting refreshUserProfile BasedOn All ", loggingComponentName);
-
-        var userProfilePage = userProfileRepository.fetchUserProfileByAll(pageRequest);
-
-        if (userProfilePage == null || userProfilePage.isEmpty()) {
-            log.error("{}:: No data found in JRD ", loggingComponentName);
-            throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
-        }
-
-        return getRefreshRoleResponseEntity(userProfilePage, "", "All");
     }
 
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
