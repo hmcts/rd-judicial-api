@@ -29,6 +29,5 @@ class AppointmentTest {
         assertNotNull(appointment.getPrimaryLocation());
         assertNotNull(appointment.getSecondaryLocation());
         assertNotNull(appointment.getTertiaryLocation());
-
     }
 }

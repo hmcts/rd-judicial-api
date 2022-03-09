@@ -199,7 +199,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         var userProfilePage = userProfileRepository.fetchUserProfileByPersonalCodes(
                 personalCodes, pageRequest);
         if (userProfilePage == null || userProfilePage.isEmpty()) {
-            log.error("{}:: No data found in JRD for the sidamIds {}",
+            log.error("{}:: No data found in JRD for the personalCodes {}",
                     loggingComponentName, personalCodes);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
         }
@@ -218,7 +218,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         log.info("regionMappings size = {}", regionMappings.size());
 
         userProfilePage.forEach(userProfile -> userProfileList.add(
-                buildUserProfileRefreshResponseDto(userProfile, serviceCodeMappings, regionMappings)));
+                buildUserProfileRefreshResponseDto(userProfile,serviceCodeMappings,regionMappings)));
 
         Map<String, List<UserProfileRefreshResponse>> groupedUserProfiles = userProfileList
                 .stream()

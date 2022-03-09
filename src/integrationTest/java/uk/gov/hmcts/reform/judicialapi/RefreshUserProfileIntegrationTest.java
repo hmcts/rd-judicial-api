@@ -257,9 +257,6 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
         var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,20,
                 0,"ASC", "objectId", role, false);
         assertThat(response).containsEntry("http_status", "404");
-
-
-
     }
 
     @DisplayName("Scenario-Feature flag is not released")

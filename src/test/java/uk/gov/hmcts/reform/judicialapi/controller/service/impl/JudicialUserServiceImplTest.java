@@ -299,11 +299,40 @@ class JudicialUserServiceImplTest {
         when(userProfileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
                 .thenReturn(page);
         var refreshRoleRequest = new RefreshRoleRequest("",
-                null, null, Arrays.asList("Emp", "Emp"));
+                null, null, Arrays.asList("Emp", "Emp", null));
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void test_refreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException {
+
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, null, Arrays.asList("Emp", "Emp", null));
+
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, -1,
+                    0, "ASC", "objectId");
+
+        });
+    }
+
+    @Test
+    void test_refreshUserProfile_BasedOnPersonalCodes_404() throws JsonProcessingException {
+        var userProfile = buildUserProfile();
+
+        var pageRequest = getPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+        when(userProfileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(null);
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, null, Arrays.asList("Emp", "Emp"));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
     }
 
     @Test
@@ -403,8 +432,7 @@ class JudicialUserServiceImplTest {
                 .errorCode(400)
                 .errorDescription("testErrorDesc")
                 .errorMessage("testErrorMsg")
-                .build()
-                ;
+                .build();
         var body = mapper.writeValueAsString(errorResponse);
 
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
