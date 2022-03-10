@@ -31,7 +31,7 @@ public class RefreshUserValidator {
                 throw new InvalidRequestException(ONLY_ONE_PARAMETER_REQUIRED);
             }
             if (ccdServiceNames && (refreshRoleRequest.getCcdServiceNames().split(",").length > 1
-                    || refreshRoleRequest.getCcdServiceNames().equalsIgnoreCase("ALL"))) {
+                    || refreshRoleRequest.getCcdServiceNames().trim().equalsIgnoreCase("ALL"))) {
                 throw new InvalidRequestException(COMMA_SEPARATED_AND_ALL_NOT_ALLOWED);
             }
             if (!ccdServiceNames && !objectIds && !sidamIds && !personalCodes) {

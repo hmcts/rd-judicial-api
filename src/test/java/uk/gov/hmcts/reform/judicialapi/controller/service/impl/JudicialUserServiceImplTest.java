@@ -250,7 +250,7 @@ class JudicialUserServiceImplTest {
     @Test
     void test_refreshUserProfile_WhenCcdServiceNameContainAll() throws JsonProcessingException {
 
-        var refreshRoleRequest = new RefreshRoleRequest("all",
+        var refreshRoleRequest = new RefreshRoleRequest(" all ",
                 null, null,null);
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
