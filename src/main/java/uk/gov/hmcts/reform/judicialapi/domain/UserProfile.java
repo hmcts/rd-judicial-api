@@ -97,4 +97,13 @@ public class UserProfile implements Serializable {
             orphanRemoval = true, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<JudicialRoleType> judicialRoleTypes;
+
+    @Column(name = "is_judge")
+    private Boolean isJudge;
+
+    @Column(name = "is_panel_member")
+    private Boolean isPanelMember;
+
+    @Column(name = "is_magistrate")
+    private Boolean isMagistrate;
 }
