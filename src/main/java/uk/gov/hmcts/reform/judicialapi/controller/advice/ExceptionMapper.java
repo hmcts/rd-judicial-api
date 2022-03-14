@@ -1,9 +1,11 @@
 package uk.gov.hmcts.reform.judicialapi.controller.advice;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,6 +45,23 @@ public class ExceptionMapper {
             InvalidRequestException ex) {
         return errorDetailsResponseEntity(ex, BAD_REQUEST, INVALID_REQUEST_EXCEPTION.getErrorMessage());
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Object> customSerializationError(
+        HttpMessageNotReadableException ex) {
+
+        String field = "";
+        if (ex.getCause() != null) {
+            JsonMappingException jme = (JsonMappingException) ex.getCause();
+            field = jme.getPath().get(0).getFieldName();
+        }
+        var errorDetails = new ErrorResponse(BAD_REQUEST.value(), BAD_REQUEST.getReasonPhrase(),
+             field + " in invalid format",
+            INVALID_REQUEST_EXCEPTION.getErrorMessage(), getTimeStamp());
+
+        return new ResponseEntity<>(errorDetails, BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handlerForNoJudicialUsersFound(
