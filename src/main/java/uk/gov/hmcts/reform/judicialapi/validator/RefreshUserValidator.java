@@ -26,8 +26,8 @@ public class RefreshUserValidator {
             boolean sidamIds = isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds());
             boolean personalCodes = isListNotEmptyOrNotNull(refreshRoleRequest.getPersonalCodes());
 
-            if (ccdServiceNames ? (objectIds || sidamIds || personalCodes) :
-                    (objectIds) ? (sidamIds || personalCodes) : (sidamIds && personalCodes)) {
+            if (ccdServiceNames ? isOneTrue(objectIds, sidamIds, personalCodes) :
+                    isTwoTrue(objectIds, sidamIds, personalCodes)) {
                 throw new InvalidRequestException(ONLY_ONE_PARAMETER_REQUIRED);
             }
             if (ccdServiceNames && (refreshRoleRequest.getCcdServiceNames().split(",").length > 1
@@ -38,6 +38,14 @@ public class RefreshUserValidator {
                 throw new InvalidRequestException(ATLEAST_ONE_PARAMETER_REQUIRED);
             }
         }
+    }
+
+    private boolean isTwoTrue(boolean objectIds, boolean sidamIds, boolean personalCodes) {
+        return objectIds ? (sidamIds || personalCodes) : (sidamIds && personalCodes);
+    }
+
+    private boolean isOneTrue(boolean objectIds, boolean sidamIds, boolean personalCodes) {
+        return objectIds || sidamIds || personalCodes;
     }
 
     public boolean isStringNotEmptyOrNotNull(String value) {

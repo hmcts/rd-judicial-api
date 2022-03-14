@@ -158,7 +158,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             return refreshUserProfileBasedOnPersonalCodes(refreshUserValidator.removeEmptyOrNullFromList(
                     refreshRoleRequest.getPersonalCodes()), pageRequest);
         }
-        return new ResponseEntity<Object>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @SuppressWarnings("unchecked")

@@ -227,30 +227,21 @@ class JudicialUserServiceImplTest {
 
     @Test
     void test_refreshUserProfile_No_Input() throws JsonProcessingException {
-
-        var refreshRoleRequest = new RefreshRoleRequest("",
-                null, null,null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        checkAssertion("");
     }
 
     @Test
     void test_refreshUserProfile_WhenCcdServiceNameContainComma() throws JsonProcessingException {
-
-        var refreshRoleRequest = new RefreshRoleRequest("abc,def",
-                null, null,null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        checkAssertion("abc,def");
     }
 
     @Test
     void test_refreshUserProfile_WhenCcdServiceNameContainAll() throws JsonProcessingException {
+        checkAssertion(" all ");
+    }
 
-        var refreshRoleRequest = new RefreshRoleRequest(" all ",
+    private void checkAssertion(String ccdServiceNames) {
+        var refreshRoleRequest = new RefreshRoleRequest(ccdServiceNames,
                 null, null,null);
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
