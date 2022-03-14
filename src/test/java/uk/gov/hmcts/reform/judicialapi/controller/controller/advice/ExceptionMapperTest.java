@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.controller.controller.advice;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -17,9 +19,12 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ForbiddenException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.UNKNOWN_EXCEPTION;
 
@@ -33,8 +38,13 @@ class ExceptionMapperTest {
     MethodArgumentNotValidException methodArgumentNotValidException;
 
     @Mock
+    HttpMessageNotReadableException httpMessageNotReadableException;
+
+    @Mock
     BindingResult bindingResult;
 
+    @Mock
+    LinkedList<JsonMappingException.Reference> path = new LinkedList<>();
 
     @Test
     void test_handle_invalid_request_exception() {
@@ -47,6 +57,24 @@ class ExceptionMapperTest {
                 .getErrorDescription());
 
     }
+
+
+    @Test
+    void test_handle_invalid_serialization_exception() {
+
+        JsonMappingException jm = mock(JsonMappingException.class);
+        JsonMappingException.Reference rf = mock(JsonMappingException.Reference.class);
+        when(httpMessageNotReadableException.getCause()).thenReturn(jm);
+        when(jm.getPath()).thenReturn(Collections.unmodifiableList(path));
+        when(jm.getPath().get(0)).thenReturn(rf);
+        when(jm.getPath().get(0).getFieldName()).thenReturn("field");
+        ResponseEntity<Object> responseEntity = exceptionMapper
+            .customSerializationError(httpMessageNotReadableException);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+    }
+
 
     @Test
     void test_handle_launchDarkly_exception() {
