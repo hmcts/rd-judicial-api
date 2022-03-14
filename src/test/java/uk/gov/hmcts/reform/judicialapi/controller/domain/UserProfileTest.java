@@ -32,6 +32,9 @@ class UserProfileTest {
         assertEquals(Boolean.TRUE, userProfile.getActiveFlag());
         assertEquals("objectId", userProfile.getObjectId());
         assertEquals("sidamId", userProfile.getSidamId());
+        assertEquals(Boolean.TRUE, userProfile.getIsJudge());
+        assertEquals(Boolean.TRUE, userProfile.getIsMagistrate());
+        assertEquals(Boolean.TRUE, userProfile.getIsPanelMember());
     }
 
 }
