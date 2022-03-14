@@ -118,6 +118,10 @@ public class JrdApiProviderTest {
         userProfile.setSurname("surname");
         userProfile.setEjudiciaryEmailId("test@test.com");
         userProfile.setPostNominals("Dr");
+        userProfile.setPersonalCode("1234");
+        userProfile.setIsJudge(true);
+        userProfile.setIsPanelMember(false);
+        userProfile.setIsMagistrate(true);
 
         var serviceCodeMapping = ServiceCodeMapping
                 .builder()
