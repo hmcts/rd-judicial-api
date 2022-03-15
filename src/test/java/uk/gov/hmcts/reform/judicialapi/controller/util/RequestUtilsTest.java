@@ -41,6 +41,15 @@ class RequestUtilsTest {
     }
 
     @Test
+    void testInvalidRequestExceptionForInvalidPageSize02() {
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            RequestUtils.validateAndBuildPaginationObject(0, 1,
+                    "ASC", "objectId",
+                    20, "id", UserProfile.class);
+        });
+    }
+
+    @Test
     void testInvalidRequestExceptionForInvalidSortDirection() {
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             RequestUtils.validateAndBuildPaginationObject(1, 1,

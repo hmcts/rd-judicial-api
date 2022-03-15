@@ -35,7 +35,7 @@ public class RequestUtils {
         if (Objects.nonNull(pageNumber) && pageNumber < 0) {
             throw new InvalidRequestException(String.format(INVALID_FIELD, PAGE_NUMBER));
         }
-        if (Objects.nonNull(pageSize) && pageSize <= 0) {
+        if (Objects.nonNull(pageSize) && !(pageSize > 0)) {
             throw new InvalidRequestException(String.format(INVALID_FIELD, PAGE_SIZE));
         }
         if (!StringUtils.isEmpty(sortDirection)) {
