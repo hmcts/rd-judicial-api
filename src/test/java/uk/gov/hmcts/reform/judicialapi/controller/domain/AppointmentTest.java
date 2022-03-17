@@ -26,5 +26,8 @@ class AppointmentTest {
         assertNotNull(appointment.getUserProfile());
         assertNotNull(appointment.getRegionType());
         assertNotNull(appointment.getBaseLocationType());
+        assertNotNull(appointment.getPrimaryLocation());
+        assertNotNull(appointment.getSecondaryLocation());
+        assertNotNull(appointment.getTertiaryLocation());
     }
 }
