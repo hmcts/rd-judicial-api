@@ -79,6 +79,20 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "and (per.sidamId IN :sidamIds)")
     Page<UserProfile> fetchUserProfileBySidamIds(List<String> sidamIds, Pageable pageable);
 
+    @Query(value = "select distinct per "
+            + "from judicial_user_profile per "
+            + "LEFT JOIN FETCH judicial_office_appointment appt "
+            + "on per.perId = appt.perId "
+            + "LEFT JOIN FETCH judicial_office_authorisation auth "
+            + "on per.perId = auth.perId "
+            + "LEFT JOIN FETCH judicial_role_type jrt "
+            + "ON per.perId = jrt.perId "
+            + "where (per.objectId != '' and per.objectId is not null) "
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
+            + "and (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "and (per.personalCode IN :personalCodes)")
+    Page<UserProfile> fetchUserProfileByPersonalCodes(List<String> personalCodes, Pageable pageable);
+
 
     @Query(value = "select distinct per "
             + "from judicial_user_profile per "
