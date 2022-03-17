@@ -23,12 +23,16 @@ public class RefreshRoleRequest {
     @JsonProperty("sidam_ids")
     private List<String> sidamIds;
 
+    @JsonProperty("personal_code")
+    private List<String> personalCodes;
+
     @Override
     public String toString() {
         return "RefreshRoleRequest{"
                 + "ccdServiceNames='" + ccdServiceNames + '\''
                 + ", objectIds=" + objectIds
                 + ", sidamIds=" + sidamIds
+                + ", personalCodes=" + personalCodes
                 + '}';
     }
 }

@@ -33,6 +33,14 @@ public class UserProfileRefreshResponse implements Serializable {
 
     private String emailId;
 
+    private String personalCode;
+
+    private String isJudge;
+
+    private String isPanelNumber;
+
+    private String isMagistrate;
+
     private List<AppointmentRefreshResponse> appointments;
 
     private List<AuthorisationRefreshResponse> authorisations;
