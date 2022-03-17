@@ -191,27 +191,28 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(4, profiles.size());
+        assertEquals(5, profiles.size());
         assertEquals("test900@test.net", profiles.get(0).get("emailId"));
-        assertEquals("test901@test.net", profiles.get(1).get("emailId"));
-        assertEquals("test902@test.net", profiles.get(2).get("emailId"));
-        assertEquals("test903@test.net", profiles.get(3).get("emailId"));
         assertEquals("Y", profiles.get(0).get("isJudge"));
-        assertEquals("N", profiles.get(1).get("isJudge"));
-        assertEquals("Y", profiles.get(2).get("isJudge"));
-        assertEquals("N", profiles.get(3).get("isJudge"));
         assertEquals("N", profiles.get(0).get("isPanelMember"));
-        assertEquals("Y", profiles.get(1).get("isPanelMember"));
-        assertEquals("Y", profiles.get(2).get("isPanelMember"));
-        assertEquals("N", profiles.get(3).get("isPanelMember"));
         assertEquals("Y", profiles.get(0).get("isMagistrate"));
-        assertEquals("Y", profiles.get(1).get("isMagistrate"));
-        assertEquals("N", profiles.get(2).get("isMagistrate"));
-        assertEquals("N", profiles.get(3).get("isMagistrate"));
         assertEquals("300", profiles.get(0).get("personalCode"));
-        assertEquals("301", profiles.get(1).get("personalCode"));
-        assertEquals("302", profiles.get(2).get("personalCode"));
-        assertEquals("303", profiles.get(3).get("personalCode"));
+        assertEquals("test900@test.net", profiles.get(1).get("emailId"));
+        assertEquals("Y", profiles.get(1).get("isJudge"));
+        assertEquals("N", profiles.get(1).get("isPanelMember"));
+        assertEquals("Y", profiles.get(1).get("isMagistrate"));
+        assertEquals("A123", profiles.get(1).get("personalCode"));
+
+        assertEquals("test901@test.net", profiles.get(2).get("emailId"));
+        assertEquals("N", profiles.get(2).get("isJudge"));
+        assertEquals("Y", profiles.get(2).get("isPanelMember"));
+        assertEquals("Y", profiles.get(2).get("isMagistrate"));
+        assertEquals("301", profiles.get(2).get("personalCode"));
+        assertEquals("test902@test.net", profiles.get(3).get("emailId"));
+        assertEquals("Y", profiles.get(3).get("isJudge"));
+        assertEquals("Y", profiles.get(3).get("isPanelMember"));
+        assertEquals("N", profiles.get(3).get("isMagistrate"));
+        assertEquals("302", profiles.get(3).get("personalCode"));
 
         assertThat(response).containsEntry("http_status", "200 OK");
     }
