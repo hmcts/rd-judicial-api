@@ -91,7 +91,7 @@ class JrdUsersControllerTest {
                 "ASC", "objectId",
                 20, "objectId", UserProfile.class);
 
-        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc", null, null);
+        RefreshRoleRequest refreshRoleRequest = new RefreshRoleRequest("cmc", null, null,null);
         ResponseEntity<?> actual = jrdUsersController
                 .refreshUserProfile(refreshRoleRequest, 1, 0,
                         "ASC", "objectId");
