@@ -17,34 +17,34 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundExcepti
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
+import uk.gov.hmcts.reform.judicialapi.controller.response.AppointmentRefreshResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.AuthorisationRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
-import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.repository.RegionMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 import uk.gov.hmcts.reform.judicialapi.util.RefDataConstants;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
-import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.response.AppointmentRefreshResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.response.AuthorisationRefreshResponse;
-import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
@@ -139,8 +139,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 sortDirection, sortColumn, refreshDefaultPageSize, refreshDefaultSortColumn,
                 UserProfile.class);
 
-        return (refreshRoleRequest != null) ? getRefreshUserProfileBasedOnParam(refreshRoleRequest, pageRequest)
-                : refreshUserProfileBasedOnAll(pageRequest);
+        return getRefreshUserProfileBasedOnParam(refreshRoleRequest, pageRequest);
 
     }
 
@@ -155,9 +154,11 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getObjectIds())) {
             return refreshUserProfileBasedOnObjectIds(
                     refreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getObjectIds()), pageRequest);
-        } else {
-            return refreshUserProfileBasedOnAll(pageRequest);
+        } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getPersonalCodes())) {
+            return refreshUserProfileBasedOnPersonalCodes(refreshUserValidator.removeEmptyOrNullFromList(
+                    refreshRoleRequest.getPersonalCodes()), pageRequest);
         }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @SuppressWarnings("unchecked")
@@ -192,17 +193,17 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     }
 
     @SuppressWarnings("unchecked")
-    private ResponseEntity<Object> refreshUserProfileBasedOnAll(PageRequest pageRequest) {
-        log.info("{} : starting refreshUserProfile BasedOn All ", loggingComponentName);
-
-        var userProfilePage = userProfileRepository.fetchUserProfileByAll(pageRequest);
-
+    private ResponseEntity<Object> refreshUserProfileBasedOnPersonalCodes(List<String> personalCodes,
+                                                                          PageRequest pageRequest) {
+        log.info("{} : starting refreshUserProfile BasedOn personalCodes ", loggingComponentName);
+        var userProfilePage = userProfileRepository.fetchUserProfileByPersonalCodes(
+                personalCodes, pageRequest);
         if (userProfilePage == null || userProfilePage.isEmpty()) {
-            log.error("{}:: No data found in JRD ", loggingComponentName);
+            log.error("{}:: No data found in JRD for the personalCodes {}",
+                    loggingComponentName, personalCodes);
             throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
         }
-
-        return getRefreshRoleResponseEntity(userProfilePage, "", "All");
+        return getRefreshRoleResponseEntity(userProfilePage, personalCodes, "personalCodes");
     }
 
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
@@ -233,6 +234,10 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .objectId(v.get(0).getObjectId())
                 .knownAs(v.get(0).getKnownAs())
                 .postNominals(v.get(0).getPostNominals())
+                .personalCode(v.get(0).getPersonalCode())
+                .isJudge(v.get(0).getIsJudge())
+                .isPanelNumber(v.get(0).getIsPanelNumber())
+                .isMagistrate(v.get(0).getIsMagistrate())
                 .appointments(v.stream()
                         .flatMap(i -> i.getAppointments().stream())
                         .collect(Collectors.toList()))
@@ -320,9 +325,20 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .fullName(profile.getFullName())
                 .postNominals(profile.getPostNominals())
                 .emailId(profile.getEjudiciaryEmailId())
-                .appointments(getAppointmentRefreshResponseList(profile,regionMappings))
-                .authorisations(getAuthorisationRefreshResponseList(profile,serviceCodeMappings))
+                .personalCode(profile.getPersonalCode())
+                .isJudge(getStringValueFromBoolean(profile.getIsJudge()))
+                .isPanelNumber(getStringValueFromBoolean(profile.getIsPanelMember()))
+                .isMagistrate(getStringValueFromBoolean(profile.getIsMagistrate()))
+                .appointments(getAppointmentRefreshResponseList(profile, regionMappings))
+                .authorisations(getAuthorisationRefreshResponseList(profile, serviceCodeMappings))
                 .build();
+    }
+
+    private String getStringValueFromBoolean(Boolean value) {
+        if (value != null) {
+            return value ? "Y" : "N";
+        }
+        return "";
     }
 
     private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(
@@ -361,6 +377,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .roles(getRoleIdList(profile.getJudicialRoleTypes()))
                 .startDate(null != appt.getStartDate() ? String.valueOf(appt.getStartDate()) : null)
                 .endDate(null != appt.getEndDate() ? String.valueOf(appt.getEndDate()) : null)
+                .primaryLocation(appt.getPrimaryLocation())
+                .secondaryLocation(appt.getSecondaryLocation())
+                .tertiaryLocation(appt.getTertiaryLocation())
                 .build();
     }
 
