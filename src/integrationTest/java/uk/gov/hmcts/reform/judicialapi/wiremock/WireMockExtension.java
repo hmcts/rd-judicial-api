@@ -6,8 +6,6 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-import java.util.concurrent.TimeUnit;
-
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 
 public class WireMockExtension extends WireMockServer implements BeforeAllCallback, AfterAllCallback {
@@ -21,15 +19,13 @@ public class WireMockExtension extends WireMockServer implements BeforeAllCallba
     }
 
     @Override
-    public void beforeAll(ExtensionContext context) throws Exception {
+    public void beforeAll(ExtensionContext context) {
         start();
     }
 
     @Override
-    public void afterAll(ExtensionContext context) throws InterruptedException {
+    public void afterAll(ExtensionContext context) {
         stop();
-        resetAll();
-        TimeUnit.SECONDS.sleep(1);
     }
 
 }
