@@ -357,7 +357,7 @@ dependencies {
     }
 
     testImplementation group: 'com.h2database', name: 'h2'
-    testImplementation "com.github.tomakehurst:wiremock:2.21.0"
+    testImplementation "com.github.tomakehurst:wiremock:2.27.2"
     testImplementation ("org.mockito:mockito-core:4.3.1") {
         exclude group: "net.bytebuddy", module: "byte-buddy"
         exclude group: "net.bytebuddy", module: "byte-buddy-agent"
