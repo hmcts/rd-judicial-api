@@ -220,7 +220,7 @@ public class JrdApiProviderTest {
         authorisation.setTicketId(1234L);
         authorisation.setJurisdiction("Languages");
         authorisation.setStartDate(LocalDateTime.now());
-       // authorisation.setEndDate(LocalDateTime.now());
+        authorisation.setEndDate(LocalDateTime.of (2027,04,01,10,10));
         authorisation.setCreatedDate(LocalDateTime.now());
         authorisation.setLastUpdated(LocalDateTime.now());
         authorisation.setLowerLevel("lower level");
