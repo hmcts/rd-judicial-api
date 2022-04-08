@@ -51,6 +51,10 @@ def jarName = 'rd-judicial-api.jar'
 group = 'uk.gov.hmcts.reform.juddata'
 version = '0.0.1'
 
+tasks.withType(JavaExec).configureEach {
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
