@@ -340,6 +340,7 @@ dependencies {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
 
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.21'
 
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
 
