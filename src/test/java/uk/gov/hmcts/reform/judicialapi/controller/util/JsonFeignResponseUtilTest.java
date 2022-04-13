@@ -10,8 +10,10 @@ import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResp
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileCreationResponse;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 class JsonFeignResponseUtilTest {
 
@@ -52,6 +55,13 @@ class JsonFeignResponseUtilTest {
         Response.Body bodyMock = mock(Response.Body.class);
         var response = Response.builder().status(200).reason("OK").headers(header).body(bodyMock)
                 .request(mock(Request.class)).build();
+
+        try {
+            when(bodyMock.asInputStream()).thenThrow(new IOException());
+            when(bodyMock.asReader(Charset.defaultCharset())).thenThrow(new IOException());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         var createUserProfileResponseOptional = JsonFeignResponseUtil.decode(response,
                 UserProfileCreationResponse.class);
