@@ -45,7 +45,28 @@ class JsonFeignResponseUtilTest {
         assertThat(createUserProfileResponseOptional).isNotEmpty();
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_Decode_fails_with_ioException() {
+        var header = new HashMap<String, Collection<String>>();
+        var list = new ArrayList<String>();
+        header.put("content-encoding", list);
 
+        Response.Body bodyMock = mock(Response.Body.class);
+        var response = Response.builder().status(200).reason("OK").headers(header).body(bodyMock)
+                .request(mock(Request.class)).build();
+
+        try {
+            when(bodyMock.asInputStream()).thenThrow(new IOException());
+            when(bodyMock.asReader(Charset.defaultCharset())).thenThrow(new IOException());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        var createUserProfileResponseOptional = JsonFeignResponseUtil.decode(response,
+                UserProfileCreationResponse.class);
+        assertThat(createUserProfileResponseOptional).isEmpty();
+    }
 
     @Test
     void test_convertHeaders() {
