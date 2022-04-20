@@ -373,6 +373,7 @@ dependencies {
     testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.7.0'
 
+    testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
     testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
