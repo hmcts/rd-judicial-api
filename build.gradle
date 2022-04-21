@@ -376,7 +376,7 @@ dependencies {
     testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
     testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
 
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
+//    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
 
     testImplementation(group: 'org.yaml', name: 'snakeyaml') {
