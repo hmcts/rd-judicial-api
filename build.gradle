@@ -309,8 +309,6 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     implementation 'com.github.hmcts:idam-java-client:2.0.1'
-//    implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
-//    implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
@@ -329,23 +327,22 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
-//    implementation "io.github.openfeign:feign-httpclient:11.8"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
-//    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.18'
-//   	implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-aop', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-aspects', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-context-support', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-expression', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-jcl', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-orm', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.18'
-//    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.18'
+   	implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-aop', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-aspects', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-context-support', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-expression', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-jcl', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-orm', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-tx', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.18'
 
     implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
     //Fix for CVE-2021-29425
