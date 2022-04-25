@@ -47,7 +47,6 @@ class FeatureConditionEvaluationTest {
 
     @BeforeEach
     void before() {
-        MockitoAnnotations.openMocks(this);
         when(method.getName()).thenReturn("test");
         doReturn(WelcomeController.class).when(method).getDeclaringClass();
         when(handlerMethod.getMethod()).thenReturn(method);
