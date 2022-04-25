@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -46,6 +47,7 @@ class FeatureConditionEvaluationTest {
 
     @BeforeEach
     void before() {
+        MockitoAnnotations.openMocks(this);
         when(method.getName()).thenReturn("test");
         doReturn(WelcomeController.class).when(method).getDeclaringClass();
         when(handlerMethod.getMethod()).thenReturn(method);
