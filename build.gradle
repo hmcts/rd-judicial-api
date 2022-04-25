@@ -339,7 +339,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
-    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.18'
+    implementation group: 'org.springframework', name: 'spring-core', version: '5.3.19'
    	implementation group: 'org.springframework', name: 'spring-beans', version: '5.3.18'
     implementation group: 'org.springframework', name: 'spring-aop', version: '5.3.18'
     implementation group: 'org.springframework', name: 'spring-aspects', version: '5.3.18'
