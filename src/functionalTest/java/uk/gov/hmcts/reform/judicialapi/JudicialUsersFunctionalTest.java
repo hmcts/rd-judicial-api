@@ -18,7 +18,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtension;
 import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
-import uk.gov.hmcts.reform.judicialapi.util.serenity5.SerenityTest;
+import uk.gov.hmcts.reform.lib.util.serenity5.SerenityTest;
 
 import java.util.ArrayList;
 import java.util.Collections;
