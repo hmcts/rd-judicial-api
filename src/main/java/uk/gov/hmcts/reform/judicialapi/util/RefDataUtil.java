@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -40,7 +39,7 @@ public class RefDataUtil {
         return t -> {
             final List<?> keys = Arrays.stream(keyExtractors)
                     .map(ke -> ke.apply(t))
-                    .collect(Collectors.toList());
+                    .toList();
 
             return seen.putIfAbsent(keys, Boolean.TRUE) == null;
         };
