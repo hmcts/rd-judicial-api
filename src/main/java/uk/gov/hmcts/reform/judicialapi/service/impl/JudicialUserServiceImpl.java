@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.distinctByKeys;
 
 @Slf4j
 @Service
@@ -118,7 +119,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                         userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode);
 
         var userSearchResponses = userProfiles
-                .stream()
+                .stream().filter(distinctByKeys(UserProfile::getPersonalCode))
                 .map(UserSearchResponse::new)
                 .collect(Collectors.toUnmodifiableList());
 
