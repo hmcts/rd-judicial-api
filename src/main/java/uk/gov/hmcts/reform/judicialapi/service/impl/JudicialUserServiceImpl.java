@@ -95,7 +95,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         List<OrmResponse> ormResponses = userProfiles.stream()
                 .map(OrmResponse::new)
-                .collect(Collectors.toList());
+                .toList();
 
         return ResponseEntity
                 .status(200)
@@ -241,10 +241,10 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .isMagistrate(v.get(0).getIsMagistrate())
                 .appointments(v.stream()
                         .flatMap(i -> i.getAppointments().stream())
-                        .collect(Collectors.toList()))
+                        .toList())
                 .authorisations(v.stream()
                         .flatMap(i -> i.getAuthorisations().stream())
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build()));
 
         log.info("userProfileList size = {}", userProfileList.size());
@@ -425,7 +425,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         log.info("{} : starting get RoleId List ", loggingComponentName);
         return judicialRoleTypes.stream()
                 .filter(e -> e.getEndDate() == null || !e.getEndDate().toLocalDate().isBefore(LocalDate.now()))
-                .map(JudicialRoleType::getTitle).collect(Collectors.toList());
+                .map(JudicialRoleType::getTitle).toList();
     }
 
 }
