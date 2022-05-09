@@ -281,13 +281,13 @@ repositories {
 
 dependencies {
 
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 
-    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    integrationTestImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    integrationTestImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
