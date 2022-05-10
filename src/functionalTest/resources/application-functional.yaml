@@ -2,11 +2,12 @@ targetInstance: ${TEST_URL:http://localhost:8093}
 
 s2s-url: ${S2S_URL_FOR_TESTS:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
 s2s-name: rd_judicial_api
+scope-name: openid profile roles openid roles profile create-user manage-user
 idam.api.url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
-oauth2.client.secret: ${OAUTH2_CLIENT_SECRET:}
-idam.auth.clientId: ${OAUTH2_CLIENT_ID:rd-judicial-api}
+oauth2.client.secret: ${OAUTH2_CLIENT_SECRET:cc5f2a6-9690-11e9-bc42-526af7764f64}
+idam.auth.clientId: ${OAUTH2_CLIENT_ID:rd-professional-api}
 idam.auth.redirectUrl: ${OAUTH2_REDIRECT_URI:https://rd-judicial-api-aat.service.core-compute-aat.internal/oauth2redirect}
-s2s-secret: ${JUDICIAL_API_S2S_SECRET:}
+s2s-secret: ${JUDICIAL_API_S2S_SECRET:F5U22E7HCOOEZY5P}
 
 jrd.security.roles.hmcts-admin: jrd-admin
 jrd.security.roles.system-user: jrd-system-user
