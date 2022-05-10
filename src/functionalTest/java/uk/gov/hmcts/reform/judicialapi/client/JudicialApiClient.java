@@ -131,8 +131,6 @@ public class JudicialApiClient {
                 .andReturn();
 
         log.info("JRD get users response: {}", fetchResponse.getStatusCode());
-        log.info("expectedStatus get users response: {}", expectedStatus.value());
-
         fetchResponse.then()
                 .assertThat()
                 .statusCode(expectedStatus.value());
