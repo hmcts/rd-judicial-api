@@ -354,7 +354,7 @@ dependencies {
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
 
-    testImplementation ('com.github.hmcts:rd-commons-lib:v0.0.11'){
+    testImplementation ('com.github.hmcts:rd-commons-lib:v0.0.12'){
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
 
