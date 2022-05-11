@@ -350,6 +350,9 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-web', version: '5.3.18'
     implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.18'
 
+    implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
+    implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
+
     implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
@@ -396,7 +399,6 @@ dependencies {
     testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
 
     testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
-    testImplementation 'com.github.hmcts:fortify-client:1.2.0:all'
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
