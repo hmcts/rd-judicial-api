@@ -84,11 +84,11 @@ public class JudicialApiClient {
     }
 
     public RequestSpecification getMultipleAuthHeadersInternal(String role) {
-        return getMultipleAuthHeaders(idamOpenIdClient.getOpenIdTokenByRole(role));
+        return getMultipleAuthHeaders(idamOpenIdClient.getcwdAdminOpenIdToken(role));
     }
 
     public RequestSpecification getMultiPartWithAuthHeaders(String role) {
-        String userToken = idamOpenIdClient.getOpenIdTokenByRole(role);
+        String userToken = idamOpenIdClient.getcwdAdminOpenIdToken(role);
         return SerenityRest.with()
                 .relaxedHTTPSValidation()
                 .baseUri(judicialApiUrl)
@@ -99,7 +99,7 @@ public class JudicialApiClient {
 
     public RequestSpecification getMultipleAuthHeaders(String role,int pageSize, int pageNumber,
                                                        String sortColumn,String sortDirection) {
-        String userToken = idamOpenIdClient.getOpenIdTokenByRole(role);
+        String userToken = idamOpenIdClient.getcwdAdminOpenIdToken(role);
         return SerenityRest.with()
                 .relaxedHTTPSValidation()
                 .baseUri(judicialApiUrl)
