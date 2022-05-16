@@ -95,7 +95,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         List<OrmResponse> ormResponses = userProfiles.stream()
                 .map(OrmResponse::new)
-                .toList();
+                .collect(Collectors.toList());
 
         return ResponseEntity
                 .status(200)
@@ -241,10 +241,10 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .isMagistrate(v.get(0).getIsMagistrate())
                 .appointments(v.stream()
                         .flatMap(i -> i.getAppointments().stream())
-                        .toList())
+                        .collect(Collectors.toList()))
                 .authorisations(v.stream()
                         .flatMap(i -> i.getAuthorisations().stream())
-                        .toList())
+                        .collect(Collectors.toList()))
                 .build()));
 
         log.info("userProfileList size = {}", userProfileList.size());
@@ -401,16 +401,16 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             Authorisation auth, List<ServiceCodeMapping> serviceCodeMappings) {
         log.info("{} : starting build Authorisation Refresh Response Dto ", loggingComponentName);
 
-        String serviceCode = serviceCodeMappings.stream()
+        List<String> serviceCode = serviceCodeMappings.stream()
                 .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode()))
                 .map(ServiceCodeMapping::getServiceCode)
-                .collect(Collectors.joining(","));
+                .collect(Collectors.toList());
 
         return AuthorisationRefreshResponse.builder()
                 .jurisdiction(auth.getJurisdiction())
                 .ticketDescription(auth.getLowerLevel())
                 .ticketCode(auth.getTicketCode())
-                .serviceCode(serviceCode)
+                .serviceCodes(serviceCode)
                 .startDate(null != auth.getStartDate() ? String.valueOf(auth.getStartDate()) : null)
                 .endDate(null != auth.getEndDate() ? String.valueOf(auth.getEndDate()) : null)
                 .build();
@@ -425,7 +425,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         log.info("{} : starting get RoleId List ", loggingComponentName);
         return judicialRoleTypes.stream()
                 .filter(e -> e.getEndDate() == null || !e.getEndDate().toLocalDate().isBefore(LocalDate.now()))
-                .map(JudicialRoleType::getTitle).toList();
+                .map(JudicialRoleType::getTitle).collect(Collectors.toList());
     }
 
 }
