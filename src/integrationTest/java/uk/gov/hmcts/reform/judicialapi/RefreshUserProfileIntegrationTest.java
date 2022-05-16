@@ -237,9 +237,9 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
 
         var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         assertThat((List<?>) values.get("appointments")).hasSize(1);
-        assertThat((List<?>) values.get("authorisations")).hasSize(0);
+        assertThat((List<?>) values.get("authorisations")).isEmpty();
         var appointment = (LinkedHashMap<String, Object>)((List<?>) values.get("appointments")).get(0);
-        Assertions.assertTrue(appointment.get("primary_location").equals("Nottingham"));
+        Assertions.assertEquals("Nottingham",appointment.get("primary_location"));
     }
 
     @DisplayName("AC28  - Scenario-Retrieve based on Personal Code(s) return 404")
@@ -308,5 +308,37 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
         var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
                 0,"ASC", "objectId", "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "400");
+    }
+
+    @DisplayName("Validate soft delete service code scenario")
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn_200_ValidParameters_Mrd_Delete_time(String role) {
+
+        refreshRoleRequest = RefreshRoleRequest.builder()
+                .ccdServiceNames("")
+                .sidamIds(Collections.emptyList())
+                .objectIds(Arrays.asList("74ac97ad"))
+                .build();
+
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,20,
+                0,"ASC", "objectId", role, false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+
+        var userProfileList = (List<?>) response.get("body");
+        assertThat(userProfileList).hasSize(1);
+
+        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        assertThat((List<?>) values.get("appointments")).hasSize(1);
+        assertThat((List<?>) values.get("authorisations")).hasSize(3);
+        var appointmentOne = (LinkedHashMap<String, Object>)((List<?>) values.get("authorisations")).get(0);
+        Assertions.assertNull(appointmentOne.get("ticket_code"));
+        assertThat(appointmentOne.get("service_code")).isEqualTo("");
+        var appointmentTwo = (LinkedHashMap<String, Object>)((List<?>) values.get("authorisations")).get(1);
+        Assertions.assertEquals("357",appointmentTwo.get("ticket_code"));
+        assertThat(appointmentTwo.get("service_code")).isEqualTo("BBA3");
+        var appointmentThree = (LinkedHashMap<String, Object>)((List<?>) values.get("authorisations")).get(2);
+        Assertions.assertNull(appointmentThree.get("ticket_code"));
+        assertThat(appointmentThree.get("service_code")).isEqualTo("");
     }
 }
