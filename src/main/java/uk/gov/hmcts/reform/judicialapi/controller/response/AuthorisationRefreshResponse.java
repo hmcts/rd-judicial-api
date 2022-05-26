@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Builder
 @Getter
@@ -24,7 +25,7 @@ public class AuthorisationRefreshResponse implements Serializable {
 
     private String ticketCode;
 
-    private String serviceCode;
+    private List<String> serviceCodes;
 
     private String startDate;
 
