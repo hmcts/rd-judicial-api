@@ -401,16 +401,16 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             Authorisation auth, List<ServiceCodeMapping> serviceCodeMappings) {
         log.info("{} : starting build Authorisation Refresh Response Dto ", loggingComponentName);
 
-        String serviceCode = serviceCodeMappings.stream()
+        List<String> serviceCode = serviceCodeMappings.stream()
                 .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode()))
                 .map(ServiceCodeMapping::getServiceCode)
-                .collect(Collectors.joining(","));
+                .toList();
 
         return AuthorisationRefreshResponse.builder()
                 .jurisdiction(auth.getJurisdiction())
                 .ticketDescription(auth.getLowerLevel())
                 .ticketCode(auth.getTicketCode())
-                .serviceCode(serviceCode)
+                .serviceCodes(serviceCode)
                 .startDate(null != auth.getStartDate() ? String.valueOf(auth.getStartDate()) : null)
                 .endDate(null != auth.getEndDate() ? String.valueOf(auth.getEndDate()) : null)
                 .build();

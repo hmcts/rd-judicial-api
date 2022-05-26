@@ -333,12 +333,13 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
         assertThat((List<?>) values.get("authorisations")).hasSize(3);
         var appointmentOne = (LinkedHashMap<String, Object>)((List<?>) values.get("authorisations")).get(0);
         Assertions.assertNull(appointmentOne.get("ticket_code"));
-        assertThat(appointmentOne.get("service_code")).isEqualTo("");
+        assertThat((List<?>) appointmentOne.get("service_codes")).isEmpty();
         var appointmentTwo = (LinkedHashMap<String, Object>)((List<?>) values.get("authorisations")).get(1);
         Assertions.assertEquals("357",appointmentTwo.get("ticket_code"));
-        assertThat(appointmentTwo.get("service_code")).isEqualTo("BBA3");
+        assertThat((List<?>) appointmentTwo.get("service_codes")).toString().equals("BBA3");
         var appointmentThree = (LinkedHashMap<String, Object>)((List<?>) values.get("authorisations")).get(2);
         Assertions.assertNull(appointmentThree.get("ticket_code"));
-        assertThat(appointmentThree.get("service_code")).isEqualTo("");
+        assertThat((List<?>) appointmentThree.get("service_codes")).isEmpty();
+
     }
 }
