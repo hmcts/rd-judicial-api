@@ -43,9 +43,6 @@ public class UserSearchResponse implements Serializable {
         this.emailId = userProfile.getEjudiciaryEmailId();
         this.personalCode = userProfile.getPersonalCode();
         this.idamId = userProfile.getSidamId();
-        this.isJudge = this.getStringValueFromBoolean(userProfile.getIsJudge());
-        this.isPanelMember = this.getStringValueFromBoolean(userProfile.getIsPanelMember());
-        this.isMagistrate = this.getStringValueFromBoolean(userProfile.getIsMagistrate());
     }
 
     private String getStringValueFromBoolean(Boolean value) {

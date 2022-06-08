@@ -76,9 +76,6 @@ public class TestSupport {
         userProfile.setCreatedDate(dateTime);
         userProfile.setObjectId("objectId");
         userProfile.setSidamId("sidamId");
-        userProfile.setIsJudge(Boolean.TRUE);
-        userProfile.setIsPanelMember(Boolean.TRUE);
-        userProfile.setIsMagistrate(Boolean.TRUE);
         userProfile.setAppointments(Collections.singletonList(createAppointment()));
         userProfile.setAuthorisations(Collections.singletonList(createAuthorisation()));
 
