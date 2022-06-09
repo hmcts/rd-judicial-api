@@ -372,9 +372,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .roles(getRoleIdList(profile.getJudicialRoleTypes()))
                 .startDate(null != appt.getStartDate() ? String.valueOf(appt.getStartDate()) : null)
                 .endDate(null != appt.getEndDate() ? String.valueOf(appt.getEndDate()) : null)
-                .primaryLocation(appt.getPrimaryLocation())
-                .secondaryLocation(appt.getSecondaryLocation())
-                .tertiaryLocation(appt.getTertiaryLocation())
                 .build();
     }
 

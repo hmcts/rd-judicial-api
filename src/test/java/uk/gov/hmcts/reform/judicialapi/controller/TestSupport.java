@@ -36,9 +36,6 @@ public class TestSupport {
         appointment.setCreatedDate(dateTime);
         appointment.setLastLoadedDate(dateTime);
         appointment.setUserProfile(new UserProfile());
-        appointment.setPrimaryLocation("Nottinghamshire");
-        appointment.setSecondaryLocation("Nottingham");
-        appointment.setTertiaryLocation("Queens Road");
 
         return appointment;
     }

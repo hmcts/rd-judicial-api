@@ -207,9 +207,7 @@ public class JrdApiProviderTest {
         appointment.setAppointment("testApp");
         appointment.setAppointmentType("testAppType");
         appointment.setBaseLocationId("testBaseLocID");
-        appointment.setPrimaryLocation("test");
-        appointment.setSecondaryLocation("test");
-        appointment.setTertiaryLocation("test");
+
 
         var authorisation = new Authorisation();
         authorisation.setOfficeAuthId(1234L);
