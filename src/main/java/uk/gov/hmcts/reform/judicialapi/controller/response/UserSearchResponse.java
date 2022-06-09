@@ -26,14 +26,6 @@ public class UserSearchResponse implements Serializable {
     @JsonProperty
     private String personalCode;
 
-    @JsonProperty
-    private String isJudge;
-
-    @JsonProperty
-    private String isPanelMember;
-
-    @JsonProperty
-    private String isMagistrate;
 
     public UserSearchResponse(UserProfile userProfile) {
         this.title = userProfile.getPostNominals();

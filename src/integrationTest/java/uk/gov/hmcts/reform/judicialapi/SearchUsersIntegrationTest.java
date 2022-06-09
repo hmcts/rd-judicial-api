@@ -166,15 +166,6 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         assertEquals("test528@test.net", profiles.get(0).get("emailId"));
         assertEquals("test529@test.net", profiles.get(1).get("emailId"));
         assertEquals("test530@test.net", profiles.get(2).get("emailId"));
-        assertEquals("", profiles.get(0).get("isJudge"));
-        assertEquals("", profiles.get(1).get("isJudge"));
-        assertEquals("", profiles.get(2).get("isJudge"));
-        assertEquals("", profiles.get(0).get("isPanelMember"));
-        assertEquals("", profiles.get(1).get("isPanelMember"));
-        assertEquals("", profiles.get(2).get("isPanelMember"));
-        assertEquals("", profiles.get(0).get("isMagistrate"));
-        assertEquals("", profiles.get(1).get("isMagistrate"));
-        assertEquals("", profiles.get(2).get("isMagistrate"));
         assertEquals("27", profiles.get(0).get("personalCode"));
         assertEquals("28", profiles.get(1).get("personalCode"));
         assertEquals("29", profiles.get(2).get("personalCode"));
