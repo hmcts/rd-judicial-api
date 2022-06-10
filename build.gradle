@@ -354,7 +354,7 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
 
-    implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
 
