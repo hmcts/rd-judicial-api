@@ -356,7 +356,7 @@ dependencies {
 
     implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
     //Fix for CVE-2021-29425
-    implementation 'commons-io:commons-io:2.8.0'
+    implementation 'commons-io:commons-io:2.11.0'
 
 
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
