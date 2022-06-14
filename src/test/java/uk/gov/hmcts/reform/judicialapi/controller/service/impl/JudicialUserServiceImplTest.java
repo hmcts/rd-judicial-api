@@ -1,13 +1,14 @@
 package uk.gov.hmcts.reform.judicialapi.controller.service.impl;
 
 
+import javax.validation.constraints.NotNull;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -130,7 +131,8 @@ class JudicialUserServiceImplTest {
                 .searchString("Test")
                 .build();
         var userProfile = createUserProfile();
-
+        var userProfile1 = createUserProfile();
+        userProfile1.setActiveFlag(false);
         var serviceCodeMapping = ServiceCodeMapping
                 .builder()
                 .ticketCode("testTicketCode")
@@ -140,7 +142,7 @@ class JudicialUserServiceImplTest {
                 .thenReturn(List.of(serviceCodeMapping));
         when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
                 userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode")))
-                .thenReturn(List.of(userProfile));
+                .thenReturn(List.of(userProfile,userProfile1));
 
         var responseEntity =
                 judicialUserService.retrieveUserProfile(userSearchRequest);
