@@ -8,7 +8,6 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ATLEAST_ONE_PARAMETER_REQUIRED;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.COMMA_SEPARATED_AND_ALL_NOT_ALLOWED;
@@ -61,7 +60,7 @@ public class RefreshUserValidator {
 
     public List<String> removeEmptyOrNullFromList(List<String> values) {
         if (values != null && !values.isEmpty()) {
-            values = values.stream().filter(this::isStringNotEmptyOrNotNull).collect(Collectors.toList());
+            values = values.stream().filter(this::isStringNotEmptyOrNotNull).toList();
         }
         return values;
     }
