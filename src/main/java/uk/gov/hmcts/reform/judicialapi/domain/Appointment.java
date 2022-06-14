@@ -90,4 +90,13 @@ public class Appointment implements Serializable {
     @Column(name = "region_Id")
     private String regionId;
 
+    @Column(name = "primary_location")
+    private String primaryLocation;
+
+    @Column(name = "secondary_location")
+    private String secondaryLocation;
+
+    @Column(name = "tertiary_location")
+    private String tertiaryLocation;
+
 }

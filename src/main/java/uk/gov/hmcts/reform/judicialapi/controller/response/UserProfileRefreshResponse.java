@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.controller.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class UserProfileRefreshResponse implements Serializable {
 
     private String sidamId;
@@ -32,6 +32,14 @@ public class UserProfileRefreshResponse implements Serializable {
     private String postNominals;
 
     private String emailId;
+
+    private String personalCode;
+
+    private String isJudge;
+
+    private String isPanelNumber;
+
+    private String isMagistrate;
 
     private List<AppointmentRefreshResponse> appointments;
 

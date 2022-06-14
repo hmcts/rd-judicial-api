@@ -118,6 +118,10 @@ public class JrdApiProviderTest {
         userProfile.setSurname("surname");
         userProfile.setEjudiciaryEmailId("test@test.com");
         userProfile.setPostNominals("Dr");
+        userProfile.setPersonalCode("1234");
+        userProfile.setIsJudge(true);
+        userProfile.setIsPanelMember(false);
+        userProfile.setIsMagistrate(true);
 
         var serviceCodeMapping = ServiceCodeMapping
                 .builder()
@@ -206,6 +210,9 @@ public class JrdApiProviderTest {
         appointment.setAppointment("testApp");
         appointment.setAppointmentType("testAppType");
         appointment.setBaseLocationId("testBaseLocID");
+        appointment.setPrimaryLocation("test");
+        appointment.setSecondaryLocation("test");
+        appointment.setTertiaryLocation("test");
 
         var authorisation = new Authorisation();
         authorisation.setOfficeAuthId(1234L);
@@ -213,7 +220,7 @@ public class JrdApiProviderTest {
         authorisation.setTicketId(1234L);
         authorisation.setJurisdiction("Languages");
         authorisation.setStartDate(LocalDateTime.now());
-        authorisation.setEndDate(LocalDateTime.now());
+        authorisation.setEndDate(LocalDateTime.parse("2022-03-04T10:11:00.619526"));
         authorisation.setCreatedDate(LocalDateTime.now());
         authorisation.setLastUpdated(LocalDateTime.now());
         authorisation.setLowerLevel("lower level");
@@ -244,6 +251,10 @@ public class JrdApiProviderTest {
         userProfile.setLastLoadedDate(LocalDateTime.now());
         userProfile.setActiveFlag(Boolean.TRUE);
         userProfile.setActiveFlag(Boolean.TRUE);
+        userProfile.setPersonalCode("1234");
+        userProfile.setIsJudge(true);
+        userProfile.setIsPanelMember(false);
+        userProfile.setIsMagistrate(true);
 
         var judicialRoleType = new JudicialRoleType();
         judicialRoleType.setRoleId("testRoleId");

@@ -36,6 +36,9 @@ public class TestSupport {
         appointment.setCreatedDate(dateTime);
         appointment.setLastLoadedDate(dateTime);
         appointment.setUserProfile(new UserProfile());
+        appointment.setPrimaryLocation("Nottinghamshire");
+        appointment.setSecondaryLocation("Nottingham");
+        appointment.setTertiaryLocation("Queens Road");
 
         return appointment;
     }
@@ -73,6 +76,9 @@ public class TestSupport {
         userProfile.setCreatedDate(dateTime);
         userProfile.setObjectId("objectId");
         userProfile.setSidamId("sidamId");
+        userProfile.setIsJudge(Boolean.TRUE);
+        userProfile.setIsPanelMember(Boolean.TRUE);
+        userProfile.setIsMagistrate(Boolean.TRUE);
         userProfile.setAppointments(Collections.singletonList(createAppointment()));
         userProfile.setAuthorisations(Collections.singletonList(createAuthorisation()));
 

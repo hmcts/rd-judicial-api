@@ -8,7 +8,6 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ATLEAST_ONE_PARAMETER_REQUIRED;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.COMMA_SEPARATED_AND_ALL_NOT_ALLOWED;
@@ -24,18 +23,28 @@ public class RefreshUserValidator {
             boolean ccdServiceNames = isStringNotEmptyOrNotNull(refreshRoleRequest.getCcdServiceNames());
             boolean objectIds = isListNotEmptyOrNotNull(refreshRoleRequest.getObjectIds());
             boolean sidamIds = isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds());
+            boolean personalCodes = isListNotEmptyOrNotNull(refreshRoleRequest.getPersonalCodes());
 
-            if (ccdServiceNames ? (objectIds || sidamIds) : (objectIds && sidamIds)) {
+            if (ccdServiceNames ? isOneTrue(objectIds, sidamIds, personalCodes) :
+                    isTwoTrue(objectIds, sidamIds, personalCodes)) {
                 throw new InvalidRequestException(ONLY_ONE_PARAMETER_REQUIRED);
             }
             if (ccdServiceNames && (refreshRoleRequest.getCcdServiceNames().split(",").length > 1
-                    || refreshRoleRequest.getCcdServiceNames().equalsIgnoreCase("ALL"))) {
+                    || refreshRoleRequest.getCcdServiceNames().trim().equalsIgnoreCase("ALL"))) {
                 throw new InvalidRequestException(COMMA_SEPARATED_AND_ALL_NOT_ALLOWED);
             }
-            if (!ccdServiceNames && !objectIds && !sidamIds) {
+            if (!ccdServiceNames && !objectIds && !sidamIds && !personalCodes) {
                 throw new InvalidRequestException(ATLEAST_ONE_PARAMETER_REQUIRED);
             }
         }
+    }
+
+    private boolean isTwoTrue(boolean objectIds, boolean sidamIds, boolean personalCodes) {
+        return objectIds ? (sidamIds || personalCodes) : (sidamIds && personalCodes);
+    }
+
+    private boolean isOneTrue(boolean objectIds, boolean sidamIds, boolean personalCodes) {
+        return objectIds || sidamIds || personalCodes;
     }
 
     public boolean isStringNotEmptyOrNotNull(String value) {
@@ -51,7 +60,7 @@ public class RefreshUserValidator {
 
     public List<String> removeEmptyOrNullFromList(List<String> values) {
         if (values != null && !values.isEmpty()) {
-            values = values.stream().filter(this::isStringNotEmptyOrNotNull).collect(Collectors.toList());
+            values = values.stream().filter(this::isStringNotEmptyOrNotNull).toList();
         }
         return values;
     }

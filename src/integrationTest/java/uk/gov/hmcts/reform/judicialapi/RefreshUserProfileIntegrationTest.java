@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
      void setUp() {
         refreshRoleRequest = new RefreshRoleRequest("BFA1",
                 Arrays.asList("aa57907b-6d8f-4d2a-9950-7dde95059d05"),
+                Arrays.asList("ba57907b-6d8f-4d2a-9950-7dde95059d06"),
                 Arrays.asList("ba57907b-6d8f-4d2a-9950-7dde95059d06"));
     }
 
@@ -214,6 +216,49 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
         });
     }
 
+    @DisplayName("AC27  - Scenario-Retrieve based on Personal Code(s)")
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn_200_ValidParameters_personalCodes_01(String role) {
+
+        refreshRoleRequest = RefreshRoleRequest.builder()
+                .ccdServiceNames("")
+                .sidamIds(Arrays.asList(""))
+                .objectIds(Collections.emptyList())
+                .personalCodes(Arrays.asList("A123"))
+                .build();
+
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,20,
+                0,"ASC", "objectId", role, false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+
+        var userProfileList = (List<?>) response.get("body");
+        assertThat(userProfileList).hasSize(1);
+
+        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        assertThat((List<?>) values.get("appointments")).hasSize(1);
+        assertThat((List<?>) values.get("authorisations")).isEmpty();
+        var appointment = (LinkedHashMap<String, Object>)((List<?>) values.get("appointments")).get(0);
+        Assertions.assertEquals("Nottingham",appointment.get("primary_location"));
+    }
+
+    @DisplayName("AC28  - Scenario-Retrieve based on Personal Code(s) return 404")
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn_404_InValid_personalCodes_01(String role) {
+
+        refreshRoleRequest = RefreshRoleRequest.builder()
+                .ccdServiceNames("")
+                .sidamIds(Arrays.asList(""))
+                .objectIds(Collections.emptyList())
+                .personalCodes(Arrays.asList("AAAAAAA"))
+                .build();
+
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,20,
+                0,"ASC", "objectId", role, false);
+        assertThat(response).containsEntry("http_status", "404");
+    }
+
     @DisplayName("Scenario-Feature flag is not released")
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
@@ -263,5 +308,38 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
         var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
                 0,"ASC", "objectId", "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "400");
+    }
+
+    @DisplayName("Validate soft delete service code scenario")
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn_200_ValidParameters_Mrd_Delete_time(String role) {
+
+        refreshRoleRequest = RefreshRoleRequest.builder()
+                .ccdServiceNames("")
+                .sidamIds(Collections.emptyList())
+                .objectIds(Arrays.asList("74ac97ad"))
+                .build();
+
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,20,
+                0,"ASC", "objectId", role, false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+
+        var userProfileList = (List<?>) response.get("body");
+        assertThat(userProfileList).hasSize(1);
+
+        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+        assertThat((List<?>) values.get("appointments")).hasSize(1);
+        assertThat((List<?>) values.get("authorisations")).hasSize(3);
+        var appointmentOne = (LinkedHashMap<String, Object>)((List<?>) values.get("authorisations")).get(0);
+        Assertions.assertNull(appointmentOne.get("ticket_code"));
+        assertThat((List<?>) appointmentOne.get("service_codes")).isEmpty();
+        var appointmentTwo = (LinkedHashMap<String, Object>)((List<?>) values.get("authorisations")).get(1);
+        Assertions.assertEquals("357",appointmentTwo.get("ticket_code"));
+        assertThat((List<?>) appointmentTwo.get("service_codes")).toString().equals("BBA3");
+        var appointmentThree = (LinkedHashMap<String, Object>)((List<?>) values.get("authorisations")).get(2);
+        Assertions.assertNull(appointmentThree.get("ticket_code"));
+        assertThat((List<?>) appointmentThree.get("service_codes")).isEmpty();
+
     }
 }
