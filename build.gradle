@@ -9,7 +9,7 @@ plugins {
     id 'jacoco'
     id 'pmd'
     id 'com.github.ben-manes.versions' version '0.41.0'
-    id "info.solidsoft.pitest" version '1.7.0'
+    id "info.solidsoft.pitest" version '1.7.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '3.3'
     id 'org.springframework.boot' version '2.4.12'
@@ -282,13 +282,13 @@ repositories {
 
 dependencies {
 
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 
-    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    integrationTestImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    integrationTestImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
 
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
@@ -297,7 +297,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
-    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.1'
+    implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.3'
 
 
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
@@ -305,11 +305,11 @@ dependencies {
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
-    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.1.1'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.1'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.13.2.2'
     implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.13.2.20220324', ext: 'pom'
 
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
@@ -328,14 +328,14 @@ dependencies {
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '7.10.0'
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.3'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.3.5'
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
     implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.11'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
     implementation group: 'org.springframework', name: 'spring-core', version: versions.springVersion
    	implementation group: 'org.springframework', name: 'spring-beans', version: versions.springVersion
@@ -354,7 +354,7 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
 
-    implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
 
@@ -384,13 +384,13 @@ dependencies {
         exclude group: "net.bytebuddy", module: "byte-buddy"
         exclude group: "net.bytebuddy", module: "byte-buddy-agent"
     }
-    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.7'
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.10'
     testImplementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.12.7'
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.3.1'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
 
-    testImplementation('com.github.tomakehurst:wiremock:2.27.2') {
+    testImplementation('com.github.tomakehurst:wiremock:2.33.2') {
         exclude group: 'com.github.jknack'
     }
 
