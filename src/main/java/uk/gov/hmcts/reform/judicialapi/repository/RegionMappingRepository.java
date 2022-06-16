@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface RegionMappingRepository extends JpaRepository<RegionMapping, String> {
 
-    @Query(value = "select jlrm from jrd_lrd_region_mapping jlrm where mrd_deleted_time IS NULL")
+    @Query(value = "select jlrm from jrd_lrd_region_mapping jlrm")
     List<RegionMapping> findAllRegionMappingData();
 }
