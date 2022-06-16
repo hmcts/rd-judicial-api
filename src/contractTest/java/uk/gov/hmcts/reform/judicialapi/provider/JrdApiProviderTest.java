@@ -119,9 +119,6 @@ public class JrdApiProviderTest {
         userProfile.setEjudiciaryEmailId("test@test.com");
         userProfile.setPostNominals("Dr");
         userProfile.setPersonalCode("1234");
-        userProfile.setIsJudge(true);
-        userProfile.setIsPanelMember(false);
-        userProfile.setIsMagistrate(true);
 
         var serviceCodeMapping = ServiceCodeMapping
                 .builder()
@@ -210,9 +207,7 @@ public class JrdApiProviderTest {
         appointment.setAppointment("testApp");
         appointment.setAppointmentType("testAppType");
         appointment.setBaseLocationId("testBaseLocID");
-        appointment.setPrimaryLocation("test");
-        appointment.setSecondaryLocation("test");
-        appointment.setTertiaryLocation("test");
+
 
         var authorisation = new Authorisation();
         authorisation.setOfficeAuthId(1234L);
@@ -252,9 +247,6 @@ public class JrdApiProviderTest {
         userProfile.setActiveFlag(Boolean.TRUE);
         userProfile.setActiveFlag(Boolean.TRUE);
         userProfile.setPersonalCode("1234");
-        userProfile.setIsJudge(true);
-        userProfile.setIsPanelMember(false);
-        userProfile.setIsMagistrate(true);
 
         var judicialRoleType = new JudicialRoleType();
         judicialRoleType.setRoleId("testRoleId");
