@@ -1,4 +1,4 @@
-DELETE from jrd_lrd_region_mapping ;
+DELETE from jrd_lrd_region_mapping;
 COMMIT;
 INSERT INTO jrd_lrd_region_mapping (jrd_region_id,jrd_region,region_id,region) VALUES
 ('1','National','12','National'),
