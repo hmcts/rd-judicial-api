@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.distinctByKeys;
 
 @Slf4j
 @Service
@@ -94,7 +95,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         List<OrmResponse> ormResponses = userProfiles.stream()
                 .map(OrmResponse::new)
-                .collect(Collectors.toList());
+                .toList();
 
         return ResponseEntity
                 .status(200)
@@ -118,7 +119,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                         userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode);
 
         var userSearchResponses = userProfiles
-                .stream()
+                .stream().filter(distinctByKeys(UserProfile::getPersonalCode))
                 .map(UserSearchResponse::new)
                 .collect(Collectors.toUnmodifiableList());
 
@@ -235,15 +236,12 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .knownAs(v.get(0).getKnownAs())
                 .postNominals(v.get(0).getPostNominals())
                 .personalCode(v.get(0).getPersonalCode())
-                .isJudge(v.get(0).getIsJudge())
-                .isPanelNumber(v.get(0).getIsPanelNumber())
-                .isMagistrate(v.get(0).getIsMagistrate())
                 .appointments(v.stream()
                         .flatMap(i -> i.getAppointments().stream())
-                        .collect(Collectors.toList()))
+                        .toList())
                 .authorisations(v.stream()
                         .flatMap(i -> i.getAuthorisations().stream())
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build()));
 
         log.info("userProfileList size = {}", userProfileList.size());
@@ -326,9 +324,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .postNominals(profile.getPostNominals())
                 .emailId(profile.getEjudiciaryEmailId())
                 .personalCode(profile.getPersonalCode())
-                .isJudge(getStringValueFromBoolean(profile.getIsJudge()))
-                .isPanelNumber(getStringValueFromBoolean(profile.getIsPanelMember()))
-                .isMagistrate(getStringValueFromBoolean(profile.getIsMagistrate()))
                 .appointments(getAppointmentRefreshResponseList(profile, regionMappings))
                 .authorisations(getAuthorisationRefreshResponseList(profile, serviceCodeMappings))
                 .build();
@@ -377,9 +372,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .roles(getRoleIdList(profile.getJudicialRoleTypes()))
                 .startDate(null != appt.getStartDate() ? String.valueOf(appt.getStartDate()) : null)
                 .endDate(null != appt.getEndDate() ? String.valueOf(appt.getEndDate()) : null)
-                .primaryLocation(appt.getPrimaryLocation())
-                .secondaryLocation(appt.getSecondaryLocation())
-                .tertiaryLocation(appt.getTertiaryLocation())
                 .build();
     }
 
@@ -400,16 +392,16 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             Authorisation auth, List<ServiceCodeMapping> serviceCodeMappings) {
         log.info("{} : starting build Authorisation Refresh Response Dto ", loggingComponentName);
 
-        String serviceCode = serviceCodeMappings.stream()
+        List<String> serviceCode = serviceCodeMappings.stream()
                 .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode()))
                 .map(ServiceCodeMapping::getServiceCode)
-                .collect(Collectors.joining(","));
+                .toList();
 
         return AuthorisationRefreshResponse.builder()
                 .jurisdiction(auth.getJurisdiction())
                 .ticketDescription(auth.getLowerLevel())
                 .ticketCode(auth.getTicketCode())
-                .serviceCode(serviceCode)
+                .serviceCodes(serviceCode)
                 .startDate(null != auth.getStartDate() ? String.valueOf(auth.getStartDate()) : null)
                 .endDate(null != auth.getEndDate() ? String.valueOf(auth.getEndDate()) : null)
                 .build();
@@ -424,7 +416,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         log.info("{} : starting get RoleId List ", loggingComponentName);
         return judicialRoleTypes.stream()
                 .filter(e -> e.getEndDate() == null || !e.getEndDate().toLocalDate().isBefore(LocalDate.now()))
-                .map(JudicialRoleType::getTitle).collect(Collectors.toList());
+                .map(JudicialRoleType::getTitle).toList();
     }
 
 }

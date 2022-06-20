@@ -131,7 +131,8 @@ class JudicialUserServiceImplTest {
                 .searchString("Test")
                 .build();
         var userProfile = createUserProfile();
-
+        var userProfile1 = createUserProfile();
+        userProfile1.setActiveFlag(false);
         var serviceCodeMapping = ServiceCodeMapping
                 .builder()
                 .ticketCode("testTicketCode")
@@ -141,7 +142,7 @@ class JudicialUserServiceImplTest {
                 .thenReturn(List.of(serviceCodeMapping));
         when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
                 userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode")))
-                .thenReturn(List.of(userProfile));
+                .thenReturn(List.of(userProfile,userProfile1));
 
         var responseEntity =
                 judicialUserService.retrieveUserProfile(userSearchRequest);
