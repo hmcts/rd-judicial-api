@@ -8,7 +8,7 @@ plugins {
     id 'application'
     id 'jacoco'
     id 'pmd'
-    id 'com.github.ben-manes.versions' version '0.41.0'
+    id 'com.github.ben-manes.versions' version '0.42.0'
     id "info.solidsoft.pitest" version '1.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.sonarqube' version '3.3'
@@ -32,7 +32,7 @@ def versions = [
         springBoot         : '2.6.6',
         springfoxSwagger   : '2.9.2',
         restAssured        : '4.3.3',
-        jackson            : '2.13.1',
+        jackson            : '2.13.2',
         launchDarklySdk    : '5.8.1',
         pact_version       : '4.1.7',
         log4j              : '2.17.1',
@@ -306,6 +306,7 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
+
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
@@ -336,7 +337,7 @@ dependencies {
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
     implementation group: 'org.springframework', name: 'spring-core', version: versions.springVersion
    	implementation group: 'org.springframework', name: 'spring-beans', version: versions.springVersion
     implementation group: 'org.springframework', name: 'spring-aop', version: versions.springVersion
@@ -390,7 +391,7 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.3.1'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
 
-    testImplementation('com.github.tomakehurst:wiremock:2.27.2') {
+    testImplementation('com.github.tomakehurst:wiremock:2.32.0') {
         exclude group: 'com.github.jknack'
     }
 
@@ -436,7 +437,7 @@ dependencies {
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
 
     contractTestImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    contractTestImplementation("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+    contractTestImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
     contractTestImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
