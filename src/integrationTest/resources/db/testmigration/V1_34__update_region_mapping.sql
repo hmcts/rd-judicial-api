@@ -15,7 +15,7 @@ INSERT INTO jrd_lrd_region_mapping (jrd_region_id,jrd_region,region_id,region) V
 ('11','Bradford','3','North East'),
 ('12','Nottingham','2','Midlands'),
 ('13','Field House (London)','1','London'),
-('14','London','1','London'),'
+('14','London','1','London'),
 ('15','London Central','1','London'),
 ('16','London East','1','London'),
 ('17','London South','1','London'),
