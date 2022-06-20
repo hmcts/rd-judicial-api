@@ -7,7 +7,7 @@ INSERT INTO jrd_lrd_region_mapping (jrd_region_id,jrd_region,region_id,region) V
 ('5','Newport (Wales)','7','Wales'),
 ('6','Glasgow (Scotland and NI)','11','Scotland'),
 ('7','Birmingham','2','Midlands'),
-(',8','North Shields','3','North East'),
+('8','North Shields','3','North East'),
 ('9','Stoke','2','Midlands'),
 ('10','Manchester','4','North West'),
 ('11','Bradford','3','North East'),
