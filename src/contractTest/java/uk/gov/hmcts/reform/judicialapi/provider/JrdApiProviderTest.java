@@ -158,7 +158,6 @@ public class JrdApiProviderTest {
 
         when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
         var regionMapping = new RegionMapping();
-        regionMapping.setJrdRegionId("1");
         regionMapping.setRegion("National");
         regionMapping.setJrdRegion("National");
         when(regionMappingRepository.findAllRegionMappingData()).thenReturn(List.of(regionMapping));
@@ -175,6 +174,11 @@ public class JrdApiProviderTest {
     @NotNull
     private Page<UserProfile> getPageUserProfiles() {
         var baseLocationType = new BaseLocationType();
+        baseLocationType.setBaseLocationId("1");
+        baseLocationType.setCourtName("Social Entitlement");
+        baseLocationType.setCourtType("Test court type");
+        baseLocationType.setAreaOfExpertise("Test area of expertise");
+        baseLocationType.setCircuit("First Tier Tribunal");
 
         var regionType = new RegionType();
 
@@ -192,7 +196,7 @@ public class JrdApiProviderTest {
         appointment.setRegionId("1");
         appointment.setIsPrincipleAppointment(Boolean.TRUE);
         appointment.setPersonalCode("testPersonalCode");
-        appointment.setEpimmsId("testEpimmsId");
+        appointment.setEpimmsId("");
         appointment.setServiceCode("testServiceCode");
         appointment.setObjectId("testObjectId");
         appointment.setAppointment("testApp");
