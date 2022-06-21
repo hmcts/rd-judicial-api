@@ -158,6 +158,7 @@ public class JrdApiProviderTest {
 
         when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
         var regionMapping = new RegionMapping();
+        regionMapping.setJrdRegionId("1");
         regionMapping.setRegion("National");
         regionMapping.setJrdRegion("National");
         when(regionMappingRepository.findAllRegionMappingData()).thenReturn(List.of(regionMapping));
