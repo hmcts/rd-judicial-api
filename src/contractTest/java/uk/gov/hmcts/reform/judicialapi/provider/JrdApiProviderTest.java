@@ -158,8 +158,9 @@ public class JrdApiProviderTest {
 
         when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
         var regionMapping = new RegionMapping();
-        regionMapping.setJrdRegion("Region");
         regionMapping.setJrdRegionId("1");
+        regionMapping.setRegion("National");
+        regionMapping.setJrdRegion("National");
         when(regionMappingRepository.findAllRegionMappingData()).thenReturn(List.of(regionMapping));
 
         Page<UserProfile> pagedUserProfiles = getPageUserProfiles();
