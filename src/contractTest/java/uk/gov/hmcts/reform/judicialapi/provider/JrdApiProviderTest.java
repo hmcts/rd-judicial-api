@@ -176,7 +176,7 @@ public class JrdApiProviderTest {
     @NotNull
     private Page<UserProfile> getPageUserProfiles() {
         var baseLocationType = new BaseLocationType();
-        baseLocationType.setBaseLocationId("1");
+       // baseLocationType.setBaseLocationId("1");
         baseLocationType.setCourtName("Social Entitlement");
         baseLocationType.setCourtType("Test court type");
         baseLocationType.setAreaOfExpertise("Test area of expertise");
