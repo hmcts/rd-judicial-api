@@ -236,9 +236,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .knownAs(v.get(0).getKnownAs())
                 .postNominals(v.get(0).getPostNominals())
                 .personalCode(v.get(0).getPersonalCode())
-                .isJudge(v.get(0).getIsJudge())
-                .isPanelNumber(v.get(0).getIsPanelNumber())
-                .isMagistrate(v.get(0).getIsMagistrate())
                 .appointments(v.stream()
                         .flatMap(i -> i.getAppointments().stream())
                         .toList())
@@ -327,9 +324,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .postNominals(profile.getPostNominals())
                 .emailId(profile.getEjudiciaryEmailId())
                 .personalCode(profile.getPersonalCode())
-                .isJudge(getStringValueFromBoolean(profile.getIsJudge()))
-                .isPanelNumber(getStringValueFromBoolean(profile.getIsPanelMember()))
-                .isMagistrate(getStringValueFromBoolean(profile.getIsMagistrate()))
                 .appointments(getAppointmentRefreshResponseList(profile, regionMappings))
                 .authorisations(getAuthorisationRefreshResponseList(profile, serviceCodeMappings))
                 .build();
@@ -378,9 +372,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .roles(getRoleIdList(profile.getJudicialRoleTypes()))
                 .startDate(null != appt.getStartDate() ? String.valueOf(appt.getStartDate()) : null)
                 .endDate(null != appt.getEndDate() ? String.valueOf(appt.getEndDate()) : null)
-                .primaryLocation(appt.getPrimaryLocation())
-                .secondaryLocation(appt.getSecondaryLocation())
-                .tertiaryLocation(appt.getTertiaryLocation())
                 .build();
     }
 
