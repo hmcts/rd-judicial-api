@@ -238,8 +238,6 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
         var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
         assertThat((List<?>) values.get("appointments")).hasSize(1);
         assertThat((List<?>) values.get("authorisations")).isEmpty();
-        var appointment = (LinkedHashMap<String, Object>)((List<?>) values.get("appointments")).get(0);
-        Assertions.assertEquals("Nottingham",appointment.get("primary_location"));
     }
 
     @DisplayName("AC28  - Scenario-Retrieve based on Personal Code(s) return 404")

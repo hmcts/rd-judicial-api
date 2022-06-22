@@ -49,10 +49,5 @@ public class AppointmentRefreshResponse implements Serializable {
 
     private String endDate;
 
-    private String primaryLocation;
-
-    private String secondaryLocation;
-
-    private String tertiaryLocation;
 
 }
