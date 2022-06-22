@@ -439,7 +439,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                                 String type) {
 
         if ((epimmsId == null || epimmsId.isEmpty())) {
-            if (LOCATION.equalsIgnoreCase(type) && epimmsId == null) {
+            if (LOCATION.equalsIgnoreCase(type)) {
                 return null != regionMapping ? regionMapping.getJrdRegion() : null;
             } else {
                 return null != regionMapping ? regionMapping.getRegion() : null;
