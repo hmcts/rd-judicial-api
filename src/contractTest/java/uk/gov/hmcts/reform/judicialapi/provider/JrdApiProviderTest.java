@@ -180,7 +180,7 @@ public class JrdApiProviderTest {
         baseLocationType.setCourtName("Social Entitlement");
         baseLocationType.setCourtType("Test court type");
         baseLocationType.setAreaOfExpertise("Test area of expertise");
-        baseLocationType.setCircuit("First Tier Tribunal");
+        baseLocationType.setCircuit("National");
 
         var regionType = new RegionType();
         regionType.setRegionId("1");
