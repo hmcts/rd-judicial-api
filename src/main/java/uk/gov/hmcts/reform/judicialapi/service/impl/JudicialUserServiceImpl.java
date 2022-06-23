@@ -47,6 +47,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.LOCATION;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.REGION;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.distinctByKeys;
 
@@ -329,13 +331,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .build();
     }
 
-    private String getStringValueFromBoolean(Boolean value) {
-        if (value != null) {
-            return value ? "Y" : "N";
-        }
-        return "";
-    }
-
     private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(
             UserProfile profile, List<RegionMapping> regionMappings) {
         log.info("{} : starting get Appointment Refresh Response List ", loggingComponentName);
@@ -357,14 +352,20 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .findFirst()
                 .orElse(null);
 
+        RegionMapping regionCircuitMapping = regionMappings.stream()
+                .filter(rm -> rm.getRegion().equalsIgnoreCase(appt.getBaseLocationType().getCircuit()))
+                .findFirst()
+                .orElse(null);
+
+
         return AppointmentRefreshResponse.builder()
                 .baseLocationId(appt.getBaseLocationId())
                 .epimmsId(appt.getEpimmsId())
                 .courtName(appt.getBaseLocationType().getCourtName())
-                .cftRegionID(null != regionMapping ? regionMapping.getRegionId() : null)
-                .cftRegion(null != regionMapping ? regionMapping.getRegion() : null)
-                .locationId(appt.getRegionId())
-                .location(null != regionMapping ? regionMapping.getJrdRegion() : null)
+                .cftRegionID(getRegionId(appt.getEpimmsId(),regionMapping,regionCircuitMapping,REGION))
+                .cftRegion(getRegion(appt.getEpimmsId(),regionMapping,regionCircuitMapping,REGION))
+                .locationId(getRegionId(appt.getEpimmsId(),regionMapping,regionCircuitMapping,LOCATION))
+                .location(getRegion(appt.getEpimmsId(),regionMapping,regionCircuitMapping,LOCATION))
                 .isPrincipalAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
                 .appointment(appt.getAppointment())
                 .appointmentType(appt.getAppointmentType())
@@ -419,4 +420,32 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .map(JudicialRoleType::getTitle).toList();
     }
 
+    // For Tribunal's epimmsId is null
+    private String getRegionId(String epimmsId,RegionMapping regionMapping,RegionMapping regionCircuitMapping,
+                                  String type) {
+
+        if ((epimmsId == null || epimmsId.isEmpty())) {
+            if (LOCATION.equalsIgnoreCase(type)) {
+                return null != regionMapping ? regionMapping.getJrdRegionId() : null;
+            } else {
+                return null != regionMapping ? regionMapping.getRegionId() : null;
+            }
+        } else {
+            return null != regionCircuitMapping ? regionCircuitMapping.getRegionId() : null;
+        }
+    }
+
+    private String getRegion(String epimmsId,RegionMapping regionMapping,RegionMapping regionCircuitMapping,
+                                String type) {
+
+        if ((epimmsId == null || epimmsId.isEmpty())) {
+            if (LOCATION.equalsIgnoreCase(type)) {
+                return null != regionMapping ? regionMapping.getJrdRegion() : null;
+            } else {
+                return null != regionMapping ? regionMapping.getRegion() : null;
+            }
+        } else {
+            return null != regionCircuitMapping ? regionCircuitMapping.getRegion() : null;
+        }
+    }
 }
