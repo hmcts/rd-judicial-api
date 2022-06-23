@@ -4,7 +4,7 @@ VALUES('1', 'National', NULL);
 
 INSERT INTO base_location_type
 (base_location_id, court_name, court_type, circuit, area_of_expertise)
-VALUES('1029', 'Aberconwy', 'Old Gwynedd', 'Gwynedd', 'LJA');
+VALUES('1029', 'Aberconwy', 'Old Gwynedd', 'National', 'LJA');
 
 INSERT INTO judicial_user_profile
 (per_id, personal_code, known_as, surname, full_name, post_nominals,
