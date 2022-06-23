@@ -340,4 +340,33 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
         assertThat((List<?>) appointmentThree.get("service_codes")).isEmpty();
 
     }
+
+    @DisplayName("Non-Tribunal cft region and location")
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn_200_Non_Tribunal_scenario_01(String role) {
+
+        RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
+                .ccdServiceNames("")
+                .sidamIds(Collections.emptyList())
+                .objectIds(Arrays.asList("d4774030-32cc-4b64-894f-d475b0b1129c"))
+                .build();
+
+        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
+                0,"ASC", "objectId", role, false);
+        assertThat(response).containsEntry("http_status", "200 OK");
+
+        var userProfileList = (List<?>) response.get("body");
+
+        assertThat(userProfileList).hasSize(1);
+
+        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
+
+        assertThat((List<?>) values.get("appointments")).hasSize(1);
+        var appointment = (LinkedHashMap<String, Object>)((List<?>) values.get("appointments")).get(0);
+        Assertions.assertEquals("12",appointment.get("cft_region_id"));
+        Assertions.assertEquals("National",appointment.get("cft_region"));
+        Assertions.assertEquals("12",appointment.get("location_id"));
+        Assertions.assertEquals("National",appointment.get("location"));
+    }
 }
