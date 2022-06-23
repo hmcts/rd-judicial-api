@@ -469,6 +469,7 @@ class JudicialUserServiceImplTest {
 
         var appointment = new Appointment();
         appointment.setPerId("1");
+        appointment.setEpimmsId("1234");
         appointment.setOfficeAppointmentId(1L);
         appointment.setIsPrincipleAppointment(true);
         appointment.setStartDate(LocalDate.now());
@@ -479,6 +480,34 @@ class JudicialUserServiceImplTest {
         appointment.setLastLoadedDate(LocalDateTime.now());
         appointment.setBaseLocationType(baseLocationType);
         appointment.setRegionType(regionType);
+
+        var appointmentTwo = new Appointment();
+        appointmentTwo.setPerId("1");
+        appointmentTwo.setEpimmsId(null);
+        appointmentTwo.setOfficeAppointmentId(1L);
+        appointmentTwo.setIsPrincipleAppointment(true);
+        appointmentTwo.setStartDate(LocalDate.now());
+        appointmentTwo.setEndDate(LocalDate.now());
+        appointmentTwo.setActiveFlag(true);
+        appointmentTwo.setExtractedDate(LocalDateTime.now());
+        appointmentTwo.setCreatedDate(LocalDateTime.now());
+        appointmentTwo.setLastLoadedDate(LocalDateTime.now());
+        appointmentTwo.setBaseLocationType(baseLocationType);
+        appointmentTwo.setRegionType(regionType);
+
+        var appointmentThree = new Appointment();
+        appointmentThree.setPerId("1");
+        appointmentThree.setEpimmsId("");
+        appointmentThree.setOfficeAppointmentId(1L);
+        appointmentThree.setIsPrincipleAppointment(true);
+        appointmentThree.setStartDate(LocalDate.now());
+        appointmentThree.setEndDate(LocalDate.now());
+        appointmentThree.setActiveFlag(true);
+        appointmentThree.setExtractedDate(LocalDateTime.now());
+        appointmentThree.setCreatedDate(LocalDateTime.now());
+        appointmentThree.setLastLoadedDate(LocalDateTime.now());
+        appointmentThree.setBaseLocationType(baseLocationType);
+        appointmentThree.setRegionType(regionType);
 
         var authorisation = new Authorisation();
         authorisation.setPerId("1");
@@ -532,7 +561,7 @@ class JudicialUserServiceImplTest {
 
         authorisation.setUserProfile(userProfile);
 
-        userProfile.setAppointments(List.of(appointment));
+        userProfile.setAppointments(List.of(appointment,appointmentTwo,appointmentThree));
         userProfile.setAuthorisations(List.of(authorisation));
         userProfile.setJudicialRoleTypes(List.of(judicialRoleType,judicialRoleType1,judicialRoleType2));
 
