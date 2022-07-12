@@ -19,7 +19,7 @@ public class UserSearchRequest {
     @JsonProperty("searchString")
     @NotNull(message = "cannot be null")
     @NotEmpty(message = "cannot be empty")
-    @Pattern(regexp = "([a-zA-Z\\-\\s']){3,}+", message = "searchString must be at least 3 characters including "
+    @Pattern(regexp = "([a-zA-Z\\-\\s']){3,}+", message = "must be at least 3 characters including "
             + "letters, apostrophe, hyphen")
     private String searchString;
 
