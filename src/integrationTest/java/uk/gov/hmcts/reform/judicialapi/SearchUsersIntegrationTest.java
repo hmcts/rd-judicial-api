@@ -135,8 +135,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
-        assertTrue(responseBody.contains("searchString should contains atleast 3 characters with letters, Apostrophe and Hyphen "
-                + "only and white space allowed"));
+        assertTrue(responseBody.contains("searchString should contains atleast 3 characters with letters, Apostrophe" +
+                " and Hyphen only and white space allowed"));
     }
 
     @ParameterizedTest
@@ -151,8 +151,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
-        assertTrue(responseBody.contains("searchString should contains atleast 3 characters with letters, Apostrophe and Hyphen"
-                + " only and white space allowed"));
+        assertTrue(responseBody.contains("searchString should contains atleast 3 characters with letters, Apostrophe"
+                + " and Hyphen only and white space allowed"));
     }
 
     @ParameterizedTest
