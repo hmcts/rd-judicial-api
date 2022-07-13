@@ -45,7 +45,25 @@ last_working_date, active_flag, extracted_date, created_date,
 last_loaded_date, object_id, sidam_id, is_judge, is_panel_member, is_magistrate)
 VALUES('9001', 'A123', 'Sample_KA_1', 'Sample_SN_1', 'Sample_FN_1', 'Ms', 'No Work Pattern (M to F)', 'test900@test.net', '2022-03-01', NULL, true,
 '2022-03-01 12:25:28.763', '2022-03-01 09:10:44.682', '2022-03-01 09:10:44.682',
-'900', '900', true, false, true);
+'900', '900', true, false, true),
+('8002', 'A124', 'Am''ar', 'Pamet', 'Am''ar Pamet', 'Ms', 'No Work Pattern (M to F)', 'test802@test.net', '2022-03-01', NULL, true,
+'2022-03-01 12:25:28.763', '2022-03-01 09:10:44.682', '2022-03-01 09:10:44.682',
+'802', '802', true, false, true),
+('8003', 'A125', 'O''jas', 'Baet', 'O''jas Baet', 'Ms', 'No Work Pattern (M to F)', 'test803@test.net', '2022-03-01', NULL, true,
+'2022-03-01 12:25:28.763', '2022-03-01 09:10:44.682', '2022-03-01 09:10:44.682',
+'803', '803', true, false, true),
+('8004', 'A126', 'Li-am', 'Kate', 'Li-am Kate', 'Ms', 'No Work Pattern (M to F)', 'test804@test.net', '2022-03-01', NULL, true,
+'2022-03-01 12:25:28.763', '2022-03-01 09:10:44.682', '2022-03-01 09:10:44.682',
+'804', '804', true, false, true),
+('8005', 'A127', 'V-ed', 'Prakasscs', 'V-ed Prakasscs', 'Ms', 'No Work Pattern (M to F)', 'test805@test.net', '2022-03-01', NULL, true,
+'2022-03-01 12:25:28.763', '2022-03-01 09:10:44.682', '2022-03-01 09:10:44.682',
+'805', '805', true, false, true),
+('8006', 'A128', 'J Rock', 'Brian', 'J Rock Brian', 'Ms', 'No Work Pattern (M to F)', 'test806@test.net', '2022-03-01', NULL, true,
+'2022-03-01 12:25:28.763', '2022-03-01 09:10:44.682', '2022-03-01 09:10:44.682',
+'806', '806', true, false, true),
+('8007', 'A129', 'To Nick', 'Cruz', 'To Nick Cruz', 'Ms', 'No Work Pattern (M to F)', 'test807@test.net', '2022-03-01', NULL, true,
+'2022-03-01 12:25:28.763', '2022-03-01 09:10:44.682', '2022-03-01 09:10:44.682',
+'807', '807', true, false, true);
 
 INSERT INTO judicial_office_appointment
 (judicial_office_appointment_id, per_id, base_location_id, region_id, is_prinicple_appointment,
