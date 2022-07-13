@@ -135,7 +135,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
-        assertTrue(responseBody.contains("should have atleast 3 characters"));
+        assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
+                + "apostrophe, hyphen"));
     }
 
     @ParameterizedTest
@@ -150,7 +151,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
-        assertTrue(responseBody.contains("should contains letters only"));
+        assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
+                + "apostrophe, hyphen"));
     }
 
     @ParameterizedTest
@@ -196,5 +198,93 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn200WhenUserProfileApostropheString(String role) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+                .searchString("Am'")
+                .build();
+        var response = judicialReferenceDataClient.searchUsers(
+                userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test802@test.net", profiles.get(0).get("emailId"));
+        assertEquals("Am'ar", profiles.get(0).get("knownAs"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
 
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn200WhenUserProfileApostropheStrings(String role) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+                .searchString("O'j")
+                .build();
+        var response = judicialReferenceDataClient.searchUsers(
+                userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test803@test.net", profiles.get(0).get("emailId"));
+        assertEquals("O'jas", profiles.get(0).get("knownAs"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn200WhenUserProfileHyphenString(String role) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+                .searchString("Li-a")
+                .build();
+        var response = judicialReferenceDataClient.searchUsers(
+                userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test804@test.net", profiles.get(0).get("emailId"));
+        assertEquals("Li-am", profiles.get(0).get("knownAs"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn200WhenUserProfileHyphenStrings(String role) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+                .searchString("V-e")
+                .build();
+        var response = judicialReferenceDataClient.searchUsers(
+                userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test805@test.net", profiles.get(0).get("emailId"));
+        assertEquals("V-ed", profiles.get(0).get("knownAs"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn200WhenUserProfileEmptySpace(String role) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+                .searchString("J Ro")
+                .build();
+        var response = judicialReferenceDataClient.searchUsers(
+                userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test806@test.net", profiles.get(0).get("emailId"));
+        assertEquals("J Rock", profiles.get(0).get("knownAs"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn200WhenUserProfileEmptySpaces(String role) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+                .searchString("To N")
+                .build();
+        var response = judicialReferenceDataClient.searchUsers(
+                userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test807@test.net", profiles.get(0).get("emailId"));
+        assertEquals("To Nick", profiles.get(0).get("knownAs"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
 }
