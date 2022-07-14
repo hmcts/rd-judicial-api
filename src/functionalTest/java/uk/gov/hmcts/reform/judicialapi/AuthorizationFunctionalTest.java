@@ -13,7 +13,6 @@ import uk.gov.hmcts.reform.judicialapi.config.TestConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 import uk.gov.hmcts.reform.lib.client.response.S2sClient;
 
-
 import javax.annotation.PostConstruct;
 
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;

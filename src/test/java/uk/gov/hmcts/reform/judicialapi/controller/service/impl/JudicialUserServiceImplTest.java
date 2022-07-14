@@ -1,66 +1,64 @@
 package uk.gov.hmcts.reform.judicialapi.controller.service.impl;
 
 
-import javax.validation.constraints.NotNull;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
-import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
-import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
-import uk.gov.hmcts.reform.judicialapi.repository.RegionMappingRepository;
-import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
-import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
-import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
-import org.springframework.data.domain.PageRequest;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
+import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
+import uk.gov.hmcts.reform.judicialapi.repository.RegionMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
-import static java.nio.charset.Charset.defaultCharset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import javax.validation.constraints.NotNull;
 
+import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserProfile;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class JudicialUserServiceImplTest {
