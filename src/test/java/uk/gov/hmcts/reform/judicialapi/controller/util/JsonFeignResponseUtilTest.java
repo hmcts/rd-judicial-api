@@ -10,18 +10,16 @@ import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResp
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileCreationResponse;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
