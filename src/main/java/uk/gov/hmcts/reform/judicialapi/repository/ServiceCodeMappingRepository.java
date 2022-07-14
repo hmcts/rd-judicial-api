@@ -1,10 +1,11 @@
 package uk.gov.hmcts.reform.judicialapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import org.springframework.data.jpa.repository.Query;
-import java.util.Set;
+import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
+
 import java.util.List;
+import java.util.Set;
 
 public interface ServiceCodeMappingRepository extends JpaRepository<ServiceCodeMapping, String> {
 
