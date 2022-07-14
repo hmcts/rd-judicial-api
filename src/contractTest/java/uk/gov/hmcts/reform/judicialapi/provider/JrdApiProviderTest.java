@@ -29,15 +29,15 @@ import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
-import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionMapping;
+import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.repository.RegionMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
-import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
 import java.time.LocalDate;
@@ -45,14 +45,14 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Objects.nonNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.anySet;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.anySet;
 import static org.mockito.Mockito.when;
-import static java.nio.charset.Charset.defaultCharset;
 
 @ExtendWith(SpringExtension.class)
 @Provider("referenceData_judicial")
