@@ -14,8 +14,8 @@ import java.util.Objects;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.INVALID_FIELD;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.PAGE_NUMBER;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.PAGE_SIZE;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.SORT_DIRECTION;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.SORT_COLUMN;
+import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.SORT_DIRECTION;
 
 @Slf4j
 @Getter
