@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.controller.advice;
 
-import lombok.Getter;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
