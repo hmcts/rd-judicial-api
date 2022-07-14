@@ -2,17 +2,17 @@ package uk.gov.hmcts.reform.judicialapi.controller.util;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.controller.TestSupport;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.distinctByKeys;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class RefDataUtilTest {
 
