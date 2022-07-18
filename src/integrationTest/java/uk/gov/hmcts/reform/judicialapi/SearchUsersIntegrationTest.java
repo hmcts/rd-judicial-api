@@ -42,7 +42,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(1, profiles.size());
+        assertEquals(2, profiles.size());
         assertEquals("test528@test.net", profiles.get(0).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
