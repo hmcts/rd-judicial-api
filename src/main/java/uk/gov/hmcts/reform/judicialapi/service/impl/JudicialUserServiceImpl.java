@@ -118,7 +118,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             serviceCodeMappings
                     .forEach(s -> ticketCode.add(s.getTicketCode()));
         }
-
+        log.info("SearchServiceCode list = {}", searchServiceCode);
         var userProfiles = userProfileRepository
                 .findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
                         userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode,
