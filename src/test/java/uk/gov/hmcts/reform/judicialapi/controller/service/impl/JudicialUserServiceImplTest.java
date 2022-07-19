@@ -155,6 +155,37 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
+    void shouldReturn200WhenUserFoundForSscsSearchRequestProvided() {
+        var userSearchRequest = UserSearchRequest
+                .builder()
+                .serviceCode("BBA3")
+                .location("12456")
+                .searchString("Test")
+                .build();
+        var userProfile = createUserProfile();
+        var userProfile1 = createUserProfile();
+        userProfile1.setActiveFlag(false);
+        var serviceCodeMapping = ServiceCodeMapping
+                .builder()
+                .ticketCode("testTicketCode")
+                .build();
+
+        when(serviceCodeMappingRepository.findByServiceCodeIgnoreCase(userSearchRequest.getServiceCode()))
+                .thenReturn(List.of(serviceCodeMapping));
+        when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
+                userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode"),
+                searchServiceCode))
+                .thenReturn(List.of(userProfile,userProfile1));
+
+        var responseEntity =
+                judicialUserService.retrieveUserProfile(userSearchRequest);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        verify(userProfileRepository, times(1)).findBySearchString(any(),any(),
+                any(), anyList(),anyList());
+    }
+
+
+    @Test
     void shouldReturn200WithEmptyResponseWhenUserNotFoundForTheSearchRequestProvided() {
 
         var userSearchRequest = UserSearchRequest
