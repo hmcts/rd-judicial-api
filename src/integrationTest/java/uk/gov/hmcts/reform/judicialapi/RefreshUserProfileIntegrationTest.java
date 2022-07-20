@@ -230,14 +230,9 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
 
         var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,20,
                 0,"ASC", "objectId", role, false);
-        assertThat(response).containsEntry("http_status", "200 OK");
+        assertThat(response).containsEntry("http_status", "404");
 
         var userProfileList = (List<?>) response.get("body");
-        assertThat(userProfileList).hasSize(1);
-
-        var values = (LinkedHashMap<String, Object>) userProfileList.get(0);
-        assertThat((List<?>) values.get("appointments")).hasSize(1);
-        assertThat((List<?>) values.get("authorisations")).isEmpty();
     }
 
     @DisplayName("AC28  - Scenario-Retrieve based on Personal Code(s) return 404")

@@ -40,6 +40,7 @@ import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.LOCATION;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.REGION;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.distinctByKeys;
 
@@ -83,6 +82,12 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @Value("${loggingComponentName}")
     private String loggingComponentName;
+
+    @Value("${refresh.serviceCode}")
+    private String refreshServiceCode;
+
+    @Value("${refresh.ticketCode}")
+    private String refreshTicketCode;
 
     @Override
     public ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page, List<String> sidamIds) {
@@ -123,7 +128,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         var userSearchResponses = userProfiles
                 .stream().filter(distinctByKeys(UserProfile::getPersonalCode))
                 .map(UserSearchResponse::new)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
 
         return ResponseEntity
                 .status(200)
@@ -195,7 +200,6 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         return getRefreshRoleResponseEntity(userProfilePage, sidamIds, "sidamIds");
     }
 
-    @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnPersonalCodes(List<String> personalCodes,
                                                                           PageRequest pageRequest) {
         log.info("{} : starting refreshUserProfile BasedOn personalCodes ", loggingComponentName);
@@ -220,8 +224,17 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         var regionMappings = regionMappingRepository.findAllRegionMappingData();
         log.info("regionMappings size = {}", regionMappings.size());
 
-        userProfilePage.forEach(userProfile -> userProfileList.add(
-                buildUserProfileRefreshResponseDto(userProfile,serviceCodeMappings,regionMappings)));
+        userProfilePage.forEach(userProfile -> {
+            UserProfileRefreshResponse response =  buildUserProfileRefreshResponseDto(userProfile,
+                    serviceCodeMappings, regionMappings);
+            if (null != response) {
+                userProfileList.add(response);
+            }
+        });
+
+        if (userProfileList.isEmpty()) {
+            throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
+        }
 
         Map<String, List<UserProfileRefreshResponse>> groupedUserProfiles = userProfileList
                 .stream()
@@ -305,8 +318,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 ErrorResponse.class);
         var responseBody = responseEntity.getBody();
 
-        if (nonNull(responseBody) && responseBody instanceof ErrorResponse) {
-            ErrorResponse errorResponse = (ErrorResponse) responseBody;
+        if (nonNull(responseBody) && responseBody instanceof ErrorResponse errorResponse) {
             throw new UserProfileException(httpStatus, errorResponse.getErrorMessage(),
                     errorResponse.getErrorDescription());
         } else {
@@ -317,6 +329,22 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(
             UserProfile profile, List<ServiceCodeMapping> serviceCodeMappings, List<RegionMapping> regionMappings) {
         log.info("{} : starting build User Profile Refresh Response Dto ", loggingComponentName);
+
+        //check the Non-IAC records validation
+        if (Boolean.TRUE.equals(validateIacCodes(profile,true))) {
+            return  userProfileResponse(profile,serviceCodeMappings,regionMappings);
+        } else {
+            if (Boolean.TRUE.equals(validateIacCodes(profile,false))) {
+                return  userProfileResponse(profile,serviceCodeMappings,regionMappings);
+            }
+        }
+        return null;
+    }
+
+    private UserProfileRefreshResponse userProfileResponse(UserProfile profile,
+                                                           List<ServiceCodeMapping> serviceCodeMappings,
+                                                           List<RegionMapping> regionMappings) {
+
         return UserProfileRefreshResponse.builder()
                 .sidamId(profile.getSidamId())
                 .objectId(profile.getObjectId())
@@ -336,8 +364,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         log.info("{} : starting get Appointment Refresh Response List ", loggingComponentName);
 
         var appointmentList = new ArrayList<AppointmentRefreshResponse>();
-
-        profile.getAppointments().stream()
+        profile.getAppointments()
                 .forEach(appointment -> appointmentList.add(
                         buildAppointmentRefreshResponseDto(appointment, profile, regionMappings)));
         return appointmentList;
@@ -350,22 +377,26 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         RegionMapping regionMapping = regionMappings.stream()
                 .filter(rm -> rm.getJrdRegionId().equalsIgnoreCase(appt.getRegionId()))
                 .findFirst()
-                .orElse(null);
+                .orElse(new RegionMapping());
 
         RegionMapping regionCircuitMapping = regionMappings.stream()
                 .filter(rm -> rm.getRegion().equalsIgnoreCase(appt.getBaseLocationType().getCircuit()))
                 .findFirst()
-                .orElse(null);
+                .orElse(new RegionMapping());
 
 
         return AppointmentRefreshResponse.builder()
                 .baseLocationId(appt.getBaseLocationId())
                 .epimmsId(appt.getEpimmsId())
                 .courtName(appt.getBaseLocationType().getCourtName())
-                .cftRegionID(getRegionId(appt.getEpimmsId(),regionMapping,regionCircuitMapping,REGION))
-                .cftRegion(getRegion(appt.getEpimmsId(),regionMapping,regionCircuitMapping,REGION))
-                .locationId(getRegionId(appt.getEpimmsId(),regionMapping,regionCircuitMapping,LOCATION))
-                .location(getRegion(appt.getEpimmsId(),regionMapping,regionCircuitMapping,LOCATION))
+                .cftRegionID(StringUtils.isBlank(appt.getEpimmsId()) ? regionMapping.getRegionId() :
+                            regionCircuitMapping.getRegionId())
+                .cftRegion(StringUtils.isBlank(appt.getEpimmsId()) ?  regionMapping.getRegion() :
+                             regionCircuitMapping.getRegion())
+                .locationId(StringUtils.isBlank(appt.getEpimmsId()) ? regionMapping.getJrdRegionId() :
+                        regionCircuitMapping.getRegionId())
+                .location(StringUtils.isBlank(appt.getEpimmsId()) ?  regionMapping.getJrdRegion()  :
+                            regionCircuitMapping.getRegion())
                 .isPrincipalAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
                 .appointment(appt.getAppointment())
                 .appointmentType(appt.getAppointmentType())
@@ -382,7 +413,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
         var authorisationList = new ArrayList<AuthorisationRefreshResponse>();
 
-        profile.getAuthorisations().stream()
+        profile.getAuthorisations()
                 .forEach(authorisation -> authorisationList.add(
                         buildAuthorisationRefreshResponseDto(authorisation, serviceCodeMappings)));
 
@@ -420,32 +451,30 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 .map(JudicialRoleType::getTitle).toList();
     }
 
-    // For Tribunal's epimmsId is null
-    private String getRegionId(String epimmsId,RegionMapping regionMapping,RegionMapping regionCircuitMapping,
-                                  String type) {
+    private Boolean validateIacCodes(UserProfile profile,Boolean iacFlag) {
 
-        if ((epimmsId == null || epimmsId.isEmpty())) {
-            if (LOCATION.equalsIgnoreCase(type)) {
-                return null != regionMapping ? regionMapping.getJrdRegionId() : null;
-            } else {
-                return null != regionMapping ? regionMapping.getRegionId() : null;
-            }
-        } else {
-            return null != regionCircuitMapping ? regionCircuitMapping.getRegionId() : null;
-        }
-    }
+        List<String> serviceCode = List.of(refreshServiceCode);
+        List<String> ticketCodes = List.of(refreshTicketCode);
 
-    private String getRegion(String epimmsId,RegionMapping regionMapping,RegionMapping regionCircuitMapping,
-                                String type) {
+        List<Appointment> appointment = profile.getAppointments().stream()
+                                       .filter(app -> StringUtils.isNotBlank(app.getServiceCode())
+                                               ? (serviceCode.contains(app.getServiceCode()) == iacFlag) :
+                                                       !iacFlag)
+                                    .filter(app -> null != app.getEndDate() ? (app.getEndDate().equals(LocalDate.now())
+                                       || app.getEndDate().isAfter(LocalDate.now())) : Boolean.TRUE)
+                                       .toList();
 
-        if ((epimmsId == null || epimmsId.isEmpty())) {
-            if (LOCATION.equalsIgnoreCase(type)) {
-                return null != regionMapping ? regionMapping.getJrdRegion() : null;
-            } else {
-                return null != regionMapping ? regionMapping.getRegion() : null;
-            }
-        } else {
-            return null != regionCircuitMapping ? regionCircuitMapping.getRegion() : null;
-        }
+
+
+        List<Authorisation> authorisation =  profile.getAuthorisations().stream()
+                .filter(auth -> StringUtils.isNotBlank(auth.getTicketCode())
+                        ? (ticketCodes.contains(auth.getTicketCode()) == iacFlag) : !iacFlag)
+                .filter(auth -> null != auth.getEndDate() ? (auth.getEndDate().equals(LocalDateTime.now())
+                        || auth.getEndDate().isAfter(LocalDateTime.now())) : Boolean.TRUE)
+                .toList();
+
+        //IAC flag check
+        return Boolean.TRUE.equals(iacFlag) ? (!appointment.isEmpty() || !authorisation.isEmpty()) :
+               (!appointment.isEmpty() && !authorisation.isEmpty());
     }
 }

@@ -152,8 +152,8 @@ public class JrdApiProviderTest {
 
         var serviceCodeMapping = new ServiceCodeMapping();
         serviceCodeMapping.setServiceId(1L);
-        serviceCodeMapping.setTicketCode("368");
-        serviceCodeMapping.setServiceCode("BBA3");
+        serviceCodeMapping.setTicketCode("373");
+        serviceCodeMapping.setServiceCode("BFA1");
         serviceCodeMapping.setServiceDescription("Social Security and Child Support");
 
         when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
@@ -191,7 +191,7 @@ public class JrdApiProviderTest {
         appointment.setOfficeAppointmentId(12L);
         appointment.setPerId("testPerId");
         appointment.setStartDate(LocalDate.now());
-        appointment.setEndDate(LocalDate.now());
+        appointment.setEndDate(LocalDate.now().plusDays(10));
         appointment.setActiveFlag(Boolean.TRUE);
         appointment.setExtractedDate(LocalDateTime.now());
         appointment.setCreatedDate(LocalDateTime.now());
@@ -202,7 +202,7 @@ public class JrdApiProviderTest {
         appointment.setIsPrincipleAppointment(Boolean.TRUE);
         appointment.setPersonalCode("testPersonalCode");
         appointment.setEpimmsId("testEpimmsId");
-        appointment.setServiceCode("testServiceCode");
+        appointment.setServiceCode("BFA1");
         appointment.setObjectId("testObjectId");
         appointment.setAppointment("testApp");
         appointment.setAppointmentType("testAppType");
@@ -215,7 +215,7 @@ public class JrdApiProviderTest {
         authorisation.setTicketId(1234L);
         authorisation.setJurisdiction("Languages");
         authorisation.setStartDate(LocalDateTime.now());
-        authorisation.setEndDate(LocalDateTime.parse("2022-03-04T10:11:00.619526"));
+        authorisation.setEndDate(LocalDateTime.parse("2099-03-04T10:11:00.619526"));
         authorisation.setCreatedDate(LocalDateTime.now());
         authorisation.setLastUpdated(LocalDateTime.now());
         authorisation.setLowerLevel("lower level");
