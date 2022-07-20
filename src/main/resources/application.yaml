@@ -123,4 +123,5 @@ locationRefDataUrl: ${LOCATION_REF_DATA_URL:http://rd-location-ref-api-aat.servi
 refresh:
   pageSize: ${REFRESH_PAGE_SIZE:200}
   sortColumn: ${REFRESH_SORT_COLUMN:objectId}
-
+  serviceCode: ${REFRESH_SERVICE_CODE:BFA1}
+  ticketCode: ${REFRESH_TICKET_CODE:373}

@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
 import uk.gov.hmcts.reform.judicialapi.domain.JudicialRoleType;
+import uk.gov.hmcts.reform.judicialapi.domain.RegionMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
@@ -80,11 +81,14 @@ class JudicialUserServiceImplTest {
 
     private RefreshUserValidator refreshUserValidatorMock;
     ObjectMapper mapper = new ObjectMapper();
+    private String refreshServiceCode;
 
     @BeforeEach
     void setUp() {
         refreshUserValidatorMock = new RefreshUserValidator();
         judicialUserService.setRefreshUserValidator(refreshUserValidatorMock);
+        judicialUserService.setRefreshServiceCode("BFA1");
+        judicialUserService.setRefreshTicketCode("373");
     }
 
     @Test
@@ -170,7 +174,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_Two_Input_01() throws JsonProcessingException {
+    void test_refreshUserProfile_Two_Input_01() {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, Arrays.asList("test", "test"),null);
@@ -182,7 +186,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_Two_Input_02() throws JsonProcessingException {
+    void test_refreshUserProfile_Two_Input_02() {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), null,null);
@@ -193,7 +197,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_Two_Input_03() throws JsonProcessingException {
+    void test_refreshUserProfile_Two_Input_03() {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"),null);
@@ -204,7 +208,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_Two_Input_04() throws JsonProcessingException {
+    void test_refreshUserProfile_Two_Input_04() {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), null,Arrays.asList("test", "test"));
@@ -215,7 +219,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_Multiple_Input() throws JsonProcessingException {
+    void test_refreshUserProfile_Multiple_Input() {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"),null);
@@ -226,17 +230,17 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_No_Input() throws JsonProcessingException {
+    void test_refreshUserProfile_No_Input() {
         checkAssertion("");
     }
 
     @Test
-    void test_refreshUserProfile_WhenCcdServiceNameContainComma() throws JsonProcessingException {
+    void test_refreshUserProfile_WhenCcdServiceNameContainComma() {
         checkAssertion("abc,def");
     }
 
     @Test
-    void test_refreshUserProfile_WhenCcdServiceNameContainAll() throws JsonProcessingException {
+    void test_refreshUserProfile_WhenCcdServiceNameContainAll() {
         checkAssertion(" all ");
     }
 
@@ -250,11 +254,31 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnSidamIds_200() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnSidamIds_200() {
         var userProfile = buildUserProfile();
 
         var pageRequest = getPageRequest();
         var page = new PageImpl<>(Collections.singletonList(userProfile));
+        var serviceCodeMappingOne = ServiceCodeMapping
+                .builder()
+                .ticketCode("300")
+                .serviceCode("BBA3")
+                .build();
+        var serviceCodeMappingTwo = ServiceCodeMapping
+                .builder()
+                .ticketCode("373")
+                .serviceCode("BFA1")
+                .build();
+
+        var regionMapping = RegionMapping
+                .builder()
+                .regionId("1")
+                .region("National")
+                .jrdRegionId("1")
+                .build();
+        when(serviceCodeMappingRepository.findAllServiceCodeMapping())
+                .thenReturn(List.of(serviceCodeMappingOne,serviceCodeMappingTwo));
+        when(regionMappingRepository.findAllRegionMappingData()).thenReturn(List.of(regionMapping));
         when(userProfileRepository.fetchUserProfileBySidamIds(List.of("test", "test"), pageRequest))
                 .thenReturn(page);
         var refreshRoleRequest = new RefreshRoleRequest("",
@@ -266,15 +290,33 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnObjectIds_200() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnObjectIds_200() {
         var userProfile = buildUserProfile();
 
         var pageRequest = getPageRequest();
         var page = new PageImpl<>(Collections.singletonList(userProfile));
+
+        var serviceCodeMapping = ServiceCodeMapping
+                .builder()
+                .ticketCode("100")
+                .serviceCode("BBA3")
+                .build();
+
+        var regionMapping = RegionMapping
+                .builder()
+                .regionId("1")
+                .region("National")
+                .jrdRegionId("1")
+                .build();
+        when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
+        when(regionMappingRepository.findAllRegionMappingData()).thenReturn(List.of(regionMapping));
         when(userProfileRepository.fetchUserProfileByObjectIds(List.of("test", "test"), pageRequest))
                 .thenReturn(page);
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), null,null);
+
+
+
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
@@ -282,11 +324,43 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_200() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnObjectIds_EmptyUser() {
+        var userProfile = new UserProfile();
+
+        var pageRequest = getPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                Arrays.asList("test", "test"), null,null);
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
+
+    @Test
+    void test_refreshUserProfile_BasedOnPersonalCodes_200() {
         var userProfile = buildUserProfile();
 
         var pageRequest = getPageRequest();
         var page = new PageImpl<>(Collections.singletonList(userProfile));
+        var serviceCodeMapping = ServiceCodeMapping
+                .builder()
+                .ticketCode("200")
+                .serviceCode("BFA1")
+                .build();
+
+        var regionMapping = RegionMapping
+                .builder()
+                .regionId("2")
+                .region("National")
+                .jrdRegionId("2")
+                .build();
+        when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
+        when(regionMappingRepository.findAllRegionMappingData()).thenReturn(List.of(regionMapping));
+
         when(userProfileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
                 .thenReturn(page);
         var refreshRoleRequest = new RefreshRoleRequest("",
@@ -298,7 +372,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnPersonalCodes_400() {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 null, null, Arrays.asList("Emp", "Emp", null));
@@ -311,7 +385,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_404() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnPersonalCodes_404() {
         var userProfile = buildUserProfile();
 
         var pageRequest = getPageRequest();
@@ -440,7 +514,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOn_All_400() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOn_All_400() {
         var refreshRoleRequest = new RefreshRoleRequest("", null, null,null);
         Assertions.assertThrows(InvalidRequestException.class, () -> {
             var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
@@ -458,7 +532,8 @@ class JudicialUserServiceImplTest {
     UserProfile buildUserProfile() {
 
         var baseLocationType = new BaseLocationType();
-        baseLocationType.setBaseLocationId("123");
+        baseLocationType.setBaseLocationId("1");
+        baseLocationType.setCircuit("National");
 
         var regionType = new RegionType();
         regionType.setRegionId("1");
@@ -467,17 +542,19 @@ class JudicialUserServiceImplTest {
 
         var appointment = new Appointment();
         appointment.setPerId("1");
-        appointment.setEpimmsId("1234");
+        appointment.setEpimmsId(null);
         appointment.setOfficeAppointmentId(1L);
         appointment.setIsPrincipleAppointment(true);
         appointment.setStartDate(LocalDate.now());
-        appointment.setEndDate(LocalDate.now());
+        appointment.setEndDate(null);
         appointment.setActiveFlag(true);
         appointment.setExtractedDate(LocalDateTime.now());
         appointment.setCreatedDate(LocalDateTime.now());
         appointment.setLastLoadedDate(LocalDateTime.now());
         appointment.setBaseLocationType(baseLocationType);
         appointment.setRegionType(regionType);
+        appointment.setServiceCode(null);
+
 
         var appointmentTwo = new Appointment();
         appointmentTwo.setPerId("1");
@@ -485,39 +562,83 @@ class JudicialUserServiceImplTest {
         appointmentTwo.setOfficeAppointmentId(1L);
         appointmentTwo.setIsPrincipleAppointment(true);
         appointmentTwo.setStartDate(LocalDate.now());
-        appointmentTwo.setEndDate(LocalDate.now());
+        appointmentTwo.setEndDate(LocalDate.now().minusDays(10));
         appointmentTwo.setActiveFlag(true);
         appointmentTwo.setExtractedDate(LocalDateTime.now());
         appointmentTwo.setCreatedDate(LocalDateTime.now());
         appointmentTwo.setLastLoadedDate(LocalDateTime.now());
         appointmentTwo.setBaseLocationType(baseLocationType);
         appointmentTwo.setRegionType(regionType);
+        appointment.setServiceCode("BFA1");
 
         var appointmentThree = new Appointment();
         appointmentThree.setPerId("1");
-        appointmentThree.setEpimmsId("");
+        appointmentThree.setEpimmsId(null);
         appointmentThree.setOfficeAppointmentId(1L);
         appointmentThree.setIsPrincipleAppointment(true);
         appointmentThree.setStartDate(LocalDate.now());
-        appointmentThree.setEndDate(LocalDate.now());
+        appointmentThree.setEndDate(LocalDate.now().plusDays(10));
         appointmentThree.setActiveFlag(true);
         appointmentThree.setExtractedDate(LocalDateTime.now());
         appointmentThree.setCreatedDate(LocalDateTime.now());
         appointmentThree.setLastLoadedDate(LocalDateTime.now());
         appointmentThree.setBaseLocationType(baseLocationType);
         appointmentThree.setRegionType(regionType);
+        appointmentThree.setServiceCode("BBA3");
+
+        var appointmentFour = new Appointment();
+        appointmentFour.setPerId("1");
+        appointmentFour.setEpimmsId("10");
+        appointmentFour.setOfficeAppointmentId(1L);
+        appointmentFour.setIsPrincipleAppointment(true);
+        appointmentFour.setStartDate(LocalDate.now());
+        appointmentFour.setEndDate(LocalDate.now());
+        appointmentFour.setActiveFlag(true);
+        appointmentFour.setExtractedDate(LocalDateTime.now());
+        appointmentFour.setCreatedDate(LocalDateTime.now());
+        appointmentFour.setLastLoadedDate(LocalDateTime.now());
+        appointmentFour.setBaseLocationType(baseLocationType);
+        appointmentFour.setRegionType(regionType);
+        appointmentFour.setServiceCode("BBA3");
 
         var authorisation = new Authorisation();
         authorisation.setPerId("1");
         authorisation.setOfficeAuthId(1L);
         authorisation.setJurisdiction("Languages");
         authorisation.setTicketId(29611L);
-        authorisation.setStartDate(LocalDateTime.now());
-        authorisation.setEndDate(LocalDateTime.now());
+        authorisation.setStartDate(null);
+        authorisation.setEndDate(null);
         authorisation.setCreatedDate(LocalDateTime.now());
         authorisation.setLastUpdated(LocalDateTime.now());
         authorisation.setLowerLevel("Welsh");
         authorisation.setPersonalCode("");
+        authorisation.setTicketCode(null);
+
+        var authorisationOne = new Authorisation();
+        authorisationOne.setPerId("2");
+        authorisationOne.setOfficeAuthId(1L);
+        authorisationOne.setJurisdiction("Languages");
+        authorisationOne.setTicketId(29611L);
+        authorisationOne.setStartDate(LocalDateTime.now());
+        authorisationOne.setEndDate(LocalDateTime.now().plusDays(15));
+        authorisationOne.setCreatedDate(LocalDateTime.now());
+        authorisationOne.setLastUpdated(LocalDateTime.now());
+        authorisationOne.setLowerLevel("Welsh");
+        authorisationOne.setPersonalCode("");
+        authorisationOne.setTicketCode("373");
+
+        var authorisationTwo = new Authorisation();
+        authorisationTwo.setPerId("2");
+        authorisationTwo.setOfficeAuthId(1L);
+        authorisationTwo.setJurisdiction("Languages");
+        authorisationTwo.setTicketId(29611L);
+        authorisationTwo.setStartDate(LocalDateTime.now());
+        authorisationTwo.setEndDate(LocalDateTime.now().minusDays(5));
+        authorisationTwo.setCreatedDate(LocalDateTime.now());
+        authorisationTwo.setLastUpdated(LocalDateTime.now());
+        authorisationTwo.setLowerLevel("Welsh");
+        authorisationTwo.setPersonalCode("");
+        authorisationTwo.setTicketCode("100");
 
         var judicialRoleType = new JudicialRoleType();
         judicialRoleType.setRoleId("1");
@@ -558,9 +679,9 @@ class JudicialUserServiceImplTest {
         userProfile.setSidamId("4c0ff6a3-8fd6-803b-301a-29d9dacccca8");
 
         authorisation.setUserProfile(userProfile);
-
-        userProfile.setAppointments(List.of(appointment,appointmentTwo,appointmentThree));
-        userProfile.setAuthorisations(List.of(authorisation));
+        baseLocationType.setAppointments(List.of(appointment,appointmentTwo,appointmentThree,appointmentFour));
+        userProfile.setAppointments(List.of(appointment,appointmentTwo,appointmentThree,appointmentFour));
+        userProfile.setAuthorisations(List.of(authorisation,authorisationOne,authorisationTwo));
         userProfile.setJudicialRoleTypes(List.of(judicialRoleType,judicialRoleType1,judicialRoleType2));
 
         return userProfile;
