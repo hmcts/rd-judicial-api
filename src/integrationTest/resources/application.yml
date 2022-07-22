@@ -114,3 +114,6 @@ syncInterval: 60
 defaultPageSize: ${DEFAULTPAGESIZE:10}
 
 loggingComponentName: RD-Judicial-API
+
+search:
+  serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3}
