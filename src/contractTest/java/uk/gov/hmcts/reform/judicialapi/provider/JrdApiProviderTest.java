@@ -128,7 +128,7 @@ public class JrdApiProviderTest {
         var userProfiles = List.of(userProfile);
 
         when(serviceCodeMappingRepository.findByServiceCodeIgnoreCase(any())).thenReturn(List.of(serviceCodeMapping));
-        when(userProfileRepository.findBySearchString(any(),any(),any(), anyList()))
+        when(userProfileRepository.findBySearchString(any(),any(),any(), anyList(), anyList()))
                 .thenReturn(userProfiles);
     }
 
