@@ -124,3 +124,5 @@ refresh:
   pageSize: ${REFRESH_PAGE_SIZE:200}
   sortColumn: ${REFRESH_SORT_COLUMN:objectId}
 
+search:
+  serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3}
