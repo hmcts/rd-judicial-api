@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 @Builder
 @AllArgsConstructor
@@ -20,8 +19,8 @@ public class UserSearchRequest {
     @JsonProperty("searchString")
     @NotNull(message = "cannot be null")
     @NotEmpty(message = "cannot be empty")
-    @Size(min = 3, message = "should have atleast {min} characters")
-    @Pattern(regexp = "[a-zA-Z]+", message = "should contains letters only")
+    @Pattern(regexp = "([a-zA-Z\\-\\s']){3,}+", message = "must be at least 3 characters including "
+            + "letters, apostrophe, hyphen")
     private String searchString;
 
     @JsonProperty("serviceCode")

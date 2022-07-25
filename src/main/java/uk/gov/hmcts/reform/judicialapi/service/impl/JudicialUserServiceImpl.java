@@ -84,6 +84,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
     @Value("${loggingComponentName}")
     private String loggingComponentName;
 
+    @Value("${search.serviceCode}")
+    private List<String> searchServiceCode;
+
     @Override
     public ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page, List<String> sidamIds) {
         Pageable pageable = createPageableObject(page, size, defaultPageSize);
@@ -115,10 +118,11 @@ public class JudicialUserServiceImpl implements JudicialUserService {
             serviceCodeMappings
                     .forEach(s -> ticketCode.add(s.getTicketCode()));
         }
-
+        log.info("SearchServiceCode list = {}", searchServiceCode);
         var userProfiles = userProfileRepository
                 .findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
-                        userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode);
+                        userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode,
+                        searchServiceCode);
 
         var userSearchResponses = userProfiles
                 .stream().filter(distinctByKeys(UserProfile::getPersonalCode))
