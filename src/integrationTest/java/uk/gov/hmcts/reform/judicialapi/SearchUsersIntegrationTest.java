@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi;
 
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
@@ -32,27 +33,28 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
-    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCodeAndLocation(String role) {
+    @CsvSource({ "jrd-system-user,20013","jrd-system-user,200134","jrd-admin,20013","jrd-admin,200136"})
+    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCodeAndLocation(String role,
+                                                                                              String location) {
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
-                .location("20013")
+                .location(location)
                 .serviceCode("BBA3")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(1, profiles.size());
+        assertEquals(2, profiles.size());
         assertEquals("test528@test.net", profiles.get(0).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
-    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsBfa1(String role) {
+    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
+    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsBfa1(String role, String location) {
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
-                .location("20012")
+                .location(location)
                 .serviceCode("BFA1")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(

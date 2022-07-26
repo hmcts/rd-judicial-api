@@ -26,7 +26,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
                    + "and (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
                    + "and ( (:serviceCode is not null and (lower(appt.serviceCode) = :serviceCode or "
                    + "auth.ticketCode in :ticketCode)) or :serviceCode is null ) "
-                   + "and ( :serviceCode = 'bfa1' or ((:locationCode is not null "
+                   + "and (( :serviceCode in :searchServiceCode) or ((:locationCode is not null "
                    + "and lower(appt.epimmsId) = :locationCode)"
                    + " or :locationCode is null)) "
                    + "and (lower(per.knownAs) like %:searchString% "
@@ -34,7 +34,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
                    + "or lower(per.fullName)  like %:searchString% "
                    + ")")
     List<UserProfile> findBySearchString(String searchString, String serviceCode, String locationCode,
-                                         List<String> ticketCode);
+                                         List<String> ticketCode, List<String> searchServiceCode);
 
     @Query(value = "select distinct per "
             + "from judicial_user_profile per "
@@ -46,7 +46,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "ON per.perId = jrt.perId "
             + "where (per.objectId != '' and per.objectId is not null) "
             + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
-            + "and (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
             + "and (per.objectId IN :objectIds)")
     Page<UserProfile> fetchUserProfileByObjectIds(List<String> objectIds, Pageable pageable);
 
@@ -60,7 +60,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "ON per.perId = jrt.perId "
             + "where (per.objectId != '' and per.objectId is not null) "
             + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
-            + "and (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
             + "and (appt.serviceCode IN :ccdServiceCode or auth.ticketCode IN :ticketCode )")
     Page<UserProfile> fetchUserProfileByServiceNames(Set<String> ccdServiceCode,
                                                      List<String> ticketCode, Pageable pageable);
@@ -75,7 +75,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "ON per.perId = jrt.perId "
             + "where (per.objectId != '' and per.objectId is not null) "
             + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
-            + "and (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
             + "and (per.sidamId IN :sidamIds)")
     Page<UserProfile> fetchUserProfileBySidamIds(List<String> sidamIds, Pageable pageable);
 
@@ -89,7 +89,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
             + "ON per.perId = jrt.perId "
             + "where (per.objectId != '' and per.objectId is not null) "
             + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
-            + "and (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
             + "and (per.personalCode IN :personalCodes)")
     Page<UserProfile> fetchUserProfileByPersonalCodes(List<String> personalCodes, Pageable pageable);
 
