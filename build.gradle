@@ -36,7 +36,9 @@ def versions = [
         launchDarklySdk    : '5.8.1',
         pact_version       : '4.1.7',
         log4j              : '2.17.1',
-        springVersion      : '5.3.20'
+        springVersion      : '5.3.20',
+        logback            : '1.2.11',
+        bytebuddy          : '1.12.7'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
@@ -282,13 +284,13 @@ repositories {
 
 dependencies {
 
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
-    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    integrationTestImplementation group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
-    integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    integrationTestImplementation group: 'org.projectlombok', name: 'lombok', version: versions.lombok
+    integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
@@ -336,8 +338,8 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '8.20'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.11'
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'org.springframework', name: 'spring-core', version: versions.springVersion
    	implementation group: 'org.springframework', name: 'spring-beans', version: versions.springVersion
     implementation group: 'org.springframework', name: 'spring-aop', version: versions.springVersion
@@ -385,8 +387,8 @@ dependencies {
         exclude group: "net.bytebuddy", module: "byte-buddy"
         exclude group: "net.bytebuddy", module: "byte-buddy-agent"
     }
-    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.7'
-    testImplementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: '1.12.7'
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: versions.bytebuddy
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy-agent', version: versions.bytebuddy
 
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.3.1'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
