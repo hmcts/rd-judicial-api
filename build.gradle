@@ -417,23 +417,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
 
-    testImplementation(group: 'org.yaml', name: 'snakeyaml') {
-        version {
-            strictly '1.33'
-        }
-    }
-
-    integrationTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
-        version {
-            strictly '1.33'
-        }
-    }
-
-    functionalTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
-        version{
-            strictly '1.33'
-        }
-    }
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
