@@ -33,7 +33,7 @@ def versions = [
         springfoxSwagger   : '2.9.2',
         restAssured        : '4.3.3',
         jackson            : '2.13.2',
-        launchDarklySdk    : '5.8.1',
+        launchDarklySdk    : '5.10.2',
         pact_version       : '4.1.7',
         log4j              : '2.17.1',
         springVersion      : '5.3.20',
@@ -419,19 +419,19 @@ dependencies {
 
     testImplementation(group: 'org.yaml', name: 'snakeyaml') {
         version {
-            strictly '1.31'
+            strictly '1.33'
         }
     }
 
     integrationTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
         version {
-            strictly '1.31'
+            strictly '1.33'
         }
     }
 
     functionalTestImplementation(group: 'org.yaml', name: 'snakeyaml') {
         version{
-            strictly '1.31'
+            strictly '1.33'
         }
     }
 
