@@ -121,3 +121,6 @@ search:
 refresh:
   pageSize: ${REFRESH_PAGE_SIZE:200}
   sortColumn: ${REFRESH_SORT_COLUMN:objectId}
+testing:
+  support:
+    idamUrl: ${http://127.0.0.1:5000/o}
