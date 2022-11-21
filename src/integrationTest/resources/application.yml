@@ -116,4 +116,4 @@ defaultPageSize: ${DEFAULTPAGESIZE:10}
 loggingComponentName: RD-Judicial-API
 
 search:
-  serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3}
+  serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3,aaa6,aaa7,aba5,aba3}
