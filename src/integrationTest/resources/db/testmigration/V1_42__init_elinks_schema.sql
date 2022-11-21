@@ -1,3 +1,5 @@
+-- NB Flyway requires lowercase for table names
+
 create schema if not exists dbjudicialdata;
 
 -- dbjudicialdata.judicial_location_mapping definition
@@ -39,7 +41,7 @@ CREATE TABLE dbjudicialdata.judicial_ticket_code_mapping (
 
 -- dbjudicialdata.dataload_schedular_audit definition
 CREATE TABLE dbjudicialdata.dataload_schedular_audit (
-	id serial4 NOT NULL,
+	id serial NOT NULL,
 	scheduler_name varchar(64) NOT NULL,
 	scheduler_start_time timestamp NOT NULL,
 	scheduler_end_time timestamp NULL,
