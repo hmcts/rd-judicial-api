@@ -65,6 +65,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         assertEquals("test530@test.net", profiles.get(1).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
+    
     @ParameterizedTest
     @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
     void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAaa6(String role, String location) {
