@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.judicialapi.configuration.RestTemplateConfiguration;
@@ -39,6 +40,7 @@ import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResp
 @TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
 @ContextConfiguration(classes = {RestTemplateConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@DirtiesContext
 public abstract class AuthorizationEnabledIntegrationTest extends SpringBootIntegrationTest {
 
     @MockBean
