@@ -23,6 +23,7 @@ spring:
     show-sql: false
     properties:
       hibernate:
+        default_schema: dbjuddata
         jdbc:
           lob:
             non_contextual_creation: true
@@ -48,11 +49,13 @@ spring:
   flyway:
     enabled: true
     locations: ${JUDICIAL_DB:classpath:db/migration}
+    schemas:
+      - dbjuddata
 
 ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}?currentSchema=dbjuddata
     username: ${POSTGRES_USERNAME:dbjuddata}
     password: ${POSTGRES_PASSWORD:dbjuddata}
     min-idle: 1
