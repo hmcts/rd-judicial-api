@@ -124,3 +124,8 @@ refresh:
 testing:
   support:
     idamUrl: ${http://127.0.0.1:5000/o}
+
+elastic:
+  search:
+    query: (roles:judiciary) AND lastModified:>now-12h
+    recordsPerPage: 500

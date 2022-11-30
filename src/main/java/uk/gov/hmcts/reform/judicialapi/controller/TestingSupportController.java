@@ -13,8 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.reform.judicialapi.configuration.JrdSidamTokenService;
 import uk.gov.hmcts.reform.judicialapi.controller.response.IdamUserProfileResponse;
+import uk.gov.hmcts.reform.judicialapi.feign.IdamClient;
 import uk.gov.hmcts.reform.judicialapi.service.IdamUserProfileService;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Set;
 
 
 @RestController
@@ -27,6 +32,8 @@ public class TestingSupportController {
 
     @Autowired
     IdamUserProfileService idamUserProfileService;
+    @Autowired
+    JrdSidamTokenService jrdSidamTokenService;
 
     @ApiOperation(
             value = "This API create idam user profile for all the judicial user profiles.",
@@ -68,5 +75,13 @@ public class TestingSupportController {
 
     public ResponseEntity<Object> createIdamUserProfiles() {
         return idamUserProfileService.createIdamUserProfiles();
+    }
+
+
+    @GetMapping(path = "/testing-support/idam/last-modified",
+            produces = "application/json")
+
+    public Set<IdamClient.User> createIdamUserProfilesLastModified() throws UnsupportedEncodingException {
+        return jrdSidamTokenService.getIdamElasticFeed();
     }
 }
