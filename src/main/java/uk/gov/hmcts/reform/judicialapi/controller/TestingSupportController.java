@@ -13,8 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.reform.judicialapi.configuration.TopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.controller.response.IdamUserProfileResponse;
 import uk.gov.hmcts.reform.judicialapi.service.IdamUserProfileService;
+import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
+
+import java.util.List;
 
 
 @RestController
@@ -22,11 +26,17 @@ import uk.gov.hmcts.reform.judicialapi.service.IdamUserProfileService;
 @NoArgsConstructor
 @AllArgsConstructor
 @RequestMapping(path = "/refdata/judicial/users")
-@ConditionalOnExpression("${testing.support.enabled:false}")
+@ConditionalOnExpression("${testing.support.enabled:true}")
 public class TestingSupportController {
 
     @Autowired
     IdamUserProfileService idamUserProfileService;
+
+    @Autowired
+    JudicialUserServiceImpl judicialUserServiceImpl;
+
+    @Autowired
+    TopicPublisher topicPublisher;
 
     @ApiOperation(
             value = "This API create idam user profile for all the judicial user profiles.",
@@ -69,4 +79,15 @@ public class TestingSupportController {
     public ResponseEntity<Object> createIdamUserProfiles() {
         return idamUserProfileService.createIdamUserProfiles();
     }
+
+    @GetMapping(path = "/testing-support/publish/users")
+    public String publishJrdUsers() {
+
+        List<String> jrdUsers = judicialUserServiceImpl.getUsersToPublish();
+        topicPublisher.sendMessage(jrdUsers);
+
+        return "Success";
+    }
+
+
 }

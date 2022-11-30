@@ -360,7 +360,9 @@ dependencies {
 
     implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
     //Fix for CVE-2021-29425
-    implementation 'commons-io:commons-io:2.8.0'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+
 
 
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
@@ -370,6 +372,10 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
 
+    implementation group: 'com.azure', name: 'azure-core', version: '1.13.0'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.0.2'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+    implementation 'commons-io:commons-io:2.11.0'
 
     testImplementation ('com.github.hmcts:rd-commons-lib:v0.0.13'){
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'

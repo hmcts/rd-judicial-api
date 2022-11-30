@@ -30,6 +30,7 @@ import uk.gov.hmcts.reform.judicialapi.domain.RegionMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
+import uk.gov.hmcts.reform.judicialapi.repository.JrdCustomQueryRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.RegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.repository.UserProfileRepository;
@@ -86,6 +87,9 @@ public class JudicialUserServiceImpl implements JudicialUserService {
 
     @Value("${search.serviceCode}")
     private List<String> searchServiceCode;
+
+    @Autowired
+    private JrdCustomQueryRepository jrdCustomQueryRepository;
 
     @Override
     public ResponseEntity<Object> fetchJudicialUsers(Integer size, Integer page, List<String> sidamIds) {
@@ -451,5 +455,16 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         } else {
             return null != regionCircuitMapping ? regionCircuitMapping.getRegion() : null;
         }
+    }
+
+
+    public List<String> getUsersToPublish(){
+        var userProfilePage = jrdCustomQueryRepository.findUsersToPublish();
+
+        var userProfileList = new ArrayList<String>();
+
+        userProfilePage.forEach(userProfile -> userProfileList.add(userProfile.toLowerCase()));
+
+        return userProfileList;
     }
 }
