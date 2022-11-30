@@ -65,6 +65,70 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         assertEquals("test530@test.net", profiles.get(1).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
+    
+    @ParameterizedTest
+    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
+    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAaa6(String role, String location) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("test")
+            .location(location)
+            .serviceCode("AAA6")
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
+    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAaa7(String role, String location) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("test")
+            .location(location)
+            .serviceCode("AAA7")
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test529@test.net", profiles.get(0).get("emailId"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
+    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAba5(String role, String location) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("test")
+            .location(location)
+            .serviceCode("ABA5")
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
+    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAba3(String role, String location) {
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("test")
+            .location(location)
+            .serviceCode("ABA3")
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false);
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(1, profiles.size());
+        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
 
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
