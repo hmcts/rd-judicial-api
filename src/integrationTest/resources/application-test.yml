@@ -117,7 +117,7 @@ loggingComponentName: RD-Judicial-API
 
 locationRefDataUrl: ${LOCATION_REF_DATA_URL:http://rd-location-ref-api-aat.service.core-compute-aat.internal}
 search:
-  serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3}
+  serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3,aaa6,aaa7,aba5,aba3}
 refresh:
   pageSize: ${REFRESH_PAGE_SIZE:200}
   sortColumn: ${REFRESH_SORT_COLUMN:objectId}
