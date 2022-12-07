@@ -75,7 +75,7 @@ withPipeline(type, product, component) {
     env.TEST_URL = "http://rd-judicial-api-aat.service.core-compute-aat.internal"
 
 
-    after('sonarscan') {
+    afterSuccess('sonarscan') {
 
         publishHTML target: [
             allowMissing         : true,
@@ -96,7 +96,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    after('smoketest:preview') {
+    afterSuccess('smoketest:preview') {
         publishHTML target: [
             allowMissing         : true,
             alwaysLinkToLastBuild: true,
@@ -107,7 +107,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    after('smoketest:aat') {
+    afterSuccess('smoketest:aat') {
         publishHTML target: [
             allowMissing         : true,
             alwaysLinkToLastBuild: true,
@@ -118,7 +118,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    after('functionalTest:aat') {
+    afterSuccess('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
         publishHTML target: [
             allowMissing         : true,
@@ -130,7 +130,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    after('functionalTest:preview') {
+    afterSuccess('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
         publishHTML target: [
             allowMissing         : true,
@@ -142,7 +142,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    after('pact-provider-verification') {
+    afterSuccess('pact-provider-verification') {
         publishHTML target: [
              allowMissing         : true,
              alwaysLinkToLastBuild: true,
