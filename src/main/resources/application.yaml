@@ -96,6 +96,7 @@ security:
     - "/csrf"
     - "/error"
     - "/favicon.ico"
+    - "/refdata/jinternal/elink/**"
 
 ### dependency configuration
 idam:
