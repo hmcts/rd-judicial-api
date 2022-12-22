@@ -17,6 +17,7 @@ java:
     LOCATION_REF_DATA_URL: http://rd-location-ref-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     REFRESH_PAGE_SIZE: 200
     REFRESH_SORT_COLUMN: objectId
+    ELINKS_URL: https://jo-staging.elinks.judiciary.uk
   image: 'hmctspublic.azurecr.io/rd/judicial-api:latest'
   keyVaults:
     rd:
@@ -29,3 +30,5 @@ java:
           alias: azure.application-insights.instrumentation-key
         - name: LD-SDK-KEY
           alias: LD_SDK_KEY
+        - name: judicial-api-elinks-api-key
+          alias: judicial_api_elinks_api_key
