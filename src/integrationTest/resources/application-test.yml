@@ -124,3 +124,8 @@ refresh:
 testing:
   support:
     idamUrl: ${http://127.0.0.1:5000/o}
+
+
+elinksApiKey: ${judicial_api_elinks_api_key:}
+#URL not tested , code is for developers reference
+elinksUrl: ${ELINKS_URL:https://jo-staging.elinks.judiciary.uk}
