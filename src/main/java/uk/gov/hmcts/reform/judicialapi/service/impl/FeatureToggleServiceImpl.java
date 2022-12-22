@@ -37,9 +37,9 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
      */
     @PostConstruct
     public void mapServiceToFlag() {
-        String judApi = "rd-judicial-api";
-        String elinksApi = "rd_jud_elinks";
-        String jrdPublish = "elinks_jrd_publish_user_profiles_flag";
+        final String judApi = "rd-judicial-api";
+        final String elinksApi = "rd_jud_elinks";
+        final String jrdPublish = "elinks_jrd_publish_user_profiles_flag";
         launchDarklyMap = new HashMap<>();
         launchDarklyMap.put("JrdUsersController.fetchUsers", judApi);
         launchDarklyMap.put("JrdUsersController.searchUsers", judApi);
