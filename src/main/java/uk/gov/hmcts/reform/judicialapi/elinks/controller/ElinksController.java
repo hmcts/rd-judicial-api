@@ -23,7 +23,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 
 @RestController
 @RequestMapping(
-        path = "/refdata/jinternal/elink"
+        path = "/refdata/internal/elink"
 )
 @Slf4j
 @AllArgsConstructor
