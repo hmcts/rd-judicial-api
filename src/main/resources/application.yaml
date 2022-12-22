@@ -114,6 +114,10 @@ feign:
   allow:
     headers:
       - authorization
+  client:
+    config:
+      default:
+        loggerLevel: full
 
 defaultPageSize: ${DEFAULTPAGESIZE:10}
 
@@ -135,7 +139,4 @@ elinksApiKey: ${judicial_api_elinks_api_key:}
 elinksUrl: ${ELINKS_URL:https://jo-staging.elinks.judiciary.uk/api/v4}
 
 logging.level.uk.gov.hmcts.reform: DEBUG
-  client:
-    config:
-      default:
-        loggerLevel: full
+
