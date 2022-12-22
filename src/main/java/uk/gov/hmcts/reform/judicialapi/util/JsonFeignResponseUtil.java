@@ -39,6 +39,15 @@ public class JsonFeignResponseUtil {
                 HttpStatus.valueOf(response.status()));
     }
 
+    public static ResponseEntity<Object> toELinksResponseEntity(Response response, Object clazz) {
+        Optional<Object>  payload = decode(response, clazz);
+
+        return new ResponseEntity<>(
+                payload.orElse("unknown"),
+                convertHeaders(response.headers()),
+                HttpStatus.valueOf(response.status()));
+    }
+
     public static List<Object> mapObjectToList(Response response, Object clazz) {
         try {
             JavaType type = json.getTypeFactory().constructCollectionType(List.class, (Class<?>) clazz);
