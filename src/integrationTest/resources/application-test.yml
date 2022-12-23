@@ -129,3 +129,11 @@ testing:
 elinksApiKey: ${judicial_api_elinks_api_key:}
 #URL not tested , code is for developers reference
 elinksUrl: ${ELINKS_URL:https://jo-staging.elinks.judiciary.uk/api/v4}
+
+elinks:
+  people:
+    lastUpdated: 2015-01-01
+    perPage: 50
+    page: 1
+    includePreviousAppointments : false
+    threadPauseTime: 2000

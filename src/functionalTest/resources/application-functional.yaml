@@ -11,3 +11,11 @@ s2s-secret: ${JUDICIAL_API_S2S_SECRET:}
 
 jrd.security.roles.hmcts-admin: jrd-admin
 jrd.security.roles.system-user: jrd-system-user
+
+elinks:
+  people:
+    lastUpdated: 2015-01-01
+    perPage: 50
+    page: 1
+    includePreviousAppointments : false
+    threadPauseTime: 2000
