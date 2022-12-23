@@ -10,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -55,26 +55,26 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @ExtendWith(MockitoExtension.class)
 class ElinksPeopleServiceImplTest {
 
-    @Mock
+    @Spy
     ElinksFeignClient elinksFeignClient;
 
-    @Mock
+    @Spy
     private AppointementsRepository appointementsRepository;
 
-    @Mock
+    @Spy
     private AuthorisationsRepository authorisationsRepository;
 
-    @Mock
+    @Spy
     private ProfileRepository profileRepository;
 
-    @Mock
+    @Spy
     private LocationMapppingRepository locationMapppingRepository;
 
-    @Mock
+    @Spy
     private DataloadSchedularAuditRepository dataloadSchedularAuditRepository;
 
     @InjectMocks
-    ElinksPeopleServiceImpl elinksPeopleServiceImpl;
+    private ElinksPeopleServiceImpl elinksPeopleServiceImpl;
 
     private ResultsRequest result1;
 
@@ -158,7 +158,9 @@ class ElinksPeopleServiceImplTest {
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
         String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
 
-        when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(dateTime);
 
         when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
                  Boolean.parseBoolean(any()))).thenReturn(Response.builder()

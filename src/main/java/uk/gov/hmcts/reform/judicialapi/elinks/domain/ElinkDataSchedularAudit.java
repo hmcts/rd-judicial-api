@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 
 @Entity(name = "dataloadSchedularAudit")
-@Table(name = "dbjudicialdata.dataload_schedular_audit")
+@Table(name = "dataload_schedular_audit", schema = "dbjudicialdata")
 @Getter
 @Setter
 @NoArgsConstructor

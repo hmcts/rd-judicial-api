@@ -52,7 +52,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     public static final String EPIMMS_ID = "epimmsId";
     public static final String SERVICE_CODE = "serviceCode";
     @Autowired
-    ElinksFeignClient elinksFeignClient;
+    private ElinksFeignClient elinksFeignClient;
 
     @Autowired
     private AppointementsRepository appointementsRepository;
@@ -206,7 +206,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
 
-    private uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment buildAppointmentDto(AppointmentsRequest appointment) {
+    private uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment
+        buildAppointmentDto(AppointmentsRequest appointment) {
         Map<String,String> locationMappingDetails = getDetailsFromJudicilaLocationMapping(appointment
                 .getBaseLocationId());
         return uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment.builder()
