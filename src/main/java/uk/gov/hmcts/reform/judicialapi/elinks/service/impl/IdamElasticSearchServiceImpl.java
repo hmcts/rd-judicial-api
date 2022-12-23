@@ -5,7 +5,6 @@ import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -58,7 +57,6 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     DataloadSchedularAuditRepository dataloadSchedularAuditRepository;
 
     @Autowired
-    @Qualifier("springJdbcTemplate")
     JdbcTemplate jdbcTemplate;
 
     @Override

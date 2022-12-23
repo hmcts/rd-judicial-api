@@ -140,3 +140,7 @@ elinksUrl: ${ELINKS_URL:https://jo-staging.elinks.judiciary.uk/api/v4}
 
 logging.level.uk.gov.hmcts.reform: DEBUG
 
+elastic:
+  search:
+    query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
+    recordsPerPage: 500
