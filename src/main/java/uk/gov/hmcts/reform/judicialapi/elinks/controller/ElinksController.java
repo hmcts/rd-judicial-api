@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ELinksService;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BAD_REQUEST;
@@ -33,6 +34,9 @@ public class ElinksController {
 
     @Autowired
     ELinksService eLinksService;
+
+    @Autowired
+    ElinksPeopleService elinksPeopleService;
 
     @ApiResponses({
             @ApiResponse(
@@ -110,6 +114,37 @@ public class ElinksController {
     public ResponseEntity<ElinkBaseLocationWrapperResponse> loadBaseLocationType() {
 
         return eLinksService.retrieveBaseLocation();
+
+    }
+
+    @ApiResponses({
+            @ApiResponse(
+                    code = 200,
+                    message = "Get list of idam users.",
+                    response = Object.class
+            ),
+            @ApiResponse(
+                    code = 400,
+                    message = BAD_REQUEST
+            ),
+            @ApiResponse(
+                    code = 401,
+                    message = UNAUTHORIZED_ERROR
+            ),
+            @ApiResponse(
+                    code = 403,
+                    message = FORBIDDEN_ERROR
+            ),
+            @ApiResponse(
+                    code = 500,
+                    message = INTERNAL_SERVER_ERROR
+            )
+    })
+    @GetMapping (path = "/people",
+            produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> loadPeople() {
+
+        return elinksPeopleService.updatePeople();
 
     }
 
