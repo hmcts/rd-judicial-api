@@ -5,6 +5,7 @@ import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
 
     @Value("${elinks.people.lastUpdated}")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String lastUpdated;
 
     @Value("${elinks.people.perPage}")
@@ -149,7 +151,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
         }
         if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
-            updatedSince = lastUpdated;
+            updatedSince = "2019-01-01";
         } else {
             updatedSince = maxSchedulerEndTime.toString();
             updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
