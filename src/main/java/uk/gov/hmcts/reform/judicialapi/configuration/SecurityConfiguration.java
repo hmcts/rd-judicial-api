@@ -1,16 +1,15 @@
 package uk.gov.hmcts.reform.judicialapi.configuration;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -22,7 +21,6 @@ import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
-import org.springframework.security.web.SecurityFilterChain;
 import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 import uk.gov.hmcts.reform.judicialapi.oidc.JwtGrantedAuthoritiesConverter;
 
@@ -36,9 +34,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @Slf4j
 @SuppressWarnings("unchecked")
-@EnableMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor
-public class SecurityConfiguration {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     @Value("${spring.security.oauth2.client.provider.oidc.issuer-uri}")
@@ -65,10 +61,10 @@ public class SecurityConfiguration {
         this.anonymousPaths = anonymousPaths;
     }
 
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers(anonymousPaths.toArray(new String[0]));
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring()
+                .antMatchers(anonymousPaths.toArray(new String[0]));
     }
 
     @Inject
@@ -85,7 +81,8 @@ public class SecurityConfiguration {
 
     }
 
-    public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
+    @Override
+    protected void configure(final HttpSecurity http) throws Exception {
         http
              .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
              .addFilterAfter(securityEndpointFilter, OAuth2AuthorizationRequestRedirectFilter.class)
@@ -105,7 +102,6 @@ public class SecurityConfiguration {
              .and()
              .and()
              .oauth2Client();
-        return http.build();
     }
 
     @Bean
