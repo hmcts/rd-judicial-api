@@ -10,7 +10,10 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -23,10 +26,13 @@ import javax.validation.constraints.Size;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SequenceGenerator(name = "judicial_office_auth_id_sequence",
+        sequenceName = "judicial_office_auth_id_sequence", schema = "dbjudicialdata", allocationSize = 1)
 public class Authorisation implements Serializable {
 
     @Id
     @Column(name = "judicial_office_auth_Id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "judicial_office_auth_id_sequence")
     private Long officeAuthId;
 
     @Column(name = "personal_code")

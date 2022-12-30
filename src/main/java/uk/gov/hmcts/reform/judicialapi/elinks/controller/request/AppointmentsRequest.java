@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.controller.request;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,29 +14,28 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AppointmentsRequest {
 
-    @JsonProperty("per_id")
-    private String perId;
     @JsonProperty("base_location_id")
     private String baseLocationId;
-    @JsonProperty("region_id")
-    private String regionId;
-    @JsonProperty("is_principle_appointment")
+    //TBC
+    @JsonProperty("circuit")
+    private String circuit;
+    //TBC
+    @JsonProperty("location")
+    private String location;
+    @JsonProperty("is_principal")
     private Boolean isPrincipleAppointment;
     @JsonProperty("start_date")
     private String startDate;
     @JsonProperty("end_date")
     private String endDate;
-    @JsonProperty("active_flag")
-    private Boolean activeFlag;
-    @JsonProperty("personal_code")
-    private String personalCode;
-    @JsonProperty("object_id")
-    private String objectId;
-    @JsonProperty("appointment")
+    //TBC role/role_name?
+    @JsonProperty("role")
     private String appointmentRolesMapping;
-    @JsonProperty("appointment_type")
+    //TBC contract_type_id?
+    @JsonProperty("contract_type")
     private String appointmentType;
     @JsonProperty("work_pattern")
     private String workPattern;

@@ -43,6 +43,10 @@ public class RefDataElinksConstants {
 
     public static final String DATA_UPDATE_ERROR = "An error occurred while updating data in refDataDb";
 
+    public static final String REGION_DEFAULT_ID = "0";
+
+    public static final String UPDATED_SINCE = "2015-01-01";
+
 
 
 

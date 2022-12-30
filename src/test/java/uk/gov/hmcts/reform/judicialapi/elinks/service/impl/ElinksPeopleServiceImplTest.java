@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointementsRepository
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 
 import java.time.LocalDateTime;
@@ -71,6 +72,9 @@ class ElinksPeopleServiceImplTest {
     private LocationMapppingRepository locationMapppingRepository;
 
     @Spy
+    private LocationRepository locationRepository;
+
+    @Spy
     private DataloadSchedularAuditRepository dataloadSchedularAuditRepository;
 
     @InjectMocks
@@ -101,41 +105,36 @@ class ElinksPeopleServiceImplTest {
                 .results(1)
                 .pages(1).currentPage(1).resultsPerPage(3).morePages(true).build();
 
-        AppointmentsRequest appintment1 = AppointmentsRequest.builder().perId("123").baseLocationId("baselocId")
-                .regionId("regionId")
-                .isPrincipleAppointment(true).startDate("1991-12-19").endDate("2022-12-20").activeFlag(true)
-                .personalCode("personalCode").objectId("objectIs").appointmentRolesMapping("appointment")
-                .appointmentType("type").workPattern("pattern").build();
-        AppointmentsRequest appintment2 = AppointmentsRequest.builder().perId("123").baseLocationId("baselocId")
-                .regionId("regionId")
-                .isPrincipleAppointment(true).startDate("1991-12-19").endDate("2022-12-20").activeFlag(true)
-                .personalCode("personalCode").objectId("objectIs").appointmentRolesMapping("appointment")
-                .appointmentType("type").workPattern("pattern").build();
-        List<AppointmentsRequest> appintments = Arrays.asList(appintment1,appintment2);
+        AppointmentsRequest appointmentsRequest1 = AppointmentsRequest.builder()
+                .baseLocationId("baselocId").circuit("circuit").location("location")
+                .isPrincipleAppointment(true).startDate("1991-12-19").endDate("2022-12-20")
+                .appointmentRolesMapping("appointment").appointmentType("type").workPattern("pattern").build();
+        AppointmentsRequest appointmentsRequest2 = AppointmentsRequest.builder()
+                .baseLocationId("baselocId").circuit("circuit").location("location")
+                .isPrincipleAppointment(true).startDate("1991-12-19").endDate("2022-12-20")
+                .appointmentRolesMapping("appointment").appointmentType("type").workPattern("pattern").build();
+        List<AppointmentsRequest> appointmentsRequests = Arrays.asList(appointmentsRequest1,appointmentsRequest2);
 
-        AuthorisationsRequest authorisation1 = AuthorisationsRequest.builder().perId(123).jurisdiction("juristriction")
-                .lowerLevel("lowerlevel").ticketCode("ticketCode").personalCode("personalCode").startDate("1991-12-19")
-                .endDate("2022-12-20").objectId("objectId").ticketId("ticketId").build();
-        AuthorisationsRequest authorisation2 = AuthorisationsRequest.builder().perId(123).jurisdiction("juristriction")
-                .lowerLevel("lowerlevel").ticketCode("ticketCode").personalCode("personalCode").startDate("1991-12-19")
-                .endDate("2022-12-20").objectId("objectId").ticketId("ticketId").build();
+        AuthorisationsRequest authorisation1 = AuthorisationsRequest.builder().jurisdiction("juristriction")
+                .lowerLevel("lowerlevel").startDate("1991-12-19")
+                .endDate("2022-12-20").ticketCode("ticketId").build();
+        AuthorisationsRequest authorisation2 = AuthorisationsRequest.builder().jurisdiction("juristriction")
+                .lowerLevel("lowerlevel").startDate("1991-12-19")
+                .endDate("2022-12-20").ticketCode("ticketId").build();
 
         List<AuthorisationsRequest> authorisations = Arrays.asList(authorisation1,authorisation2);
 
 
 
-        result1 = ResultsRequest.builder().perId("123").personalCode("1234").knownAs("knownas").fullName("fullName")
+        result1 = ResultsRequest.builder().personalCode("1234").knownAs("knownas").fullName("fullName")
                 .surname("surname").postNominals("postNOmi").email("email").lastWorkingDate("2022-12-20")
-                .objectId("objectId").initials("initials").appointmentsRequests(appintments)
+                .objectId("objectId").initials("initials").appointmentsRequests(appointmentsRequests)
                 .authorisationsRequests(authorisations).build();
 
-        result2 = ResultsRequest.builder().perId("123").personalCode("12345").knownAs("knownas").fullName("fullName")
+        result2 = ResultsRequest.builder().personalCode("12345").knownAs("knownas").fullName("fullName")
                 .surname("surname").postNominals("postNOmi").email("email").lastWorkingDate("2022-12-20")
-                .objectId("objectId").initials("initials").appointmentsRequests(appintments)
+                .objectId("objectId").initials("initials").appointmentsRequests(appointmentsRequests)
                 .authorisationsRequests(authorisations).build();
-
-
-
 
         List<ResultsRequest> results = Arrays.asList(result1,result2);
 
@@ -147,9 +146,6 @@ class ElinksPeopleServiceImplTest {
                 .pages(1).currentPage(1).resultsPerPage(3).morePages(false).build();
         elinksApiResponseSecondHit = PeopleRequest.builder().resultsRequests(results).pagination(paginationFalse)
                 .build();
-
-
-
     }
 
     @Test
@@ -181,10 +177,6 @@ class ElinksPeopleServiceImplTest {
 
         verify(authorisationsRepository, times(2)).deleteByPersonalCodeIn(any());
         verify(authorisationsRepository, times(2)).saveAll(any());
-
-
-
-
     }
 
     @Test
@@ -266,6 +258,7 @@ class ElinksPeopleServiceImplTest {
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ACCESS_ERROR);
+
     }
 
     @Test
@@ -287,6 +280,7 @@ class ElinksPeopleServiceImplTest {
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ACCESS_ERROR);
+
     }
 
     @Test
@@ -405,7 +399,6 @@ class ElinksPeopleServiceImplTest {
 
     }
 
-
     @Test
     void load_people_should_return_elinksException_when_http_unauthorised() {
 
@@ -460,7 +453,6 @@ class ElinksPeopleServiceImplTest {
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
 
-
     }
 
     @Test
@@ -480,6 +472,4 @@ class ElinksPeopleServiceImplTest {
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS);
 
     }
-
-
 }

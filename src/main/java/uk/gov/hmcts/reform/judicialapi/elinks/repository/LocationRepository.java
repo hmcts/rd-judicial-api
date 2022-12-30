@@ -7,4 +7,5 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 @Repository
 public interface LocationRepository extends JpaRepository<Location, String> {
 
+    Location findByRegionDescEnIgnoreCase(String personalCode);
 }

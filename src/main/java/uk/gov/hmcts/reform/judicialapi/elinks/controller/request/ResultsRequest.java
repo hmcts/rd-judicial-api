@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.controller.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,25 +15,24 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ResultsRequest {
 
-    @JsonProperty("per_id")
-    private String perId;
     @JsonProperty("personal_code")
     private String personalCode;
     @JsonProperty("known_as")
     private String knownAs;
-    @JsonProperty("full_name")
-    private String fullName;
     @JsonProperty("surname")
     private String surname;
+    @JsonProperty("fullname")
+    private String fullName;
     @JsonProperty("post_nominals")
     private String postNominals;
     @JsonProperty("email")
     private String email;
-    @JsonProperty("last_working_date")
+    @JsonProperty("leaving_on")
     private String lastWorkingDate;
-    @JsonProperty("object_id")
+    @JsonProperty("id")
     private String objectId;
     @JsonProperty("initials")
     private String initials;
