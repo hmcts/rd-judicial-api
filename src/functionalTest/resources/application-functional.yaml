@@ -19,3 +19,8 @@ elinks:
     page: 1
     includePreviousAppointments : false
     threadPauseTime: 2000
+
+elastic:
+  search:
+    query: (roles:judiciary) AND lastModified:>now-12h
+    recordsPerPage: 500

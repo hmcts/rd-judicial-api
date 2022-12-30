@@ -10,8 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ElinksPeopleServiceImpl;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.IdamElasticSearchServiceImpl;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -32,6 +37,9 @@ class ElinksControllerTest {
 
     @Mock
     ElinksPeopleServiceImpl elinksPeopleServiceImpl;
+
+    @Mock
+    IdamElasticSearchServiceImpl idamElasticSearchService;
 
     @Test
     void test_load_location_success() {
@@ -102,5 +110,18 @@ class ElinksControllerTest {
 
     }
 
+    @Test
+    void test_idam_elastic_search_success() {
+
+        Set<IdamResponse> idamResponseSet = new HashSet<>();
+        idamResponseSet.add(new IdamResponse());
+
+        when(idamElasticSearchService.getIdamElasticSearchSyncFeed()).thenReturn(idamResponseSet);
+
+        ResponseEntity<Object> actual = eLinksController.idamElasticSearch();
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
+
+    }
 
 }
