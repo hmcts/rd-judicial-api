@@ -270,6 +270,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         return appointmentList;
     }
 
+    // change the logic to outside
     private Map<String, String> getDetailsFromJudicilaLocationMapping(String baseLocationId) {
         Map<String,String> locationMappingDetails = new HashMap<>();
         if (nonNull(baseLocationId)) {
@@ -317,6 +318,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         return null;
     }
 
+    // Need to be removed after Region ID  CR fix
     private String regionMapping(AppointmentsRequest appointment) {
 
         String region = appointment.getCircuit() != null ? appointment.getCircuit() : appointment.getLocation();

@@ -34,6 +34,7 @@ public class ResultsRequest {
     private String lastWorkingDate;
     @JsonProperty("id")
     private String objectId;
+    //TBC
     @JsonProperty("initials")
     private String initials;
     @JsonProperty("appointments")

@@ -31,10 +31,8 @@ public class AppointmentsRequest {
     private String startDate;
     @JsonProperty("end_date")
     private String endDate;
-    //TBC role/role_name?
-    @JsonProperty("role")
+    @JsonProperty("role_name")
     private String appointmentRolesMapping;
-    //TBC contract_type_id?
     @JsonProperty("contract_type")
     private String appointmentType;
     @JsonProperty("work_pattern")
