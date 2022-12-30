@@ -268,7 +268,8 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/feign/IdamUserFeignClient.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/IdamUserProfileServiceImpl.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java"
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java" +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/**,"
     }
 }
 
