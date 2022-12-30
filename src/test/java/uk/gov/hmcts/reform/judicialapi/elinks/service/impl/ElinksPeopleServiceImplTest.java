@@ -99,7 +99,9 @@ class ElinksPeopleServiceImplTest {
                 "2000");
         ReflectionTestUtils.setField(elinksPeopleServiceImpl, "lastUpdated",
                 "2015-01-01");
-        ;
+        ReflectionTestUtils.setField(elinksPeopleServiceImpl, "page",
+                "1");
+
 
         pagination = PaginationRequest.builder()
                 .results(1)

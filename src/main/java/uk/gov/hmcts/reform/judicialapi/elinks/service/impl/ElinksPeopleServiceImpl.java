@@ -105,8 +105,9 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
 
-        while (isMorePagesAvailable) {
-            Response peopleApiResponse = getPeopleResposeFromElinks();
+        int pageValue = Integer.parseInt(page);
+        do {
+            Response peopleApiResponse = getPeopleResponseFromElinks(pageValue++);
             httpStatus = HttpStatus.valueOf(peopleApiResponse.status());
             ResponseEntity<Object> responseEntity;
 
@@ -125,7 +126,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 handleELinksErrorResponse(httpStatus);
             }
             pauseThread(Long.valueOf(threadPauseTime));
-        }
+        } while (isMorePagesAvailable);
 
         return ResponseEntity
                 .status(httpStatus)
@@ -134,10 +135,10 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
     }
 
-    private Response getPeopleResposeFromElinks() {
+    private Response getPeopleResponseFromElinks(int currentPage) {
         String updatedSince = getUpdateSince();
         try {
-            return elinksFeignClient.getPeopleDetials(updatedSince, perPage, page,
+            return elinksFeignClient.getPeopleDetials(updatedSince, perPage, String.valueOf(currentPage),
                     Boolean.parseBoolean(includePreviousAppointments));
         } catch (FeignException ex) {
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
