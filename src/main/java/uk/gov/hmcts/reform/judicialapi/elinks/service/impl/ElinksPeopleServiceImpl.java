@@ -222,10 +222,10 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private List<uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation> buildAuthorisationsDto(ResultsRequest
                                                                                                        resultsRequest) {
         final List<AuthorisationsRequest> authorisationsRequests = resultsRequest.getAuthorisationsRequests();
-        final List<Authorisation> appointmentList = new ArrayList<>();
+        final List<Authorisation> authorisationList = new ArrayList<>();
 
         for (AuthorisationsRequest authorisationsRequest : authorisationsRequests) {
-            appointmentList.add(uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation.builder()
+            authorisationList.add(uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation.builder()
                     .personalCode(resultsRequest.getPersonalCode())
                     .objectId(resultsRequest.getObjectId())
                     .jurisdiction(authorisationsRequest.getJurisdiction())
@@ -237,7 +237,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .ticketCode(authorisationsRequest.getTicketCode())
                     .build());
         }
-        return appointmentList;
+        return authorisationList;
     }
 
 
@@ -263,6 +263,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 .lastLoadedDate(LocalDateTime.now())
                 .epimmsId(locationMappingDetails.get(EPIMMS_ID))
                 .serviceCode(locationMappingDetails.get(SERVICE_CODE))
+                .appointmentRolesMapping(appointment.getAppointmentRolesMapping())
                 .appointmentType(appointment.getAppointmentType())
                 .workPattern(appointment.getWorkPattern())
                 .build());
