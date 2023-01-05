@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AppointmentsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AuthorisationsRequest;
@@ -24,7 +25,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointementsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
@@ -60,7 +61,7 @@ class ElinksPeopleServiceImplTest {
     ElinksFeignClient elinksFeignClient;
 
     @Spy
-    private AppointementsRepository appointementsRepository;
+    private AppointmentsRepository appointmentsRepository;
 
     @Spy
     private AuthorisationsRepository authorisationsRepository;
@@ -90,7 +91,7 @@ class ElinksPeopleServiceImplTest {
 
     private PeopleRequest elinksApiResponseSecondHit;
 
-
+    JdbcTemplate jdbcTemplate =  mock(JdbcTemplate.class);
 
     @BeforeEach
     void setUP() {
@@ -174,8 +175,8 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()));
         verify(profileRepository, times(2)).saveAll(any());
 
-        verify(appointementsRepository, times(2)).deleteByPersonalCodeIn(any());
-        verify(appointementsRepository, times(2)).saveAll(any());
+        verify(appointmentsRepository, times(2)).deleteByPersonalCodeIn(any());
+        verify(appointmentsRepository, times(2)).saveAll(any());
 
         verify(authorisationsRepository, times(2)).deleteByPersonalCodeIn(any());
         verify(authorisationsRepository, times(2)).saveAll(any());
@@ -203,8 +204,8 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()));
         verify(profileRepository, times(2)).saveAll(any());
 
-        verify(appointementsRepository, times(2)).deleteByPersonalCodeIn(any());
-        verify(appointementsRepository, times(2)).saveAll(any());
+        verify(appointmentsRepository, times(2)).deleteByPersonalCodeIn(any());
+        verify(appointmentsRepository, times(2)).saveAll(any());
 
         verify(authorisationsRepository, times(2)).deleteByPersonalCodeIn(any());
         verify(authorisationsRepository, times(2)).saveAll(any());
@@ -346,7 +347,7 @@ class ElinksPeopleServiceImplTest {
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         DataAccessException dataAccessException = mock(DataAccessException.class);
-        when(appointementsRepository.saveAll(any())).thenThrow(dataAccessException);
+        when(appointmentsRepository.saveAll(any())).thenThrow(dataAccessException);
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {

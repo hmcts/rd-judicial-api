@@ -3,11 +3,14 @@ package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 import feign.FeignException;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -22,7 +25,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointementsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
@@ -31,14 +34,14 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.nonNull;
@@ -65,7 +68,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private ElinksFeignClient elinksFeignClient;
 
     @Autowired
-    private AppointementsRepository appointementsRepository;
+    private AppointmentsRepository appointmentsRepository;
 
     @Autowired
     private AuthorisationsRepository authorisationsRepository;
@@ -74,7 +77,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private ProfileRepository profileRepository;
 
     @Autowired
-    private LocationMapppingRepository locationMapppingRepository;
+    private LocationMapppingRepository locationMappingRepository;
 
     @Autowired
     private LocationRepository locationRepository;
@@ -82,6 +85,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     @Autowired
     private DataloadSchedularAuditRepository dataloadSchedularAuditRepository;
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @Value("${elinks.people.lastUpdated}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -128,6 +133,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             pauseThread(Long.valueOf(threadPauseTime));
         } while (isMorePagesAvailable);
 
+        updateEpimsServiceCodeMapping();
         return ResponseEntity
                 .status(httpStatus)
                 .body(PEOPLE_DATA_LOAD_SUCCESS);
@@ -190,7 +196,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             // Delete the personalCodes in appointment table
             List<String>  personalCodesToDelete = userProfiles.stream().map(UserProfile::getPersonalCode).toList();
 
-            appointementsRepository.deleteByPersonalCodeIn(personalCodesToDelete);
+            appointmentsRepository.deleteByPersonalCodeIn(personalCodesToDelete);
             List<uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment> appointments =  resultsRequests.stream()
                     .filter(resultsRequest -> !CollectionUtils.isEmpty(resultsRequest.getAppointmentsRequests()))
                     .map(this::buildAppointmentDto)
@@ -198,7 +204,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .toList();
 
             if (!CollectionUtils.isEmpty(appointments)) {
-                appointementsRepository.saveAll(appointments);
+                appointmentsRepository.saveAll(appointments);
             }
             authorisationsRepository.deleteByPersonalCodeIn(personalCodesToDelete);
 
@@ -248,8 +254,6 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         final List<Appointment> appointmentList = new ArrayList<>();
 
         for (AppointmentsRequest appointment: appointmentsRequests) {
-            Map<String,String> locationMappingDetails = getDetailsFromJudicilaLocationMapping(appointment
-                .getBaseLocationId());
 
             appointmentList.add(uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment.builder()
                 .personalCode(resultsRequest.getPersonalCode())
@@ -261,8 +265,6 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 .endDate(convertToLocalDate(appointment.getEndDate()))
                 .createdDate(LocalDateTime.now())
                 .lastLoadedDate(LocalDateTime.now())
-                .epimmsId(locationMappingDetails.get(EPIMMS_ID))
-                .serviceCode(locationMappingDetails.get(SERVICE_CODE))
                 .appointmentRolesMapping(appointment.getAppointmentRolesMapping())
                 .appointmentType(appointment.getAppointmentType())
                 .workPattern(appointment.getWorkPattern())
@@ -271,17 +273,30 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         return appointmentList;
     }
 
-    // change the logic to outside
-    private Map<String, String> getDetailsFromJudicilaLocationMapping(String baseLocationId) {
-        Map<String,String> locationMappingDetails = new HashMap<>();
-        if (nonNull(baseLocationId)) {
-            Optional<LocationMapping> locationMapping = locationMapppingRepository.findById(baseLocationId);
-            if (locationMapping.isPresent()) {
-                locationMappingDetails.put(SERVICE_CODE, locationMapping.get().getServiceCode());
-                locationMappingDetails.put(EPIMMS_ID, locationMapping.get().getEpimmsId());
-            }
-        }
-        return locationMappingDetails;
+    // moved the logic to outside
+    public void updateEpimsServiceCodeMapping() {
+
+        List<Triple<String, String,String>> epimsLocationId = new ArrayList<>();
+        List<String> locationIds = appointmentsRepository.fetchAppointmentBaseLocation();
+        List<LocationMapping> locationMappings  = locationMappingRepository.findAllById(locationIds);
+
+        String updateEpimmsid = "UPDATE dbjudicialdata.judicial_office_appointment SET epimms_id = ? , "
+                    + " service_code = ? WHERE base_location_id = ?";
+        locationMappings.stream().filter(location -> nonNull(location.getJudicialBaseLocationId())).forEach(s ->
+                epimsLocationId.add(Triple.of(s.getJudicialBaseLocationId(), s.getEpimmsId(),s.getServiceCode())));
+        log.info("Insert Query batch Response from IDAM" + epimsLocationId.size());
+        jdbcTemplate.batchUpdate(
+                    updateEpimmsid,
+                epimsLocationId,
+                    10,
+                    new ParameterizedPreparedStatementSetter<Triple<String, String, String>>() {
+                public void setValues(PreparedStatement ps, Triple<String, String, String> argument)
+                                throws SQLException {
+                    ps.setString(1, argument.getMiddle());
+                    ps.setString(2, argument.getRight());
+                    ps.setString(3, argument.getLeft());
+                    }
+                });
     }
 
     private UserProfile buildUserProfileDto(
