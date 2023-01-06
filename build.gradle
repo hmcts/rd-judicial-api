@@ -272,9 +272,10 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/domain/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/response/**,"
-
-
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/response/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/ElinksFeignInterceptorConfiguration.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/util/ElinkDataIngestionSchedularAudit.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/controller/advice/ForbiddenException.java,"
     }
 }
 
