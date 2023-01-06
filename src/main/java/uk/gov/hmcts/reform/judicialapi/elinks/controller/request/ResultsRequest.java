@@ -45,7 +45,8 @@ public class ResultsRequest {
     //Leaversfields
     @JsonProperty("per_id")
     private String perId;
-    @JsonProperty("active")
-    private String active;
-
+    @JsonProperty("leaver")
+    private String leaver;
+    @JsonProperty("left_on")
+    private String leftOn;
 }

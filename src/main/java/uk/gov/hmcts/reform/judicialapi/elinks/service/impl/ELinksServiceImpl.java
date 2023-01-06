@@ -331,17 +331,6 @@ public class ELinksServiceImpl implements ELinksService {
 
     }
 
-    private UserProfile buildUserProfileDto(
-            ResultsRequest resultsRequest) {
-
-        return UserProfile.builder()
-                .personalCode(resultsRequest.getPersonalCode())
-                .lastWorkingDate(convertToLocalDate(resultsRequest.getLastWorkingDate()))
-                .activeFlag(Boolean.valueOf(resultsRequest.getActive()))
-                .objectId(resultsRequest.getObjectId())
-                .build();
-    }
-
     private LocalDate convertToLocalDate(String date) {
         if (Optional.ofNullable(date).isPresent()) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -358,7 +347,7 @@ public class ELinksServiceImpl implements ELinksService {
                 + " active-flag = ? WHERE personal_code = ?";
 
         resultsRequests.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
-                leaversId.add(Triple.of(s.getPersonalCode(), s.getActive(),s.getLastWorkingDate())));
+                leaversId.add(Triple.of(s.getPersonalCode(), s.getLeaver(),s.getLeftOn())));
         log.info("Insert Query batch Response from IDAM" + leaversId.size());
         jdbcTemplate.batchUpdate(
                 updateLeaversId,
