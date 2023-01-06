@@ -271,7 +271,9 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java" +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/domain/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/**,"
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/response/**,"
+
 
     }
 }
