@@ -371,8 +371,6 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
     
     
-    implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.20'
-
 
     testImplementation ('com.github.hmcts:rd-commons-lib:v0.0.13'){
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
