@@ -343,7 +343,7 @@ public class ELinksServiceImpl implements ELinksService {
         List<Triple<String, String,String>> leaversId = new ArrayList<>();
 
         String updateLeaversId = "UPDATE dbjudicialdata.judicial_user_profile SET last_working_date = ? , "
-                + "active_flag = ? WHERE personal_code = ?";
+                + "active_flag = ?, lastLoadedDate= NOW() AT TIME ZONE 'utc' WHERE personal_code = ?";
 
         resultsRequests.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
                 leaversId.add(Triple.of(s.getPersonalCode(), s.getLeaver(),s.getLeftOn())));
