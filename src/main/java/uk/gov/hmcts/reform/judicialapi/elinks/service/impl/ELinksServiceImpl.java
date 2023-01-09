@@ -342,12 +342,12 @@ public class ELinksServiceImpl implements ELinksService {
 
         List<Triple<String, String,String>> leaversId = new ArrayList<>();
 
-        String updateLeaversId = "UPDATE dbjudicialdata.judicial_user_profile SET last_working_date = ? , "
-                + "active_flag = ?, lastLoadedDate= NOW() AT TIME ZONE 'utc' WHERE personal_code = ?";
+        String updateLeaversId = "UPDATE dbjudicialdata.judicial_user_profile SET last_working_date = Date(?) , "
+                + "active_flag = ?, last_loaded_date= NOW() AT TIME ZONE 'utc' WHERE personal_code = ?";
 
         resultsRequests.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
                 leaversId.add(Triple.of(s.getPersonalCode(), s.getLeaver(),s.getLeftOn())));
-        log.info("Insert Query batch Response from IDAM" + leaversId.size());
+        log.info("Insert Query batch Response from Leavers" + leaversId.size());
         jdbcTemplate.batchUpdate(
                 updateLeaversId,
                 leaversId,
@@ -356,7 +356,7 @@ public class ELinksServiceImpl implements ELinksService {
                     public void setValues(PreparedStatement ps, Triple<String, String, String> argument)
                             throws SQLException {
                         ps.setString(1, argument.getRight());
-                        ps.setString(2, argument.getMiddle());
+                        ps.setBoolean(2, !(Boolean.valueOf(argument.getMiddle())));
                         ps.setString(3, argument.getLeft());
                     }
                 });
