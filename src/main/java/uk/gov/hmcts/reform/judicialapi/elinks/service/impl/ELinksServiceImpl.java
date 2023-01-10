@@ -8,6 +8,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +32,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.LocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ELinksService;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.sql.PreparedStatement;
@@ -86,7 +88,12 @@ public class ELinksServiceImpl implements ELinksService {
     @Value("${elinks.people.threadPauseTime}")
     private String threadPauseTime;
 
+    @Autowired
+    CommonUtil commonUtil;
 
+    @Value("${elinks.people.lastUpdated}")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private String lastUpdated;
 
     @Override
     public ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveBaseLocation() {
@@ -264,7 +271,7 @@ public class ELinksServiceImpl implements ELinksService {
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
         }
         if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
-            updatedSince = UPDATED_SINCE;
+            updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
         } else {
             updatedSince = maxSchedulerEndTime.toString();
             updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
