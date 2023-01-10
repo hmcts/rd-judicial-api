@@ -71,6 +71,9 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
     @RegisterExtension
     protected final WireMockExtension peopleService = new WireMockExtension(8000);
 
+    @RegisterExtension
+    protected final WireMockExtension leaversService = new WireMockExtension(8001);
+
     @Autowired
     Flyway flyway;
 
@@ -236,6 +239,29 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                                 + "        }"
                                 + "    ]"
                                 + " }")
+                        .withTransformers("user-token-response")));
+
+        leaversService.stubFor(get(urlPathMatching("/leavers"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("{"
+                                + "    \"pagination\": {"
+                                + "      \"results\": 1,"
+                                + "      \"pages\": 1,"
+                                + "      \"current_page\": 1,"
+                                + "      \"results_per_page\": 1,"
+                                + "      \"more_pages\": false"
+                                + "  },"
+                                + "  \"results\": ["
+                                + "      { "
+                                + "      \"id\":\"d01b0b59-8d68-4463-9887-535989208e27\","
+                                + "      \"per_id\":56787,"
+                                + "      \"personal_code\":\"0049931063\","
+                                + "      \"leaver\":true,"
+                                + "      \"left_on\":\"2021-02-24\""
+                                + "    }")
                         .withTransformers("user-token-response")));
     }
 
