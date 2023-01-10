@@ -255,7 +255,7 @@ public class ELinksServiceImpl implements ELinksService {
     private Response getLeaversResponseFromElinks(int currentPage) {
         String leftSince = getUpdateSince();
         try {
-            return elinksFeignClient.getLeaversDetials(leftSince, perPage, String.valueOf(currentPage));
+            return elinksFeignClient.getLeaversDetails(leftSince, perPage, String.valueOf(currentPage));
         } catch (FeignException ex) {
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         }

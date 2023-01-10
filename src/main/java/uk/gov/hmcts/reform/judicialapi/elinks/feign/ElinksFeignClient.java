@@ -36,7 +36,8 @@ public interface ElinksFeignClient {
     @RequestLine("GET /leavers")
     @Headers({"Authorization: {authorization}",
             "Content-Type: application/json"})
-    Response getLeaversDetials(@RequestParam("left_since") String updatedSince,
+
+    Response getLeaversDetails(@RequestParam("left_since") String updatedSince,
                               @RequestParam("per_page") String perPage, @RequestParam("page") String page);
 
 
