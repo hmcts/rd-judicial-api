@@ -46,7 +46,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUDIT_DATA_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
@@ -228,8 +227,8 @@ class ElinksPeopleServiceImplTest {
             ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
-        assertThat(thrown.getErrorMessage()).contains(AUDIT_DATA_ERROR);
-        assertThat(thrown.getErrorDescription()).contains(AUDIT_DATA_ERROR);
+        assertThat(thrown.getErrorMessage()).contains(DATA_UPDATE_ERROR);
+        assertThat(thrown.getErrorDescription()).contains(DATA_UPDATE_ERROR);
     }
 
 
