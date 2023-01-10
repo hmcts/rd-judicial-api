@@ -184,7 +184,7 @@ class ElinksLeaversServiceImplTest {
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ACCESS_ERROR);
     }
-///////
+
     @Test
     void load_leavers_should_return_elinksException_when_ElinksApi_Response_is_unknown_Format()
             throws JsonProcessingException {
