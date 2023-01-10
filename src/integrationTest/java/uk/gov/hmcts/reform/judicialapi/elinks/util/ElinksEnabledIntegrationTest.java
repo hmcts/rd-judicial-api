@@ -69,7 +69,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
     protected final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
 
     @RegisterExtension
-    protected final WireMockExtension peopleService = new WireMockExtension(8000);
+    protected final WireMockExtension elinks = new WireMockExtension(8000);
 
     @Autowired
     Flyway flyway;
@@ -119,7 +119,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                         .withBody(getDynamicJwksResponse())));
 
 
-        peopleService.stubFor(get(urlPathMatching("/people"))
+        elinks.stubFor(get(urlPathMatching("/people"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -237,6 +237,18 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                                 + "    ]"
                                 + " }")
                         .withTransformers("user-token-response")));
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody("{"
+                    + " \"region_id\": \"0\","
+                    + " \"region_desc_en\": \"default\","
+                    + " \"region_desc_cy\": \"default\""
+                    + " }")
+                .withTransformers("user-token-response")));
     }
 
     @AfterEach
