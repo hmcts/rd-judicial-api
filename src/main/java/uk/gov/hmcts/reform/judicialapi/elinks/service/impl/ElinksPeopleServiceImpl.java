@@ -173,7 +173,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         try {
             maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSchedularEndTime();
         } catch (Exception ex) {
-            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
+            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
         }
         if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
             updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
