@@ -133,7 +133,7 @@ testing:
 
 elinksApiKey: ${judicial_api_elinks_api_key:}
 #URL not tested , code is for developers reference
-elinksUrl: ${ELINKS_URL:https://jo-staging.elinks.judiciary.uk/api/v4}
+elinksUrl: ${ELINKS_URL:http://127.0.0.1:8000}
 
 elinks:
   people:

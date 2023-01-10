@@ -35,7 +35,7 @@ public class RefDataElinksConstants {
     public static final String ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS
             = "You have exceeded the request limit (20 requests in 20 seconds)";
 
-    public static final String PEOPLE_DATA_LOAD_SUCCESS = "People data loaded successfully.";
+    public static final String PEOPLE_DATA_LOAD_SUCCESS = "People data loaded successfully";
 
     public static final String THREAD_INVOCATION_EXCEPTION = "An error occurred while thread sleeping";
 

@@ -31,7 +31,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditR
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.sql.PreparedStatement;
@@ -56,7 +58,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.REGION_DEFAULT_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.THREAD_INVOCATION_EXCEPTION;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.UPDATED_SINCE;
 
 @Slf4j
 @Service
@@ -88,6 +89,9 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    CommonUtil commonUtil;
+
     @Value("${elinks.people.lastUpdated}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String lastUpdated;
@@ -106,7 +110,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
     @Override
     @Transactional("transactionManager")
-    public ResponseEntity<Object> updatePeople() {
+    public ResponseEntity<ElinkPeopleWrapperResponse> updatePeople() {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
 
@@ -134,11 +138,13 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         } while (isMorePagesAvailable);
 
         updateEpimsServiceCodeMapping();
+
+        ElinkPeopleWrapperResponse response = new ElinkPeopleWrapperResponse();
+        response.setMessage(PEOPLE_DATA_LOAD_SUCCESS);
+
         return ResponseEntity
                 .status(httpStatus)
-                .body(PEOPLE_DATA_LOAD_SUCCESS);
-
-
+                .body(response);
     }
 
     private Response getPeopleResponseFromElinks(int currentPage) {
@@ -170,7 +176,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
         }
         if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
-            updatedSince = UPDATED_SINCE;
+            updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
         } else {
             updatedSince = maxSchedulerEndTime.toString();
             updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
@@ -178,6 +184,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         log.info("updatedSince : " + updatedSince);
         return updatedSince;
     }
+
 
     private void processPeopleResponse(PeopleRequest elinkPeopleResponseRequest) {
         try {

@@ -13,4 +13,17 @@ BY dbjudicialdata.judicial_office_appointment.judicial_office_appointment_id;
 ALTER TABLE dbjudicialdata.judicial_office_appointment
 ALTER COLUMN judicial_office_appointment_id SET DEFAULT nextval('dbjudicialdata.judicial_office_appointment_id_sequence');
 
+insert into dbjudicialdata.base_location_type(base_location_id,court_name,court_type,circuit,area_of_expertise)
+values ('0', 'default', 'default','default', 'default');
 
+insert into dbjudicialdata.region_type(region_id,region_desc_en,region_desc_cy)
+values ('0', 'default', 'default');
+
+
+CREATE TABLE dbjudicialdata.judicial_location_mapping (
+	epimms_id varchar(16),
+	judicial_base_location_id varchar(64),
+	building_location_name varchar(256),
+	base_location_name varchar(128),
+	service_code varchar(16)
+);

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ElinksPeopleServiceImpl;
@@ -95,20 +96,23 @@ class ElinksControllerTest {
     @Test
     void test_load_people_success() {
 
-        ResponseEntity<Object> responseEntity;
+        ResponseEntity<ElinkPeopleWrapperResponse> responseEntity;
+
+        ElinkPeopleWrapperResponse elinkPeopleWrapperResponse = new ElinkPeopleWrapperResponse();
+        elinkPeopleWrapperResponse.setMessage(PEOPLE_DATA_LOAD_SUCCESS);
 
         responseEntity = new ResponseEntity<>(
-                PEOPLE_DATA_LOAD_SUCCESS,
+                elinkPeopleWrapperResponse,
                 null,
                 HttpStatus.OK
         );
 
         when(elinksPeopleServiceImpl.updatePeople()).thenReturn(responseEntity);
 
-        ResponseEntity<Object> actual = eLinksController.loadPeople();
+        ResponseEntity<ElinkPeopleWrapperResponse> actual = eLinksController.loadPeople();
         assertThat(actual).isNotNull();
         assertThat(actual.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
-        assertThat(actual.getBody().toString()).hasToString(PEOPLE_DATA_LOAD_SUCCESS);
+        assertThat(actual.getBody().getMessage()).hasToString(PEOPLE_DATA_LOAD_SUCCESS);
 
     }
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ELinksService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
@@ -153,7 +154,7 @@ public class ElinksController {
     @GetMapping (path = "/people",
             produces = APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<Object> loadPeople() {
+    public ResponseEntity<ElinkPeopleWrapperResponse> loadPeople() {
 
         return elinksPeopleService.updatePeople();
 

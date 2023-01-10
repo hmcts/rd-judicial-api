@@ -31,6 +31,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditR
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -93,13 +95,16 @@ class ElinksPeopleServiceImplTest {
 
     JdbcTemplate jdbcTemplate =  mock(JdbcTemplate.class);
 
+    @Spy
+    CommonUtil commonUtil;
+
     @BeforeEach
     void setUP() {
 
         ReflectionTestUtils.setField(elinksPeopleServiceImpl, "threadPauseTime",
                 "2000");
         ReflectionTestUtils.setField(elinksPeopleServiceImpl, "lastUpdated",
-                "2015-01-01");
+                "Thu Jan 01 00:00:00 GMT 2015");
         ReflectionTestUtils.setField(elinksPeopleServiceImpl, "page",
                 "1");
 
@@ -167,9 +172,9 @@ class ElinksPeopleServiceImplTest {
                 .thenReturn(Response.builder().request(mock(Request.class))
                         .body(body2, defaultCharset()).status(200).build());
 
-        ResponseEntity<Object> response = elinksPeopleServiceImpl.updatePeople();
+        ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertThat(response.getBody()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
+        assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
         verify(elinksFeignClient, times(2)).getPeopleDetials(any(), any(), any(),
                 Boolean.parseBoolean(any()));
@@ -195,9 +200,9 @@ class ElinksPeopleServiceImplTest {
                 .thenReturn(Response.builder().request(mock(Request.class))
                         .body(body2, defaultCharset()).status(200).build());
 
-        ResponseEntity<Object> response = elinksPeopleServiceImpl.updatePeople();
+        ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertThat(response.getBody()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
+        assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
 
         verify(elinksFeignClient, times(2)).getPeopleDetials(any(), any(), any(),
@@ -220,7 +225,7 @@ class ElinksPeopleServiceImplTest {
         DataAccessException dataAccessException = mock(DataAccessException.class);
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenThrow(dataAccessException);
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
         assertThat(thrown.getErrorMessage()).contains(AUDIT_DATA_ERROR);
@@ -237,7 +242,7 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()))).thenThrow(feignExceptionMock);
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
@@ -256,7 +261,7 @@ class ElinksPeopleServiceImplTest {
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
@@ -278,7 +283,7 @@ class ElinksPeopleServiceImplTest {
                         .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
@@ -300,7 +305,7 @@ class ElinksPeopleServiceImplTest {
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
@@ -325,7 +330,7 @@ class ElinksPeopleServiceImplTest {
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
         assertThat(thrown.getErrorMessage()).contains(DATA_UPDATE_ERROR);
@@ -351,7 +356,7 @@ class ElinksPeopleServiceImplTest {
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
         assertThat(thrown.getErrorMessage()).contains(DATA_UPDATE_ERROR);
@@ -376,7 +381,7 @@ class ElinksPeopleServiceImplTest {
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.NOT_ACCEPTABLE.value());
         assertThat(thrown.getErrorMessage()).contains(DATA_UPDATE_ERROR);
@@ -394,7 +399,7 @@ class ElinksPeopleServiceImplTest {
                 .build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_BAD_REQUEST);
@@ -413,7 +418,7 @@ class ElinksPeopleServiceImplTest {
                 .build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_UNAUTHORIZED);
@@ -431,7 +436,7 @@ class ElinksPeopleServiceImplTest {
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.FORBIDDEN.value()).build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_FORBIDDEN);
@@ -450,7 +455,7 @@ class ElinksPeopleServiceImplTest {
                 .build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
@@ -468,7 +473,7 @@ class ElinksPeopleServiceImplTest {
                 .status(HttpStatus.TOO_MANY_REQUESTS.value()).build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<Object> responseEntity = elinksPeopleServiceImpl.updatePeople();
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.TOO_MANY_REQUESTS.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS);
