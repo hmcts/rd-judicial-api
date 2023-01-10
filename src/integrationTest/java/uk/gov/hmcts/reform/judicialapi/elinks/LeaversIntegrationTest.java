@@ -33,7 +33,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
         Map<String, Object> response = elinksReferenceDataClient.getLeavers();
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkLeaversWrapperResponse profiles = (ElinkLeaversWrapperResponse)response.get("body");
-        assertEquals("Leavers data loaded successfully", profiles.getMessage());
+        assertEquals("Leavers Data Loaded Successfully", profiles.getMessage());
     }
 
     @DisplayName("Elinks Leavers to JRD user profile verification")
@@ -43,15 +43,15 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
         assertThat(leaversResponse).containsEntry("http_status", "200 OK");
         ElinkLeaversWrapperResponse profiles = (ElinkLeaversWrapperResponse)leaversResponse.get("body");
-        assertEquals("Leavers data loaded successfully", profiles.getMessage());
+        assertEquals("Leavers Data Loaded Successfully", profiles.getMessage());
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
         assertEquals(1, userprofile.size());
         assertEquals("0049931063", userprofile.get(0).getPersonalCode());
-        assertEquals("2021-02-24", userprofile.get(0).getLastWorkingDate());
-        assertEquals("false", userprofile.get(0).getActiveFlag());
-        assertEquals("d01b0b59-8d68-4463-9887-535989208e27", userprofile.get(0).getObjectId());
+        assertEquals("2021-02-24", userprofile.get(0).getLastWorkingDate().toString());
+        assertEquals(false, userprofile.get(0).getActiveFlag());
+        assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
 
     }
 }
