@@ -58,7 +58,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSSUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.THREAD_INVOCATION_EXCEPTION;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.UPDATED_SINCE;
 
 @Service
 @Slf4j
