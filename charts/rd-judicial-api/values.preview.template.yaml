@@ -60,5 +60,5 @@ servicebus:
   serviceplan: standard
   setup:
     topics:
-      - name: crd-aks-topic
+      - name: jrdapi-aks-topic
         subscriptionNeeded: yes
