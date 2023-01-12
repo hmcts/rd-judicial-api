@@ -30,3 +30,16 @@ idam:
     redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
     authorization: ${OAUTH2_AUTH:}
     client-authorization: ${OAUTH2_CLIENT_AUTH:}
+
+jrd:
+  publisher:
+    azure:
+      service:
+        bus:
+          host: ${JRD_MQ_HOST:rd-servicebus-sandbox.servicebus.windows.net}
+          username: ${JRD_MQ_USERNAME:SendAndListenSharedAccessKey}
+          password: ${JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY:}
+          topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-sandbox}
+          # DO NOT SET THIS 'true' IN PRODUCTION!
+          trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
+    judicialDataPerMessage: ${JRD_DATA_PER_MESSAGE:50}
