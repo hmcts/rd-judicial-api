@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 
 import java.nio.charset.Charset;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -196,8 +197,8 @@ class IdamElasticSearchServiceImplTest {
     @Test
     void testElasticSearchQuery() {
 
-        List<String> resultSet = new ArrayList<>(Collections.singleton(LocalDateTime.now().minusDays(1).toString()
-                .replace("T"," ")));
+        List<Timestamp> resultSet = new ArrayList<>(Collections.singleton(java.sql.Timestamp.valueOf(
+                LocalDateTime.now().minusDays(1))));
         when(jdbcTemplate.query(anyString(),any(RowMapper.class))).thenReturn(resultSet);
         Long hours = invokeMethod(idamElasticSearchServiceImpl, "idamElasticSearchQueryHours");
         Assert.assertEquals(Long.valueOf(25), hours);
@@ -205,6 +206,7 @@ class IdamElasticSearchServiceImplTest {
 
     @Test
     void testElasticSearchQueryMaxIsNull() {
+        when(jdbcTemplate.query(anyString(),any(RowMapper.class))).thenReturn(null);
         Long computeHours = invokeMethod(idamElasticSearchServiceImpl, "idamElasticSearchQueryHours");
         Assert.assertEquals(Long.valueOf(72),computeHours);
     }

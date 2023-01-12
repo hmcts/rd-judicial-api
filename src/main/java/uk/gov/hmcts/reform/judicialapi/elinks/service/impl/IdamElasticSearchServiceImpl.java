@@ -23,8 +23,8 @@ import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -147,15 +147,13 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
 
     private Long idamElasticSearchQueryHours() {
 
-        RowMapper<String> rowMapper = (rs, i) -> rs.getString(1);
-        List<String> resultSet = jdbcTemplate.query(SqlConstants.SELECT_IDM_JOB_STATUS_SQL,rowMapper);
+        RowMapper<Timestamp> rowMapper = (rs, i) -> rs.getTimestamp(1);
+        List<Timestamp> resultSet = jdbcTemplate.query(SqlConstants.SELECT_IDM_JOB_STATUS_SQL,rowMapper);
 
-        String maxSchedulerEndTime = CollectionUtils.isNotEmpty(resultSet) ? resultSet.get(0) : null;
+        Timestamp maxSchedulerEndTime = CollectionUtils.isNotEmpty(resultSet) ? resultSet.get(0) : null;
         log.debug("idamElasticSearchQuery  date from audit table {}",maxSchedulerEndTime);
         return maxSchedulerEndTime == null ? 72 : Math.addExact(ChronoUnit.HOURS.between(
-                LocalDateTime.parse(maxSchedulerEndTime,
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")),
-                LocalDateTime.now()), 1);
+                maxSchedulerEndTime.toLocalDateTime(),LocalDateTime.now()), 1);
     }
 
     public void updateSidamIds(Set<IdamResponse> sidamUsers) {
@@ -165,7 +163,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 + "WHERE object_id = ? AND (sidam_id IS NULL OR sidam_id <> ' ')";
         sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s ->
                 sidamObjectId.add(Pair.of(s.getId(), s.getSsoId())));
-        log.debug("Insert Query batch Response from IDAM" + sidamObjectId.size());
+        log.debug("Insert Query batch Response from IDAM " + sidamObjectId.size());
         jdbcTemplate.batchUpdate(
                 updateSidamIds,
                 sidamObjectId,
