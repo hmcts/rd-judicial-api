@@ -10,6 +10,12 @@ java:
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
     JRD_SEARCH_SERVICE_CODE: bfa1,bba3
+    JRD_MQ_HOST: "$(JRDAPI_MQ_HOST).servicebus.windows.net"
+    JRDAPI_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRDAPI_MQ_PASSWORD)"
+    JRDAPI_MQ_USERNAME: RootManageSharedAccessKey
+    JRDAPI_MQ_TOPIC_NAME: crd-aks-topic
+    JRDAPI_MQ_TRUST_ALL_CERTS: false
+    JRDAPI_DATA_PER_MESSAGE: 50
   postgresql:
     enabled: true
     auth:
@@ -50,9 +56,9 @@ servicebus:
         subscriptionNeeded: yes
 
   secrets:
-    CWRD_MQ_PASSWORD:
+    JRDAPI_MQ_PASSWORD:
       secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
       key: primaryKey
-    CWRD_MQ_HOST:
+    JRDAPI_MQ_HOST:
       secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
       key: namespaceName
