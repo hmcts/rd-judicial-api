@@ -37,3 +37,22 @@ java:
           alias: OAUTH2_CLIENT_AUTH
         - name: rd-sendgrid-api-key
           alias: RD_SENDGRID_API_KEY
+
+
+servicebus:
+  enabled: true
+  teamName: RD
+  resourceGroup: rd-aks
+  serviceplan: standard
+  setup:
+    topics:
+      - name: jrdapi-aks-topic
+        subscriptionNeeded: yes
+
+  secrets:
+    CWRD_MQ_PASSWORD:
+      secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
+      key: primaryKey
+    CWRD_MQ_HOST:
+      secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
+      key: namespaceName
