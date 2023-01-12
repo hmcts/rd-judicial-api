@@ -238,6 +238,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                                 + " }")
                         .withTransformers("user-token-response")));
 
+
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
             .willReturn(aResponse()
                 .withStatus(200)
@@ -249,6 +250,31 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                     + " \"region_desc_cy\": \"default\""
                     + " }")
                 .withTransformers("user-token-response")));
+
+        elinks.stubFor(get(urlPathMatching("/leavers"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("{"
+                                + "   \"pagination\":{"
+                                + "     \"results\":46,"
+                                + "     \"pages\":1,"
+                                + "     \"current_page\":1,"
+                                + "     \"results_per_page\":50,"
+                                + "     \"more_pages\":false"
+                                + "   },"
+                                + "   \"results\":["
+                                + "     {"
+                                + "       \"id\":\"d01b0b59-8d68-4463-9887-535989208e27\","
+                                + "       \"per_id\":56787,"
+                                + "       \"personal_code\":\"0049931063\","
+                                + "       \"leaver\":true,"
+                                + "       \"left_on\":\"2021-02-24\""
+                                + "     }]"
+                                + " }")
+                        .withTransformers("user-token-response")));
+
     }
 
     @AfterEach

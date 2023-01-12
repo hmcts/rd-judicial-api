@@ -34,6 +34,7 @@ public class ResultsRequest {
     private String lastWorkingDate;
     @JsonProperty("id")
     private String objectId;
+
     //TBC
     @JsonProperty("initials")
     private String initials;
@@ -41,5 +42,11 @@ public class ResultsRequest {
     private List<AppointmentsRequest> appointmentsRequests;
     @JsonProperty("authorisations_with_dates")
     private List<AuthorisationsRequest> authorisationsRequests;
-
+    //Leaversfields
+    @JsonProperty("per_id")
+    private String perId;
+    @JsonProperty("leaver")
+    private String leaver;
+    @JsonProperty("left_on")
+    private String leftOn;
 }

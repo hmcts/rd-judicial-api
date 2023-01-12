@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
@@ -22,6 +23,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSSUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 
@@ -127,5 +129,31 @@ class ElinksControllerTest {
         assertThat(actual.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
 
     }
+
+    @Test
+    void test_load_leaver_success() {
+
+        ResponseEntity<ElinkLeaversWrapperResponse> responseEntity;
+
+        ElinkLeaversWrapperResponse elinkLeaversWrapperResponse = new ElinkLeaversWrapperResponse();
+        elinkLeaversWrapperResponse.setMessage(LEAVERSSUCCESS);
+
+
+
+        responseEntity = new ResponseEntity<>(
+                elinkLeaversWrapperResponse,
+                null,
+                HttpStatus.OK
+        );
+
+        when(eLinksService.retrieveLeavers()).thenReturn(responseEntity);
+
+        ResponseEntity<ElinkLeaversWrapperResponse> actual = eLinksController.loadLeavers();
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
+        assertThat(actual.getBody().getMessage()).isEqualTo(LEAVERSSUCCESS);
+
+    }
+
 
 }

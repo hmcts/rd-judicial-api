@@ -270,7 +270,10 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/IdamUserProfileServiceImpl.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java" +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/domain/**,"
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/domain/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/response/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/ElinksFeignInterceptorConfiguration.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/controller/advice/ForbiddenException.java,"
     }
 }
 
@@ -456,7 +459,7 @@ dependencyManagement {
 
     dependencies {
         // CVE-2021-42340
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.68') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.69') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
