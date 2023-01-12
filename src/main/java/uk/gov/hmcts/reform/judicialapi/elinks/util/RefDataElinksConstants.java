@@ -47,8 +47,4 @@ public class RefDataElinksConstants {
 
     public static final String UPDATED_SINCE = "2015-01-01";
 
-
-
-
-
 }
