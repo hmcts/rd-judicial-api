@@ -32,5 +32,13 @@ public interface ElinksFeignClient {
                               @RequestParam("per_page") String perPage, @RequestParam("page") String page,
                               @RequestParam("include_previous_appointments") boolean includePreviousAppointments);
 
+    @GetMapping(value = "/leavers")
+    @RequestLine("GET /leavers")
+    @Headers({"Authorization: {authorization}",
+            "Content-Type: application/json"})
+
+    Response getLeaversDetails(@RequestParam("left_since") String updatedSince,
+                              @RequestParam("per_page") String perPage, @RequestParam("page") String page);
+
 
 }
