@@ -46,3 +46,13 @@ java:
           alias: OAUTH2_CLIENT_AUTH
         - name: rd-sendgrid-api-key
           alias: RD_SENDGRID_API_KEY
+
+servicebus:
+  enabled: true
+  teamName: RD
+  resourceGroup: rd-aks
+  serviceplan: standard
+  setup:
+    topics:
+      - name: crd-aks-topic
+        subscriptionNeeded: yes
