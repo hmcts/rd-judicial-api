@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Component
 @Slf4j
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class ElinkDataIngestionSchedularAudit {
     @Value("${loggingComponentName}")
     private String loggingComponentName;

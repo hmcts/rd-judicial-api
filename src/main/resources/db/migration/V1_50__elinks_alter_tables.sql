@@ -18,3 +18,9 @@ values ('0', 'default', 'default','default', 'default');
 
 insert into dbjudicialdata.region_type(region_id,region_desc_en,region_desc_cy)
 values ('0', 'default', 'default');
+
+
+create sequence elink_audit_scheduler_id_seq;
+
+ALTER TABLE dbjudicialdata.dataload_schedular_audit ALTER COLUMN id
+SET DEFAULT nextval('elink_audit_scheduler_id_seq');
