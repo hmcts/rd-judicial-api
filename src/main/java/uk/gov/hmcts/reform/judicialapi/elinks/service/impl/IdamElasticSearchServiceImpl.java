@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -9,18 +10,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.JudicialDataLoadException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IdamElasticSearchService;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SqlConstants;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -32,7 +35,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.nonNull;
-
 
 @Slf4j
 @Component
@@ -52,9 +54,6 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
 
     @Autowired
     IdamTokenConfigProperties props;
-
-    @Autowired
-    DataloadSchedularAuditRepository dataloadSchedularAuditRepository;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -148,11 +147,13 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
 
     private Long idamElasticSearchQueryHours() {
 
-        LocalDateTime maxSchedulerEndTime = dataloadSchedularAuditRepository.findByScheduleEndTime();
+        RowMapper<Timestamp> rowMapper = (rs, i) -> rs.getTimestamp(1);
+        List<Timestamp> resultSet = jdbcTemplate.query(SqlConstants.SELECT_IDM_JOB_STATUS_SQL,rowMapper);
 
+        Timestamp maxSchedulerEndTime = CollectionUtils.isNotEmpty(resultSet) ? resultSet.get(0) : null;
         log.debug("idamElasticSearchQuery  date from audit table {}",maxSchedulerEndTime);
-        return maxSchedulerEndTime == null ? 72 : Math.addExact(ChronoUnit.HOURS.between(maxSchedulerEndTime,
-                LocalDateTime.now()), 1);
+        return maxSchedulerEndTime == null ? 72 : Math.addExact(ChronoUnit.HOURS.between(
+                maxSchedulerEndTime.toLocalDateTime(),LocalDateTime.now()), 1);
     }
 
     public void updateSidamIds(Set<IdamResponse> sidamUsers) {
@@ -162,7 +163,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 + "WHERE object_id = ? AND (sidam_id IS NULL OR sidam_id <> ' ')";
         sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s ->
                 sidamObjectId.add(Pair.of(s.getId(), s.getSsoId())));
-        log.debug("Insert Query batch Response from IDAM" + sidamObjectId.size());
+        log.debug("Insert Query batch Response from IDAM " + sidamObjectId.size());
         jdbcTemplate.batchUpdate(
                 updateSidamIds,
                 sidamObjectId,

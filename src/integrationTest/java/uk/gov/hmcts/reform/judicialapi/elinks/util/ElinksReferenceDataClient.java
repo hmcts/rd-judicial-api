@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 
 import java.util.Date;
@@ -45,7 +46,7 @@ public class ElinksReferenceDataClient {
         this.serviceName = serviceName;
     }
 
-    public Map<String, Object>  getPeoples() {
+    public Map<String, Object> getPeoples() {
 
         var stringBuilder = new StringBuilder();
 
@@ -68,6 +69,29 @@ public class ElinksReferenceDataClient {
         return getResponse(responseEntity);
     }
 
+
+    public Map<String, Object> getLocations() {
+
+        ResponseEntity<ElinkLocationWrapperResponse> responseEntity;
+        HttpEntity<?> request =
+            new HttpEntity<>(getMultipleAuthHeaders("jrd-system-user", null));
+
+        try {
+
+            responseEntity = restTemplate.exchange(
+                baseUrl + "/reference_data/location",HttpMethod.GET,request, ElinkLocationWrapperResponse.class);
+
+        } catch (RestClientResponseException ex) {
+            var statusAndBody = new HashMap<String, Object>(2);
+            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("response_body", ex.getResponseBodyAsString());
+            return statusAndBody;
+        }
+
+        return getLocationResponse(responseEntity);
+    }
+  
+
     public Map<String, Object>  getLeavers() {
 
         var stringBuilder = new StringBuilder();
@@ -79,7 +103,7 @@ public class ElinksReferenceDataClient {
         try {
 
             responseEntity = restTemplate.exchange(
-                    baseUrl + "/leavers",HttpMethod.GET,request, ElinkLeaversWrapperResponse.class);
+              baseUrl + "/leavers",HttpMethod.GET,request, ElinkLeaversWrapperResponse.class);
 
         } catch (RestClientResponseException ex) {
             var statusAndBody = new HashMap<String, Object>(2);
@@ -91,6 +115,7 @@ public class ElinksReferenceDataClient {
         return getLeaversResponse(responseEntity);
     }
 
+
     private Map<String, Object> getLeaversResponse(ResponseEntity<ElinkLeaversWrapperResponse> responseEntity) {
 
         var response = new HashMap();
@@ -101,6 +126,17 @@ public class ElinksReferenceDataClient {
         return response;
     }
 
+
+    private Map<String, Object> getLocationResponse(ResponseEntity<ElinkLocationWrapperResponse> responseEntity) {
+      
+        var response = new HashMap();
+
+        response.put("http_status", responseEntity.getStatusCode().toString());
+        response.put("headers", responseEntity.getHeaders().toString());
+        response.put("body", responseEntity.getBody());
+        return response;
+    }
+  
     private Map<String, Object> getResponse(ResponseEntity<ElinkPeopleWrapperResponse> responseEntity) {
 
         var response = new HashMap();

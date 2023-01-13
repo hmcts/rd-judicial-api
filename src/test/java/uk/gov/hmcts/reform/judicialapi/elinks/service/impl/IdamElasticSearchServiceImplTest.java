@@ -10,20 +10,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.JudicialDataLoadException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 
 import java.nio.charset.Charset;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +32,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -43,6 +44,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("unchecked")
 class IdamElasticSearchServiceImplTest {
 
     private final IdamFeignClient idamClientMock = spy(IdamFeignClient.class);
@@ -50,8 +52,6 @@ class IdamElasticSearchServiceImplTest {
     private final IdamOpenIdTokenResponse openIdTokenResponseMock = mock(IdamOpenIdTokenResponse.class);
     @InjectMocks
     private IdamElasticSearchServiceImpl idamElasticSearchServiceImpl;
-    @Spy
-    DataloadSchedularAuditRepository dataloadSchedularAuditRepository;
     JdbcTemplate jdbcTemplate =  mock(JdbcTemplate.class);
 
     public static final String CLIENT_AUTHORIZATION =
@@ -110,7 +110,6 @@ class IdamElasticSearchServiceImplTest {
                         Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
                 .status(200).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
-        when(dataloadSchedularAuditRepository.findByScheduleEndTime()).thenReturn(LocalDateTime.now());
         Set<IdamResponse> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
         assertThat(response).isNotNull();
         useResponses.forEach(useResponse -> {
@@ -133,7 +132,6 @@ class IdamElasticSearchServiceImplTest {
                         Request.Body.empty(), null)).body(body, Charset.defaultCharset())
                 .status(500).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
-        when(dataloadSchedularAuditRepository.findByScheduleEndTime()).thenReturn(LocalDateTime.now());
         assertThrows(JudicialDataLoadException.class,() -> idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed());
     }
 
@@ -197,14 +195,17 @@ class IdamElasticSearchServiceImplTest {
 
     @Test
     void testElasticSearchQuery() {
-        when(dataloadSchedularAuditRepository.findByScheduleEndTime()).thenReturn(LocalDateTime.now().minusDays(1));
+
+        List<Timestamp> resultSet = new ArrayList<>(Collections.singleton(java.sql.Timestamp.valueOf(
+                LocalDateTime.now().minusDays(1))));
+        when(jdbcTemplate.query(anyString(),any(RowMapper.class))).thenReturn(resultSet);
         Long hours = invokeMethod(idamElasticSearchServiceImpl, "idamElasticSearchQueryHours");
         Assert.assertEquals(Long.valueOf(25), hours);
     }
 
     @Test
     void testElasticSearchQueryMaxIsNull() {
-        when(dataloadSchedularAuditRepository.findByScheduleEndTime()).thenReturn(null);
+        when(jdbcTemplate.query(anyString(),any(RowMapper.class))).thenReturn(null);
         Long computeHours = invokeMethod(idamElasticSearchServiceImpl, "idamElasticSearchQueryHours");
         Assert.assertEquals(Long.valueOf(72),computeHours);
     }

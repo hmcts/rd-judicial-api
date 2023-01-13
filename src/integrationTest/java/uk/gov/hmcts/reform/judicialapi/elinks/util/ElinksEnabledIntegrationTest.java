@@ -239,6 +239,19 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                                 + " }")
                         .withTransformers("user-token-response")));
 
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody("{"
+                    + " \"region_id\": \"0\","
+                    + " \"region_desc_en\": \"default\","
+                    + " \"region_desc_cy\": \"default\""
+                    + " }")
+                .withTransformers("user-token-response")));
+
         elinks.stubFor(get(urlPathMatching("/leavers"))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -262,6 +275,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                                 + "     }]"
                                 + " }")
                         .withTransformers("user-token-response")));
+
     }
 
     @AfterEach
