@@ -33,6 +33,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperRespo
 import uk.gov.hmcts.reform.judicialapi.elinks.response.LocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ELinksService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.sql.PreparedStatement;
@@ -44,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUDIT_DATA_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
@@ -55,6 +58,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_NOT_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_UNAUTHORIZED;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSSUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.THREAD_INVOCATION_EXCEPTION;
@@ -93,6 +98,9 @@ public class ELinksServiceImpl implements ELinksService {
     @Value("${elinks.people.lastUpdated}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String lastUpdated;
+
+    @Autowired
+    ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
 
     @Override
     public ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveBaseLocation() {
@@ -285,6 +293,12 @@ public class ELinksServiceImpl implements ELinksService {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
         ElinkLeaversWrapperResponse elinkLeaversWrapperResponse = new ElinkLeaversWrapperResponse();
+
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                now(),
+                null,
+                RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), LEAVERSAPI);
+
         int pageValue = Integer.parseInt(page);
         do {
             Response leaverApiResponse = getLeaversResponseFromElinks(pageValue++);
@@ -299,7 +313,12 @@ public class ELinksServiceImpl implements ELinksService {
                         && Optional.ofNullable(elinkLeaverResponseRequest.getResultsRequests()).isPresent()) {
                     isMorePagesAvailable = elinkLeaverResponseRequest.getPagination().getMorePages();
                     processLeaverResponse(elinkLeaverResponseRequest);
+
                 } else {
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                            now(),
+                            now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), LEAVERSAPI);
                     throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
                 }
             } else {
@@ -309,6 +328,11 @@ public class ELinksServiceImpl implements ELinksService {
         } while (isMorePagesAvailable);
 
         elinkLeaversWrapperResponse.setMessage(LEAVERSSUCCESS);
+
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                null,
+                now(),
+                RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), LEAVERSAPI);
 
         return ResponseEntity
                 .status(httpStatus)
