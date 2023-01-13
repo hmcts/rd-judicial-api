@@ -62,8 +62,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @Service
 public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
-    public static final String EPIMMS_ID = "epimmsId";
-    public static final String SERVICE_CODE = "serviceCode";
     @Autowired
     private ElinksFeignClient elinksFeignClient;
 

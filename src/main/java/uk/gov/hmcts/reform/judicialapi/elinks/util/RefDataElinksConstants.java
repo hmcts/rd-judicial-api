@@ -45,6 +45,8 @@ public class RefDataElinksConstants {
 
     public static final String REGION_DEFAULT_ID = "0";
 
+    public static final String UPDATED_SINCE = "2015-01-01";
+
     public static final String LEAVERSSUCCESS = "Leavers Data Loaded Successfully";
 
     public static final String JUDICIAL_REF_DATA_ELINKS = "judicial-ref-data-elinks";
