@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
@@ -20,6 +22,10 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private ProfileRepository profileRepository;
+
+
+    @Autowired
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
 
     @BeforeEach
     void setUp() {
@@ -72,5 +78,8 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(false, userprofile.get(0).getActiveFlag());
         assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
 
+        List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
+
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
     }
 }

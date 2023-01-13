@@ -21,12 +21,12 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SequenceGenerator(name = "elink_audit_scheduler_id_seq",
-        sequenceName = "elink_audit_scheduler_id_seq", allocationSize = 1)
+@SequenceGenerator(name = "elink_audit_scheduler_id_sequence",
+        sequenceName = "elink_audit_scheduler_id_sequence",  schema = "dbjudicialdata", allocationSize = 1)
 public class ElinkDataSchedularAudit implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "elink_audit_scheduler_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "elink_audit_scheduler_id_sequence")
     @Column(name = "id")
     private int id;
 
