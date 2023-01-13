@@ -32,8 +32,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -110,7 +110,6 @@ class IdamElasticSearchServiceImplTest {
                         Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
                 .status(200).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
-        //when(dataloadSchedularAuditRepository.findByScheduleEndTime()).thenReturn(LocalDateTime.now());
         Set<IdamResponse> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
         assertThat(response).isNotNull();
         useResponses.forEach(useResponse -> {
