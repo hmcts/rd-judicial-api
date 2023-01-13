@@ -66,7 +66,7 @@ public class ElinksReferenceDataClient {
             return statusAndBody;
         }
 
-        return getResponse(responseEntity);;
+        return getResponse(responseEntity);
     }
 
 
