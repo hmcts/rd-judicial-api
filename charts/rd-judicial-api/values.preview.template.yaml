@@ -16,12 +16,10 @@ java:
     POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     POSTGRES_PORT: "{{ .Values.postgresql.auth.port}}"
-    CWRD_MQ_HOST: "$(CWRD_MQ_HOST).servicebus.windows.net"
-    CASEWORKER_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(CWRD_MQ_PASSWORD)"
-    CWRD_MQ_USERNAME: RootManageSharedAccessKey
-    CWRD_MQ_TOPIC_NAME: crd-aks-topic
-    CWRD_MQ_TRUST_ALL_CERTS: false
-    CWRD_DATA_PER_MESSAGE: 50
+    JRD_MQ_USERNAME: RootManageSharedAccessKey
+    JRD_MQ_TOPIC_NAME: jrd-aks-topic
+    JRD_MQ_TRUST_ALL_CERTS: false
+    JRD_DATA_PER_MESSAGE: 50
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
     EMAIL_DOMAIN_LIST: "justice.gov.uk,dwp.gov.uk,hmrc.gov.uk,hmcts.net,dfcni.gov.uk"
@@ -49,5 +47,5 @@ servicebus:
   serviceplan: standard
   setup:
     topics:
-      - name: crd-aks-topic
+      - name: jrd-aks-topic
         subscriptionNeeded: yes
