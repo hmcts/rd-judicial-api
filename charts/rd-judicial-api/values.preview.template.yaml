@@ -3,10 +3,10 @@ java:
   ingressHost: ${SERVICE_FQDN}
 
   secrets:
-    CWRD_MQ_PASSWORD:
+    JRD_MQ_PASSWORD:
       secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
       key: primaryKey
-    CWRD_MQ_HOST:
+    JRD_MQ_HOST:
       secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
       key: namespaceName
 
