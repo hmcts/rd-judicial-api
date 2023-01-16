@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
@@ -115,6 +116,28 @@ public class ElinksReferenceDataClient {
         return getLeaversResponse(responseEntity);
     }
 
+    public Map<String, Object> getBaseLocations() {
+
+        ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity;
+        HttpEntity<?> request =
+            new HttpEntity<>(getMultipleAuthHeaders("jrd-system-user", null));
+
+        try {
+
+            responseEntity = restTemplate.exchange(
+                baseUrl + "/reference_data/base_location",HttpMethod.GET,request,
+                ElinkBaseLocationWrapperResponse.class);
+
+        } catch (RestClientResponseException ex) {
+            var statusAndBody = new HashMap<String, Object>(2);
+            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("response_body", ex.getResponseBodyAsString());
+            return statusAndBody;
+        }
+
+        return getBaseLocationResponse(responseEntity);
+    }
+
 
     private Map<String, Object> getLeaversResponse(ResponseEntity<ElinkLeaversWrapperResponse> responseEntity) {
 
@@ -138,6 +161,17 @@ public class ElinksReferenceDataClient {
     }
   
     private Map<String, Object> getResponse(ResponseEntity<ElinkPeopleWrapperResponse> responseEntity) {
+
+        var response = new HashMap();
+
+        response.put("http_status", responseEntity.getStatusCode().toString());
+        response.put("headers", responseEntity.getHeaders().toString());
+        response.put("body", responseEntity.getBody());
+        return response;
+    }
+
+    private Map<String, Object> getBaseLocationResponse(ResponseEntity<ElinkBaseLocationWrapperResponse>
+                                                            responseEntity) {
 
         var response = new HashMap();
 
