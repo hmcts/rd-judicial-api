@@ -337,7 +337,7 @@ dependencies {
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
     implementation group: 'com.azure', name: 'azure-core', version: '1.13.0'
-    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.0.2'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.1.0'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '7.10.0'
