@@ -54,12 +54,12 @@ java:
         - name: rd-sendgrid-api-key
           alias: RD_SENDGRID_API_KEY
 
-servicebus:
-  enabled: true
-  teamName: RD
-  resourceGroup: rd-aks
-  serviceplan: standard
-  setup:
-    topics:
-      - name: jrd-aks-topic
-        subscriptionNeeded: yes
+  servicebus:
+    enabled: true
+    teamName: RD
+    resourceGroup: rd-aks
+    serviceplan: standard
+    setup:
+      topics:
+        - name: jrd-aks-topic
+          subscriptionNeeded: yes
