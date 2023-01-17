@@ -17,7 +17,7 @@ java:
     POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     POSTGRES_PORT: "{{ .Values.postgresql.auth.port}}"
     JRD_MQ_HOST: "$(JRD_MQ_HOST).servicebus.windows.net"
-    CASEWORKER_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
+    JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
     JRD_MQ_USERNAME: RootManageSharedAccessKey
     JRD_MQ_TOPIC_NAME: jrd-aks-topic
     JRD_MQ_TRUST_ALL_CERTS: false
