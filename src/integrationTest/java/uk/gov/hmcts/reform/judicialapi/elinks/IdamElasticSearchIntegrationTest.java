@@ -4,10 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.IdamElasticSearchServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
 class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
@@ -24,10 +27,12 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
 
+    @MockBean
+    protected IdamElasticSearchServiceImpl idamElasticSearchService;
 
     @BeforeEach
     void setUp() {
-
+        when(idamElasticSearchService.getIdamBearerToken()).thenReturn("token");
     }
 
     @DisplayName("Idam Elastic Search status")
