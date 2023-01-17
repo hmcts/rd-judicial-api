@@ -88,7 +88,7 @@ public class ElinksReferenceDataClient {
             return statusAndBody;
         }
 
-        return getLocationResponse(responseEntity);
+        return getResponse(responseEntity);
     }
   
 
@@ -112,32 +112,26 @@ public class ElinksReferenceDataClient {
             return statusAndBody;
         }
 
-        return getLeaversResponse(responseEntity);
+        return getResponse(responseEntity);
+    }
+
+    public ResponseEntity<Object>  getIdamElasticSearch() {
+
+        var stringBuilder = new StringBuilder();
+
+        ResponseEntity<Object> responseEntity = null;
+        HttpEntity<?> request =
+                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null));
+
+        responseEntity = restTemplate.exchange(
+                    baseUrl + "/idam/elastic/search",HttpMethod.GET,request, Object.class);
+
+        return responseEntity;
     }
 
 
-    private Map<String, Object> getLeaversResponse(ResponseEntity<ElinkLeaversWrapperResponse> responseEntity) {
-
-        var response = new HashMap();
-
-        response.put("http_status", responseEntity.getStatusCode().toString());
-        response.put("headers", responseEntity.getHeaders().toString());
-        response.put("body", responseEntity.getBody());
-        return response;
-    }
-
-
-    private Map<String, Object> getLocationResponse(ResponseEntity<ElinkLocationWrapperResponse> responseEntity) {
-      
-        var response = new HashMap();
-
-        response.put("http_status", responseEntity.getStatusCode().toString());
-        response.put("headers", responseEntity.getHeaders().toString());
-        response.put("body", responseEntity.getBody());
-        return response;
-    }
   
-    private Map<String, Object> getResponse(ResponseEntity<ElinkPeopleWrapperResponse> responseEntity) {
+    private Map<String, Object> getResponse(ResponseEntity<?> responseEntity) {
 
         var response = new HashMap();
 

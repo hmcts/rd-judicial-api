@@ -27,6 +27,7 @@ import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static java.lang.String.format;
@@ -236,7 +237,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                                 + "        }"
                                 + "    ]"
                                 + " }")
-                        .withTransformers("user-token-response")));
+                        ));
 
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
@@ -249,7 +250,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                     + " \"region_desc_en\": \"default\","
                     + " \"region_desc_cy\": \"default\""
                     + " }")
-                .withTransformers("user-token-response")));
+                ));
 
         elinks.stubFor(get(urlPathMatching("/leavers"))
                 .willReturn(aResponse()
@@ -273,7 +274,51 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                                 + "       \"left_on\":\"2021-02-24\""
                                 + "     }]"
                                 + " }")
-                        .withTransformers("user-token-response")));
+                       ));
+
+        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("["
+                                + "    {"
+                                + "        \"id\": \"6455c84c-e77d-4c4f-9759-bf4a93a8e971\","
+                                + "        \"forename\": \"Service\","
+                                + "        \"surname\": \"Account\","
+                                + "        \"email\": \"tester@hmcts.net\","
+                                + "        \"active\": true,"
+                                + "        \"locked\": false,"
+                                + "        \"ssoId\": \"552da697-4b3d-4aed-9c22-1e903b70aead\","
+                                + "        \"roles\": ["
+                                + "            \"caseworker-privatelaw-systemupdate\","
+                                + "            \"caseworker-privatelaw\","
+                                + "            \"hearing-manager\","
+                                + "            \"hearing-viewer\","
+                                + "            \"jrd-admin\","
+                                + "            \"listed-hearing-viewer\","
+                                + "            \"idam-service-account\","
+                                + "            \"judge\","
+                                + "            \"caseworker\","
+                                + "            \"judiciary\","
+                                + "            \"jrd-system-user\","
+                                + "            \"caseworker-privatelaw-courtadmin\""
+                                + "        ],"
+                                + "        \"lastModified\": \"2023-01-17T13:15:36.435Z\","
+                                + "        \"createDate\": \"2022-12-02T11:54:55.212Z\""
+                                + "    }"
+                                + "]")
+                        ));
+
+        sidamService.stubFor(post(urlPathMatching("/o/token"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("{"
+                                + "        \"access_token\": \"12345\""
+                                + "    }")
+                                ));
 
     }
 
