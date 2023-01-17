@@ -2,18 +2,29 @@ java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
 
+  secrets:
+    JRD_MQ_PASSWORD:
+      secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
+      key: primaryKey
+    JRD_MQ_HOST:
+      secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
+      key: namespaceName
+
   environment:
     POSTGRES_HOST: "{{ .Release.Name }}-postgresql"
-    POSTGRES_DB_NAME: "{{ .Values.postgresql.auth.database}}"
+    POSTGRES_NAME: "{{ .Values.postgresql.auth.database}}"
     POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     POSTGRES_PORT: "{{ .Values.postgresql.auth.port}}"
+    JRD_MQ_HOST: "$(JRD_MQ_HOST).servicebus.windows.net"
+    JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
     JRD_MQ_USERNAME: RootManageSharedAccessKey
     JRD_MQ_TOPIC_NAME: jrd-aks-topic
     JRD_MQ_TRUST_ALL_CERTS: false
     JRD_DATA_PER_MESSAGE: 50
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
+    JRD_SEARCH_SERVICE_CODE: bfa1,bba3
     EMAIL_DOMAIN_LIST: "justice.gov.uk,dwp.gov.uk,hmrc.gov.uk,hmcts.net,dfcni.gov.uk"
   postgresql:
     enabled: true
