@@ -21,6 +21,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
 
@@ -100,7 +102,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
     @DisplayName("Elinks Leavers to JRD Audit Functionality verification")
     @Test
     void verifyLeaversJrdAuditFunctionalityBadRequestScenario() {
-          elinks.stubFor(get(urlPathMatching("/leavers"))
+        elinks.stubFor(get(urlPathMatching("/leavers"))
                 .willReturn(aResponse()
                         .withStatus(400)
                         .withHeader("Content-Type", "application/json")
@@ -110,16 +112,16 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
                                 + " }")));
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
-        assertThat(leaversResponse).containsEntry("http_status", "400 OK");
-        ElinkLeaversWrapperResponse profiles = (ElinkLeaversWrapperResponse)leaversResponse.get("body");
-        assertEquals("Leavers Data Loaded Successfully", profiles.getMessage());
+        assertThat(leaversResponse).containsEntry("http_status", "400");
+        String profiles = leaversResponse.get("response_body").toString();
+        assertTrue(profiles.contains("Syntax error or Bad request"));
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
         assertEquals(1, userprofile.size());
         assertEquals("0049931063", userprofile.get(0).getPersonalCode());
-        assertEquals("2021-02-24", userprofile.get(0).getLastWorkingDate().toString());
-        assertEquals(false, userprofile.get(0).getActiveFlag());
+        assertNull(userprofile.get(0).getLastWorkingDate());
+        assertEquals(true, userprofile.get(0).getActiveFlag());
         assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
@@ -128,7 +130,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         assertEquals(1, auditEntry.getId());
         assertEquals(LEAVERSAPI, auditEntry.getApiName());
-        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
         assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
