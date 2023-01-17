@@ -53,6 +53,8 @@ public class RefDataElinksConstants {
 
     public static final String LEAVERSAPI = "LeaversAPI";
 
+    public static final String BASELOCATIONAPI = "BaseLocationAPI";
+
     public enum JobStatus {
         IN_PROGRESS("IN_PROGRESS"),
         FAILED("FAILED"),
