@@ -3,10 +3,10 @@ java:
   ingressHost: ${SERVICE_FQDN}
 
   secrets:
-    CWRD_MQ_PASSWORD:
+    JRD_MQ_PASSWORD:
       secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
       key: primaryKey
-    CWRD_MQ_HOST:
+    JRD_MQ_HOST:
       secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
       key: namespaceName
 
@@ -16,31 +16,43 @@ java:
     POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     POSTGRES_PORT: "{{ .Values.postgresql.auth.port}}"
-    CWRD_MQ_HOST: "$(CWRD_MQ_HOST).servicebus.windows.net"
-    CASEWORKER_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(CWRD_MQ_PASSWORD)"
-    CWRD_MQ_USERNAME: RootManageSharedAccessKey
-    CWRD_MQ_TOPIC_NAME: crd-aks-topic
-    CWRD_MQ_TRUST_ALL_CERTS: false
-    CWRD_DATA_PER_MESSAGE: 50
+    JRD_MQ_HOST: "$(JRD_MQ_HOST).servicebus.windows.net"
+    CASEWORKER_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
+    JRD_MQ_USERNAME: RootManageSharedAccessKey
+    JRD_MQ_TOPIC_NAME: jrd-aks-topic
+    JRD_MQ_TRUST_ALL_CERTS: false
+    JRD_DATA_PER_MESSAGE: 50
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
     EMAIL_DOMAIN_LIST: "justice.gov.uk,dwp.gov.uk,hmrc.gov.uk,hmcts.net,dfcni.gov.uk"
   postgresql:
     enabled: true
     auth:
-      username: dbrdcaseworker
-      password: dbrdcaseworker
-      database: dbrdcaseworker
+      username: dbjuddata
+      password: dbjuddata
+      database: dbjuddata
       port: 5432
   keyVaults:
     rd:
       secrets:
         - name: ApplicationInsightsInstrumentationKey
           alias: azure.application-insights.instrumentation-key
-        - name: caseworker-ref-api-s2s-secret
-          alias: CASEWORKER_REF_API_S2S_SECRET
         - name: LD-SDK-KEY
           alias: LD_SDK_KEY
+        - name: judicial-api-s2s-secret
+          alias: JUDICIAL_API_S2S_SECRET
+        - name: judicial-api-elinks-api-key
+          alias: judicial_api_elinks_api_key
+        - name: judicial-topic-primary-connection-string
+          alias: JUDICIAL_TOPIC_PRIMARY_CONNECTION_STRING
+        - name: OAUTH2-CLIENT-SECRET
+          alias: OAUTH2_CLIENT_SECRET
+        - name: OAUTH2-AUTH
+          alias: OAUTH2_AUTH
+        - name: OAUTH2-CLIENT-AUTH
+          alias: OAUTH2_CLIENT_AUTH
+        - name: rd-sendgrid-api-key
+          alias: RD_SENDGRID_API_KEY
 
 servicebus:
   enabled: true
@@ -49,5 +61,5 @@ servicebus:
   serviceplan: standard
   setup:
     topics:
-      - name: crd-aks-topic
+      - name: jrd-aks-topic
         subscriptionNeeded: yes
