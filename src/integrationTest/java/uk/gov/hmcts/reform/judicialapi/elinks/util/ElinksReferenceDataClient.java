@@ -100,7 +100,8 @@ public class ElinksReferenceDataClient {
         try {
 
             responseEntity = restTemplate.exchange(
-                    baseUrl + "/reference_data/base_location",HttpMethod.GET,request, ElinkLocationWrapperResponse.class);
+                    baseUrl + "/reference_data/base_location",HttpMethod.GET,request,
+                    ElinkLocationWrapperResponse.class);
 
         } catch (RestClientResponseException ex) {
             var statusAndBody = new HashMap<String, Object>(2);
