@@ -4,12 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
+import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.IdamElasticSearchServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
 class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
@@ -27,12 +25,23 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
 
-    @MockBean
-    protected IdamElasticSearchServiceImpl idamElasticSearchService;
+    @Autowired
+    IdamTokenConfigProperties tokenConfigProperties;
+
 
     @BeforeEach
     void setUp() {
-        when(idamElasticSearchService.getIdamBearerToken()).thenReturn("token");
+
+        final String clientId = "234342332";
+        final String redirectUri = "http://idam-api.aat.platform.hmcts.net";
+        final String authorization = "c2hyZWVkaGFyLmxvbXRlQGhtY3RzLm5ldDpITUNUUzEyMzQ=";
+        final String clientAuth = "cmQteHl6LWFwaTp4eXo=";
+        final String url = "http://127.0.0.1:5000";
+        tokenConfigProperties.setClientId(clientId);
+        tokenConfigProperties.setClientAuthorization(clientAuth);
+        tokenConfigProperties.setAuthorization(authorization);
+        tokenConfigProperties.setRedirectUri(redirectUri);
+        tokenConfigProperties.setUrl(url);
     }
 
     @DisplayName("Idam Elastic Search status")
