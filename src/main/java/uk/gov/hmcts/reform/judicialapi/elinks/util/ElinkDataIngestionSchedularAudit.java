@@ -11,8 +11,11 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 
 import java.time.LocalDateTime;
 
+import static java.util.Objects.nonNull;
+
 @Component
 @Slf4j
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class ElinkDataIngestionSchedularAudit {
     @Value("${loggingComponentName}")
     private String loggingComponentName;
@@ -24,11 +27,14 @@ public class ElinkDataIngestionSchedularAudit {
     public void auditSchedulerStatus(String schedulerName, LocalDateTime schedulerStartTime,
                                      LocalDateTime schedulerEndTime, String status, String apiName) {
 
+        ElinkDataSchedularAudit audit = new ElinkDataSchedularAudit();
         try {
-            ElinkDataSchedularAudit audit = new ElinkDataSchedularAudit();
+            if (nonNull(schedulerEndTime)) {
+                audit = elinkSchedularAuditRepository.findBySchedulerStartTime(schedulerStartTime);
+                audit.setSchedulerEndTime(schedulerEndTime);
+            }
             audit.setSchedulerName(schedulerName);
             audit.setSchedulerStartTime(schedulerStartTime);
-            audit.setSchedulerEndTime(schedulerEndTime);
             audit.setStatus(status);
             audit.setApiName(apiName);
 

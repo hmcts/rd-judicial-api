@@ -48,4 +48,22 @@ public class RefDataElinksConstants {
     public static final String UPDATED_SINCE = "2015-01-01";
 
     public static final String LEAVERSSUCCESS = "Leavers Data Loaded Successfully";
+
+    public static final String JUDICIAL_REF_DATA_ELINKS = "judicial-ref-data-elinks";
+
+    public static final String LEAVERSAPI = "LeaversAPI";
+
+    public enum JobStatus {
+        IN_PROGRESS("IN_PROGRESS"),
+        FAILED("FAILED"),
+        SUCCESS("SUCCESS");
+        String status;
+        JobStatus(String status) {
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+    }
 }

@@ -27,3 +27,11 @@ CREATE TABLE dbjudicialdata.judicial_location_mapping (
 	base_location_name varchar(128),
 	service_code varchar(16)
 );
+
+
+CREATE SEQUENCE dbjudicialdata.elink_audit_scheduler_id_sequence AS integer START 1 OWNED
+BY dbjudicialdata.dataload_schedular_audit.id;
+
+
+ALTER TABLE dbjudicialdata.dataload_schedular_audit
+ALTER COLUMN id SET DEFAULT nextval('dbjudicialdata.elink_audit_scheduler_id_sequence');

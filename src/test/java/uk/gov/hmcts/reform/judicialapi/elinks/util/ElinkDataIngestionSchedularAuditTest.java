@@ -40,6 +40,7 @@ class ElinkDataIngestionSchedularAuditTest {
         schedularAudit.setStatus(status);
         schedularAudit.setApiName(apiName);
 
+        when(elinkSchedularAuditRepository.findBySchedulerStartTime(any())).thenReturn(schedularAudit);
         when(elinkSchedularAuditRepository.save(any())).thenReturn(schedularAudit);
         elinkDataIngestionSchedularAudit.auditSchedulerStatus("Test User",
             LocalDateTime.now(), LocalDateTime.now(), schedularAudit.getStatus(), schedularAudit.getApiName());
@@ -60,7 +61,7 @@ class ElinkDataIngestionSchedularAuditTest {
         schedularAudit.setSchedulerEndTime(LocalDateTime.now().plusHours(1));
         schedularAudit.setStatus(status);
         schedularAudit.setApiName(apiName);
-
+        when(elinkSchedularAuditRepository.findBySchedulerStartTime(any())).thenReturn(schedularAudit);
         when(elinkSchedularAuditRepository.save(any())).thenReturn(schedularAudit);
         elinkDataIngestionSchedularAudit.auditSchedulerStatus("Test User",
             LocalDateTime.now(), LocalDateTime.now().plusHours(1),
