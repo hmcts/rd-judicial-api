@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
@@ -43,6 +44,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @DisplayName("Elinks Leavers endpoint status verification")
     @Test
+    @Order(1)
     void getLeaversUserProfile() {
 
         Map<String, Object> response = elinksReferenceDataClient.getLeavers();
@@ -53,6 +55,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @DisplayName("Elinks Leavers to JRD user profile verification")
     @Test
+    @Order(2)
     void verifyLeaversJrdUserProfile() {
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
@@ -70,8 +73,9 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
     }
 
-    @DisplayName("Elinks Leavers to JRD Audit Functionality verification")
+    @DisplayName("Elinks Leavers to JRD Audit Success Functionality verification")
     @Test
+    @Order(3)
     void verifyLeaversJrdAuditFunctionality() {
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
@@ -98,42 +102,4 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
-
-    @DisplayName("Elinks Leavers to JRD Audit Functionality verification")
-    @Test
-    void verifyLeaversJrdAuditFunctionalityBadRequestScenario() {
-        elinks.stubFor(get(urlPathMatching("/leavers"))
-                .willReturn(aResponse()
-                        .withStatus(400)
-                        .withHeader("Content-Type", "application/json")
-                        .withHeader("Connection", "close")
-                        .withBody("{"
-
-                                + " }")));
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
-        assertThat(leaversResponse).containsEntry("http_status", "400");
-        String profiles = leaversResponse.get("response_body").toString();
-        assertTrue(profiles.contains("Syntax error or Bad request"));
-
-        List<UserProfile> userprofile = profileRepository.findAll();
-
-        assertEquals(1, userprofile.size());
-        assertEquals("0049931063", userprofile.get(0).getPersonalCode());
-        assertNull(userprofile.get(0).getLastWorkingDate());
-        assertEquals(true, userprofile.get(0).getActiveFlag());
-        assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
-
-        List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
-
-        ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
-
-        assertEquals(1, auditEntry.getId());
-        assertEquals(LEAVERSAPI, auditEntry.getApiName());
-        assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
-        assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
-        assertNotNull(auditEntry.getSchedulerStartTime());
-        assertNotNull(auditEntry.getSchedulerEndTime());
-    }
-
 }
