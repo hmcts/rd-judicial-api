@@ -11,6 +11,7 @@ s2s-secret: ${JUDICIAL_API_S2S_SECRET:}
 
 jrd.security.roles.hmcts-admin: jrd-admin
 jrd.security.roles.system-user: jrd-system-user
+
 jrd:
   publisher:
     azure:

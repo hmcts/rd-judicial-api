@@ -15,7 +15,6 @@ java:
     POSTGRES_NAME: "{{ .Values.postgresql.auth.database}}"
     POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
-    POSTGRES_PORT: "{{ .Values.postgresql.auth.port}}"
     JRD_MQ_HOST: "$(JRD_MQ_HOST).servicebus.windows.net"
     JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
     JRD_MQ_USERNAME: RootManageSharedAccessKey
@@ -24,7 +23,6 @@ java:
     JRD_DATA_PER_MESSAGE: 50
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
-    EMAIL_DOMAIN_LIST: "justice.gov.uk,dwp.gov.uk,hmrc.gov.uk,hmcts.net,dfcni.gov.uk"
   postgresql:
     enabled: true
     auth:
@@ -41,6 +39,8 @@ java:
           alias: JUDICIAL_API_S2S_SECRET
         - name: LD-SDK-KEY
           alias: LD_SDK_KEY
+        - name: judicial-topic-primary-connection-string
+          alias: JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY
 
 servicebus:
   enabled: true
