@@ -19,7 +19,7 @@ java:
     JRD_MQ_HOST: "$(JRD_MQ_HOST).servicebus.windows.net"
     JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
     JRD_MQ_USERNAME: RootManageSharedAccessKey
-    JRD_MQ_TOPIC_NAME: crd-aks-topic
+    JRD_MQ_TOPIC_NAME: jrd-aks-topic
     JRD_MQ_TRUST_ALL_CERTS: false
     JRD_DATA_PER_MESSAGE: 50
     LAUNCH_DARKLY_ENV: "preview"
@@ -49,5 +49,5 @@ servicebus:
   serviceplan: standard
   setup:
     topics:
-      - name: crd-aks-topic
+      - name: jrd-aks-topic
         subscriptionNeeded: yes
