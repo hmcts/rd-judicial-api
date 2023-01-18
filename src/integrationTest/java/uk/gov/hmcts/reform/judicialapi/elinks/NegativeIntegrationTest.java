@@ -9,6 +9,8 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
@@ -23,6 +25,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_FORBIDDEN;
@@ -46,6 +49,8 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
 
 
     @Test
@@ -296,15 +301,27 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
                         .withBody("{"
 
                                 + " }")));
+
         elinkSchedularAuditRepository.deleteAll();
+
+        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
         assertThat(leaversResponse).containsEntry("http_status", "400");
         String profiles = leaversResponse.get("response_body").toString();
         assertTrue(profiles.contains("Syntax error or Bad request"));
 
+        List<UserProfile> userprofile = profileRepository.findAll();
+
+        assertEquals(1, userprofile.size());
+        assertEquals("0049931063", userprofile.get(0).getPersonalCode());
+        assertNull(userprofile.get(0).getLastWorkingDate());
+        assertEquals(true, userprofile.get(0).getActiveFlag());
+        assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
+
         List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
 
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
+
 
         assertEquals(LEAVERSAPI, auditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
@@ -538,5 +555,4 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
         tokenConfigProperties.setUrl(url);
 
     }
-
 }

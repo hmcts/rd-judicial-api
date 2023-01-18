@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
@@ -38,6 +39,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @DisplayName("Elinks Leavers endpoint status verification")
     @Test
+    @Order(1)
     void getLeaversUserProfile() {
 
         Map<String, Object> response = elinksReferenceDataClient.getLeavers();
@@ -48,6 +50,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @DisplayName("Elinks Leavers to JRD user profile verification")
     @Test
+    @Order(2)
     void verifyLeaversJrdUserProfile() {
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
@@ -65,8 +68,9 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
     }
 
-    @DisplayName("Elinks Leavers to JRD Audit Functionality verification")
+    @DisplayName("Elinks Leavers to JRD Audit Success Functionality verification")
     @Test
+    @Order(3)
     void verifyLeaversJrdAuditFunctionality() {
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
