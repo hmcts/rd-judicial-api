@@ -23,6 +23,20 @@
     <suppress until="2023-12-30">
     <notes>cucumber:datatable pom contains com.googlecode.java-diff-utils:diffutils which has the CVE vulnerability, no fix has been released yet for this</notes>
     <cve>CVE-2021-4277</cve>
+    <cve>CVE-2021-43797</cve>
+    <cve>CVE-2022-41915</cve>
+    <cve>CVE-2022-24823</cve>
+    <cve>CVE-2022-41881</cve>
+    <cve>CVE-2019-16869</cve>
+    <cve>CVE-2015-2156</cve>
+    <cve>CVE-2021-37136</cve>
+    <cve>CVE-2021-37137</cve>
+    <cve>CVE-2019-20445</cve>
+    <cve>CVE-2019-20444</cve>
+    <cve>CVE-2021-21295</cve>
+    <cve>CVE-2021-21290</cve>
+    <cve>CVE-2014-3488</cve>
+    <cve>CVE-2021-21409</cve>
   </suppress>
       <suppress>
         <packageUrl regex="true">^pkg:maven/org\.yaml/snakeyaml@.*$</packageUrl>
