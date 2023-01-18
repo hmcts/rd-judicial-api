@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
@@ -48,8 +47,8 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
     @Test
     void getIdamElasticSearchResponses() {
 
-        ResponseEntity<Object> response = elinksReferenceDataClient.getIdamElasticSearch();
-        assertEquals(200,response.getStatusCode().value());
+        Map<String, Object> response = elinksReferenceDataClient.getIdamElasticSearch();
+        assertEquals("200 OK",response.get("http_status"));
     }
 
     @DisplayName("SIADM id verification")
@@ -59,9 +58,9 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         assertThat(response).containsEntry("http_status", "200 OK");
 
-        ResponseEntity<Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
-        assertEquals(200,idamResponses.getStatusCode().value());
-        List<IdamResponse> idamResponse = (ArrayList<IdamResponse>) idamResponses.getBody();
+        Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
+        assertEquals("200 OK",idamResponses.get("http_status"));
+        List<IdamResponse> idamResponse = (ArrayList<IdamResponse>) idamResponses.get("body");
         assertEquals(1,idamResponse.size());
 
         List<UserProfile> userprofile = profileRepository.findAll();

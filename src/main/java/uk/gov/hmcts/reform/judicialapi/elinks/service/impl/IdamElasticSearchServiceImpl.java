@@ -82,11 +82,11 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             idamOpenIdTokenResponse = idamFeignClient.getOpenIdToken(formParams);
 
             if (idamOpenIdTokenResponse == null) {
-                throw new ElinksException(HttpStatus.BAD_REQUEST, IDAM_TOKEN_ERROR_MESSAGE,
+                throw new ElinksException(HttpStatus.FORBIDDEN, IDAM_TOKEN_ERROR_MESSAGE,
                         IDAM_TOKEN_ERROR_MESSAGE);
             }
         } catch (Exception e) {
-            throw new ElinksException(HttpStatus.BAD_REQUEST, IDAM_TOKEN_ERROR_MESSAGE,
+            throw new ElinksException(HttpStatus.FORBIDDEN, IDAM_TOKEN_ERROR_MESSAGE,
                     IDAM_TOKEN_ERROR_MESSAGE);
         }
         return idamOpenIdTokenResponse.getAccessToken();
@@ -102,25 +102,23 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         Set<IdamResponse> judicialUsers = new HashSet<>();
         int count = 0;
         int totalCount = 0;
-        HttpStatus httpStatus;
-        ResponseEntity<Object> responseEntity;
+        ResponseEntity<Object> responseEntity = null;
+        Response response = null;
 
         do {
             params.put("page", String.valueOf(count));
             String bearerToken = "Bearer ".concat(getIdamBearerToken());
-            Response response = idamFeignClient.getUserFeed(bearerToken, params);
+            response = idamFeignClient.getUserFeed(bearerToken, params);
             logIdamResponses(response);
-
-            responseEntity = JsonFeignResponseUtil.toResponseEntity(response,
+            try {
+                responseEntity = JsonFeignResponseUtil.toResponseEntity(response,
                     new TypeReference<Set<IdamResponse>>() {
                     });
-            httpStatus = responseEntity.getStatusCode();
-            if (response.status() == 200) {
+                if (response.status() == 200) {
 
-                Set<IdamResponse> users = (Set<IdamResponse>) responseEntity.getBody();
-                judicialUsers.addAll(users);
+                    Set<IdamResponse> users = (Set<IdamResponse>) responseEntity.getBody();
+                    judicialUsers.addAll(users);
 
-                try {
                     List<String> headerCount = responseEntity.getHeaders().get("X-Total-Count");
                     if (headerCount != null && !headerCount.isEmpty()
                             && !headerCount.get(0).isEmpty()) {
@@ -129,15 +127,15 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                         log.debug("{}:: Header Records count from Idam :: " + totalCount, loggingComponentName);
                     }
 
-                } catch (Exception ex) {
-                    //There is No header.
-                    log.error("{}:: X-Total-Count header not return Idam Search Service::{}", loggingComponentName, ex);
-                    throw new ElinksException(httpStatus, ex.getMessage(),
-                            IDAM_ERROR_MESSAGE);
+                } else {
+                    log.error("{}:: Idam Search Service Failed :: ", loggingComponentName);
+                    throw new ElinksException(responseEntity.getStatusCode(), IDAM_ERROR_MESSAGE,
+                        IDAM_ERROR_MESSAGE);
                 }
-            } else {
-                log.error("{}:: Idam Search Service Failed :: ", loggingComponentName);
-                throw new ElinksException(httpStatus, IDAM_ERROR_MESSAGE,
+            } catch (Exception ex) {
+                //There is No header.
+                log.error("{}:: X-Total-Count header not return Idam Search Service::{}", loggingComponentName, ex);
+                throw new ElinksException(HttpStatus.valueOf(response.status()), ex.getMessage(),
                         IDAM_ERROR_MESSAGE);
             }
             count++;
@@ -146,7 +144,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         updateSidamIds(judicialUsers);
 
         return ResponseEntity
-                .status(httpStatus.value())
+                .status(response.status())
                 .body(judicialUsers);
     }
 
