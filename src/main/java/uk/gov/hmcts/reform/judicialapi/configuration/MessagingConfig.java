@@ -1,8 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.configuration;
 
-import com.azure.core.amqp.AmqpRetryOptions;
-import com.azure.messaging.servicebus.ServiceBusClientBuilder;
-import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -25,17 +22,7 @@ public class MessagingConfig {
     @Value("${jrd.publisher.azure.service.bus.password}")
     String sharedAccessKeyValue;
 
-    public ServiceBusSenderClient getServiceBusSenderClient() {
-        String connectionString = "Endpoint=sb://"
-                + host + ";SharedAccessKeyName=" + sharedAccessKeyName + ";SharedAccessKey=" + sharedAccessKeyValue;
 
-        return new ServiceBusClientBuilder()
-                .connectionString(connectionString)
-                .retryOptions(new AmqpRetryOptions())
-                .sender()
-                .topicName(topic)
-                .buildClient();
-    }
 
 
 }
