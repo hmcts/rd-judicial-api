@@ -278,7 +278,7 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS, errorDetails.getErrorMessage());
     }
 
-    @DisplayName("Elinks Leavers to JRD Audit Functionality verification")
+    @DisplayName("Elinks Leavers to test JRD Audit Negative Scenario Functionality verification")
     @Test
     void verifyLeaversJrdAuditFunctionalityBadRequestScenario() {
         elinks.stubFor(get(urlPathMatching("/leavers"))
@@ -315,6 +315,7 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
 
+    @DisplayName("test_get_leavers_with_wrong_endpoint_return_response_status_400()")
     @Test
     void test_get_leavers_return_response_status_400() throws JsonProcessingException  {
 
@@ -331,6 +332,7 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(ELINKS_ERROR_RESPONSE_BAD_REQUEST, errorDetails.getErrorMessage());
     }
 
+    @DisplayName("test_get_leavers_with_wrong_token_return_response_status_401()")
     @Test
     void test_get_leavers_return_response_status_401() throws JsonProcessingException  {
 
@@ -347,6 +349,7 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(ELINKS_ERROR_RESPONSE_UNAUTHORIZED, errorDetails.getErrorMessage());
     }
 
+    @DisplayName("test_get_leavers_return_with_invalid_token_response_status_403()")
     @Test
     void test_get_leavers_return_response_status_403() throws JsonProcessingException  {
 
@@ -363,6 +366,7 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(ELINKS_ERROR_RESPONSE_FORBIDDEN, errorDetails.getErrorMessage());
     }
 
+    @DisplayName("test_get_leavers_url_not_found_return_response_status_404()")
     @Test
     void test_get_leavers_return_response_status_404() throws JsonProcessingException  {
 
@@ -379,6 +383,7 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(ELINKS_ERROR_RESPONSE_NOT_FOUND, errorDetails.getErrorMessage());
     }
 
+    @DisplayName("test_get_leavers_exceeding_limit_return_response_status_429()")
     @Test
     void test_get_leavers_return_response_status_429() throws JsonProcessingException  {
 
@@ -395,6 +400,39 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS, errorDetails.getErrorMessage());
     }
 
+    @DisplayName("test_get_leavers_missing_mandatory_param_return_response_status_400()")
+    @Test
+    void test_get_leavers_missing_mandatory_param_return_response_status_400() throws JsonProcessingException  {
+
+        int statusCode = 400;
+        leaversApi4xxResponse(statusCode,null);
+
+        Map<String, Object> response = elinksReferenceDataClient.getLeavers();
+
+        assertThat(response).containsEntry("http_status", "400");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ErrorResponse errorDetails = objectMapper
+                .readValue(response.get("response_body").toString(),ErrorResponse.class);
+
+        assertEquals(ELINKS_ERROR_RESPONSE_BAD_REQUEST, errorDetails.getErrorMessage());
+    }
+
+    @DisplayName("test_get_leavers_future_since_then_return_response_status_400()")
+    @Test
+    void test_get_leavers_future_since_then_return_response_status_400() throws JsonProcessingException  {
+
+        int statusCode = 400;
+        leaversApi4xxResponse(statusCode,null);
+
+        Map<String, Object> response = elinksReferenceDataClient.getLeavers();
+
+        assertThat(response).containsEntry("http_status", "400");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ErrorResponse errorDetails = objectMapper
+                .readValue(response.get("response_body").toString(),ErrorResponse.class);
+
+        assertEquals(ELINKS_ERROR_RESPONSE_BAD_REQUEST, errorDetails.getErrorMessage());
+    }
 
     private void peopleApi4xxResponse(int statusCode, String body) {
         elinks.stubFor(get(urlPathMatching("/people"))
