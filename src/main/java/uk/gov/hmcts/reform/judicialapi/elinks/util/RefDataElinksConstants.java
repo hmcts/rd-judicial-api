@@ -66,4 +66,8 @@ public class RefDataElinksConstants {
             return status;
         }
     }
+
+    public static final String IDAM_ERROR_MESSAGE = "Error during the IDAM elastic search query";
+
+    public static final String IDAM_TOKEN_ERROR_MESSAGE = "Idam Service Failed while bearer token generate";
 }

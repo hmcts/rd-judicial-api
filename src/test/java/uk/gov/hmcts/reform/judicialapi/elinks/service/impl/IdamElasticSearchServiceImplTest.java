@@ -11,10 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
-import uk.gov.hmcts.reform.judicialapi.elinks.exception.JudicialDataLoadException;
+import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,7 +90,7 @@ class IdamElasticSearchServiceImplTest {
     @Test
     void getBearerTokenWithException() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
-        assertThrows(JudicialDataLoadException.class, () -> idamElasticSearchServiceImpl.getIdamBearerToken());
+        assertThrows(ElinksException.class, () -> idamElasticSearchServiceImpl.getIdamBearerToken());
     }
 
     @Test
@@ -110,9 +112,10 @@ class IdamElasticSearchServiceImplTest {
                         Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
                 .status(200).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
-        Set<IdamResponse> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
+        ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
         assertThat(response).isNotNull();
-        useResponses.forEach(useResponse -> {
+        Set<IdamResponse>  idamResponse = (HashSet<IdamResponse>) useResponses.getBody();
+        idamResponse.forEach(useResponse -> {
             assertThat(useResponse.getEmail()).isEqualTo("some@some.com");
         });
         verify(idamClientMock, times(1)).getUserFeed(anyString(), any());
@@ -132,7 +135,7 @@ class IdamElasticSearchServiceImplTest {
                         Request.Body.empty(), null)).body(body, Charset.defaultCharset())
                 .status(500).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
-        assertThrows(JudicialDataLoadException.class,() -> idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed());
+        assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed());
     }
 
 

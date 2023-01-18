@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiResponses;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +18,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ELinksService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IdamElasticSearchService;
-
-import java.util.Set;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BAD_REQUEST;
@@ -187,11 +184,9 @@ public class ElinksController {
             produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> idamElasticSearch() {
 
-        Set<IdamResponse> response =  idamElasticSearchService.getIdamElasticSearchSyncFeed();
+        ResponseEntity<Object> response =  idamElasticSearchService.getIdamElasticSearchSyncFeed();
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return response;
     }
 
     @ApiResponses({

@@ -7,13 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
-import uk.gov.hmcts.reform.judicialapi.elinks.exception.JudicialDataLoadException;
+import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
@@ -35,6 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.nonNull;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_ERROR_MESSAGE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_TOKEN_ERROR_MESSAGE;
 
 @Slf4j
 @Component
@@ -59,32 +62,39 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public String getIdamBearerToken() throws JudicialDataLoadException {
+    public String getIdamBearerToken() {
+        IdamOpenIdTokenResponse idamOpenIdTokenResponse = null;
+        try {
 
-        byte[] base64UserDetails = Base64.getDecoder().decode(props.getAuthorization());
-        Map<String, String> formParams = new HashMap<>();
-        formParams.put("grant_type", "password");
-        String[] userDetails = new String(base64UserDetails).split(":");
-        formParams.put("username", userDetails[0].trim());
-        formParams.put("password", userDetails[1].trim());
-        formParams.put("client_id", props.getClientId());
-        byte[] base64ClientAuth = Base64.getDecoder().decode(props.getClientAuthorization());
-        String[] clientAuth = new String(base64ClientAuth).split(":");
-        formParams.put("redirect_uri", props.getRedirectUri());
-        formParams.put("client_secret", clientAuth[1]);
-        formParams.put("scope", "openid profile roles manage-user create-user search-user");
+            byte[] base64UserDetails = Base64.getDecoder().decode(props.getAuthorization());
+            Map<String, String> formParams = new HashMap<>();
+            formParams.put("grant_type", "password");
+            String[] userDetails = new String(base64UserDetails).split(":");
+            formParams.put("username", userDetails[0].trim());
+            formParams.put("password", userDetails[1].trim());
+            formParams.put("client_id", props.getClientId());
+            byte[] base64ClientAuth = Base64.getDecoder().decode(props.getClientAuthorization());
+            String[] clientAuth = new String(base64ClientAuth).split(":");
+            formParams.put("redirect_uri", props.getRedirectUri());
+            formParams.put("client_secret", clientAuth[1]);
+            formParams.put("scope", "openid profile roles manage-user create-user search-user");
 
-        IdamOpenIdTokenResponse idamOpenIdTokenResponse = idamFeignClient.getOpenIdToken(formParams);
+            idamOpenIdTokenResponse = idamFeignClient.getOpenIdToken(formParams);
 
-        if (idamOpenIdTokenResponse == null) {
-            throw new JudicialDataLoadException("Idam Service Failed while bearer token generate");
+            if (idamOpenIdTokenResponse == null) {
+                throw new ElinksException(HttpStatus.BAD_REQUEST, IDAM_TOKEN_ERROR_MESSAGE,
+                        IDAM_TOKEN_ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            throw new ElinksException(HttpStatus.BAD_REQUEST, IDAM_TOKEN_ERROR_MESSAGE,
+                    IDAM_TOKEN_ERROR_MESSAGE);
         }
         return idamOpenIdTokenResponse.getAccessToken();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Set<IdamResponse> getIdamElasticSearchSyncFeed() throws JudicialDataLoadException {
+    public ResponseEntity<Object> getIdamElasticSearchSyncFeed() {
         Map<String, String> params = new HashMap<>();
         params.put("size",String.valueOf(recordsPerPage));
         params.put("query",String.format(idamSearchQuery,idamElasticSearchQueryHours()));
@@ -92,6 +102,8 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         Set<IdamResponse> judicialUsers = new HashSet<>();
         int count = 0;
         int totalCount = 0;
+        HttpStatus httpStatus;
+        ResponseEntity<Object> responseEntity;
 
         do {
             params.put("page", String.valueOf(count));
@@ -99,10 +111,10 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             Response response = idamFeignClient.getUserFeed(bearerToken, params);
             logIdamResponses(response);
 
-            ResponseEntity<Object> responseEntity = JsonFeignResponseUtil.toResponseEntity(response,
+            responseEntity = JsonFeignResponseUtil.toResponseEntity(response,
                     new TypeReference<Set<IdamResponse>>() {
                     });
-
+            httpStatus = responseEntity.getStatusCode();
             if (response.status() == 200) {
 
                 Set<IdamResponse> users = (Set<IdamResponse>) responseEntity.getBody();
@@ -120,19 +132,22 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 } catch (Exception ex) {
                     //There is No header.
                     log.error("{}:: X-Total-Count header not return Idam Search Service::{}", loggingComponentName, ex);
-                    throw new JudicialDataLoadException("Idam search query failure");
+                    throw new ElinksException(httpStatus, ex.getMessage(),
+                            IDAM_ERROR_MESSAGE);
                 }
             } else {
                 log.error("{}:: Idam Search Service Failed :: ", loggingComponentName);
-                throw new JudicialDataLoadException("Idam search query failure with response status "
-                        + response.status());
+                throw new ElinksException(httpStatus, IDAM_ERROR_MESSAGE,
+                        IDAM_ERROR_MESSAGE);
             }
             count++;
             log.debug("{}:: batch count :: ", count);
         } while (totalCount > 0 && recordsPerPage * count < totalCount);
         updateSidamIds(judicialUsers);
 
-        return judicialUsers;
+        return ResponseEntity
+                .status(httpStatus.value())
+                .body(judicialUsers);
     }
 
     private void logIdamResponses(Response response) {
