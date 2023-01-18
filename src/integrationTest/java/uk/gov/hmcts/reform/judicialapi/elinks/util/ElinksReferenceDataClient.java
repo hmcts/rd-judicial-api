@@ -69,6 +69,30 @@ public class ElinksReferenceDataClient {
         return getResponse(responseEntity);
     }
 
+    public Map<String, Object> getPeoples(String peopleUrl) {
+
+        var stringBuilder = new StringBuilder();
+
+        ResponseEntity<ElinkPeopleWrapperResponse> responseEntity;
+        HttpEntity<?> request =
+                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null));
+
+        try {
+
+            responseEntity = restTemplate.exchange(
+                    baseUrl + peopleUrl,HttpMethod.GET,request, ElinkPeopleWrapperResponse.class);
+
+        } catch (RestClientResponseException ex) {
+            var statusAndBody = new HashMap<String, Object>(2);
+            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("response_body", ex.getResponseBodyAsString());
+            return statusAndBody;
+        }
+
+        return getResponse(responseEntity);
+    }
+
+
 
     public Map<String, Object> getLocations() {
 
