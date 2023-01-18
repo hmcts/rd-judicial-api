@@ -72,6 +72,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
     @RegisterExtension
     protected final WireMockExtension elinks = new WireMockExtension(8000);
 
+
     @Autowired
     Flyway flyway;
 
