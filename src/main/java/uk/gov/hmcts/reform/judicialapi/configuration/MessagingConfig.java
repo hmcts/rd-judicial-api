@@ -29,8 +29,8 @@ public class MessagingConfig {
     @Bean
     public ServiceBusSenderClient getServiceBusSenderClient() {
 
-        log.error(topic,sharedAccessKeyName,sharedAccessKeyValue);
-        log.error("Host : ",host);
+        log.error("Maddineni",topic,sharedAccessKeyName,sharedAccessKeyValue);
+        log.error("Host :: ",host);
         String connectionString = "Endpoint=sb://"
                 + host + ";SharedAccessKeyName=" + sharedAccessKeyName + ";SharedAccessKey=" + sharedAccessKeyValue;
         log.error(connectionString);
