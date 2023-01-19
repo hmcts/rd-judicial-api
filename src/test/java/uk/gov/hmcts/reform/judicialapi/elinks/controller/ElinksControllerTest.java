@@ -28,7 +28,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings({"AbbreviationAsWordInName","MemberName"})
+@SuppressWarnings({"AbbreviationAsWordInName", "MemberName", "warnings"})
 class ElinksControllerTest {
 
     @InjectMocks
@@ -121,8 +121,8 @@ class ElinksControllerTest {
 
         Set<IdamResponse> idamResponseSet = new HashSet<>();
         idamResponseSet.add(new IdamResponse());
-
-        when(idamElasticSearchService.getIdamElasticSearchSyncFeed()).thenReturn(idamResponseSet);
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).body(idamResponseSet);
+        when(idamElasticSearchService.getIdamElasticSearchSyncFeed()).thenReturn(response);
 
         ResponseEntity<Object> actual = eLinksController.idamElasticSearch();
         assertThat(actual).isNotNull();
