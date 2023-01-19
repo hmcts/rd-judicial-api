@@ -323,8 +323,8 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
         elinkSchedularAuditRepository.deleteAll();
         Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
         assertThat(baseLocationResponse).containsEntry("http_status", "400");
-        String profiles = baseLocationResponse.get("response_body").toString();
-        assertTrue(profiles.contains("Syntax error or Bad request"));
+        String baseLocations = baseLocationResponse.get("response_body").toString();
+        assertTrue(baseLocations.contains("Syntax error or Bad request"));
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
