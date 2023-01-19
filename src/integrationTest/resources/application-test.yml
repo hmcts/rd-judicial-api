@@ -137,3 +137,6 @@ jrd:
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
     judicialDataPerMessage: ${JRD_DATA_PER_MESSAGE:50}
+  security:
+    roles:
+      jrd-admin: jrd-admin
