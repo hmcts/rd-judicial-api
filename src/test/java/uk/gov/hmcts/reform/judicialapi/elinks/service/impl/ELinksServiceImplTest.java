@@ -24,6 +24,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.LocationResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,9 @@ class ELinksServiceImplTest {
 
     @Spy
     ElinksFeignClient elinksFeignClient;
+
+    @Spy
+    private ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
 
     @InjectMocks
     private ELinksServiceImpl eLinksServiceImpl;

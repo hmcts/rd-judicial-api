@@ -59,6 +59,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSSUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.THREAD_INVOCATION_EXCEPTION;
 
@@ -149,12 +150,22 @@ public class ELinksServiceImpl implements ELinksService {
 
         log.info("Get location details ELinksService.retrieveLocation ");
 
+        LocalDateTime schedulerStartTime = now();
+
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                schedulerStartTime,
+                null,
+                RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), LOCATIONAPI);
+
         Response locationsResponse;
         HttpStatus httpStatus;
         ResponseEntity<ElinkLocationWrapperResponse> result = null;
+
         try {
 
             locationsResponse = elinksFeignClient.getLocationDetails();
+
+
 
             httpStatus = HttpStatus.valueOf(locationsResponse.status());
 
@@ -165,17 +176,32 @@ public class ELinksServiceImpl implements ELinksService {
 
 
                 ElinkLocationResponse elinkLocationResponse = (ElinkLocationResponse) responseEntity.getBody();
-                if (nonNull(elinkLocationResponse)) {
-                    List<LocationResponse> locationResponseList = elinkLocationResponse.getResults();
 
-                    List<Location> locations = locationResponseList.stream()
-                            .map(locationRes -> new Location(locationRes.getId(), locationRes.getName(),
-                                    StringUtils.EMPTY))
-                            .toList();
-                    result = loadLocationData(locations);
+                if (nonNull(responseEntity.getBody())) {
+                    if (nonNull(elinkLocationResponse)) {
+                        List<LocationResponse> locationResponseList = elinkLocationResponse.getResults();
+
+                        List<Location> locations = locationResponseList.stream()
+                                .map(locationRes -> new Location(locationRes.getId(), locationRes.getName(),
+                                        StringUtils.EMPTY))
+                                .toList();
+                        result = loadLocationData(locations);
+                    }
+                } else {
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                            schedulerStartTime,
+                            now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), LOCATIONAPI);
+                    throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
                 }
 
+
             } else {
+
+                elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        schedulerStartTime,
+                        now(),
+                        RefDataElinksConstants.JobStatus.FAILED.getStatus(), LOCATIONAPI);
                 handleELinksErrorResponse(httpStatus);
             }
 
@@ -183,6 +209,12 @@ public class ELinksServiceImpl implements ELinksService {
         } catch (FeignException ex) {
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         }
+
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                schedulerStartTime,
+                now(),
+                RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), LOCATIONAPI);
+
         return result;
     }
 
