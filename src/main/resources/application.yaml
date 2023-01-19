@@ -135,9 +135,7 @@ jrd:
     azure:
       service:
         bus:
-          host: ${JRD_MQ_HOST:rd-servicebus-aat.servicebus.windows.net}
-          username: ${JRD_MQ_USERNAME:RootManageSharedAccessKey}
-          password: ${JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY:}
+          connection-string: ${JUDICIAL_TOPIC_PRIMARY_CONNECTION_STRING:}
           topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-aat}
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}

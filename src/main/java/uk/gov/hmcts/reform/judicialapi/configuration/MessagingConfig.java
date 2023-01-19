@@ -14,33 +14,20 @@ import org.springframework.stereotype.Service;
 @Configuration
 public class MessagingConfig {
 
-    @Value("${jrd.publisher.azure.service.bus.host}")
-    String host;
-
     @Value("${jrd.publisher.azure.service.bus.topic}")
     String topic;
 
-    @Value("${jrd.publisher.azure.service.bus.username}")
-    String sharedAccessKeyName;
-
-    @Value("${jrd.publisher.azure.service.bus.password}")
-    String sharedAccessKeyValue;
+    @Value("${jrd.publisher.azure.service.bus.connection-string}")
+    String accessConnectionString;
 
     @Bean
     public ServiceBusSenderClient getServiceBusSenderClient() {
 
         log.error("Maddineni Prudhvi logs");
-        log.error(topic);
-        log.error(sharedAccessKeyName);
-        log.error(sharedAccessKeyValue);
-        log.error(host);
-        String host1 = host;
-        String connectionString = "Endpoint=sb://"
-                + host1 + ";SharedAccessKeyName=" + sharedAccessKeyName + ";SharedAccessKey=" + sharedAccessKeyValue;
-        log.error(connectionString,host1);
+
         log.error("Maddineni Prudhvi End");
         return new ServiceBusClientBuilder()
-                .connectionString(connectionString)
+                .connectionString(accessConnectionString)
                 .retryOptions(new AmqpRetryOptions())
                 .sender()
                 .topicName(topic)
