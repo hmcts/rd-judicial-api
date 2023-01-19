@@ -9,3 +9,13 @@ dependencies:
   - name: java
     version: 4.0.8
     repository: 'https://hmctspublic.azurecr.io/helm/v1/repo/'
+servicebus:
+  resourceGroup: rd-aks-pr-test
+  teamName: "RD"
+  location: ukwest
+  serviceplan: standard
+  setup:
+    topics:
+      - name: jrd-aks-topic
+        subscriptionNeeded: yes
+  enabled: true
