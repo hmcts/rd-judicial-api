@@ -124,20 +124,3 @@ refresh:
 testing:
   support:
     idamUrl: ${http://127.0.0.1:5000/o}
-
-jrd:
-  publisher:
-    azure:
-      service:
-        bus:
-          host: ${JRD_MQ_HOST:rd-servicebus-aat.servicebus.windows.net}
-          username: ${JRD_MQ_USERNAME:RootManageSharedAccessKey}
-          password: ${JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY:}
-          topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-aat}
-          # DO NOT SET THIS 'true' IN PRODUCTION!
-          trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
-    judicialDataPerMessage: ${JRD_DATA_PER_MESSAGE:50}
-  security:
-    roles:
-      hmcts-admin: jrd-admin
-      system-user: jrd-system-user
