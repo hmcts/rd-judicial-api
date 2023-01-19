@@ -29,12 +29,16 @@ public class MessagingConfig {
     @Bean
     public ServiceBusSenderClient getServiceBusSenderClient() {
 
-        log.error("Topic",topic,sharedAccessKeyName,sharedAccessKeyValue, "Name");
-        log.error("Host :: ",host,"Name");
+        log.error("Maddineni Prudhvi logs");
+        log.error(topic);
+        log.error(sharedAccessKeyName);
+        log.error(sharedAccessKeyValue);
+        log.error(host);
         String host1 = host;
         String connectionString = "Endpoint=sb://"
                 + host1 + ";SharedAccessKeyName=" + sharedAccessKeyName + ";SharedAccessKey=" + sharedAccessKeyValue;
-        log.error("connectionString",connectionString,"Prudhvi host",host1);
+        log.error(connectionString,host1);
+        log.error("Maddineni Prudhvi End");
         return new ServiceBusClientBuilder()
                 .connectionString(connectionString)
                 .retryOptions(new AmqpRetryOptions())
