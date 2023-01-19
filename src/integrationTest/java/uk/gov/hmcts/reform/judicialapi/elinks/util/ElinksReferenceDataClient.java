@@ -137,7 +137,7 @@ public class ElinksReferenceDataClient {
             return statusAndBody;
         }
 
-        return getLeaversResponse(responseEntity);
+        return getResponse(responseEntity);
     }
 
     public Map<String, Object> getBaseLocations() {
@@ -159,7 +159,7 @@ public class ElinksReferenceDataClient {
             return statusAndBody;
         }
 
-        return getBaseLocationResponse(responseEntity);
+        return getResponse(responseEntity);
     }
 
     public Map<String, Object>  getIdamElasticSearch() {
@@ -182,29 +182,7 @@ public class ElinksReferenceDataClient {
         return  getResponse(responseEntity);
     }
 
-    private Map<String, Object> getLocationResponse(ResponseEntity<ElinkLocationWrapperResponse> responseEntity) {
-      
-        var response = new HashMap();
-
-        response.put("http_status", responseEntity.getStatusCode().toString());
-        response.put("headers", responseEntity.getHeaders().toString());
-        response.put("body", responseEntity.getBody());
-        return response;
-    }
-  
-    private Map<String, Object> getResponse(ResponseEntity<ElinkPeopleWrapperResponse> responseEntity) {
-
-        var response = new HashMap();
-
-        response.put("http_status", responseEntity.getStatusCode().toString());
-        response.put("headers", responseEntity.getHeaders().toString());
-        response.put("body", responseEntity.getBody());
-        return response;
-    }
-
-
-    private Map<String, Object> getBaseLocationResponse(ResponseEntity<ElinkBaseLocationWrapperResponse>
-                                                            responseEntity) {
+    private Map<String, Object> getResponse(ResponseEntity<?> responseEntity) {
 
         var response = new HashMap();
 
