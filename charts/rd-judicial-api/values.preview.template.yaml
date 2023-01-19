@@ -7,6 +7,12 @@ java:
     POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     JUDICIAL_DB: classpath:db/migration
+    JRD_MQ_HOST: "$(JRD_MQ_HOST).servicebus.windows.net"
+    JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
+    JRD_MQ_USERNAME: SendAndListenSharedAccessKey
+    JRD_MQ_TOPIC_NAME: jrd-aks-topic
+    JRD_MQ_TRUST_ALL_CERTS: false
+    JRD_DATA_PER_MESSAGE: 50
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
     JRD_SEARCH_SERVICE_CODE: bfa1,bba3
@@ -16,6 +22,13 @@ java:
       username: dbjuddata
       password: dbjuddata
       database: dbjuddata
+  secrets:
+    JRD_MQ_PASSWORD:
+      secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
+      key: primaryKey
+    JRD_MQ_HOST:
+      secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
+      key: namespaceName
   keyVaults:
     rd:
       secrets:
