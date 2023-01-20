@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks.scheduler;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
@@ -23,18 +24,17 @@ public class ElinksApiJobScheduler {
     @Autowired
     private ServletContext context;
 
+    @Value("${elinks.scheduler.wrapperApiUrl}")
+    private String eLinksWrapperBaseUrl;
+
     @Autowired
     private DataloadSchedulerJobAudit dataloadSchedulerJobAudit;
 
-    //@Scheduled(cron = "${scheduler.config}")
-    //Every 5 seconds
-    @Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "${elinks.scheduler.cronExpression}")
     public void loadElinksJob() {
 
-        //String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        //String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().;
-        String baseUrl = context.getContextPath();
-        log.info("ElinksApiJobScheduler.loadElinksData{} Job execution Start" + baseUrl);
+        log.info("ElinksApiJobScheduler.loadElinksData{} Job execution Start " + eLinksWrapperBaseUrl);
+
         DataloadSchedulerJob audit = new DataloadSchedulerJob();
         LocalDateTime jobStartTime = now();
 
@@ -44,7 +44,7 @@ public class ElinksApiJobScheduler {
         dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
 
         try {
-            log.info("ElinksApiJobScheduler.loadElinksData{} Job execution in progress" + baseUrl);
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution in progress");
 
             loadElinksData();
 
@@ -55,14 +55,14 @@ public class ElinksApiJobScheduler {
             dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
 
         } catch (Exception exception) {
-            log.info("ElinksApiJobScheduler.loadElinksData{} Job execution completed failure" + baseUrl);
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure");
 
             LocalDateTime jobEndTime = now();
             audit.setJobEndTime(jobEndTime);
             audit.setPublishingStatus(RefDataElinksConstants.JobStatus.FAILED.getStatus());
             dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
         }
-        log.info("ElinksApiJobScheduler.loadElinksData{} Job execution completed successful" + baseUrl);
+        log.info("ElinksApiJobScheduler.loadElinksData Job execution completed successful");
     }
 
     public void loadElinksData(){
