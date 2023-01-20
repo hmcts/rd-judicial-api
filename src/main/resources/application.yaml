@@ -150,6 +150,10 @@ elinks:
     page: 1
     includePreviousAppointments : false
     threadPauseTime: 2000
+  scheduler:
+    wrapperApiUrl: ${ELINKS_WRAPPER_API_URL:http://localhost:8093}
+    cronExpression: ${CRON_EXPRESSION:0 0 */5 * * *}
+
 
 logging.level.uk.gov.hmcts.reform: DEBUG
 
