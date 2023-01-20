@@ -1,21 +1,14 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.scheduler;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
