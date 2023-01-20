@@ -28,11 +28,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Service
 @Slf4j
 @NoArgsConstructor
-//@AllArgsConstructor
+
 public class ElinksApiJobScheduler {
 
-    @Autowired
-    private ServletContext context;
 
     @Value("${elinks.scheduler.wrapperApiUrl}")
     private String eLinksWrapperBaseUrl;
