@@ -4,9 +4,18 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
@@ -14,6 +23,7 @@ import java.time.LocalDateTime;
 import javax.servlet.ServletContext;
 
 import static java.time.LocalDateTime.now;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
 @Slf4j
@@ -29,6 +39,12 @@ public class ElinksApiJobScheduler {
 
     @Autowired
     private DataloadSchedulerJobAudit dataloadSchedulerJobAudit;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    public static final String ELINKS_CONTROLLER_BASE_URL =
+            "/refdata/internal/elink";
 
     @Scheduled(cron = "${elinks.scheduler.cronExpression}")
     public void loadElinksJob() {
@@ -65,8 +81,99 @@ public class ElinksApiJobScheduler {
         log.info("ElinksApiJobScheduler.loadElinksData Job execution completed successful");
     }
 
-    public void loadElinksData(){
+    public void loadElinksData() {
 
-        //throw new RuntimeException();
+        retrieveLocationDetails();
+        retrieveBaseLocationDetails();
+        retrievePeopleDetails();
+        retrieveLeaversDetails();
+        retrieveIdamElasticSearchDetails();
+        //Publish Api is pending
     }
+
+    public ResponseEntity<ElinkLocationWrapperResponse> retrieveLocationDetails() {
+
+
+        String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
+                .concat("/reference_data/location");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+
+        HttpEntity<String> request =
+                new HttpEntity<>(headers);
+
+        return restTemplate.exchange(apiUrl,
+                HttpMethod.GET, request, ElinkLocationWrapperResponse.class);
+
+    }
+
+    public ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveBaseLocationDetails() {
+
+
+        String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
+                .concat("/reference_data/base_location");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+
+        HttpEntity<String> request =
+                new HttpEntity<>(headers);
+
+        return restTemplate.exchange(apiUrl,
+                HttpMethod.GET, request, ElinkBaseLocationWrapperResponse.class);
+
+    }
+
+    public ResponseEntity<ElinkPeopleWrapperResponse> retrievePeopleDetails() {
+
+
+        String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
+                .concat("/people");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+
+        HttpEntity<String> request =
+                new HttpEntity<>(headers);
+
+        return restTemplate.exchange(apiUrl,
+                HttpMethod.GET, request, ElinkPeopleWrapperResponse.class);
+
+    }
+
+    public ResponseEntity<ElinkLeaversWrapperResponse> retrieveLeaversDetails() {
+
+
+        String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
+                .concat("/leavers");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+
+        HttpEntity<String> request =
+                new HttpEntity<>(headers);
+
+        return restTemplate.exchange(apiUrl,
+                HttpMethod.GET, request, ElinkLeaversWrapperResponse.class);
+
+    }
+
+    public ResponseEntity<Object> retrieveIdamElasticSearchDetails() {
+
+
+        String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
+                .concat("/idam/elastic/search");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+
+        HttpEntity<String> request =
+                new HttpEntity<>(headers);
+
+        return restTemplate.exchange(apiUrl,
+                HttpMethod.GET, request, Object.class);
+
+    }
+
 }
