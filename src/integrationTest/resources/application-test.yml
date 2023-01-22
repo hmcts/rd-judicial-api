@@ -81,7 +81,7 @@ security:
     - "/csrf"
     - "/error"
     - "/favicon.ico"
-
+    - "/refdata/internal/elink/**"
 idam:
   s2s-auth:
     totp_secret: ${JUDICIAL_API_S2S_SECRET:}
@@ -142,6 +142,10 @@ elinks:
     page: 1
     includePreviousAppointments : false
     threadPauseTime: 2000
+  scheduler:
+    wrapperApiUrl: ${ELINKS_WRAPPER_API_URL:http://localhost:8093}
+    cronExpression: ${CRON_EXPRESSION:*/5 * * * * *}
+
 
 elastic:
   search:
