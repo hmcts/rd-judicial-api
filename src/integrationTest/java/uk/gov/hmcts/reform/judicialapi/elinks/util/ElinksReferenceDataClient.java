@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
@@ -115,28 +116,6 @@ public class ElinksReferenceDataClient {
         return getResponse(responseEntity);
     }
 
-    public Map<String, Object> getBaseLocations() {
-
-        ResponseEntity<ElinkLocationWrapperResponse> responseEntity;
-        HttpEntity<?> request =
-                new HttpEntity<>(getMultipleAuthHeaders("jrd-system-user", null));
-
-        try {
-
-            responseEntity = restTemplate.exchange(
-                    baseUrl + "/reference_data/base_location",HttpMethod.GET,request,
-                    ElinkLocationWrapperResponse.class);
-
-        } catch (RestClientResponseException ex) {
-            var statusAndBody = new HashMap<String, Object>(2);
-            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
-            statusAndBody.put("response_body", ex.getResponseBodyAsString());
-            return statusAndBody;
-        }
-
-        return getResponse(responseEntity);
-    }
-  
 
     public Map<String, Object>  getLeavers() {
 
@@ -150,6 +129,28 @@ public class ElinksReferenceDataClient {
 
             responseEntity = restTemplate.exchange(
               baseUrl + "/leavers",HttpMethod.GET,request, ElinkLeaversWrapperResponse.class);
+
+        } catch (RestClientResponseException ex) {
+            var statusAndBody = new HashMap<String, Object>(2);
+            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("response_body", ex.getResponseBodyAsString());
+            return statusAndBody;
+        }
+
+        return getResponse(responseEntity);
+    }
+
+    public Map<String, Object> getBaseLocations() {
+
+        ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity;
+        HttpEntity<?> request =
+            new HttpEntity<>(getMultipleAuthHeaders("jrd-system-user", null));
+
+        try {
+
+            responseEntity = restTemplate.exchange(
+                baseUrl + "/reference_data/base_location",HttpMethod.GET,request,
+                ElinkBaseLocationWrapperResponse.class);
 
         } catch (RestClientResponseException ex) {
             var statusAndBody = new HashMap<String, Object>(2);
@@ -181,26 +182,6 @@ public class ElinksReferenceDataClient {
         return  getResponse(responseEntity);
     }
 
-    private Map<String, Object> getLocationResponse(ResponseEntity<ElinkLocationWrapperResponse> responseEntity) {
-      
-        var response = new HashMap();
-
-        response.put("http_status", responseEntity.getStatusCode().toString());
-        response.put("headers", responseEntity.getHeaders().toString());
-        response.put("body", responseEntity.getBody());
-        return response;
-    }
-
-    private Map<String, Object> getBaseLocationResponse(ResponseEntity<ElinkLocationWrapperResponse> responseEntity) {
-
-        var response = new HashMap();
-
-        response.put("http_status", responseEntity.getStatusCode().toString());
-        response.put("headers", responseEntity.getHeaders().toString());
-        response.put("body", responseEntity.getBody());
-        return response;
-    }
-  
     private Map<String, Object> getResponse(ResponseEntity<?> responseEntity) {
 
         var response = new HashMap();

@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
@@ -24,8 +24,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_FORBIDDEN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_NOT_FOUND;
@@ -315,27 +315,52 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
                                 + " }")));
 
         elinkSchedularAuditRepository.deleteAll();
-
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
         assertThat(leaversResponse).containsEntry("http_status", "400");
         String profiles = leaversResponse.get("response_body").toString();
         assertTrue(profiles.contains("Syntax error or Bad request"));
 
-        List<UserProfile> userprofile = profileRepository.findAll();
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
 
-        assertEquals(1, userprofile.size());
-        assertEquals("0049931063", userprofile.get(0).getPersonalCode());
-        assertNull(userprofile.get(0).getLastWorkingDate());
-        assertEquals(true, userprofile.get(0).getActiveFlag());
-        assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
+
+        assertEquals(LEAVERSAPI, auditEntry.getApiName());
+        assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
+        assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
+        assertNotNull(auditEntry.getSchedulerStartTime());
+        assertNotNull(auditEntry.getSchedulerEndTime());
+    }
+
+    @DisplayName("Elinks Base Locations to test JRD Audit Negative Scenario Functionality verification")
+    @Test
+    void verifyBaseLocationJrdAuditFunctionalityBadRequestScenario() {
+        elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
+            .willReturn(aResponse()
+                .withStatus(400)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody("{"
+                    + " }")));
+        elinkSchedularAuditRepository.deleteAll();
+        Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
+        assertThat(baseLocationResponse).containsEntry("http_status", "400");
+        String baseLocations = baseLocationResponse.get("response_body").toString();
+        assertTrue(baseLocations.contains("Syntax error or Bad request"));
+
+        List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
+
+        assertEquals(1, baseLocationList.size());
+        assertEquals("0", baseLocationList.get(0).getBaseLocationId());
+        assertEquals("default", baseLocationList.get(0).getCourtName());
+        assertEquals("default", baseLocationList.get(0).getCourtType());
+        assertEquals("default", baseLocationList.get(0).getCircuit());
+        assertEquals("default", baseLocationList.get(0).getAreaOfExpertise());
 
         List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
 
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
 
-
-        assertEquals(LEAVERSAPI, auditEntry.getApiName());
+        assertEquals(BASELOCATIONAPI, auditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
         assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
         assertNotNull(auditEntry.getSchedulerStartTime());

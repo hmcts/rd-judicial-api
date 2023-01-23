@@ -321,6 +321,20 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                                 + "    }")
                                 ));
 
+        elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody("{"
+                    + " \"base_location_id\": \"0\","
+                    + " \"court_name\": \"default\","
+                    + " \"court_type\": \"default\","
+                    + " \"circuit\": \"default\","
+                    + " \"area_of_expertise\": \"default\""
+                    + " }")
+                .withTransformers("user-token-response")));
+
     }
 
     @AfterEach

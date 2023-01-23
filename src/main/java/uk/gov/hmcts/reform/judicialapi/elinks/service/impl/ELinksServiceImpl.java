@@ -47,6 +47,7 @@ import java.util.Optional;
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUDIT_DATA_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
@@ -108,6 +109,13 @@ public class ELinksServiceImpl implements ELinksService {
 
         Response baseLocationsResponse;
         HttpStatus httpStatus;
+        LocalDateTime schedulerStartTime = now();
+
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            null,
+            RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), BASELOCATIONAPI);
+
         ResponseEntity<ElinkBaseLocationWrapperResponse> result = null;
         try {
 
@@ -133,8 +141,18 @@ public class ELinksServiceImpl implements ELinksService {
                                 .toList();
                         result = loadBaseLocationData(baselocations);
                     }
+                } else {
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        schedulerStartTime,
+                        now(),
+                        RefDataElinksConstants.JobStatus.FAILED.getStatus(), BASELOCATIONAPI);
+                    throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
                 }
             } else {
+                elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        schedulerStartTime,
+                        now(),
+                        RefDataElinksConstants.JobStatus.FAILED.getStatus(), BASELOCATIONAPI);
                 handleELinksErrorResponse(httpStatus);
             }
 
@@ -142,6 +160,12 @@ public class ELinksServiceImpl implements ELinksService {
         } catch (FeignException ex) {
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         }
+
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            now(),
+            RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), BASELOCATIONAPI);
+
         return result;
     }
 
