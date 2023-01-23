@@ -7,19 +7,14 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
-
-import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION_DATA_LOAD_SUCCESS;
 
 public class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
