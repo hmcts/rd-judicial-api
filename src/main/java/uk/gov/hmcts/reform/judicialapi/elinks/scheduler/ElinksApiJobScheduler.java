@@ -20,7 +20,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
 import java.time.LocalDateTime;
-import javax.servlet.ServletContext;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -28,7 +27,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Service
 @Slf4j
 @NoArgsConstructor
-
+@SuppressWarnings("all")
 public class ElinksApiJobScheduler {
 
 
@@ -158,6 +157,7 @@ public class ElinksApiJobScheduler {
     }
 
     public ResponseEntity<Object> retrieveIdamElasticSearchDetails() {
+
 
 
         String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
