@@ -67,7 +67,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
 
 
- 
+
 
     @DisplayName("Elinks load eLinks scheduler status verification failure case")
     @Test
