@@ -67,20 +67,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
 
 
-    @DisplayName("Elinks load eLinks scheduler status verification success case")
-    @Test
-    @Disabled
-    void test_load_elinks_job_status_sucess() throws JOSEException, JsonProcessingException {
-
-
-        elinksApiJobScheduler.loadElinksJob();
-
-        DataloadSchedulerJob jobDetails = dataloadSchedulerJobRepository.findAll().get(0);
-
-        assertThat(jobDetails).isNotNull();
-        assertThat(jobDetails.getPublishingStatus()).isEqualTo(RefDataElinksConstants.JobStatus.SUCCESS.getStatus());
-
-    }
+ 
 
     @DisplayName("Elinks load eLinks scheduler status verification failure case")
     @Test
