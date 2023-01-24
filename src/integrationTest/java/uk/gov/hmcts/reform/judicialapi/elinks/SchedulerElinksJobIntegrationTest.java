@@ -17,7 +17,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
 import java.util.List;
 
