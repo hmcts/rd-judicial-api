@@ -3,8 +3,8 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
@@ -67,7 +67,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @DisplayName("Elinks load eLinks scheduler status verification success case")
     @Test
-
+    @Order(1)
     void test_load_elinks_job_status_sucess() throws JOSEException, JsonProcessingException {
 
         //setupData();
@@ -83,7 +83,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @DisplayName("Elinks load eLinks scheduler status verification failure case")
     @Test
-    @Disabled
+    @Order(2)
     void test_load_elinks_job_status_failure() {
 
 
