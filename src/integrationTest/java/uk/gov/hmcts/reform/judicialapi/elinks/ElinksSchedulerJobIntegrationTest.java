@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +65,25 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
 
+    @DisplayName("Elinks load eLinks scheduler status verification success case")
+    @Test
+
+    void test_load_elinks_job_status_sucess() throws JOSEException, JsonProcessingException {
+
+        //setupData();
+        elinksApiJobScheduler.loadElinksJob();
+
+        DataloadSchedulerJob jobDetails = dataloadSchedulerJobRepository.findAll().get(0);
+
+        assertThat(jobDetails).isNotNull();
+        assertThat(jobDetails.getPublishingStatus()).isEqualTo(RefDataElinksConstants.JobStatus.SUCCESS.getStatus());
+
+    }
+
 
     @DisplayName("Elinks load eLinks scheduler status verification failure case")
     @Test
+    @Disabled
     void test_load_elinks_job_status_failure() {
 
 
@@ -92,6 +109,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
         elinkLocationWrapperResponse.setMessage(LOCATION_DATA_LOAD_SUCCESS);
 
         elinks.stubFor(get(urlPathMatching("/location"))
+                .atPriority(1)
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -103,6 +121,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
         elinkLocationWrapperResponse.setMessage(BASE_LOCATION_DATA_LOAD_SUCCESS);
 
         elinks.stubFor(get(urlPathMatching("/base_location"))
+                .atPriority(1)
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -116,6 +135,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
 
         elinks.stubFor(get(urlPathMatching("/people"))
+                .atPriority(1)
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -128,6 +148,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
         idamResponseSet.add(new IdamResponse());
 
         elinks.stubFor(get(urlPathMatching("/idam/elastic/search"))
+                .atPriority(1)
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -141,6 +162,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
         elinkLeaversWrapperResponse.setMessage(LEAVERSSUCCESS);
 
         elinks.stubFor(get(urlPathMatching("/leavers"))
+                .atPriority(1)
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")

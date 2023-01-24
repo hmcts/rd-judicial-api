@@ -80,11 +80,18 @@ public class ElinksApiJobScheduler {
 
     public void loadElinksData() {
 
-        retrieveLocationDetails();
-        retrieveBaseLocationDetails();
-        retrievePeopleDetails();
-        retrieveLeaversDetails();
-        retrieveIdamElasticSearchDetails();
+        ResponseEntity<ElinkLocationWrapperResponse> locationResponse
+                = retrieveLocationDetails();
+        ResponseEntity<ElinkBaseLocationWrapperResponse> baseLocationResponse
+                = retrieveBaseLocationDetails();
+
+        ResponseEntity<ElinkPeopleWrapperResponse> peopleResponse
+                = retrievePeopleDetails();
+
+        ResponseEntity<ElinkLeaversWrapperResponse> leaversResponse
+                = retrieveLeaversDetails();
+        ResponseEntity<Object> idamSearchResponse
+                = retrieveIdamElasticSearchDetails();
         //Publish Api is pending
     }
 
