@@ -180,6 +180,6 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
                         .withHeader("Content-Type", "application/json")
                         .withHeader("Connection", "close")
                         .withBody(body)
-                        .withTransformers("user-token-response")));
+                ));
     }
 }
