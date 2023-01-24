@@ -26,6 +26,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -86,12 +87,15 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
     @Order(2)
     void test_load_elinks_job_status_failure() {
 
+        dataloadSchedulerJobRepository.deleteAll();
 
         int statusCode = 400;
-        locationApi4xxResponse(statusCode,null);
+        String body = null;
+        locationApi4xxResponse(statusCode,body);
 
         elinksApiJobScheduler.loadElinksJob();
 
+        List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
         DataloadSchedulerJob jobDetails = dataloadSchedulerJobRepository.findAll().get(0);
 
         assertThat(jobDetails).isNotNull();
@@ -175,6 +179,7 @@ class ElinksSchedulerJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
     private void locationApi4xxResponse(int statusCode, String body) {
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+                .atPriority(1)
                 .willReturn(aResponse()
                         .withStatus(statusCode)
                         .withHeader("Content-Type", "application/json")
