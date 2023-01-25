@@ -23,6 +23,7 @@ public class RefDataElinksConstants {
 
     public static final String ELINKS_ACCESS_ERROR = "An error occurred while retrieving data from Elinks";
     public static final String ELINKS_DATA_STORE_ERROR = "An error occurred while storing data from Elinks";
+    public static final String ERROR_IN_PARSING_THE_FEIGN_RESPONSE = "Error in parsing %s Feign Response";
 
     public static final String ELINKS_ERROR_RESPONSE_BAD_REQUEST = "Syntax error or Bad request";
     public static final String ELINKS_ERROR_RESPONSE_UNAUTHORIZED =
@@ -44,26 +45,21 @@ public class RefDataElinksConstants {
 
     public static final String REGION_DEFAULT_ID = "0";
 
+    public static final String UPDATED_SINCE = "2015-01-01";
+
     public static final String LEAVERSSUCCESS = "Leavers Data Loaded Successfully";
 
     public static final String JUDICIAL_REF_DATA_ELINKS = "judicial-ref-data-elinks";
 
     public static final String LEAVERSAPI = "LeaversAPI";
-
-    public static final String BASE_LOCATION_ID = "base_location_id";
-
-    public static final String APPOINTMENT_TABLE = "judicial_office_appointment";
-
-
-    public static final String LOCATIONIDFAILURE = "Appointment Base Location ID not available in BASE LOCATION table";
+    public static final String LOCATIONAPI = "LocationAPI";
 
     public static final String BASELOCATIONAPI = "BaseLocationAPI";
 
     public enum JobStatus {
         IN_PROGRESS("IN_PROGRESS"),
         FAILED("FAILED"),
-        SUCCESS("SUCCESS"),
-        PARTIAL_SUCCESS("PARTIAL_SUCCESS");
+        SUCCESS("SUCCESS");
         String status;
         JobStatus(String status) {
             this.status = status;
