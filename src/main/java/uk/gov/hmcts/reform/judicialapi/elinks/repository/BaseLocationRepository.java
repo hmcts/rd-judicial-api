@@ -6,6 +6,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 
 @SuppressWarnings("all")
 @Repository
+
 public interface BaseLocationRepository extends JpaRepository<BaseLocation, String> {
+
+
 
 }
