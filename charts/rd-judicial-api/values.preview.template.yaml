@@ -38,8 +38,6 @@ java:
           alias: LD_SDK_KEY
         - name: judicial-api-s2s-secret
           alias: JUDICIAL_API_S2S_SECRET
-        - name: judicial-topic-primary-send-listen-shared-access-key
-          alias: JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY
 servicebus:
   resourceGroup: rd-aks-pr-test
   teamName: "RD"
