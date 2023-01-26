@@ -25,7 +25,6 @@ java:
     JRD_SEARCH_SERVICE_CODE: bfa1,bba3
     JRD_MQ_TRUST_ALL_CERTS: false
     JRD_DATA_PER_MESSAGE: 50
-    MAIL_FROM: no-reply@mail-rd-nonprod.platform.hmcts.net
   postgresql:
     enabled: true
     auth:

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,12 @@ public class WelcomeController {
     private static final Logger LOG = getLogger(WelcomeController.class);
     private static final String INSTANCE_ID = UUID.randomUUID().toString();
     private static final String MESSAGE = "Welcome to the Judicial API";
+
+    @Value("${jrd.publisher.azure.service.bus.username}")
+    String sharedAccessKeyName;
+
+    @Value("${jrd.publisher.azure.service.bus.password}")
+    String sharedAccessKeyValue;
 
     /**
      * Root GET endpoint.
@@ -53,10 +60,10 @@ public class WelcomeController {
     public ResponseEntity<String> welcome() {
 
         LOG.info("Welcome message '{}' from running instance: {}", MESSAGE, INSTANCE_ID);
-
+        LOG.error("keysssssssssssssssssssss {} key  {} ",sharedAccessKeyName,sharedAccessKeyName);
         return ResponseEntity
             .ok()
             .cacheControl(CacheControl.noCache())
-            .body("{\"message\": \"" + MESSAGE + "\"}");
+            .body("{\"message\": \"" + sharedAccessKeyName + "---" +sharedAccessKeyName + "\"}");
     }
 }
