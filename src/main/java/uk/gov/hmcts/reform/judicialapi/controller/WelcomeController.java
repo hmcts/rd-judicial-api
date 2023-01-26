@@ -64,6 +64,6 @@ public class WelcomeController {
         return ResponseEntity
             .ok()
             .cacheControl(CacheControl.noCache())
-            .body("{\"message\": \"" + sharedAccessKeyName + "---" +sharedAccessKeyName + "\"}");
+            .body("{\"message\": \"" + MESSAGE + "\"}");
     }
 }
