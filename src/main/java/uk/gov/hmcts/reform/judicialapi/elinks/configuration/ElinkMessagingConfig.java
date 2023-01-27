@@ -33,7 +33,7 @@ public class ElinkMessagingConfig {
 
         String connectionString = "Endpoint=sb://"
             + host + ";SharedAccessKeyName=" + sharedAccessKeyName + ";SharedAccessKey=" + sharedAccessKeyValue;
-        log.error("sharedAcessssssss ::::: ", sharedAccessKeyValue);
+
         return new ServiceBusClientBuilder()
                 .connectionString(connectionString)
                 .retryOptions(new AmqpRetryOptions())
