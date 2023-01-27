@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
@@ -157,7 +156,7 @@ class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
 
         Map<String, Object> response = elinksReferenceDataClient.getLocations();
         assertThat(response).containsEntry("http_status", "403");
-  
+
         assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_FORBIDDEN);
     }
 
