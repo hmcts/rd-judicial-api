@@ -25,7 +25,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class EmailServiceTest {
+class EmailServiceTest {
 
     @InjectMocks
     EmailServiceImpl emailServiceImpl;

@@ -151,19 +151,23 @@ elastic:
   search:
     query: (roles:judiciary) AND lastModified:>now-12h
     recordsPerPage: 500
-
+launchdarkly:
+  sdk:
+    key: ${LD_SDK_KEY:}
+    environment: ${LAUNCH_DARKLY_ENV:preview}
+    user: rd
 jrd:
   publisher:
     azure:
       service:
         bus:
           host: ${JRD_MQ_HOST:rd-servicebus-sandbox.servicebus.windows.net}
-          username: ${JRD_MQ_USERNAME:RootManageSharedAccessKey}
+          username: ${JRD_MQ_USERNAME:SendAndListenSharedAccessKey}
           password: ${JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY:TEST}
           topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-sandbox}
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
-    judicialDataPerMessage: ${JRD_DATA_PER_MESSAGE:50}
+    jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:50}
   security:
     roles:
       hmcts-admin: jrd-admin
