@@ -63,7 +63,6 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
 
     public SchedulerJobStatusResponse publishSidamIdToAsb() {
 
-        jobBeforePublishingMessageToAsb();
         //Get the job details from dataload_schedular_job table
         Pair<String, String> jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
 
@@ -89,14 +88,6 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
                 .sidamIdsCount(sidamIdcount)
                 .statusCode(HttpStatus.OK.value()).build();
 
-    }
-
-    private void jobBeforePublishingMessageToAsb() {
-        var params = new Object[]{new Timestamp(currentTimeMillis()),
-                JobStatus.IN_PROGRESS.getStatus()};
-        log.info("{}:: Scheduler Job execution Started", logComponentName);
-        //Start Auditing Job Status
-        jdbcTemplate.update(INSERT_AUDIT_JOB, params);
     }
 
     private Pair<String, String> getJobDetails(String jobStatusQuery) {
