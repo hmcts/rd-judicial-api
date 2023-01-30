@@ -73,14 +73,19 @@ security:
     - "/health/readiness"
     - "/health/liveness"
     - "/actuator/**"
+    - "/swagger-ui/swagger-ui.html"
     - "/loggers/**"
     - "/swagger-ui.html"
     - "/swagger-resources/**"
-    - "/v2/api-docs"
+    - "/v3/api-docs"
     - "/webjars/springfox-swagger-ui/**"
     - "/csrf"
     - "/error"
     - "/favicon.ico"
+    - "/swagger-ui/**"
+    - "/v3/**"
+    - "/status/health"
+    - "/actuator/**"
 
 idam:
   s2s-auth:

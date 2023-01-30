@@ -6,6 +6,9 @@ import com.github.tomakehurst.wiremock.extension.ResponseTransformer;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.Response;
 import com.launchdarkly.sdk.server.LDClient;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.TextCodec;
 import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.flywaydb.core.Flyway;
@@ -17,12 +20,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.judicialapi.configuration.RestTemplateConfiguration;
 import uk.gov.hmcts.reform.judicialapi.service.impl.FeatureToggleServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
+
+import java.time.Instant;
+import java.util.Date;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -67,6 +75,13 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     @RegisterExtension
     protected final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
 
+    @Value("${idam.s2s-auth.microservice}")
+    static String authorisedService;
+
+    @MockBean
+    protected JwtDecoder jwtDecoder;
+
+
     @Autowired
     Flyway flyway;
 
@@ -75,6 +90,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
         JudicialReferenceDataClient.setBearerToken("");
         judicialReferenceDataClient = new JudicialReferenceDataClient(port, issuer, expiration, serviceName);
         when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(true);
+        when(jwtDecoder.decode(anyString())).thenReturn(getJwt());
         flyway.clean();
         flyway.migrate();
     }
@@ -113,6 +129,28 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
                         .withHeader("Content-Type", "application/json")
                         .withHeader("Connection", "close")
                         .withBody(getDynamicJwksResponse())));
+    }
+
+    public static String generateDummyS2SToken(String serviceName) {
+        return Jwts.builder()
+                .setSubject(serviceName)
+                .setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode("AA"))
+                .compact();
+    }
+
+    public static synchronized Jwt getJwt() {
+        var s2SToken = generateDummyS2SToken(authorisedService);
+        return Jwt.withTokenValue(s2SToken)
+                .claim("exp", Instant.ofEpochSecond(1585763216))
+                .claim("iat", Instant.ofEpochSecond(1585734416))
+                .claim("token_type", "Bearer")
+                .claim("tokenName", "access_token")
+                .claim("expires_in", 28800)
+                .header("kid", "b/O6OvVv1+y+WgrH5Ui9WTioLt0=")
+                .header("typ", "RS256")
+                .header("alg", "RS256")
+                .build();
     }
 
     @AfterEach
