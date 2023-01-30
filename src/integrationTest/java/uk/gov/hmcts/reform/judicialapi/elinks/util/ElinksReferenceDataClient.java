@@ -182,6 +182,26 @@ public class ElinksReferenceDataClient {
         return  getResponse(responseEntity);
     }
 
+    public Map<String, Object>  publishSidamIds() {
+
+        var stringBuilder = new StringBuilder();
+
+        ResponseEntity<Object> responseEntity = null;
+        HttpEntity<?> request =
+                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null));
+        try {
+            responseEntity = restTemplate.exchange(
+                    baseUrl + "/sidam/asb/publish", HttpMethod.GET, request, Object.class);
+
+        } catch (RestClientResponseException ex) {
+            var statusAndBody = new HashMap<String, Object>(2);
+            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("response_body", ex.getResponseBodyAsString());
+            return statusAndBody;
+        }
+        return  getResponse(responseEntity);
+    }
+
     private Map<String, Object> getResponse(ResponseEntity<?> responseEntity) {
 
         var response = new HashMap();
