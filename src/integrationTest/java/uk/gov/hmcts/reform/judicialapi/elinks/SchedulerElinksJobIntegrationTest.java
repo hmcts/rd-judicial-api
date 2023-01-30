@@ -57,10 +57,12 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        cleanupData();
     }
 
     @AfterEach
     void cleanUp() {
+        cleanupData();
     }
 
     @DisplayName("Elinks load eLinks scheduler status verification success case")
