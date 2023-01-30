@@ -145,6 +145,7 @@ elinks:
   scheduler:
     wrapperApiUrl: ${ELINKS_WRAPPER_API_URL:http://localhost:8093}
     cronExpression: ${CRON_EXPRESSION:* * */5 * * *}
+    enabled: false
 
 
 elastic:

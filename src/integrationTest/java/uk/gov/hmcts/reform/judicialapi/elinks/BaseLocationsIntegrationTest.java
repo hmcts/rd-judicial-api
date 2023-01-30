@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,12 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @BeforeEach
     void setUp() {
+        cleanupData();
+    }
 
+    @AfterEach
+    void cleanUp() {
+        cleanupData();
     }
 
     @DisplayName("Elinks location endpoint status verification")
@@ -67,6 +73,7 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
     @DisplayName("Elinks Base Location to JRD Audit Functionality verification")
     @Test
     void verifyBaseLocationJrdAuditFunctionality() {
+
         Map<String, Object> baseLocationsResponse = elinksReferenceDataClient.getBaseLocations();
         assertThat(baseLocationsResponse).containsEntry("http_status", "200 OK");
         ElinkBaseLocationWrapperResponse profiles = (ElinkBaseLocationWrapperResponse)baseLocationsResponse.get("body");
@@ -85,12 +92,17 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
 
-        assertEquals(1, auditEntry.getId());
+
+        assertThat(auditEntry.getId()).isPositive();
         assertEquals(BASELOCATIONAPI, auditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
         assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
+    }
+
+    private void cleanupData() {
+        elinkSchedularAuditRepository.deleteAll();
     }
 
 }

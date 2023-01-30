@@ -60,7 +60,7 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
         dataloadSchedulerJobRepository.deleteAll();
 
-        elinksApiJobScheduler.loadElinksJob();
+        elinksApiJobScheduler.loadElinksData();
 
         DataloadSchedulerJob jobDetails = dataloadSchedulerJobRepository.findAll().get(0);
 
@@ -81,7 +81,7 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
         String body = null;
         locationApi4xxResponse(statusCode,body);
 
-        elinksApiJobScheduler.loadElinksJob();
+        elinksApiJobScheduler.loadElinksData();
 
         List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
         DataloadSchedulerJob jobDetails = dataloadSchedulerJobRepository.findAll().get(0);
