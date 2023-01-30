@@ -6,9 +6,7 @@ public enum JobStatus {
 
     FAILED("FAILED"),
 
-    SUCCESS("SUCCESS"),
-    
-    FILE_LOAD_FAILED("FILE_LOAD_FAILED");
+    SUCCESS("SUCCESS");
 
     String status;
 
