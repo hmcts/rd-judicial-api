@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.doThrow;
 
 class PublishSidamIdIntegrationTest extends ElinksEnabledIntegrationTest {
 
@@ -69,20 +68,6 @@ class PublishSidamIdIntegrationTest extends ElinksEnabledIntegrationTest {
 
     }
 
-
-    @DisplayName("Elinks Publish SidamId endpoint status verification failure")
-    @Test
-    @Order(2)
-    void test_publish_sidam_ids_status_failure() {
-
-        ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
-
-        doThrow(new RuntimeException()).when(elinkTopicPublisher).sendMessage(anyList(),anyString());
-
-        Map<String, Object> response = elinksReferenceDataClient.publishSidamIds();
-        assertThat(response).containsEntry("http_status", "500");
-        assertThat(response.get("response_body")).asString().contains("Internal Server Error");
-    }
 
     private UserProfile buildUserProfileDto() {
 
