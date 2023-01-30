@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
@@ -34,9 +36,17 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     private AuthorisationsRepository authorisationsRepository;
 
+    @Autowired
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
     @BeforeEach
     void setUp() {
+        cleanupData();
+    }
 
+    @AfterEach
+    void cleanUp() {
+        cleanupData();
     }
 
 
@@ -148,4 +158,9 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(authorisationList.get(1).getLastUpdated());
 
     }
+
+    private void cleanupData() {
+        elinkSchedularAuditRepository.deleteAll();
+    }
+
 }

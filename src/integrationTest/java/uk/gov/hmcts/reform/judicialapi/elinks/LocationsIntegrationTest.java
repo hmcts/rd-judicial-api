@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,15 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
 
+    @BeforeEach
+    void setUp() {
+        cleanupData();
+    }
 
+    @AfterEach
+    void cleanUp() {
+        cleanupData();
+    }
 
 
     @DisplayName("Elinks location endpoint status verification")
@@ -80,11 +90,17 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
 
-        assertEquals(1, auditEntry.getId());
+        assertThat(auditEntry.getId()).isPositive();
+
         assertEquals(LOCATIONAPI, auditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
         assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
+
+    private void cleanupData() {
+        elinkSchedularAuditRepository.deleteAll();
+    }
+
 }

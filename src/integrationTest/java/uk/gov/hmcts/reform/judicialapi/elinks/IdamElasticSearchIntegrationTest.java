@@ -1,11 +1,13 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
@@ -27,6 +29,9 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
 
+    @Autowired
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
 
     @BeforeEach
     void setUp() {
@@ -41,6 +46,13 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
         tokenConfigProperties.setAuthorization(authorization);
         tokenConfigProperties.setRedirectUri(redirectUri);
         tokenConfigProperties.setUrl(url);
+
+        cleanupData();
+    }
+
+    @AfterEach
+    void cleanUp() {
+        cleanupData();
     }
 
     @DisplayName("Idam Elastic Search status")
@@ -67,5 +79,9 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(1, userprofile.size());
         assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e971", userprofile.get(0).getSidamId());
 
+    }
+
+    private void cleanupData() {
+        elinkSchedularAuditRepository.deleteAll();
     }
 }
