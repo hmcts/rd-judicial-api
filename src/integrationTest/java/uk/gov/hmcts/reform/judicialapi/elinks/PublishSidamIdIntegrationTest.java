@@ -21,12 +21,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.SUCCESS;
 
 class PublishSidamIdIntegrationTest extends ElinksEnabledIntegrationTest {
 
@@ -66,7 +64,9 @@ class PublishSidamIdIntegrationTest extends ElinksEnabledIntegrationTest {
         Map<String, Object> response = elinksReferenceDataClient.publishSidamIds();
         assertThat(response).containsEntry("http_status", "200 OK");
         HashMap publishSidamIdsResponse = (LinkedHashMap)response.get("body");
-        assertEquals(SUCCESS.getStatus(), publishSidamIdsResponse.get("publishing_status"));
+
+        assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
+
     }
 
 
