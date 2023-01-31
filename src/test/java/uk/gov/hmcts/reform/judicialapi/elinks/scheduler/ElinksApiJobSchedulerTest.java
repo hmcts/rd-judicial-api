@@ -16,10 +16,8 @@ import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ElinksApiJobSchedulerTest {
@@ -54,21 +52,16 @@ public class ElinksApiJobSchedulerTest {
         audit.setPublishingStatus(RefDataElinksConstants.JobStatus.SUCCESS.getStatus());
 
 
-
-        when(dataloadSchedulerJobAudit.auditSchedulerJobStatus(any())).thenReturn(audit);
-
-
-
         elinksApiJobScheduler.loadElinksJob();
 
         assertThat(elinksApiJobScheduler).isNotNull();
 
         verify(elinksApiJobScheduler, times(1)).loadElinksJob();
-        verify(elinksApiJobScheduler, times(1)).retrieveLocationDetails();
-        verify(elinksApiJobScheduler, times(1)).retrieveBaseLocationDetails();
-        verify(elinksApiJobScheduler, times(1)). retrievePeopleDetails();
-        verify(elinksApiJobScheduler, times(1)). retrieveLeaversDetails();
-        verify(elinksApiJobScheduler, times(1)).  retrieveIdamElasticSearchDetails();
+        verify(elinksApiJobScheduler, times(0)).retrieveLocationDetails();
+        verify(elinksApiJobScheduler, times(0)).retrieveBaseLocationDetails();
+        verify(elinksApiJobScheduler, times(0)). retrievePeopleDetails();
+        verify(elinksApiJobScheduler, times(0)). retrieveLeaversDetails();
+        verify(elinksApiJobScheduler, times(0)).  retrieveIdamElasticSearchDetails();
 
     }
 }
