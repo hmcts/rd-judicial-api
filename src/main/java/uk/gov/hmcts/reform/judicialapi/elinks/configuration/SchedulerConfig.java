@@ -6,6 +6,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-@ConditionalOnProperty(name = "elinks.scheduler.enabled", matchIfMissing = true)
+@ConditionalOnProperty(value = "elinks.scheduler.enabled", matchIfMissing = true, havingValue = "true")
 public class SchedulerConfig {
 }
