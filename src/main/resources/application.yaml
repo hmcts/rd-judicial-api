@@ -92,6 +92,7 @@ security:
     - "/loggers/**"
     - "/swagger-ui.html"
     - "/swagger-ui/**"
+    - "/v3/**"
     - "/swagger-resources/**"
     - "/v2/api-docs"
     - "/webjars/springfox-swagger-ui/**"
