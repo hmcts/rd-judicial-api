@@ -40,42 +40,50 @@ public class ElinksApiJobScheduler {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${elinks.scheduler.enabled:false}")
+    private boolean isSchedulerEnabled;
+
+
     public static final String ELINKS_CONTROLLER_BASE_URL =
             "/refdata/internal/elink";
 
     @Scheduled(cron = "${elinks.scheduler.cronExpression}")
     public void loadElinksJob() {
 
-        log.info("ElinksApiJobScheduler.loadElinksData{} Job execution Start " + eLinksWrapperBaseUrl);
+        if (isSchedulerEnabled) {
 
-        DataloadSchedulerJob audit = new DataloadSchedulerJob();
-        LocalDateTime jobStartTime = now();
+            log.info("ElinksApiJobScheduler.loadElinksData{} Job execution Start " + eLinksWrapperBaseUrl);
 
-        audit.setJobStartTime(jobStartTime);
-        audit.setPublishingStatus(RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus());
+            DataloadSchedulerJob audit = new DataloadSchedulerJob();
+            LocalDateTime jobStartTime = now();
 
-        dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
-
-        try {
-            log.info("ElinksApiJobScheduler.loadElinksData Job execution in progress");
-
-            loadElinksData();
-
-            LocalDateTime jobEndTime = now();
-            audit.setJobEndTime(jobEndTime);
-            audit.setPublishingStatus(RefDataElinksConstants.JobStatus.SUCCESS.getStatus());
+            audit.setJobStartTime(jobStartTime);
+            audit.setPublishingStatus(RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus());
 
             dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
 
-        } catch (Exception exception) {
-            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure");
+            try {
+                log.info("ElinksApiJobScheduler.loadElinksData Job execution in progress");
 
-            LocalDateTime jobEndTime = now();
-            audit.setJobEndTime(jobEndTime);
-            audit.setPublishingStatus(RefDataElinksConstants.JobStatus.FAILED.getStatus());
-            dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
+                loadElinksData();
+
+                LocalDateTime jobEndTime = now();
+                audit.setJobEndTime(jobEndTime);
+                audit.setPublishingStatus(RefDataElinksConstants.JobStatus.SUCCESS.getStatus());
+
+                dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
+
+            } catch (Exception exception) {
+                log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure");
+
+                LocalDateTime jobEndTime = now();
+                audit.setJobEndTime(jobEndTime);
+                audit.setPublishingStatus(RefDataElinksConstants.JobStatus.FAILED.getStatus());
+                dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
+            }
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed successful");
         }
-        log.info("ElinksApiJobScheduler.loadElinksData Job execution completed successful");
+
     }
 
     public void loadElinksData() {
