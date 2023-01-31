@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperR
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
@@ -67,12 +68,6 @@ public class ElinksApiJobScheduler {
 
                 loadElinksData();
 
-                LocalDateTime jobEndTime = now();
-                audit.setJobEndTime(jobEndTime);
-                audit.setPublishingStatus(RefDataElinksConstants.JobStatus.SUCCESS.getStatus());
-
-                dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
-
             } catch (Exception exception) {
                 log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure");
 
@@ -100,7 +95,8 @@ public class ElinksApiJobScheduler {
                 = retrieveLeaversDetails();
         ResponseEntity<Object> idamSearchResponse
                 = retrieveIdamElasticSearchDetails();
-        //Publish Api is pending
+        ResponseEntity<SchedulerJobStatusResponse> schedulerResponse
+            = retrieveAsbPublishDetails();
     }
 
     public ResponseEntity<ElinkLocationWrapperResponse> retrieveLocationDetails() {
@@ -186,6 +182,22 @@ public class ElinksApiJobScheduler {
 
         return restTemplate.exchange(apiUrl,
                 HttpMethod.GET, request, Object.class);
+
+    }
+
+    public ResponseEntity<SchedulerJobStatusResponse> retrieveAsbPublishDetails() {
+
+        String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
+            .concat("/idam/asb/publish");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+
+        HttpEntity<String> request =
+            new HttpEntity<>(headers);
+
+        return restTemplate.exchange(apiUrl,
+            HttpMethod.GET, request, SchedulerJobStatusResponse.class);
 
     }
 
