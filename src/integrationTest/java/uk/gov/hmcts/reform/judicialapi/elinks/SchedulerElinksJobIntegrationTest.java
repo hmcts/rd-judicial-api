@@ -75,7 +75,7 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
         elinksApiJobScheduler.loadElinksJob();
         List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
 
-        assertThat(audits).isNull();
+        assertThat(audits).isEmpty();
 
     }
 
@@ -95,7 +95,7 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
 
-        assertThat(audits).isNull();
+        assertThat(audits).isEmpty();
     }
 
 
