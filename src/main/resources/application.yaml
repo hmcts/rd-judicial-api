@@ -18,10 +18,6 @@ testing:
     idamUrl: ${TEST_IDAM_URL:}
 
 spring:
-  #CVE-2021-22044 required to fix null pointers in integration tests, conflict in Springfox after Springboot 2.6.10 upgrade
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
