@@ -35,7 +35,8 @@ public class SwaggerConfiguration {
                     .in(ParameterIn.HEADER.toString())
                     .schema(new StringSchema())
                     .name("ServiceAuthorization")
-                    .description("Keyword `Bearer` followed by a service-to-service token for a whitelisted micro-service")
+                    .description("Keyword `Bearer` followed by a service-to-service token "
+                            + "for a whitelisted micro-service")
                     .required(true);
             Parameter authorizationHeader = new Parameter()
                     .in(ParameterIn.HEADER.toString())
