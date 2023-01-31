@@ -17,6 +17,7 @@ plugins {
     id "io.freefair.lombok" version "5.3.3.3"
     id 'uk.gov.hmcts.java' version '0.12.12'
     id 'au.com.dius.pact' version '4.1.7'
+    id 'org.owasp.dependencycheck' version '8.0.1'
 }
 
 apply plugin: 'java'
@@ -421,7 +422,6 @@ dependencies {
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
-
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
@@ -462,9 +462,7 @@ dependencyManagement {
     }
 }
 
-dependencyCheck {
-    suppressionFile = 'config/owasp/suppressions.xml'
-}
+
 
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
