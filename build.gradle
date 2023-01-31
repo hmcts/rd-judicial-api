@@ -461,12 +461,6 @@ dependencyManagement {
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
         }
-
-        //CVE-2021-22044
-        dependencySet(group: 'org.springframework.cloud', version: '4.0.1') {
-            entry 'spring-cloud-openfeign-core'
-            entry 'spring-cloud-starter-openfeign'
-        }
     }
 }
 
