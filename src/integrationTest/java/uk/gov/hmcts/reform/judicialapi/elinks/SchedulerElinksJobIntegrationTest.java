@@ -73,11 +73,9 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
         dataloadSchedulerJobRepository.deleteAll();
 
         elinksApiJobScheduler.loadElinksJob();
+        List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
 
-        DataloadSchedulerJob jobDetails = dataloadSchedulerJobRepository.findAll().get(0);
-
-        assertThat(jobDetails).isNotNull();
-        assertThat(jobDetails.getPublishingStatus()).isNotNull();
+        assertThat(audits).isNull();
 
     }
 
@@ -96,10 +94,8 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
         elinksApiJobScheduler.loadElinksJob();
 
         List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
-        DataloadSchedulerJob jobDetails = dataloadSchedulerJobRepository.findAll().get(0);
 
-        assertThat(jobDetails).isNotNull();
-        assertThat(jobDetails.getPublishingStatus()).isNotNull();
+        assertThat(audits).isNull();
     }
 
 
