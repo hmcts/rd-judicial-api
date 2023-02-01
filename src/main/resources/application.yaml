@@ -52,7 +52,6 @@ spring:
     locations: ${JUDICIAL_DB:classpath:db/migration}
     schemas:
       - dbjuddata
-
 ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
@@ -92,9 +91,9 @@ security:
     - "/loggers/**"
     - "/swagger-ui.html"
     - "/swagger-ui/**"
-    - "/v3/**"
     - "/swagger-resources/**"
     - "/v2/api-docs"
+    - "/v3/**"
     - "/webjars/springfox-swagger-ui/**"
     - "/csrf"
     - "/error"

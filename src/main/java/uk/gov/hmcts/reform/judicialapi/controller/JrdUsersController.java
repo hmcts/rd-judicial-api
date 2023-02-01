@@ -171,27 +171,22 @@ public class JrdUsersController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = BAD_REQUEST,
+                    description = "Bad Request",
                     content = @Content
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = UNAUTHORIZED_ERROR,
+                    description = "User Authentication Failed",
                     content = @Content
             ),
             @ApiResponse(
                     responseCode = "403",
-                    description = FORBIDDEN_ERROR,
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = NO_DATA_FOUND,
+                    description = "Unauthorized",
                     content = @Content
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = INTERNAL_SERVER_ERROR,
+                    description = "Internal Server Error",
                     content = @Content
             )
     })

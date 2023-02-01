@@ -73,9 +73,9 @@ security:
     - "/health/readiness"
     - "/health/liveness"
     - "/actuator/**"
-    - "/swagger-ui/swagger-ui.html"
     - "/loggers/**"
     - "/swagger-ui.html"
+    - "/swagger-ui/swagger-ui.html"
     - "/swagger-resources/**"
     - "/v3/api-docs"
     - "/webjars/springfox-swagger-ui/**"
@@ -129,3 +129,9 @@ refresh:
 testing:
   support:
     idamUrl: ${http://127.0.0.1:5000/o}
+
+launchdarkly:
+  sdk:
+    key: ${LD_SDK_KEY:}
+    environment: ${LAUNCH_DARKLY_ENV:preview}
+    user: rd
