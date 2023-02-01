@@ -35,7 +35,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
 
-class NegativeIntegrationTest extends ElinksEnabledIntegrationTest {
+class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private ProfileRepository profileRepository;

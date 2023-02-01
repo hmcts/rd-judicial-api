@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -70,12 +71,18 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
     @Order(1)
     void test_load_elinks_job_status_sucess() throws JOSEException, JsonProcessingException {
 
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled",
+                true);
+
         dataloadSchedulerJobRepository.deleteAll();
 
         elinksApiJobScheduler.loadElinksJob();
         List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
 
-        assertThat(audits).isEmpty();
+        DataloadSchedulerJob jobDetails = audits.get(0);
+
+        assertThat(jobDetails).isNotNull();
+        assertThat(jobDetails.getPublishingStatus()).isNotNull();
 
     }
 
@@ -84,6 +91,9 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
     @Test
     @Order(2)
     void test_load_elinks_job_status_failure() {
+
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled",
+                true);
 
         dataloadSchedulerJobRepository.deleteAll();
 
@@ -94,8 +104,11 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
         elinksApiJobScheduler.loadElinksJob();
 
         List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
+        DataloadSchedulerJob jobDetails = audits.get(0);
 
-        assertThat(audits).isEmpty();
+        assertThat(jobDetails).isNotNull();
+        assertThat(jobDetails.getPublishingStatus()).isNotNull();
+
     }
 
 
