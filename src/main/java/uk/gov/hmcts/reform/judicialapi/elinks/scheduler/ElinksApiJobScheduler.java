@@ -64,17 +64,12 @@ public class ElinksApiJobScheduler {
             dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
 
             try {
-                log.info("ElinksApiJobScheduler.loadElinksData Job execution in progress");
-
-                loadElinksData();
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution in progress");
+            loadElinksData();
 
             } catch (Exception exception) {
                 log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure");
-
-                LocalDateTime jobEndTime = now();
-                audit.setJobEndTime(jobEndTime);
-                audit.setPublishingStatus(RefDataElinksConstants.JobStatus.FAILED.getStatus());
-                dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
+                throw exception;
             }
             log.info("ElinksApiJobScheduler.loadElinksData Job execution completed successful");
         }
