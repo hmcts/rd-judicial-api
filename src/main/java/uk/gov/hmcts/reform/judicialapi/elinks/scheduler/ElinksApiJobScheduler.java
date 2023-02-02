@@ -69,7 +69,6 @@ public class ElinksApiJobScheduler {
 
             } catch (Exception exception) {
                 log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure");
-                throw exception;
             }
             log.info("ElinksApiJobScheduler.loadElinksData Job execution completed successful");
         }
