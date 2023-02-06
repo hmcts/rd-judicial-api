@@ -107,7 +107,7 @@ public class ElinksApiJobScheduler {
         ResponseEntity<SchedulerJobStatusResponse> schedulerResponse
             = retrieveAsbPublishDetails();
         } catch(Exception ex) {
-            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for idamSearch Response");
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Publish ASB Response");
         }
     }
 
