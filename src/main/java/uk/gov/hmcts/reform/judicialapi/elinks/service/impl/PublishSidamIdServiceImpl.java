@@ -75,7 +75,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
         }
 
         publishMessage(jobDetails.getRight(), sidamIds, jobDetails.getLeft());
-
+        jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
         log.info("{}:: completed Publish SidamId to ASB with JOB Id: {}  ", logComponentName, jobDetails.getLeft());
 
         return SchedulerJobStatusResponse.builder()

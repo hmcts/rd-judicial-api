@@ -63,13 +63,9 @@ public class ElinksApiJobScheduler {
 
             dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
 
-            try {
+
             log.info("ElinksApiJobScheduler.loadElinksData Job execution in progress");
             loadElinksData();
-
-            } catch (Exception exception) {
-                log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure");
-            }
             log.info("ElinksApiJobScheduler.loadElinksData Job execution completed successful");
         }
 
@@ -77,20 +73,42 @@ public class ElinksApiJobScheduler {
 
     public void loadElinksData() {
 
-        ResponseEntity<ElinkLocationWrapperResponse> locationResponse
+        try{
+            ResponseEntity<ElinkLocationWrapperResponse> locationResponse
                 = retrieveLocationDetails();
+        } catch(Exception ex) {
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Location");
+        }
+        try{
         ResponseEntity<ElinkBaseLocationWrapperResponse> baseLocationResponse
                 = retrieveBaseLocationDetails();
-
+        } catch(Exception ex) {
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Base Location");
+        }
+        try{
         ResponseEntity<ElinkPeopleWrapperResponse> peopleResponse
                 = retrievePeopleDetails();
-
+        } catch(Exception ex) {
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for People Response");
+        }
+        try{
         ResponseEntity<ElinkLeaversWrapperResponse> leaversResponse
                 = retrieveLeaversDetails();
+        } catch(Exception ex) {
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Leavers Response");
+        }
+        try{
         ResponseEntity<Object> idamSearchResponse
                 = retrieveIdamElasticSearchDetails();
+        } catch(Exception ex) {
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for idamSearch Response");
+        }
+        try{
         ResponseEntity<SchedulerJobStatusResponse> schedulerResponse
             = retrieveAsbPublishDetails();
+        } catch(Exception ex) {
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for idamSearch Response");
+        }
     }
 
     public ResponseEntity<ElinkLocationWrapperResponse> retrieveLocationDetails() {
@@ -182,7 +200,7 @@ public class ElinksApiJobScheduler {
     public ResponseEntity<SchedulerJobStatusResponse> retrieveAsbPublishDetails() {
 
         String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
-            .concat("/idam/asb/publish");
+            .concat("/sidam/asb/publish");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);
