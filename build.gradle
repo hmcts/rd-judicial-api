@@ -302,15 +302,10 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.5'
-
-
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
-
-
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
-
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
@@ -423,7 +418,6 @@ dependencies {
     testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
-
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
