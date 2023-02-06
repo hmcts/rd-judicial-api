@@ -186,7 +186,7 @@ public class JrdUsersController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = FORBIDDEN_ERROR,
+                    description = NO_DATA_FOUND,
                     content = @Content
             ),
             @ApiResponse(
