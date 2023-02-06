@@ -369,6 +369,4 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         }
     }
-
-
 }
