@@ -7,11 +7,14 @@ import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.extension.ResponseTransformer;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.Response;
+import com.launchdarkly.sdk.server.LDClient;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.RSAKey;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
+import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTags;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
@@ -23,7 +26,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import uk.gov.hmcts.reform.judicialapi.configuration.RestTemplateConfiguration;
 import uk.gov.hmcts.reform.judicialapi.service.impl.FeatureToggleServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 
@@ -45,36 +50,42 @@ import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.decodeJwtToken;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRoleFromToken;
 
 @Configuration
+@WithTags({@WithTag("testType:Integration")})
 @TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
+@ContextConfiguration(classes = {RestTemplateConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext
 public abstract class AuthorizationEnabledIntegrationTest extends SpringBootIntegrationTest {
-
-    @RegisterExtension
-    protected final WireMockExtension s2sService = new WireMockExtension(8990);
-
-    @RegisterExtension
-    protected final WireMockExtension sidamService = new WireMockExtension(5000);
-
-    @RegisterExtension
-    protected final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
 
     protected JudicialReferenceDataClient judicialReferenceDataClient;
 
     @MockBean
     protected FeatureToggleServiceImpl featureToggleServiceImpl;
 
+    @MockBean
+    LDClient ldClient;
+
     @Value("${oidc.expiration}")
     private long expiration;
     @Value("${oidc.issuer}")
     private String issuer;
+    @Value("${idam.s2s-authorised.services}")
+    private String serviceName;
 
+    @RegisterExtension
+    protected final WireMockExtension s2sService = new WireMockExtension(8990);
 
-    @Value("${idam.s2s-auth.microservice}")
-    static String authorisedService;
+    @RegisterExtension
+    protected final WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
+
+    @RegisterExtension
+    protected final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
 
     @MockBean
     protected JwtDecoder jwtDecoder;
+
+    @Value("${idam.s2s-auth.microservice}")
+    static String authorisedService;
 
     @Autowired
     Flyway flyway;
@@ -153,8 +164,6 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(body);
     }
-
-
 
 
     public static class JudicialTransformer extends ResponseTransformer {
