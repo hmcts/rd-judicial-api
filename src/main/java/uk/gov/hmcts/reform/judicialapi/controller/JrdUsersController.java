@@ -66,7 +66,7 @@ public class JrdUsersController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request",
+                    description = BAD_REQUEST,
                     content = @Content
             ),
             @ApiResponse(
@@ -125,7 +125,7 @@ public class JrdUsersController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request",
+                    description = BAD_REQUEST,
                     content = @Content
             ),
             @ApiResponse(
@@ -171,22 +171,27 @@ public class JrdUsersController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request",
+                    description = BAD_REQUEST,
                     content = @Content
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "User Authentication Failed",
+                    description = UNAUTHORIZED_ERROR,
                     content = @Content
             ),
             @ApiResponse(
                     responseCode = "403",
-                    description = "Unauthorized",
+                    description = FORBIDDEN_ERROR,
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = FORBIDDEN_ERROR,
                     content = @Content
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
+                    description = INTERNAL_SERVER_ERROR,
                     content = @Content
             )
     })
