@@ -51,10 +51,10 @@ public class RefDataElinksConstants {
 
     public static final String JUDICIAL_REF_DATA_ELINKS = "judicial-ref-data-elinks";
 
-    public static final String LEAVERSAPI = "LeaversAPI";
-    public static final String LOCATIONAPI = "LocationAPI";
+    public static final String LEAVERSAPI = "Leavers";
+    public static final String LOCATIONAPI = "Location";
 
-    public static final String BASELOCATIONAPI = "BaseLocationAPI";
+    public static final String BASELOCATIONAPI = "BaseLocation";
 
     public enum JobStatus {
         IN_PROGRESS("IN_PROGRESS"),
