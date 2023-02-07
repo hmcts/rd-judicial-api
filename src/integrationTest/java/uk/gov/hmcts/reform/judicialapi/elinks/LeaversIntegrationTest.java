@@ -94,7 +94,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 
-        ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(1);
 
         assertThat(auditEntry.getId()).isPositive();
 

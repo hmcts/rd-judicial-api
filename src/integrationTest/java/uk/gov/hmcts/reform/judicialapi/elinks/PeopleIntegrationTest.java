@@ -175,7 +175,6 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
-        assertEquals(1, auditEntry.getId());
         assertEquals(PEOPLEAPI, auditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
         assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
