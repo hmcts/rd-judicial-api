@@ -64,10 +64,10 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
 
         //Get the job details from dataload_schedular_job table
         Pair<String, String> jobDetails;
-        try{
-             jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
-        } catch (Exception ex){
-            throw new ElinksException(HttpStatus.BAD_REQUEST, ASB_IN_PROGRESS_SIDAM_ERROR , ex.getMessage());
+        try {
+            jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
+        } catch (Exception ex) {
+            throw new ElinksException(HttpStatus.BAD_REQUEST, ASB_IN_PROGRESS_SIDAM_ERROR, ex.getMessage());
         }
 
 
