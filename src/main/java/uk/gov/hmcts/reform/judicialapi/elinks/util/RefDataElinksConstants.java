@@ -54,6 +54,7 @@ public class RefDataElinksConstants {
     public static final String LEAVERSAPI = "Leavers";
     public static final String LOCATIONAPI = "Location";
 
+    public static final String PEOPLEAPI = "People";
     public static final String BASELOCATIONAPI = "BaseLocation";
 
     public enum JobStatus {
