@@ -60,7 +60,7 @@ class PublishSidamIdIntegrationTest extends ElinksEnabledIntegrationTest {
         ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
 
         doNothing().when(elinkTopicPublisher).sendMessage(anyList(),anyString());;
-        Map<String, Object> response = elinksReferenceDataClient.publishSidamIds();
+        Map<String, Object> response = elinksReferenceDataClient.getPublishSidamIds();
         assertThat(response).containsEntry("http_status", "200 OK");
         HashMap publishSidamIdsResponse = (LinkedHashMap)response.get("body");
 

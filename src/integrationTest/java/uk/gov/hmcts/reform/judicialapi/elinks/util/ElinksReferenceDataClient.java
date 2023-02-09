@@ -182,7 +182,7 @@ public class ElinksReferenceDataClient {
         return  getResponse(responseEntity);
     }
 
-    public Map<String, Object>  publishSidamIds() {
+    public Map<String, Object>  getPublishSidamIds() {
 
         var stringBuilder = new StringBuilder();
 
