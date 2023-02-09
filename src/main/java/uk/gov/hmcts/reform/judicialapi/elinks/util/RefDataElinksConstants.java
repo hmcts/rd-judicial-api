@@ -59,6 +59,11 @@ public class RefDataElinksConstants {
 
     public static final String BASELOCATIONAPI = "BaseLocation";
 
+    public static final String ASB_PUBLISH_SIDAM_ERROR = "An error occurred while Publishing SIDAM to ASB";
+
+    public static final String ASB_IN_PROGRESS_SIDAM_ERROR = "An error occurred while getting SIDAM Id's from the Schedular";
+
+
     public enum JobStatus {
         IN_PROGRESS("IN_PROGRESS"),
         FAILED("FAILED"),

@@ -8,8 +8,10 @@ import com.microsoft.applicationinsights.core.dependencies.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.PublishingData;
+import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ import java.util.Objects;
 import javax.validation.constraints.NotNull;
 
 import static com.google.common.collect.Lists.partition;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.UNAUTHORIZED_ERROR;
 
 @Slf4j
 @Component
@@ -54,7 +57,12 @@ public class ElinkTopicPublisher {
                                        ServiceBusTransactionContext transactionContext,
                                        String jobId) {
 
-        ServiceBusMessageBatch elinkmessageBatch = serviceBusSenderClient.createMessageBatch();
+        ServiceBusMessageBatch elinkmessageBatch;
+        try {
+            elinkmessageBatch = serviceBusSenderClient.createMessageBatch();
+        } catch (Exception ex) {
+            throw new ElinksException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_ERROR, ex.getMessage());
+        }
         List<ServiceBusMessage> serviceBusMessages = new ArrayList<>();
 
         partition(judicalIds, jrdMessageBatchSize)

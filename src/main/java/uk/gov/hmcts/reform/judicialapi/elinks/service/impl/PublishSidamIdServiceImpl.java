@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfiguration;
+import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
@@ -26,6 +27,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.CONTENT_TYPE_PLAIN;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ASB_IN_PROGRESS_SIDAM_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ASB_PUBLISH_SIDAM_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.GET_DISTINCT_SIDAM_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.SELECT_JOB_STATUS_SQL;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.UPDATE_JOB_SQL;
@@ -60,7 +63,13 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
     public SchedulerJobStatusResponse publishSidamIdToAsb() {
 
         //Get the job details from dataload_schedular_job table
-        Pair<String, String> jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
+        Pair<String, String> jobDetails;
+        try{
+             jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
+        } catch (Exception ex){
+            throw new ElinksException(HttpStatus.BAD_REQUEST, ASB_IN_PROGRESS_SIDAM_ERROR , ex.getMessage());
+        }
+
 
         // Get all sidam id's from the judicial_user_profile table
         List<String> sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
@@ -130,7 +139,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
                         .build();
                 emailService.sendEmail(email);
             }
-            throw ex;
+            throw new ElinksException(HttpStatus.FORBIDDEN, ASB_PUBLISH_SIDAM_ERROR, ASB_PUBLISH_SIDAM_ERROR);
         }
     }
 
