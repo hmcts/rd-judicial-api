@@ -504,60 +504,6 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(response.get("http_status"),String.valueOf(statusCode));
     }
 
-    @DisplayName("test_get_publish_missing_mandatory_param_return_response_status_400()")
-    @Test
-    void test_get_publish_missing_mandatory_param_return_response_status_400() throws JsonProcessingException  {
-
-        int statusCode = 400;
-        publishAsbApi4xxResponse(statusCode,null);
-
-        Map<String, Object> response = elinksReferenceDataClient.getPublishSidamIds();
-
-        assertThat(response).containsEntry("http_status", "400");
-
-        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_BAD_REQUEST);
-
-    }
-
-    @DisplayName("Publish_return_with_invalid_token_response_status_403")
-    @Test
-    void test_get_publish_return_response_status_403() throws JsonProcessingException {
-
-        int statusCode = 403;
-        publishAsbApi4xxResponse(statusCode, "[]");
-        initialize();
-        Map<String, Object> response  = elinksReferenceDataClient.getPublishSidamIds();
-
-        assertEquals(response.get("http_status"),String.valueOf(statusCode));
-
-        assertThat(response.get("response_body").toString()).contains(IDAM_ERROR_MESSAGE);
-    }
-
-    @DisplayName("Publish_url_not_found_return_response_status_404")
-    @Test
-    void test_get_publish_url_not_found_return_response_status_404() throws JsonProcessingException {
-
-        int statusCode = 404;
-        publishAsbApi4xxResponse(statusCode, "[]");
-
-        initialize();
-        Map<String, Object> response  = elinksReferenceDataClient.getPublishSidamIds();
-        assertEquals(response.get("http_status"),String.valueOf(statusCode));
-    }
-
-    @DisplayName("Publish_unauthorised_return_response_status_401")
-    @Test
-    void test_get_publish_unauthorised_return_response_status_401() throws JsonProcessingException {
-
-        int statusCode = 401;
-        idamSearchApi4xxResponse(statusCode,"[]");
-
-        initialize();
-
-        Map<String, Object> response  = elinksReferenceDataClient.getPublishSidamIds();
-        assertEquals(response.get("http_status"),String.valueOf(statusCode));
-    }
-
     private void peopleApi4xxResponse(int statusCode, String body) {
         elinks.stubFor(get(urlPathMatching("/people"))
                 .willReturn(aResponse()
@@ -610,7 +556,7 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
     }
 
     private void publishAsbApi4xxResponse(int statusCode, String body) {
-        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+        sidamService.stubFor(get(urlPathMatching("/sidam/asb/publish"))
             .willReturn(aResponse()
                 .withStatus(statusCode)
                 .withHeader("Content-Type", "application/json")

@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfiguration;
@@ -72,7 +73,8 @@ class PublishSidamIdServiceImplTest {
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
                 .thenReturn(Pair.of("2", IN_PROGRESS.getStatus()));
 
-        SchedulerJobStatusResponse res = publishSidamIdService.publishSidamIdToAsb();
+        ResponseEntity<SchedulerJobStatusResponse> response = publishSidamIdService.publishSidamIdToAsb();
+        SchedulerJobStatusResponse res = response.getBody();
 
         assertEquals("2",res.getId());
         assertEquals("IN_PROGRESS", res.getJobStatus());
@@ -90,7 +92,8 @@ class PublishSidamIdServiceImplTest {
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
                 .thenReturn(Pair.of("1", FAILED.getStatus()));
 
-        SchedulerJobStatusResponse res = publishSidamIdService.publishSidamIdToAsb();
+        ResponseEntity<SchedulerJobStatusResponse> response = publishSidamIdService.publishSidamIdToAsb();
+        SchedulerJobStatusResponse res = response.getBody();
 
         assertEquals("FAILED",res.getJobStatus());
         assertEquals("1",res.getId());
@@ -106,14 +109,15 @@ class PublishSidamIdServiceImplTest {
     void update_succes_as_job_status_when_no_sidam_ids_available() {
         List<String> sidamIds = new ArrayList<>();
         when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
-                .thenReturn(Pair.of("2", SUCCESS.getStatus()));
+            .thenReturn(Pair.of("2", SUCCESS.getStatus()));
         when(jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, ROW_MAPPER)).thenReturn(sidamIds);
 
-        SchedulerJobStatusResponse res = publishSidamIdService.publishSidamIdToAsb();
+        ResponseEntity<SchedulerJobStatusResponse> response = publishSidamIdService.publishSidamIdToAsb();
+        SchedulerJobStatusResponse res = response.getBody();
 
 
-        assertEquals("SUCCESS",res.getJobStatus());
-        assertEquals(sidamIds.size(),res.getSidamIdsCount());
+        assertEquals("SUCCESS", res.getJobStatus());
+        assertEquals(sidamIds.size(), res.getSidamIdsCount());
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         verify(jdbcTemplate, times(1)).update(anyString(), any(), anyInt());
 

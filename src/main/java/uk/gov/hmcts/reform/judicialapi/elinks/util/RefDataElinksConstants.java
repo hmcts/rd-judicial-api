@@ -64,6 +64,13 @@ public class RefDataElinksConstants {
     public static final String ASB_IN_PROGRESS_SIDAM_ERROR
         = "An error occurred while getting SIDAM Id's from the Schedular";
 
+    public static final String SCHEDULAR_JOB_DETAILS_FETCH_ERROR
+        = "An error occurred while getting Details from Job Schedule table";
+
+    public static final String JOB_DETAILS_UPDATE_ERROR
+        = "An error occurred while updating asb job status in database";
+
+
 
     public enum JobStatus {
         IN_PROGRESS("IN_PROGRESS"),
