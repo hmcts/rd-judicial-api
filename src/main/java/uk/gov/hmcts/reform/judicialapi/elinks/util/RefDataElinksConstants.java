@@ -59,7 +59,7 @@ public class RefDataElinksConstants {
 
     public static final String ASB_PUBLISH_SIDAM_ERROR = "An error occurred while Publishing SIDAM to ASB";
 
-    public static final String DATABASE_DETAILS_FETCH_ERROR
+    public static final String DATABASE_FETCH_ERROR
         = "An error occurred while getting Details from database";
 
     public static final String JOB_DETAILS_UPDATE_ERROR
