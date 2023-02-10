@@ -28,7 +28,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.CONTENT_TYPE_PLAIN;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ASB_PUBLISH_SIDAM_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATABASE_FETCH_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JOB_DETAILS_UPDATE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.GET_DISTINCT_SIDAM_ID;
@@ -140,7 +139,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
                     .build();
                 emailService.sendEmail(email);
             }
-            throw new ElinksException(HttpStatus.FORBIDDEN, ASB_PUBLISH_SIDAM_ERROR, ASB_PUBLISH_SIDAM_ERROR);
+            throw ex;
         }
     }
 
