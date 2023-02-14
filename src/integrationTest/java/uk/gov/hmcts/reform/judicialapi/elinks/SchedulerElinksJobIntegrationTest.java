@@ -11,21 +11,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
 import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
@@ -44,6 +49,7 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     BaseLocationRepository baseLocationRepository;
 
+
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
 
@@ -55,6 +61,13 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
+
+    @Autowired
+    private DataloadSchedulerJobAudit dataloadSchedulerJobAudit;
+
+    @Autowired
+    private ElinkDataExceptionRepository elinkDataExceptionRepository;
+
 
     @BeforeEach
     void setUp() {
@@ -112,6 +125,33 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
     }
 
 
+    @DisplayName("Elinks load eLinks scheduler status verification failure case for job ran already")
+    @Test
+    @Order(3)
+    void test_load_elinks_job_status_failure_job_ran_already() {
+
+        DataloadSchedulerJob audit = new DataloadSchedulerJob();
+        audit.setJobStartTime(now());
+        audit.setJobEndTime(now());
+        audit.setPublishingStatus(RefDataElinksConstants.JobStatus.SUCCESS.getStatus());
+        dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
+
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled",
+                true);
+        elinkDataExceptionRepository.deleteAll();
+
+        elinksApiJobScheduler.loadElinksJob();
+
+        List<ElinkDataExceptionRecords> exceptions = elinkDataExceptionRepository.findAll();
+        ElinkDataExceptionRecords exception = exceptions.get(0);
+
+        assertThat(exception).isNotNull();
+        assertThat(exception.getErrorDescription())
+                .isEqualToIgnoringCase("JRD load failed since job has already ran for the day");
+
+    }
+
+
 
     private void locationApi4xxResponse(int statusCode, String body) {
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
@@ -126,5 +166,6 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
+        elinkDataExceptionRepository.deleteAll();
     }
 }

@@ -12,18 +12,22 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 
 @Component
 @Slf4j
@@ -45,6 +49,13 @@ public class ElinksApiJobScheduler {
     private boolean isSchedulerEnabled;
 
 
+    @Autowired
+    ElinkDataExceptionHelper elinkDataExceptionHelper;
+
+    @Autowired
+    DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
+
+
     public static final String ELINKS_CONTROLLER_BASE_URL =
             "/refdata/internal/elink";
 
@@ -52,17 +63,29 @@ public class ElinksApiJobScheduler {
     public void loadElinksJob() {
 
         if (isSchedulerEnabled) {
+            LocalDateTime jobStartTime = now();
 
+            DataloadSchedulerJob latestEntry = dataloadSchedulerJobRepository.findFirstByOrderByIdDesc();
+
+            LocalDate startDate = latestEntry.getJobStartTime().toLocalDate();
+            LocalDate endDate = latestEntry.getJobEndTime().toLocalDate();
+            LocalDate currentDate = jobStartTime.toLocalDate();
+
+            if(startDate.equals(currentDate) || endDate.equals(currentDate)){
+                log.info("JRD load failed since job has already ran for the day");
+                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                        jobStartTime,
+                        "ElinksApiJobScheduler"+ jobStartTime,
+                        "Shcedular_Run_date", "JRD load failed since job has already ran for the day", "ElinksApiJobScheduler");
+                return;
+            }
             log.info("ElinksApiJobScheduler.loadElinksData{} Job execution Start " + eLinksWrapperBaseUrl);
 
             DataloadSchedulerJob audit = new DataloadSchedulerJob();
-            LocalDateTime jobStartTime = now();
-
             audit.setJobStartTime(jobStartTime);
             audit.setPublishingStatus(RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus());
 
             dataloadSchedulerJobAudit.auditSchedulerJobStatus(audit);
-
 
             log.info("ElinksApiJobScheduler.loadElinksData Job execution in progress");
             loadElinksData();

@@ -35,3 +35,10 @@ BY dbjudicialdata.dataload_schedular_audit.id;
 
 ALTER TABLE dbjudicialdata.dataload_schedular_audit
 ALTER COLUMN id SET DEFAULT nextval('dbjudicialdata.elink_audit_scheduler_id_sequence');
+
+CREATE SEQUENCE dbjudicialdata.elink_exception_records_id_sequence AS integer START 1 OWNED
+BY dbjudicialdata.dataload_exception_records.id;
+
+
+ALTER TABLE dbjudicialdata.dataload_exception_records
+ALTER COLUMN id SET DEFAULT nextval('dbjudicialdata.elink_exception_records_id_sequence');
