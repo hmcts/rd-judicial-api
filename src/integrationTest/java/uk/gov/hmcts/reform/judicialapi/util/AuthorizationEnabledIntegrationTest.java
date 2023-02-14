@@ -1,28 +1,40 @@
 package uk.gov.hmcts.reform.judicialapi.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.extension.Parameters;
 import com.github.tomakehurst.wiremock.extension.ResponseTransformer;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.http.Response;
 import com.launchdarkly.sdk.server.LDClient;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.jwk.RSAKey;
 import net.thucydides.core.annotations.WithTag;
 import net.thucydides.core.annotations.WithTags;
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.judicialapi.configuration.RestTemplateConfiguration;
 import uk.gov.hmcts.reform.judicialapi.service.impl.FeatureToggleServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -33,7 +45,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.decodeJwtToken;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRoleFromToken;
-import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResponse;
 
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
@@ -50,6 +61,9 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     LDClient ldClient;
 
     protected JudicialReferenceDataClient judicialReferenceDataClient;
+
+    public static final String JRD_SYSTEM_USER = "jrd-system-user";
+    public static final String INVALID_TEST_USER = "test-user-role";
 
     @Value("${oidc.expiration}")
     private long expiration;
@@ -70,9 +84,11 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     @Autowired
     Flyway flyway;
 
-    @BeforeAll
+    @MockBean
+    protected JwtDecoder jwtDecoder;
+
+    @BeforeEach
     public void setUpClient() {
-        JudicialReferenceDataClient.setBearerToken("");
         judicialReferenceDataClient = new JudicialReferenceDataClient(port, issuer, expiration, serviceName);
         when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(true);
         flyway.clean();
@@ -115,9 +131,34 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
                         .withBody(getDynamicJwksResponse())));
     }
 
-    @AfterEach
-    public void cleanupTestData() {
-        JudicialReferenceDataClient.setBearerToken("");
+    public synchronized void mockJwtToken(String role) {
+        judicialReferenceDataClient.clearTokens();
+        String bearerToken = judicialReferenceDataClient.getAndReturnBearerToken(null, role);
+        String[] bearerTokenArray = bearerToken.split(" ");
+        when(jwtDecoder.decode(anyString())).thenReturn(getJwt(role, bearerTokenArray[1]));
+    }
+
+    public Jwt getJwt(String role, String bearerToken) {
+        return Jwt.withTokenValue(bearerToken)
+                .claim("exp", Instant.ofEpochSecond(1985763216))
+                .claim("iat", Instant.ofEpochSecond(1985734416))
+                .claim("token_type", "Bearer")
+                .claim("tokenName", "access_token")
+                .claim("expires_in", 28800)
+                .header("kid", "b/O6OvVv1+y+WgrH5Ui9WTioLt0=")
+                .header("typ", "RS256")
+                .header("alg", "RS256")
+                .build();
+    }
+
+    public static String getDynamicJwksResponse() throws JOSEException, JsonProcessingException {
+        RSAKey rsaKey = KeyGenUtil.getRsaJwk();
+        Map<String, List<Map<String, Object>>> body = new LinkedHashMap<>();
+        List<Map<String, Object>> keyList = new ArrayList<>();
+        keyList.add(rsaKey.toJSONObject());
+        body.put("keys", keyList);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(body);
     }
 
 
