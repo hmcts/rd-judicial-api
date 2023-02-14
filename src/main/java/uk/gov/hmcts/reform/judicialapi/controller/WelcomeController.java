@@ -1,9 +1,8 @@
 package uk.gov.hmcts.reform.judicialapi.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +15,6 @@ import java.util.UUID;
 import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Api(
-    value = "/",
-    produces = APPLICATION_JSON_VALUE
-)
 
 @RestController
 public class WelcomeController {
@@ -37,12 +32,13 @@ public class WelcomeController {
      *
      * @return Welcome message from the service.
      */
-    @ApiOperation("Welcome message for the Judicial API")
+    @Operation(
+            summary = "Welcome message for the Judicial API"
+    )
     @ApiResponses({
         @ApiResponse(
-            code = 200,
-            message = "Welcome message",
-            response = String.class
+            responseCode = "200",
+            description = "Welcome message"
         )
     })
     @GetMapping(

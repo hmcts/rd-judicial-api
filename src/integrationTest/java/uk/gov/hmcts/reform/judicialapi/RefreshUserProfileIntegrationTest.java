@@ -41,7 +41,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
      void shouldReturn_200_ValidParameters_objectIds_01(String role) {
-
+        mockJwtToken(role);
         RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
@@ -69,7 +69,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_ValidParameters_sidamIds_01(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Arrays.asList("1111"))
@@ -95,7 +95,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_ValidParameters_ccdPageSize(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
@@ -114,7 +114,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_ValidParameters_sorted(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
@@ -134,7 +134,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = {"jrd-admin"})
     void sortedDescendingOrder(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
@@ -154,7 +154,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
      void shouldReturn_400_ValidParameters_ccdServiceEmpty(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder().build();
 
         var errorResponseMap = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,3,
@@ -169,7 +169,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-admin"})
     void shouldReturn_400_ValidParameters_ResponseHeader(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("ALL,all")
                 .sidamIds(Arrays.asList(""))
@@ -187,7 +187,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_ValidParameters_objectIds_02(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
@@ -220,7 +220,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_ValidParameters_personalCodes_01(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Arrays.asList(""))
@@ -244,7 +244,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_404_InValid_personalCodes_01(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Arrays.asList(""))
@@ -262,6 +262,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn403WhenLdFeatureDisabled(String role) {
         var launchDarklyMap = new HashMap<String, String>();
+        mockJwtToken(role);
         launchDarklyMap.put("JrdUsersController.refreshUserProfile", "test-jrd-flag");
         when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(false);
         when(featureToggleServiceImpl.getLaunchDarklyMap()).thenReturn(launchDarklyMap);
@@ -283,9 +284,10 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @DisplayName("Scenario-UnauthorisedUsers")
     @Test
     void shouldReturn_403_UnauthorisedUsers() {
+        mockJwtToken(INVALID_TEST_USER);
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
-                0,"ASC", "objectId", "test-user-role", false);
+                0,"ASC", "objectId", INVALID_TEST_USER, false);
         assertThat(response).containsEntry("http_status", "403");
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
@@ -293,9 +295,10 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @DisplayName("Scenario-InvalidTokens")
     @Test
     void shouldReturn_401_InvalidTokens() {
+        mockJwtToken(INVALID_TEST_USER);
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
-                0,"ASC", "objectId", "test-user-role", true);
+                0,"ASC", "objectId", INVALID_TEST_USER, true);
         assertThat(response).containsEntry("http_status", "401");
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
@@ -303,8 +306,9 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @DisplayName("Scenario-MultipleParameters")
     @Test
     void shouldReturn_400_WithMultipleParameters() {
+        mockJwtToken(JRD_SYSTEM_USER);
         var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,10,
-                0,"ASC", "objectId", "jrd-system-user", false);
+                0,"ASC", "objectId", JRD_SYSTEM_USER, false);
         assertThat(response).containsEntry("http_status", "400");
     }
 
@@ -312,7 +316,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_ValidParameters_Mrd_Delete_time(String role) {
-
+        mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
@@ -345,7 +349,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_Non_Tribunal_scenario_01(String role) {
-
+        mockJwtToken(role);
         RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
                 .sidamIds(Collections.emptyList())
