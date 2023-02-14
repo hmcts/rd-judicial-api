@@ -1,15 +1,16 @@
 package uk.gov.hmcts.reform.judicialapi.docs;
 
+import com.microsoft.applicationinsights.web.internal.WebRequestTrackingFilter;
+import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTags;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
-import uk.gov.hmcts.reform.judicialapi.configuration.SwaggerConfiguration;
+import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
 
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -23,10 +24,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  * Built-in feature which saves service's swagger specs in temporary directory.
  * Each travis run on master should automatically save and upload (if updated) documentation.
  */
-@WebMvcTest
-@ContextConfiguration(classes = SwaggerConfiguration.class)
-@AutoConfigureMockMvc
-class SwaggerPublisherTest {
+@WithTags({@WithTag("testType:Integration")})
+class SwaggerPublisherTest extends AuthorizationEnabledIntegrationTest {
 
     private MockMvc mvc;
 
@@ -35,14 +34,18 @@ class SwaggerPublisherTest {
 
     @BeforeEach
     public void setUp() {
-        this.mvc = webAppContextSetup(webApplicationContext).build();
+        WebRequestTrackingFilter filter = new WebRequestTrackingFilter();
+        filter.init(new MockFilterConfig());
+        this.mvc = webAppContextSetup(webApplicationContext)
+                .addFilter(filter)
+                .build();
     }
 
     @DisplayName("Generate swagger documentation")
     @Test
     @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
     void generateDocs() throws Exception {
-        byte[] specs = mvc.perform(get("/v2/api-docs"))
+        byte[] specs = mvc.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
