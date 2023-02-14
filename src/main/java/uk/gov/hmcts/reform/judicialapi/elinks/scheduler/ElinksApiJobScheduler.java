@@ -24,6 +24,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -67,17 +68,20 @@ public class ElinksApiJobScheduler {
 
             DataloadSchedulerJob latestEntry = dataloadSchedulerJobRepository.findFirstByOrderByIdDesc();
 
-            LocalDate startDate = latestEntry.getJobStartTime().toLocalDate();
-            LocalDate endDate = latestEntry.getJobEndTime().toLocalDate();
-            LocalDate currentDate = jobStartTime.toLocalDate();
+            if(Optional.ofNullable(latestEntry).isPresent()) {
 
-            if(startDate.equals(currentDate) || endDate.equals(currentDate)){
-                log.info("JRD load failed since job has already ran for the day");
-                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
-                        jobStartTime,
-                        "ElinksApiJobScheduler"+ jobStartTime,
-                        "Shcedular_Run_date", "JRD load failed since job has already ran for the day", "ElinksApiJobScheduler");
-                return;
+                LocalDate startDate = latestEntry.getJobStartTime().toLocalDate();
+                LocalDate endDate = latestEntry.getJobEndTime().toLocalDate();
+                LocalDate currentDate = jobStartTime.toLocalDate();
+
+                if (startDate.equals(currentDate) || endDate.equals(currentDate)) {
+                    log.info("JRD load failed since job has already ran for the day");
+                    elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                            jobStartTime,
+                            "ElinksApiJobScheduler" + jobStartTime,
+                            "Shcedular_Run_date", "JRD load failed since job has already ran for the day", "ElinksApiJobScheduler");
+                    return;
+                }
             }
             log.info("ElinksApiJobScheduler.loadElinksData{} Job execution Start " + eLinksWrapperBaseUrl);
 
