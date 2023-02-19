@@ -24,18 +24,24 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PaginationReque
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -57,6 +63,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_NOT_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_UNAUTHORIZED;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 
 @ExtendWith(MockitoExtension.class)
@@ -88,6 +95,15 @@ class ElinksPeopleServiceImplTest {
 
     @Spy
     private ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
+
+    @InjectMocks
+    ElinkDataExceptionHelper elinkDataExceptionHelper;
+
+    @Spy
+    private ElinkDataExceptionRepository elinkDataExceptionRepository;
+
+    @Spy
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
 
     @InjectMocks
     private ElinksPeopleServiceImpl elinksPeopleServiceImpl;
@@ -163,6 +179,63 @@ class ElinksPeopleServiceImplTest {
                 .pages(1).currentPage(1).resultsPerPage(3).morePages(false).build();
         elinksApiResponseSecondHit = PeopleRequest.builder().resultsRequests(results).pagination(paginationFalse)
                 .build();
+    }
+
+    @Test
+    void loadPeopleWhenAuditEntryPresentPartialSuccess() throws JsonProcessingException {
+
+        ElinkDataSchedularAudit schedularAudit = new ElinkDataSchedularAudit();
+        schedularAudit.setStatus(RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus());
+        schedularAudit.setId(1);
+        schedularAudit.setApiName(PEOPLEAPI);
+        schedularAudit.setSchedulerName("testschedulername");
+        schedularAudit.setSchedulerEndTime(LocalDateTime.now());
+        schedularAudit.setSchedulerStartTime(LocalDateTime.now());
+
+        ElinkDataExceptionRecords record = new ElinkDataExceptionRecords();
+        record.setId(1L);
+        record.setErrorDescription("Test Error Description");
+        record.setKey("testKey");
+        record.setTableName("test table name");
+        record.setFieldInError("testfieldInError");
+        record.setSchedulerName("testbaselocationscheduler");
+        record.setRowId(0);
+        record.setSchedulerStartTime(LocalDateTime.now());
+        record.setUpdatedTimeStamp(LocalDateTime.now());
+
+        when(elinkSchedularAuditRepository.save(any())).thenReturn(schedularAudit);
+        when(elinkDataExceptionRepository.save(any())).thenReturn(record);
+
+        BaseLocation location = new BaseLocation();
+        location.setBaseLocationId("Baselocid");
+        location.setCourtName("ABC");
+
+        when(baseLocationRepository.findById(any())).thenReturn(Optional.of(location));
+
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
+        String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
+
+        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+                Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(200).build());
+
+        ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
+
+        ElinkDataExceptionRecords result = elinkDataExceptionRepository.save(record);
+        ElinkDataSchedularAudit resultAudit = elinkSchedularAuditRepository.save(schedularAudit);
+
+        assertThat(resultAudit.getStatus()).isEqualTo(schedularAudit.getStatus());
+        assertThat(result.getId()).isEqualTo(record.getId());
+        assertThat(result.getErrorDescription()).isEqualTo(record.getErrorDescription());
+
+
+
+        verify(elinkDataExceptionRepository, times(1)).save(any());
     }
 
     @Test
