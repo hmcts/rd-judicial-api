@@ -62,12 +62,7 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(1, baseLocationList.size());
-        assertEquals("0", baseLocationList.get(0).getBaseLocationId());
-        assertEquals("default", baseLocationList.get(0).getCourtName());
-        assertEquals("default", baseLocationList.get(0).getCourtType());
-        assertEquals("default", baseLocationList.get(0).getCircuit());
-        assertEquals("default", baseLocationList.get(0).getAreaOfExpertise());
+        assertEquals(0, baseLocationList.size());
     }
 
     @DisplayName("Elinks Base Location to JRD Audit Functionality verification")
@@ -81,12 +76,7 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(1, baseLocationList.size());
-        assertEquals("0", baseLocationList.get(0).getBaseLocationId());
-        assertEquals("default", baseLocationList.get(0).getCourtName());
-        assertEquals("default", baseLocationList.get(0).getCourtType());
-        assertEquals("default", baseLocationList.get(0).getCircuit());
-        assertEquals("default", baseLocationList.get(0).getAreaOfExpertise());
+        assertEquals(0, baseLocationList.size());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 

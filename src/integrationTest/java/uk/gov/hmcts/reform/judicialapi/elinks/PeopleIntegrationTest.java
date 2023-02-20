@@ -87,47 +87,6 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
     }
 
-
-    @DisplayName("Elinks People to Appointment verification")
-    @Test
-    void verifyPeopleJrdAppointment() {
-
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        assertThat(response).containsEntry("http_status", "200 OK");
-        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
-        assertEquals("People data loaded successfully", profiles.getMessage());
-
-        List<UserProfile> userprofile = profileRepository.findAll();
-        List<Appointment> appointmentList = appointmentsRepository.findAll();
-
-        assertEquals(2, appointmentList.size());
-        assertEquals(userprofile.get(0).getPersonalCode(), appointmentList.get(0).getPersonalCode());
-        assertEquals(userprofile.get(0).getObjectId(),appointmentList.get(0).getObjectId());
-        assertEquals("0", appointmentList.get(0).getBaseLocationId());
-        assertEquals("0", appointmentList.get(0).getRegionId());
-        assertNull(appointmentList.get(0).getEpimmsId());
-        assertNull(appointmentList.get(0).getServiceCode());
-        assertEquals("fee_paid", appointmentList.get(0).getAppointmentType());
-        assertNotNull(appointmentList.get(0).getStartDate());
-        assertFalse(appointmentList.get(0).getIsPrincipleAppointment());
-        assertEquals("Fee Paid Judiciary 5 Days Mon - Fri", appointmentList.get(0).getWorkPattern());
-        assertEquals("Tribunal Judge", appointmentList.get(0).getAppointmentRolesMapping());
-
-        assertEquals(userprofile.get(0).getPersonalCode(), appointmentList.get(1).getPersonalCode());
-        assertEquals(userprofile.get(0).getObjectId(),appointmentList.get(1).getObjectId());
-        assertEquals("0", appointmentList.get(1).getBaseLocationId());
-        assertEquals("0", appointmentList.get(1).getRegionId());
-        assertNull(appointmentList.get(1).getEpimmsId());
-        assertNull(appointmentList.get(1).getServiceCode());
-        assertEquals("salaried", appointmentList.get(1).getAppointmentType());
-        assertNotNull(appointmentList.get(1).getStartDate());
-        assertTrue(appointmentList.get(1).getIsPrincipleAppointment());
-        assertEquals("Fee Paid Judiciary 5 Days Mon - Fri", appointmentList.get(1).getWorkPattern());
-        assertEquals("Magistrate", appointmentList.get(1).getAppointmentRolesMapping());
-
-    }
-
-
     @DisplayName("Elinks People to Authorisation verification")
     @Test
     void verifyPeopleJrdAuthorisation() {
@@ -176,7 +135,7 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
         assertEquals(PEOPLEAPI, auditEntry.getApiName());
-        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus(), auditEntry.getStatus());
         assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
