@@ -440,7 +440,7 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
         ElinkDataExceptionRecords exceptionEntry = elinksException.get(0);
-        assertNotNull(exceptionEntry.getKey());
+        assertEquals("0049931063",exceptionEntry.getKey());
         assertEquals(ERRORDESCRIPTIONFORINTTEST, exceptionEntry.getErrorDescription());
         assertEquals(BASE_LOCATION_ID, exceptionEntry.getFieldInError());
         assertNotNull(exceptionEntry.getSchedulerStartTime());
