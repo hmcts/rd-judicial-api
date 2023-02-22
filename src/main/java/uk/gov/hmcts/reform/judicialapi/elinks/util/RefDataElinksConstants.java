@@ -65,6 +65,12 @@ public class RefDataElinksConstants {
     public static final String JOB_DETAILS_UPDATE_ERROR
         = "An error occurred while updating asb job status in database";
 
+    public static final String SEND_EMAIL_EXCEPTION
+        = "An error occurred while sending mail";
+
+    public static final String ASB_PUBLISH_TOPIC_ERROR
+        = "An error occurred while Publishing message to service bus topic";
+
     public enum JobStatus {
         IN_PROGRESS("IN_PROGRESS"),
         FAILED("FAILED"),

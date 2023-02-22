@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.exception.EmailFailureException;
 
@@ -79,7 +80,7 @@ class EmailServiceTest {
     @SneakyThrows
     void testMailException() {
         doThrow(IOException.class).when(sendGrid).api(any(Request.class));
-        assertThrows(EmailFailureException.class, () -> emailServiceImpl
+        assertThrows(ElinksException.class, () -> emailServiceImpl
             .sendEmail(emailDto));
     }
 

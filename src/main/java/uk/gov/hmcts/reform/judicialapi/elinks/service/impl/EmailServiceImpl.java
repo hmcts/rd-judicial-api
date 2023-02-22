@@ -12,12 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email;
-import uk.gov.hmcts.reform.judicialapi.elinks.service.exception.EmailFailureException;
 
 import java.io.IOException;
+
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.SEND_EMAIL_EXCEPTION;
 
 
 /**
@@ -60,7 +63,7 @@ public class EmailServiceImpl implements IEmailService {
             return response.getStatusCode();
         } catch (IOException ex) {
             log.error("{}:: Exception  while  sending mail  {}", logComponentName, ex.getMessage());
-            throw new EmailFailureException(ex);
+            throw new ElinksException(HttpStatus.FORBIDDEN, SEND_EMAIL_EXCEPTION, SEND_EMAIL_EXCEPTION);
         }
     }
 
