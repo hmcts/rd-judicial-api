@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 import feign.FeignException;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
@@ -34,6 +36,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
@@ -50,6 +53,8 @@ import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENT_TABLE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
@@ -58,6 +63,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_UNAUTHORIZED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONIDFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.REGION_DEFAULT_ID;
@@ -69,6 +75,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
     @Autowired
     private ElinksFeignClient elinksFeignClient;
+
+    @Autowired
+    private BaseLocationRepository baseLocationRepository;
+
+    @Autowired
+    ElinkDataExceptionHelper elinkDataExceptionHelper;
 
     @Autowired
     private AppointmentsRepository appointmentsRepository;
@@ -97,6 +109,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     @Autowired
     CommonUtil commonUtil;
 
+    private boolean baseLocationUnavailableFlag = false;
+
     @Value("${elinks.people.lastUpdated}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String lastUpdated;
@@ -119,6 +133,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
         LocalDateTime schedulerStartTime = now();
+        String status = RefDataElinksConstants.JobStatus.SUCCESS.getStatus();
+
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 null,
@@ -150,8 +166,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         } while (isMorePagesAvailable);
 
 
+        if (baseLocationUnavailableFlag) {
+            status = RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus();
+        }
+
         updateEpimsServiceCodeMapping(schedulerStartTime);
-        auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.SUCCESS.getStatus());
+        auditStatus(schedulerStartTime, status);
         ElinkPeopleWrapperResponse response = new ElinkPeopleWrapperResponse();
         response.setMessage(PEOPLE_DATA_LOAD_SUCCESS);
 
@@ -278,27 +298,56 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private List<uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment>
         buildAppointmentDto(ResultsRequest resultsRequest) {
 
+        LocalDateTime schedulerStartTime = now();
+
         final List<AppointmentsRequest> appointmentsRequests = resultsRequest.getAppointmentsRequests();
         final List<Appointment> appointmentList = new ArrayList<>();
 
         for (AppointmentsRequest appointment: appointmentsRequests) {
+            log.info("Retrieving appointment.getBaseLocationId() from DB " + appointment.getBaseLocationId());
+            // Check for base location in static table
+            if (!StringUtils.isEmpty(appointment.getBaseLocationId())
+                    && baseLocationRepository.findById(appointment.getBaseLocationId()).isPresent()) {
+                appointmentList.add(uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment.builder()
+                        .personalCode(resultsRequest.getPersonalCode())
+                        .objectId(resultsRequest.getObjectId())
+                        .baseLocationId(appointment.getBaseLocationId())
+                        .regionId(regionMapping(appointment))
+                        .isPrincipleAppointment(appointment.getIsPrincipleAppointment())
+                        .startDate(convertToLocalDate(appointment.getStartDate()))
+                        .endDate(convertToLocalDate(appointment.getEndDate()))
+                        .createdDate(now())
+                        .lastLoadedDate(now())
+                        .appointmentRolesMapping(appointment.getAppointmentRolesMapping())
+                        .appointmentType(appointment.getAppointmentType())
+                        .workPattern(appointment.getWorkPattern())
+                        .build());
+            } else {
+                log.warn("Mapped Base location not found in base table " + appointment.getBaseLocationId());
+                baseLocationUnavailableFlag = true;
+                String baseLocationId = appointment.getBaseLocationId();
+                String errorDescription = appendBaseLocationIdInErroDescription(LOCATIONIDFAILURE, baseLocationId);
+                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                        schedulerStartTime,
+                        resultsRequest.getPersonalCode(),
+                        BASE_LOCATION_ID, errorDescription, APPOINTMENT_TABLE);
+            }
 
-            appointmentList.add(uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment.builder()
-                .personalCode(resultsRequest.getPersonalCode())
-                .objectId(resultsRequest.getObjectId())
-                .baseLocationId(appointment.getBaseLocationId())
-                .regionId(regionMapping(appointment))
-                .isPrincipleAppointment(appointment.getIsPrincipleAppointment())
-                .startDate(convertToLocalDate(appointment.getStartDate()))
-                .endDate(convertToLocalDate(appointment.getEndDate()))
-                .createdDate(LocalDateTime.now())
-                .lastLoadedDate(LocalDateTime.now())
-                .appointmentRolesMapping(appointment.getAppointmentRolesMapping())
-                .appointmentType(appointment.getAppointmentType())
-                .workPattern(appointment.getWorkPattern())
-                .build());
         }
         return appointmentList;
+    }
+
+    // Append the string to add error description for the given format
+    private String appendBaseLocationIdInErroDescription(String errorDescription, String wordToAppend) {
+
+        String wordAfterWhichAppend = ":";
+        String errorDescriptionInGivenFormat = errorDescription.substring(0,
+                errorDescription.indexOf(wordAfterWhichAppend)
+                + wordAfterWhichAppend.length())
+                + " " + wordToAppend + " "
+                + errorDescription.substring(errorDescription.indexOf(wordAfterWhichAppend)
+                + wordAfterWhichAppend.length(), errorDescription.length());
+        return errorDescriptionInGivenFormat;
     }
 
     // moved the logic to outside
@@ -343,8 +392,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 .ejudiciaryEmailId(resultsRequest.getEmail())
                 .lastWorkingDate(convertToLocalDate(resultsRequest.getLastWorkingDate()))
                 .activeFlag(true)
-                .createdDate(LocalDateTime.now())
-                .lastLoadedDate(LocalDateTime.now())
+                .createdDate(now())
+                .lastLoadedDate(now())
                 .objectId(resultsRequest.getObjectId())
                 .initials(resultsRequest.getInitials())
                 .build();

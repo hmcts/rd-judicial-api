@@ -57,6 +57,16 @@ public class RefDataElinksConstants {
     public static final String PEOPLEAPI = "People";
     public static final String BASELOCATIONAPI = "BaseLocation";
 
+    public static final String BASE_LOCATION_ID = "base_location_id";
+
+    public static final String LOCATIONIDFAILURE = "Appointment Base Location ID : "
+            + "not available in BASE LOCATION table";
+
+    public static final String ERRORDESCRIPTIONFORINTTEST = "Appointment Base Location ID : 1000  "
+            + "not available in BASE LOCATION table";
+
+    public static final String APPOINTMENT_TABLE = "judicial_office_appointment";
+
     public static final String ASB_PUBLISH_SIDAM_ERROR = "An error occurred while Publishing SIDAM to ASB";
 
     public static final String DATABASE_FETCH_ERROR
@@ -74,7 +84,8 @@ public class RefDataElinksConstants {
     public enum JobStatus {
         IN_PROGRESS("IN_PROGRESS"),
         FAILED("FAILED"),
-        SUCCESS("SUCCESS");
+        SUCCESS("SUCCESS"),
+        PARTIAL_SUCCESS("PARTIAL_SUCCESS");
         String status;
         JobStatus(String status) {
             this.status = status;

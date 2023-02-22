@@ -8,8 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
@@ -26,11 +28,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_FORBIDDEN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_NOT_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_UNAUTHORIZED;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ERRORDESCRIPTIONFORINTTEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
@@ -46,6 +50,9 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+    @Autowired
+    private ElinkDataExceptionRepository elinkDataExceptionRepository;
 
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
@@ -298,6 +305,148 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
 
+    @DisplayName("peoples data exception and audit testing when base location id not present exclude appointments")
+    @Test
+    void verifyPeoplesJrdExceptionRecordsBaseLocationNotFoundScenario() {
+        elinks.stubFor(get(urlPathMatching("/people"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("{"
+                                + "    \"pagination\": {"
+                                + "      \"results\": 1,"
+                                + "      \"pages\": 1,"
+                                + "      \"current_page\": 1,"
+                                + "      \"results_per_page\": 1,"
+                                + "      \"more_pages\": false"
+                                + "  },"
+                                + "  \"results\": ["
+                                + "      {"
+                                + "          \"id\": \"552da697-4b3d-4aed-9c22-1e903b70aead\","
+                                + "          \"per_id\": 57818,"
+                                + "          \"personal_code\": \"0049931063\","
+                                + "          \"title\": \"Tribunal Judge\","
+                                + "          \"known_as\": \"Tester\","
+                                + "          \"surname\": \"TestAccount 2\","
+                                + "          \"fullname\": \"Tribunal Judge Tester TestAccount 2\","
+                                + "          \"post_nominals\": \"ABC\","
+                                + "      \"email\": \"Tester2@judiciarystaging.onmicrosoft.com\","
+                                + "          \"sex\": \"sex_unknown\","
+                                + "          \"work_phone\": null,"
+                                + "          \"disability\": false,"
+                                + "          \"retirement_date\": null,"
+                                + "          \"leaving_on\": null,"
+                                + "          \"appointments\": ["
+                                + "              {"
+                                + "                  \"appointment_id\": 114325,"
+                                + "                  \"role\": \"Tribunal Judge\","
+                                + "                  \"role_name\": \"Tribunal Judge\","
+                                + "                  \"role_name_id\": null,"
+                                + "                  \"type\": \"Courts\","
+                                + "                  \"court_name\": \"Worcester Combined Court - Crown\","
+                                + "                  \"court_type\": \"Crown Court\","
+                                + "                  \"circuit\": \"default\","
+                                + "                  \"bench\": null,"
+                                + "                  \"advisory_committee_area\": null,"
+                                + "                  \"location\": \"default\","
+                                + "                  \"base_location\": \"Worcester Combined Court - Crown\","
+                                + "                  \"base_location_id\": 1000,"
+                                + "                  \"is_principal\": false,"
+                                + "                  \"start_date\": \"2022-06-29\","
+                                + "                  \"end_date\": null,"
+                                + "                  \"superseded\": true,"
+                                + "                  \"contract_type\": \"fee_paid\","
+                                + "                  \"contract_type_id\": 1,"
+                                + "                  \"work_pattern\": \"Fee Paid Judiciary 5 Days Mon - Fri\","
+                                + "                  \"work_pattern_id\": 10,"
+                                + "                  \"fte_percent\": 100"
+                                + "              },"
+                                + "              {"
+                                + "                  \"appointment_id\": 114329,"
+                                + "                  \"role\": \"Magistrate\","
+                                + "                  \"role_name\": \"Magistrate\","
+                                + "                  \"role_name_id\": null,"
+                                + "                   \"type\": \"Courts\","
+                                + "                    \"court_name\": \"Central London County Court\","
+                                + "                   \"court_type\": \"County Court\","
+                                + "                  \"circuit\": \"default\","
+                                + "                  \"bench\": null,"
+                                + "                  \"advisory_committee_area\": null,"
+                                + "                  \"location\": \"default\","
+                                + "                  \"base_location\": \"Central London County Court\","
+                                + "                  \"base_location_id\": 1200,"
+                                + "                  \"is_principal\": true,"
+                                + "                  \"start_date\": \"2022-07-27\","
+                                + "                  \"end_date\": null,"
+                                + "                  \"superseded\": false,"
+                                + "                  \"contract_type\": \"salaried\","
+                                + "                  \"contract_type_id\": 0,"
+                                + "                  \"work_pattern\": \"Fee Paid Judiciary 5 Days Mon - Fri\","
+                                + "                  \"work_pattern_id\": 10,"
+                                + "                  \"fte_percent\": 100"
+                                + "              }"
+                                + "          ],"
+                                + "          \"training_records\": [],"
+                                + "          \"authorisations\": ["
+                                + "              {"
+                                + "                  \"jurisdiction\": \"Family\","
+                                + "                  \"tickets\": ["
+                                + "                      \"Private Law\""
+                                + "                  ]"
+                                + "              },"
+                                + "              {"
+                                + "                  \"jurisdiction\": \"Tribunals\","
+                                + "                  \"tickets\": ["
+                                + "                      \"05 - Industrial Injuries\""
+                                + "                  ]"
+                                + "              }"
+                                + "          ],"
+                                + "          \"authorisations_with_dates\": ["
+                                + "              {"
+                                + "                  \"authorisation_id\": 29701,"
+                                + "                  \"jurisdiction\": \"Family\","
+                                + "                  \"jurisdiction_id\": 26,"
+                                + "                  \"ticket\": \"Private Law\","
+                                + "                  \"ticket_id\": 315,"
+                                + "                  \"start_date\": \"2022-07-03\","
+                                + "                 \"end_date\": null"
+                                + "                },"
+                                + "                {"
+                                + "                \"authorisation_id\": 29700,"
+                                + "                 \"jurisdiction\": \"Tribunals\","
+                                + "                 \"jurisdiction_id\": 27,"
+                                + "                 \"ticket\": \"05 - Industrial Injuries\","
+                                + "                 \"ticket_id\": 367,"
+                                + "                 \"start_date\": \"2022-07-04\","
+                                + "                 \"end_date\": null"
+                                + "                }"
+                                + "            ]"
+                                + "        }"
+                                + "    ]"
+                                + " }")
+                ));
+
+        elinkSchedularAuditRepository.deleteAll();
+        Map<String, Object> peoplesResponse = elinksReferenceDataClient.getPeoples();
+        assertThat(peoplesResponse).containsEntry("http_status", "200 OK");
+
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
+        assertEquals(PEOPLEAPI, auditEntry.getApiName());
+        assertEquals(RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus(), auditEntry.getStatus());
+        assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
+        assertNotNull(auditEntry.getSchedulerStartTime());
+
+        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
+        ElinkDataExceptionRecords exceptionEntry = elinksException.get(0);
+        assertEquals("0049931063",exceptionEntry.getKey());
+        assertEquals(ERRORDESCRIPTIONFORINTTEST, exceptionEntry.getErrorDescription());
+        assertEquals(BASE_LOCATION_ID, exceptionEntry.getFieldInError());
+        assertNotNull(exceptionEntry.getSchedulerStartTime());
+
+    }
+
     @DisplayName("Elinks Leavers to test JRD Audit Negative Scenario Functionality verification")
     @Test
     void verifyLeaversJrdAuditFunctionalityBadRequestScenario() {
@@ -345,12 +494,7 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(1, baseLocationList.size());
-        assertEquals("0", baseLocationList.get(0).getBaseLocationId());
-        assertEquals("default", baseLocationList.get(0).getCourtName());
-        assertEquals("default", baseLocationList.get(0).getCourtType());
-        assertEquals("default", baseLocationList.get(0).getCircuit());
-        assertEquals("default", baseLocationList.get(0).getAreaOfExpertise());
+        assertEquals(0, baseLocationList.size());
 
         List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
 
