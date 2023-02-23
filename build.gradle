@@ -28,7 +28,7 @@ apply plugin: 'idea'
 def versions = [
         lombok             : '1.18.22',
         pitest             : '1.7.3',
-        reformLogging      : '5.1.9',
+        reformLogging      : '6.0.1',
         serenity           : '2.0.76',
         springBoot         : '2.7.7',
         restAssured        : '4.3.3',
@@ -353,8 +353,8 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-webmvc', version: versions.springVersion
 
     implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
-    implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
-
+    implementation "com.github.hmcts.java-logging:logging-appinsights:5.1.9"
+    implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.0.1'
     implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
@@ -364,9 +364,7 @@ dependencies {
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
     implementation "io.github.openfeign:feign-httpclient:11.0"
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
-    implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
-    implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
-    
+
     
 
     testImplementation ('com.github.hmcts:rd-commons-lib:v0.0.13'){
