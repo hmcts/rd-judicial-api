@@ -81,6 +81,8 @@ public class RefDataElinksConstants {
     public static final String ASB_PUBLISH_TOPIC_ERROR
         = "An error occurred while Publishing message to service bus topic";
 
+    public static final String FORBIDEN_ERROR = "Forbidden Error: Access denied for invalid permissions";
+
     public enum JobStatus {
         IN_PROGRESS("IN_PROGRESS"),
         FAILED("FAILED"),

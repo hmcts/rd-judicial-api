@@ -19,7 +19,6 @@ import java.util.Objects;
 import javax.validation.constraints.NotNull;
 
 import static com.google.common.collect.Lists.partition;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ASB_PUBLISH_TOPIC_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.UNAUTHORIZED_ERROR;
 
 @Slf4j
@@ -48,7 +47,7 @@ public class ElinkTopicPublisher {
             if (Objects.nonNull(elinktransactionContext) && Objects.nonNull(elinkserviceBusSenderClient)) {
                 elinkserviceBusSenderClient.rollbackTransaction(elinktransactionContext);
             }
-            throw new ElinksException(HttpStatus.FORBIDDEN, ASB_PUBLISH_TOPIC_ERROR, ASB_PUBLISH_TOPIC_ERROR);
+            throw new ElinksException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_ERROR, UNAUTHORIZED_ERROR);
         }
         elinkserviceBusSenderClient.commitTransaction(elinktransactionContext);
     }
