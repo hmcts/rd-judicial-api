@@ -11,7 +11,7 @@ public class RefDataElinksConstants {
     public static final String BAD_REQUEST = "Syntax error or Bad Request";
     public static final String FORBIDDEN_ERROR = "Your source IP address is not whitelisted";
     public static final String UNAUTHORIZED_ERROR =
-            "A valid access token hasn't been provided in the right form";
+            "Invalid Access token has been provided. Please try with the right credentials";
     public static final String NO_DATA_FOUND = "The given attribute name does not exist in the reference data";
     public static final String INTERNAL_SERVER_ERROR = "Internal Server Error";
 
