@@ -27,6 +27,9 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  thymeleaf:
+    preprocessor:
+      mode: none
   application:
     name: Judicial Data API
   main:
