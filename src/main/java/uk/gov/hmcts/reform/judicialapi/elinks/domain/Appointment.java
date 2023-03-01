@@ -83,9 +83,4 @@ public class Appointment implements Serializable {
     @Size(max = 32)
     private String appointmentType;
 
-    @Column(name = "work_pattern")
-    @Size(max = 64)
-    private String workPattern;
-
-
 }

@@ -35,7 +35,6 @@ public class AppointmentsRequest {
     private String appointmentRolesMapping;
     @JsonProperty("contract_type")
     private String appointmentType;
-    @JsonProperty("work_pattern")
-    private String workPattern;
+
 
 }
