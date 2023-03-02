@@ -412,7 +412,6 @@ dependencies {
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
     testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
 
-    testImplementation (group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity)
     testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
@@ -422,9 +421,8 @@ dependencies {
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
 
-    contractTestImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    contractTestImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    contractTestImplementation('org.junit.jupiter:junit-jupiter-api:5.7.1')
+    contractTestImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
+    contractTestImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: versions.pact_version
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5spring', version: versions.pact_version
