@@ -301,7 +301,6 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.5'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
@@ -324,7 +323,7 @@ dependencies {
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '3.0.2'
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.1'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.5'
 
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
@@ -452,14 +451,14 @@ dependencyManagement {
 
     dependencies {
         // CVE-2021-42340
-        dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.6') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.69') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
         }
 
         //CVE-2021-22044
-        dependencySet(group: 'org.springframework.cloud', version: '4.0.1') {
+        dependencySet(group: 'org.springframework.cloud', version: '3.1.5') {
             entry 'spring-cloud-starter-openfeign'
             entry 'spring-cloud-openfeign-core'
         }
