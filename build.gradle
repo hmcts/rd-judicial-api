@@ -29,7 +29,7 @@ def versions = [
         lombok             : '1.18.22',
         pitest             : '1.7.4',
         reformLogging      : '6.0.1',
-        serenity           : '2.2.13',
+        serenity           : '2.3.10',
         springBoot         : '2.7.7',
         restAssured        : '4.3.3',
         jackson            : '2.14.2',
