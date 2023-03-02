@@ -301,7 +301,6 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.5'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
@@ -324,7 +323,9 @@ dependencies {
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '3.0.2'
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.5'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.1'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-openfeign-core', version: '4.0.1'
+
 
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
