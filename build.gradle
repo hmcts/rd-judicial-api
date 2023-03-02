@@ -15,7 +15,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.7'
     id "org.flywaydb.flyway" version "8.4.2"
     id "io.freefair.lombok" version "5.3.3.3"
-    id 'uk.gov.hmcts.java' version '0.12.12'
+    id 'uk.gov.hmcts.java' version '0.12.39'
     id 'au.com.dius.pact' version '4.1.7'
     id 'org.owasp.dependencycheck' version '8.0.2'
 }
@@ -27,13 +27,13 @@ apply plugin: 'idea'
 
 def versions = [
         lombok             : '1.18.22',
-        pitest             : '1.7.4',
+        pitest             : '1.7.3',
         reformLogging      : '6.0.1',
-        serenity           : '2.2.12',
+        serenity           : '2.0.76',
         springBoot         : '2.7.7',
         restAssured        : '4.3.3',
-        jackson            : '2.14.2',
-        launchDarklySdk    : '5.10.7',
+        jackson            : '2.14.0-rc1',
+        launchDarklySdk    : '5.10.2',
         pact_version       : '4.1.7',
         log4j              : '2.17.1',
         springVersion      : '5.3.20',
