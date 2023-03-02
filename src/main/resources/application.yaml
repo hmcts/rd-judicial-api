@@ -27,9 +27,9 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-  thymeleaf:
-    preprocessor:
-      mode: none
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   application:
     name: Judicial Data API
   main:

@@ -324,8 +324,6 @@ dependencies {
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.1'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-openfeign-core', version: '4.0.1'
-
 
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
@@ -457,6 +455,12 @@ dependencyManagement {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
+        }
+
+        //CVE-2021-22044
+        dependencySet(group: 'org.springframework.cloud', version: '4.0.1') {
+            entry 'spring-cloud-starter-openfeign'
+            entry 'spring-cloud-openfeign-core'
         }
     }
 }
