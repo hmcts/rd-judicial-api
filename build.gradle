@@ -32,6 +32,7 @@ def versions = [
         serenity           : '2.0.76',
         springBoot         : '2.7.7',
         restAssured        : '4.3.3',
+        springfoxSwagger   : '2.9.2',
         jackson            : '2.14.0-rc1',
         launchDarklySdk    : '5.10.2',
         pact_version       : '4.1.7',
@@ -237,7 +238,8 @@ pitest {
             'uk.gov.hmcts.reform.judicialapi.controller.*',
             'uk.gov.hmcts.reform.judicialapi.JudicialApplication',
             'uk.gov.hmcts.reform.judicialapi.repository.IdamUserProfileRepository',
-            'uk.gov.hmcts.reform.judicialapi.service.impl.IdamUserProfileServiceImpl'
+            'uk.gov.hmcts.reform.judicialapi.service.impl.IdamUserProfileServiceImpl',
+            'uk.gov.hmcts.reform.judicialapi.elinks.servicebus.TopicPublisher'
 
     ]
     threads = 10
@@ -268,7 +270,21 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/feign/IdamUserFeignClient.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/IdamUserProfileServiceImpl.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java"
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/domain/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/response/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/ElinksFeignInterceptorConfiguration.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/controller/advice/ForbiddenException.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/ELinksServiceImpl.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/ElinksPeopleServiceImpl.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/IdamElasticSearchServiceImpl.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/SchedulerConfig.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/SendGridConfig.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/util/DataloadSchedulerJobAudit.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/exception/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/scheduler/ElinksApiJobScheduler.java,"
+
     }
 }
 
@@ -300,7 +316,15 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: versions.springBoot
+
     implementation group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.5'
+    implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
+
+
+
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
+
+
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
@@ -324,6 +348,14 @@ dependencies {
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.5'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.5'
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
+    implementation 'com.sendgrid:sendgrid-java:4.7.2'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.13.0'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.1.0'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
 
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
@@ -419,6 +451,7 @@ dependencies {
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
+
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
@@ -461,6 +494,10 @@ dependencyManagement {
         dependencySet(group: 'org.springframework.cloud', version: '3.1.5') {
             entry 'spring-cloud-starter-openfeign'
             entry 'spring-cloud-openfeign-core'
+        }
+        //CVE-2022-40152
+        dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
+            entry 'woodstox-core'
         }
     }
 }
