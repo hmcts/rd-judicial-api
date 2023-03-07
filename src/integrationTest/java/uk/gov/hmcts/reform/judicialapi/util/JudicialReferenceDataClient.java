@@ -35,7 +35,7 @@ public class JudicialReferenceDataClient {
     private static String JWT_TOKEN = null;
     private final RestTemplate restTemplate = new RestTemplate();
     static String bearerToken;
-    private final String  serviceName;
+    private final String serviceName;
     private final String baseUrl;
     private final String issuer;
     private final long expiration;
@@ -95,21 +95,30 @@ public class JudicialReferenceDataClient {
         return response;
     }
 
-    @NotNull
-    private HttpHeaders getMultipleAuthHeaders(String role, String userId) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(APPLICATION_JSON);
+    public String setAndReturnJwtToken() {
         if (StringUtils.isBlank(JWT_TOKEN)) {
-
-            JWT_TOKEN = generateS2SToken(serviceName);
+            JWT_TOKEN = generateS2SToken("rd_judicial_api");
         }
+        return JWT_TOKEN;
+    }
 
-        headers.add("ServiceAuthorization", JWT_TOKEN);
-
+    public String getAndReturnBearerToken(String userId, String role) {
+        setAndReturnJwtToken();
         if (StringUtils.isBlank(bearerToken)) {
             bearerToken = "Bearer ".concat(getBearerToken(Objects.isNull(userId) ? UUID.randomUUID().toString()
                     : userId, role));
         }
+        return bearerToken;
+    }
+
+    @NotNull
+    private HttpHeaders getMultipleAuthHeaders(String role, String userId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+        getAndReturnBearerToken(userId, role);
+
+        headers.add("ServiceAuthorization", JWT_TOKEN);
+
         headers.add("Authorization", bearerToken);
         return headers;
     }
@@ -228,4 +237,8 @@ public class JudicialReferenceDataClient {
     }
 
 
+    public void clearTokens() {
+        JWT_TOKEN = null;
+        bearerToken = null;
+    }
 }

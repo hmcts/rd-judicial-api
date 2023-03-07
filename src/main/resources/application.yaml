@@ -31,6 +31,7 @@ spring:
     name: Judicial Data API
   main:
     allow-bean-definition-overriding: true
+    allow-circular-references: true
   security:
     oauth2:
       client:
@@ -51,7 +52,6 @@ spring:
     locations: ${JUDICIAL_DB:classpath:db/migration}
     schemas:
       - dbjuddata
-
 ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
@@ -90,8 +90,10 @@ security:
     - "/actuator/**"
     - "/loggers/**"
     - "/swagger-ui.html"
+    - "/swagger-ui/**"
     - "/swagger-resources/**"
     - "/v2/api-docs"
+    - "/v3/**"
     - "/webjars/springfox-swagger-ui/**"
     - "/csrf"
     - "/error"
