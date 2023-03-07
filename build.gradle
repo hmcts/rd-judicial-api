@@ -29,7 +29,7 @@ def versions = [
         lombok             : '1.18.22',
         pitest             : '1.7.3',
         reformLogging      : '6.0.1',
-        serenity           : '2.2.12',
+        serenity           : '2.0.76',
         springBoot         : '2.7.7',
         restAssured        : '4.3.3',
         jackson            : '2.14.0-rc1',
@@ -418,7 +418,6 @@ dependencies {
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
 
-    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
 
     contractTestImplementation("org.junit.jupiter:junit-jupiter-api:5.9.2")
