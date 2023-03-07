@@ -150,6 +150,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                                 + "          \"disability\": false,"
                                 + "          \"retirement_date\": null,"
                                 + "          \"leaving_on\": null,"
+                                + "          \"initials\": \"T.T\","
                                 + "          \"appointments\": ["
                                 + "              {"
                                 + "                  \"appointment_id\": 114325,"
