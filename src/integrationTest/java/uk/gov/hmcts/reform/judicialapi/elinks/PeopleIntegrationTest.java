@@ -81,6 +81,7 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals("Tester2@judiciarystaging.onmicrosoft.com", userprofile.get(0).getEjudiciaryEmailId());
         assertNull(userprofile.get(0).getLastWorkingDate());
         assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
+        assertEquals("T.T",userprofile.get(0).getInitials());
 
     }
 
