@@ -81,7 +81,7 @@ public class ElinksApiJobScheduler {
                     elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                             jobStartTime,
                             "ElinksApiJobScheduler" + jobStartTime,
-                            "Shcedular_Run_date", "JRD load failed since job has already ran for the day", "ElinksApiJobScheduler");
+                            "Schedular_Run_date", "JRD load failed since job has already ran for the day", "ElinksApiJobScheduler");
                     return;
                 }
             }
