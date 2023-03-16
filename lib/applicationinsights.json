@@ -1,6 +1,6 @@
 {
   "connectionString": "${file:/mnt/secrets/rd/app-insights-connection-string}",
   "role": {
-    "name": "Professional Reference Data API"
+    "name": "Judicial Data API"
   }
 }
