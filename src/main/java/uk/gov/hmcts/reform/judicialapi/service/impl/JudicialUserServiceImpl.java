@@ -127,7 +127,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
         var userSearchResponses = userProfiles
                 .stream().filter(distinctByKeys(UserProfile::getPersonalCode))
                 .map(UserSearchResponse::new)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
 
         return ResponseEntity
                 .status(200)
@@ -309,8 +309,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 ErrorResponse.class);
         var responseBody = responseEntity.getBody();
 
-        if (nonNull(responseBody) && responseBody instanceof ErrorResponse) {
-            ErrorResponse errorResponse = (ErrorResponse) responseBody;
+        if (nonNull(responseBody) && responseBody instanceof ErrorResponse errorResponse) {
             throw new UserProfileException(httpStatus, errorResponse.getErrorMessage(),
                     errorResponse.getErrorDescription());
         } else {
