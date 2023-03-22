@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -58,38 +57,38 @@ public class JrdUsersController {
                     @SecurityRequirement(name = "ServiceAuthorization")
             }
     )
-    @ApiResponses({
-            @ApiResponse(
+
+    @ApiResponse(
                     responseCode = "200",
                     description = "Retrieve the set of judicial user profiles as per given request",
                     content = @Content(schema = @Schema(implementation = OrmResponse.class))
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "400",
                     description = BAD_REQUEST,
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "401",
                     description = "User Authentication Failed",
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "403",
                     description = "Unauthorized",
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "404",
                     description = "No Users Found",
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "500",
                     description = "Internal Server Error",
                     content = @Content
             )
-    })
+
     @PostMapping(
         path = "/fetch",
         consumes = APPLICATION_JSON_VALUE,
@@ -117,33 +116,33 @@ public class JrdUsersController {
                     @SecurityRequirement(name = "ServiceAuthorization")
             }
     )
-    @ApiResponses({
-            @ApiResponse(
+
+    @ApiResponse(
                     responseCode = "200",
                     description = "Retrieve the user profiles for the given request. ",
                     content = @Content(schema = @Schema(implementation = UserSearchResponse.class))
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "400",
                     description = BAD_REQUEST,
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "401",
                     description = "User Authentication Failed",
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "403",
                     description = "Unauthorized",
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "500",
                     description = "Internal Server Error",
                     content = @Content
             )
-    })
+
     @PostMapping(
             path = "/search",
             consumes = APPLICATION_JSON_VALUE,
@@ -163,38 +162,38 @@ public class JrdUsersController {
                     @SecurityRequirement(name = "ServiceAuthorization")
             }
     )
-    @ApiResponses({
-            @ApiResponse(
+
+    @ApiResponse(
                     responseCode = "200",
                     description = "The User profiles have been retrieved successfully",
                     content = @Content(schema = @Schema(implementation = UserProfileRefreshResponse.class))
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "400",
                     description = BAD_REQUEST,
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "401",
                     description = UNAUTHORIZED_ERROR,
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "403",
                     description = FORBIDDEN_ERROR,
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "404",
                     description = NO_DATA_FOUND,
                     content = @Content
-            ),
-            @ApiResponse(
+            )
+    @ApiResponse(
                     responseCode = "500",
                     description = INTERNAL_SERVER_ERROR,
                     content = @Content
             )
-    })
+
     @PostMapping(
             path = "",
             produces = APPLICATION_JSON_VALUE
