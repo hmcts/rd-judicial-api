@@ -1,14 +1,17 @@
 package uk.gov.hmcts.reform.judicialapi.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Setter
 public class UserSearchResponse implements Serializable {
     @JsonProperty
     private String title;
@@ -26,15 +29,14 @@ public class UserSearchResponse implements Serializable {
     @JsonProperty
     private String personalCode;
 
-
-    public UserSearchResponse(UserProfile userProfile) {
-        this.title = userProfile.getPostNominals();
+    public UserSearchResponse(UserSearchResponse userProfile) {
+        this.title = userProfile.getTitle();
         this.knownAs = userProfile.getKnownAs();
         this.surname = userProfile.getSurname();
         this.fullName = userProfile.getFullName();
-        this.emailId = userProfile.getEjudiciaryEmailId();
+        this.emailId = userProfile.getEmailId();
         this.personalCode = userProfile.getPersonalCode();
-        this.idamId = userProfile.getSidamId();
+        this.idamId = userProfile.getIdamId();
     }
 
     private String getStringValueFromBoolean(Boolean value) {

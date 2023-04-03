@@ -50,7 +50,6 @@ import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.REGION;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.distinctByKeys;
 
 @Slf4j
 @Service
@@ -125,7 +124,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                         searchServiceCode);
 
         var userSearchResponses = userProfiles
-                .stream().filter(distinctByKeys(UserProfile::getPersonalCode))
+                .stream()
                 .map(UserSearchResponse::new)
                 .toList();
 
