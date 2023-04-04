@@ -29,15 +29,6 @@ public class UserSearchResponse implements Serializable {
     @JsonProperty
     private String personalCode;
 
-    public UserSearchResponse(UserSearchResponse userProfile) {
-        this.title = userProfile.getTitle();
-        this.knownAs = userProfile.getKnownAs();
-        this.surname = userProfile.getSurname();
-        this.fullName = userProfile.getFullName();
-        this.emailId = userProfile.getEmailId();
-        this.personalCode = userProfile.getPersonalCode();
-        this.idamId = userProfile.getIdamId();
-    }
 
     private String getStringValueFromBoolean(Boolean value) {
         if (value != null) {

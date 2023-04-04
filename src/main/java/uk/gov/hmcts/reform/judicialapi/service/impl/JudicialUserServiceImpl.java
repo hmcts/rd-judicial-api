@@ -118,19 +118,14 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                     .forEach(s -> ticketCode.add(s.getTicketCode()));
         }
         log.info("SearchServiceCode list = {}", searchServiceCode);
-        var userProfiles = userProfileRepository
+        List<UserSearchResponse> userProfileSearchResponse = userProfileRepository
                 .findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
                         userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode,
                         searchServiceCode);
 
-        var userSearchResponses = userProfiles
-                .stream()
-                .map(UserSearchResponse::new)
-                .toList();
-
         return ResponseEntity
                 .status(200)
-                .body(userSearchResponses);
+                .body(userProfileSearchResponse);
 
     }
 
