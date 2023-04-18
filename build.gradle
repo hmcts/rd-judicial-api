@@ -386,9 +386,9 @@ dependencies {
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
 
+    //Added below dependencies for shedlock
     implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '5.2.0'
     implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '5.2.0'
-
 
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
