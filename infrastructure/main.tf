@@ -6,6 +6,7 @@ locals {
   s2s_rg_prefix               = "rpe-service-auth-provider"
   s2s_key_vault_name          = var.env == "preview" || var.env == "spreview" ? join("-", ["s2s", "aat"]) : join("-", ["s2s", var.env])
   s2s_vault_resource_group    = var.env == "preview" || var.env == "spreview" ? join("-", [local.s2s_rg_prefix, "aat"]) : join("-", [local.s2s_rg_prefix, var.env])
+  vm_availabilty_zones  = [1, 2]
 }
 
 data "azurerm_key_vault" "rd_key_vault" {
@@ -28,6 +29,8 @@ resource "azurerm_key_vault_secret" "judicial_s2s_secret" {
   value         = data.azurerm_key_vault_secret.s2s_secret.value
   key_vault_id  = data.azurerm_key_vault.rd_key_vault.id
 }
+
+
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
   name          = join("-", [var.component, "POSTGRES-USER"])
@@ -72,3 +75,21 @@ module "db-judicial-ref-data" {
   common_tags         = var.common_tags
   postgresql_version  = var.postgresql_version
 }
+
+resource "azurerm_key_vault_secret" "vm_password" {
+  name          = "vm-password"
+  value         = random_string.password.result
+  key_vault_id  = data.azurerm_key_vault.rd_key_vault.id
+}
+
+
+resource "random_string" "password" {
+  length  = 16
+  special = true
+  upper   = true
+  lower   = true
+  number  = true
+}
+
+
+

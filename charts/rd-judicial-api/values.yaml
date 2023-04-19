@@ -22,7 +22,7 @@ java:
     LOCATION_REF_DATA_URL: http://rd-location-ref-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     REFRESH_PAGE_SIZE: 200
     REFRESH_SORT_COLUMN: objectId
-    ELINKS_URL: https://jo-staging.elinks.judiciary.uk/api/v4
+    ELINKS_URL: https://judiciary-middleware-futureehr.herokuapp.com/api/v5
   image: 'hmctspublic.azurecr.io/rd/judicial-api:latest'
   keyVaults:
     rd:
