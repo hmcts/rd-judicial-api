@@ -141,7 +141,7 @@ search:
   serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3,aaa6,aaa7,aba5,aba3}
 
 elinksApiKey: ${judicial_api_elinks_api_key:}
-elinksUrl: ${ELINKS_URL:https://jo-staging.elinks.judiciary.uk/api/v4}
+elinksUrl: ${ELINKS_URL:https://judiciary-middleware-futureehr.herokuapp.com}
 
 elinks:
   people:
@@ -152,8 +152,8 @@ elinks:
     threadPauseTime: 2000
   scheduler:
     wrapperApiUrl: ${ELINKS_WRAPPER_API_URL:http://localhost:8093}
-    cronExpression: ${CRON_EXPRESSION:0 0 */5 * * *}
-    enabled: false
+    cronExpression: ${CRON_EXPRESSION:*/5 * * * * *}
+    enabled: true
 
 
 logging.level.uk.gov.hmcts.reform: DEBUG
