@@ -105,22 +105,27 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
                         .withHeader("Connection", "close")
                         .withBody("rd_judicial_api")));
 
+
+        LinkedHashMap<String,Object> data = new LinkedHashMap<>();
+
+        ArrayList<String> roles = new ArrayList<>();
+        roles.add("%s");
+
+        data.put("id","%s");
+        data.put("uid","%s");
+        data.put("forename","Super");
+        data.put("surname","User");
+        data.put("email","super.user@hmcts.net");
+        data.put("accountStatus","active");
+        data.put("roles",roles);
+
+
         sidamService.stubFor(get(urlPathMatching("/o/userinfo"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withHeader("Connection", "close")
-                        .withBody("{"
-                                + "  \"id\": \"%s\","
-                                + "  \"uid\": \"%s\","
-                                + "  \"forename\": \"Super\","
-                                + "  \"surname\": \"User\","
-                                + "  \"email\": \"super.user@hmcts.net\","
-                                + "  \"accountStatus\": \"active\","
-                                + "  \"roles\": ["
-                                + "  \"%s\""
-                                + "  ]"
-                                + "}")
+                                .withBody(WireMockUtil.getObjectMapper().writeValueAsString(data))
                         .withTransformers("user-token-response")));
 
         mockHttpServerForOidc.stubFor(get(urlPathMatching("/jwks"))
