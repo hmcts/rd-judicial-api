@@ -1,0 +1,19 @@
+  {
+    "pagination": {
+      "results": 2,
+      "pages": 1,
+      "current_page": 1,
+      "results_per_page": 50,
+      "more_pages": false
+    },
+    "results": [
+
+      {
+        "id": "552da697-4b3d-4aed-9c22-1e903b70aead",
+        "per_id": 40962,
+        "personal_code": "410551",
+        "leaver": true,
+        "left_on": "2023-03-01"
+      }
+    ]
+  }

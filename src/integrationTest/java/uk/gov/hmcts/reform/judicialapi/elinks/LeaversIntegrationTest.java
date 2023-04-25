@@ -66,11 +66,10 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(1, userprofile.size());
-        assertEquals("0049931063", userprofile.get(0).getPersonalCode());
-        assertEquals("2021-02-24", userprofile.get(0).getLastWorkingDate().toString());
-        assertEquals(false, userprofile.get(0).getActiveFlag());
-        assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
+        assertEquals(2, userprofile.size());
+        assertEquals("410551", userprofile.get(1).getPersonalCode());
+        assertEquals(false, userprofile.get(1).getActiveFlag());
+        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(1).getObjectId());
 
     }
 
@@ -86,11 +85,10 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(1, userprofile.size());
-        assertEquals("0049931063", userprofile.get(0).getPersonalCode());
-        assertEquals("2021-02-24", userprofile.get(0).getLastWorkingDate().toString());
-        assertEquals(false, userprofile.get(0).getActiveFlag());
-        assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
+        assertEquals(2, userprofile.size());
+        assertEquals("410551", userprofile.get(1).getPersonalCode());
+        assertEquals(false, userprofile.get(1).getActiveFlag());
+        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(1).getObjectId());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 

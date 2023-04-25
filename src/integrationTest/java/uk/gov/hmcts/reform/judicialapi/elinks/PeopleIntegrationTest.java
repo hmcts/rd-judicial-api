@@ -72,16 +72,19 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(1, userprofile.size());
-        assertEquals("0049931063", userprofile.get(0).getPersonalCode());
-        assertEquals("Tester", userprofile.get(0).getKnownAs());
-        assertEquals("TestAccount 2", userprofile.get(0).getSurname());
-        assertEquals("Tribunal Judge Tester TestAccount 2", userprofile.get(0).getFullName());
-        assertEquals("ABC", userprofile.get(0).getPostNominals());
-        assertEquals("Tester2@judiciarystaging.onmicrosoft.com", userprofile.get(0).getEjudiciaryEmailId());
+        assertEquals(2, userprofile.size());
+        assertEquals("410540", userprofile.get(0).getPersonalCode());
+        assertEquals("Yuriko", userprofile.get(0).getKnownAs());
+        assertEquals("Koiko", userprofile.get(0).getSurname());
+        assertEquals("Her Honour Judge Yuriko Koiko", userprofile.get(0).getFullName());
+        assertEquals(null, userprofile.get(0).getPostNominals());
+        assertEquals("HHJ.Yuriko.Koiko@judiciarystaging13232.onmicrosoft.com",
+                userprofile.get(0).getEjudiciaryEmailId());
         assertNull(userprofile.get(0).getLastWorkingDate());
-        assertEquals("552da697-4b3d-4aed-9c22-1e903b70aead", userprofile.get(0).getObjectId());
-        assertEquals("T.T",userprofile.get(0).getInitials());
+        assertEquals("94772643-2c5f-4f84-8731-3dd7c25c9e11", userprofile.get(0).getObjectId());
+        assertEquals("B.K",userprofile.get(0).getInitials());
+
+        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(1).getObjectId());
 
     }
 
@@ -97,12 +100,12 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofile = profileRepository.findAll();
         List<Authorisation> authorisationList = authorisationsRepository.findAll();
 
-        assertEquals(2, authorisationList.size());
+        assertEquals(8, authorisationList.size());
         assertEquals(userprofile.get(0).getPersonalCode(), authorisationList.get(0).getPersonalCode());
         assertEquals(userprofile.get(0).getObjectId(),authorisationList.get(0).getObjectId());
-        assertEquals("Family", authorisationList.get(0).getJurisdiction());
-        assertEquals("Private Law", authorisationList.get(0).getLowerLevel());
-        assertEquals("315",authorisationList.get(0).getTicketCode());
+        assertEquals("Civil", authorisationList.get(0).getJurisdiction());
+        assertEquals("Administrative Court", authorisationList.get(0).getLowerLevel());
+        assertEquals("290",authorisationList.get(0).getTicketCode());
         assertNotNull(authorisationList.get(0).getStartDate());
         assertNull(authorisationList.get(0).getEndDate());
         assertNotNull(authorisationList.get(0).getCreatedDate());
@@ -110,9 +113,9 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
         assertEquals(userprofile.get(0).getPersonalCode(), authorisationList.get(1).getPersonalCode());
         assertEquals(userprofile.get(0).getObjectId(),authorisationList.get(1).getObjectId());
-        assertEquals("Tribunals", authorisationList.get(1).getJurisdiction());
-        assertEquals("05 - Industrial Injuries", authorisationList.get(1).getLowerLevel());
-        assertEquals("367",authorisationList.get(1).getTicketCode());
+        assertEquals("Civil", authorisationList.get(1).getJurisdiction());
+        assertEquals("Civil Authorisation", authorisationList.get(1).getLowerLevel());
+        assertEquals("294",authorisationList.get(1).getTicketCode());
         assertNotNull(authorisationList.get(1).getStartDate());
         assertNull(authorisationList.get(1).getEndDate());
         assertNotNull(authorisationList.get(1).getCreatedDate());
