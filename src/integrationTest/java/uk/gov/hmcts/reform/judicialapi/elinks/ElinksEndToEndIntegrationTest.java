@@ -218,5 +218,6 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
         elinkDataExceptionRepository.deleteAll();
+        dataloadSchedulerJobRepository.deleteAll();
     }
 }
