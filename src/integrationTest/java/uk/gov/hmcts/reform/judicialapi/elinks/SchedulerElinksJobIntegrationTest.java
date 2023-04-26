@@ -12,6 +12,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
@@ -32,6 +33,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
@@ -116,11 +118,15 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
         elinksApiJobScheduler.loadElinksJob();
 
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
         List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
         DataloadSchedulerJob jobDetails = audits.get(0);
 
         assertThat(jobDetails).isNotNull();
         assertThat(jobDetails.getPublishingStatus()).isNotNull();
+        assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),audits.get(0).getPublishingStatus());
 
     }
 
