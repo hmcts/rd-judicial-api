@@ -41,11 +41,9 @@
         <cve>CVE-2021-21290</cve>
         <cve>CVE-2014-3488</cve>
         <cve>CVE-2021-21409</cve>
-        <cve>CVE-2023-20863</cve>
         <cve>CVE-2023-20861</cve>
         <cve>CVE-2023-20860</cve>
         <cve>CVE-2023-28708</cve>
-
     </suppress>
 
     <suppress>
@@ -61,6 +59,10 @@
         <cve>CVE-2022-45688</cve>
         <cve>CVE-2023-24998</cve>
         <cve>CVE-2022-1471</cve>
+        <cve>CVE-2023-20861</cve>
+        <cve>CVE-2023-20860</cve>
+        <cve>CVE-2023-28708</cve>
+        <cve>CVE-2023-20863</cve>
     </suppress>
     
 </suppressions>

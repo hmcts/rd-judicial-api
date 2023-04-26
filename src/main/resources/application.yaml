@@ -154,6 +154,9 @@ elinks:
     wrapperApiUrl: ${ELINKS_WRAPPER_API_URL:http://localhost:8093}
     cronExpression: ${CRON_EXPRESSION:0 0 */5 * * *}
     enabled: false
+    lockAtLeastFor: ${Lock_AT_Least_For:PT10M}
+    lockAtMostFor: ${Lock_AT_Most_For:PT20M}
+    defaultLockAtMostFor: ${Default_Lock_At_Most_For:PT30M}
 
 
 logging.level.uk.gov.hmcts.reform: DEBUG
