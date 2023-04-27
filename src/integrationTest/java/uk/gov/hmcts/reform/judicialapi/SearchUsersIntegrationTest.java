@@ -29,9 +29,9 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(3, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("test529@test.net", profiles.get(1).get("emailId"));
-        assertEquals("test530@test.net", profiles.get(2).get("emailId"));
+        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
+        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
+        assertEquals("test529@test.net", profiles.get(2).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
@@ -66,8 +66,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(2, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("test530@test.net", profiles.get(1).get("emailId"));
+        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
+        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
     
@@ -167,8 +167,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(2, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("test530@test.net", profiles.get(1).get("emailId"));
+        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
+        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
@@ -248,12 +248,12 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(3, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("test529@test.net", profiles.get(1).get("emailId"));
-        assertEquals("test530@test.net", profiles.get(2).get("emailId"));
-        assertEquals("27", profiles.get(0).get("personalCode"));
-        assertEquals("28", profiles.get(1).get("personalCode"));
-        assertEquals("29", profiles.get(2).get("personalCode"));
+        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
+        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
+        assertEquals("test529@test.net", profiles.get(2).get("emailId"));
+        assertEquals("29", profiles.get(0).get("personalCode"));
+        assertEquals("27", profiles.get(1).get("personalCode"));
+        assertEquals("28", profiles.get(2).get("personalCode"));
 
         assertThat(response).containsEntry("http_status", "200 OK");
     }
