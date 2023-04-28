@@ -105,6 +105,8 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                 loadJson("src/integrationTest/resources/wiremock_responses/people.json");
         String leaversResponseValidationJson =
                 loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
+        String idamResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/users.json");
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
                 .willReturn(aResponse()

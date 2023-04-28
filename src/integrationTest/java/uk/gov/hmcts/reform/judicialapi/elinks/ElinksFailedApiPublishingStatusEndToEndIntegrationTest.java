@@ -8,14 +8,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
+import  uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
@@ -23,9 +27,13 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperR
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
+import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +42,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
@@ -60,6 +71,18 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
     @Autowired
     private DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
 
+    @Autowired
+    IdamTokenConfigProperties tokenConfigProperties;
+
+    @MockBean
+    ElinkTopicPublisher elinkTopicPublisher;
+
+    @Autowired
+    PublishSidamIdService publishSidamIdService;
+
+    @Autowired
+    ElinkDataExceptionRepository elinkDataExceptionRepository;
+
     @BeforeEach
     void setUp() {
         cleanupData();
@@ -76,12 +99,11 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
     void test_end_to_end_load_elinks_job_status_failure()
             throws JOSEException, JsonProcessingException {
         ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled", true);
+        ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
 
         dataloadSchedulerJobRepository.deleteAll();
         elinksApiJobScheduler.loadElinksJob();
-        setupIdamStubs();
 
-        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
         List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
         DataloadSchedulerJob jobDetails = audits.get(0);
 
@@ -90,6 +112,7 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         assertThat(jobDetails.getPublishingStatus()).isNotNull();
 
         // asserting location data
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
         Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
         ElinkDataSchedularAudit locationAuditEntry = elinksAudit.get(0);
 
@@ -119,7 +142,7 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
         assertEquals(0, baseLocationList.size());
 
-        //asserting people data
+        //asserting userprofile data for people api
         Map<String, Object> peopleResponse = elinksReferenceDataClient.getPeoples();
         ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse) peopleResponse.get("body");
         ElinkDataSchedularAudit peopleAuditEntry = elinksAudit.get(2);
@@ -143,8 +166,23 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         List<UserProfile> leaverUserProfile = profileRepository.findAll();
         assertEquals(0, leaverUserProfile.size());
 
-    }
+        //assert elastic search api
 
+        Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
+        assertEquals("403",idamResponses.get("http_status"));
+
+        // asserting SIDAM publishing
+        Map<String, Object> idamResponse = elinksReferenceDataClient.publishSidamIds();
+        doNothing().when(elinkTopicPublisher).sendMessage(anyList(),anyString());;
+        assertThat(idamResponse).containsEntry("http_status", "200 OK");
+        HashMap publishSidamIdsResponse = (LinkedHashMap)idamResponse.get("body");
+
+        assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
+
+        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
+        assertThat(elinksException.size()).isEqualTo(0);
+
+    }
 
     @BeforeAll
     public void setupIdamStubs() {
@@ -153,7 +191,6 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         int statusCode = 400;
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
-                .atPriority(1)
                 .willReturn(aResponse()
                         .withStatus(statusCode)
                         .withHeader("Content-Type", "application/json")
@@ -161,7 +198,6 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
 
 
         elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
-                .atPriority(2)
                 .willReturn(aResponse()
                         .withStatus(statusCode)
                         .withHeader("Content-Type", "application/json")
@@ -171,7 +207,6 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
 
 
         elinks.stubFor(get(urlPathMatching("/people"))
-                .atPriority(3)
                 .willReturn(aResponse()
                         .withStatus(statusCode)
                         .withHeader("Content-Type", "application/json")
@@ -180,17 +215,43 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
                 ));
 
         elinks.stubFor(get(urlPathMatching("/leavers"))
-                .atPriority(4)
                 .willReturn(aResponse()
                         .withStatus(statusCode)
                         .withHeader("Content-Type", "application/json")
                         .withHeader("Connection", "close")
                         .withBody(body)
                 ));
+
+        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+                .willReturn(aResponse()
+                        .withStatus(statusCode)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(body)
+                ));
+
     }
 
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
+        elinkDataExceptionRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
+    }
+
+    @BeforeEach
+    void idamSetUp() {
+
+        final String clientId = "234342332";
+        final String redirectUri = "http://idam-api.aat.platform.hmcts.net";
+        //The authorization and clientAuth is the dummy value which we can evaluate using BASE64 encoder.
+        final String authorization = "ZHVtbXl2YWx1ZUBobWN0cy5uZXQ6SE1DVFMxMjM0";
+        final String clientAuth = "cmQteHl6LWFwaTp4eXo=";
+        final String url = "http://127.0.0.1:5000";
+        tokenConfigProperties.setClientId(clientId);
+        tokenConfigProperties.setClientAuthorization(clientAuth);
+        tokenConfigProperties.setAuthorization(authorization);
+        tokenConfigProperties.setRedirectUri(redirectUri);
+        tokenConfigProperties.setUrl(url);
+
     }
 }

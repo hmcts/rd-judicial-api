@@ -10,13 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
+import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
@@ -24,12 +27,14 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperR
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,6 +42,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -59,6 +65,9 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
     @Autowired
     BaseLocationRepository baseLocationRepository;
 
+    @Autowired
+    IdamTokenConfigProperties tokenConfigProperties;
+
 
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
@@ -74,6 +83,9 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
 
     @MockBean
     ElinkTopicPublisher elinkTopicPublisher;
+
+    @Autowired
+    ElinkDataExceptionRepository elinkDataExceptionRepository;
 
     @BeforeEach
     void setUp() {
@@ -96,15 +108,16 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
         dataloadSchedulerJobRepository.deleteAll();
         elinksApiJobScheduler.loadElinksJob();
 
-        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
         List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
         DataloadSchedulerJob jobDetails = audits.get(0);
 
         //assserting scheduler data
         assertThat(jobDetails).isNotNull();
         assertThat(jobDetails.getPublishingStatus()).isNotNull();
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),jobDetails.getPublishingStatus());
 
         // asserting location data
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
         Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
         ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) locationResponse.get("body");
         ElinkDataSchedularAudit locationAuditEntry = elinksAudit.get(0);
@@ -138,6 +151,8 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
         assertEquals("Aberconwy",baseLocationList.get(0).getCourtName());
         assertEquals("1",baseLocationList.get(0).getBaseLocationId());
         assertEquals("Old Gwynedd",baseLocationList.get(0).getCourtType());
+        assertEquals("Gwynedd",baseLocationList.get(0).getCircuit());
+        assertEquals("LJA",baseLocationList.get(0).getAreaOfExpertise());
 
         //asserting people data
         Map<String, Object> peopleResponse = elinksReferenceDataClient.getPeoples();
@@ -158,8 +173,9 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
         assertEquals(null, userprofile.get(0).getPostNominals());
         assertEquals("HHJ.Yuriko.Koiko@judiciarystaging13232.onmicrosoft.com",
                 userprofile.get(0).getEjudiciaryEmailId());
-        assertNull(userprofile.get(0).getLastWorkingDate());
+        assertTrue(userprofile.get(0).getActiveFlag());
         assertEquals("94772643-2c5f-4f84-8731-3dd7c25c9e11", userprofile.get(0).getObjectId());
+        assertNull(userprofile.get(0).getSidamId());
         assertEquals("B.K",userprofile.get(0).getInitials());
         assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(1).getObjectId());
 
@@ -174,9 +190,11 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
 
         List<UserProfile> leaverUserProfile = profileRepository.findAll();
         assertEquals(2, leaverUserProfile.size());
-        assertEquals("410540", leaverUserProfile.get(0).getPersonalCode());
-        assertEquals(true, leaverUserProfile.get(0).getActiveFlag());
-        assertEquals("94772643-2c5f-4f84-8731-3dd7c25c9e11", leaverUserProfile.get(0).getObjectId());
+        assertEquals("410551", leaverUserProfile.get(1).getPersonalCode());
+        assertEquals(false, leaverUserProfile.get(1).getActiveFlag());
+        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", leaverUserProfile.get(1).getObjectId());
+        assertEquals("2023-03-01",leaverUserProfile.get(1).getLastWorkingDate().toString());
+        assertNotNull(leaverUserProfile.get(1).getLastLoadedDate());
 
 
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(3);
@@ -187,6 +205,19 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
 
+        //assert elastic search api
+        idamSetUp();
+
+        Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
+        assertEquals("200 OK",idamResponses.get("http_status"));
+        List<IdamResponse> idamResponseVal = (ArrayList<IdamResponse>) idamResponses.get("body");
+        assertEquals(1,idamResponseVal.size());
+
+        List<UserProfile> userprofileAfterSidamresponse = profileRepository.findAll();
+        assertEquals(2, userprofileAfterSidamresponse.size());
+        assertEquals("94772643-2c5f-4f84-8731-3dd7c25c9e11",
+                userprofileAfterSidamresponse.get(0).getObjectId());
+
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),audits.get(0).getPublishingStatus());
 
         // asserting SIDAM publishing
@@ -196,6 +227,26 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
         HashMap publishSidamIdsResponse = (LinkedHashMap)idamResponse.get("body");
 
         assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
+
+        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
+        assertThat(elinksException.size()).isEqualTo(0);
+
+    }
+
+    private void idamSetUp() {
+
+        final String clientId = "234342332";
+        final String redirectUri = "http://idam-api.aat.platform.hmcts.net";
+        //The authorization and clientAuth is the dummy value which we can evaluate using BASE64 encoder.
+        final String authorization = "ZHVtbXl2YWx1ZUBobWN0cy5uZXQ6SE1DVFMxMjM0";
+        final String clientAuth = "cmQteHl6LWFwaTp4eXo=";
+        final String url = "http://127.0.0.1:5000";
+        tokenConfigProperties.setClientId(clientId);
+        tokenConfigProperties.setClientAuthorization(clientAuth);
+        tokenConfigProperties.setAuthorization(authorization);
+        tokenConfigProperties.setRedirectUri(redirectUri);
+        tokenConfigProperties.setUrl(url);
+
     }
 
     private void cleanupData() {
