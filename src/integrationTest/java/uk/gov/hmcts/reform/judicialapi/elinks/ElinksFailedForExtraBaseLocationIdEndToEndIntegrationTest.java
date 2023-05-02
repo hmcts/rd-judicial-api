@@ -104,7 +104,7 @@ public class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends E
 
     @DisplayName("Elinks end to end success scenario")
     @Test
-    void test_elinks_end_to_end_success_scenario_with_return_status_200()
+    void test_elinks_end_to_end_partial_success_scenario()
             throws JOSEException, JsonProcessingException,IOException {
 
         ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled", true);
