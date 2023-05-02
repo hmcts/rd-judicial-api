@@ -105,8 +105,6 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                 loadJson("src/integrationTest/resources/wiremock_responses/people.json");
         String leaversResponseValidationJson =
                 loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
-        String idamResponseValidationJson =
-                loadJson("src/integrationTest/resources/wiremock_responses/users.json");
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
                 .willReturn(aResponse()
@@ -137,39 +135,15 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                         .withHeader("Connection", "close")
                         .withBody(leaversResponseValidationJson)));
 
+        String idamResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");
 
         sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withHeader("Connection", "close")
-                        .withBody("["
-                                + "    {"
-                                + "        \"id\": \"6455c84c-e77d-4c4f-9759-bf4a93a8e971\","
-                                + "        \"forename\": \"Service\","
-                                + "        \"surname\": \"Account\","
-                                + "        \"email\": \"tester@hmcts.net\","
-                                + "        \"active\": true,"
-                                + "        \"locked\": false,"
-                                + "        \"ssoId\": \"552da697-4b3d-4aed-9c22-1e903b70aead\","
-                                + "        \"roles\": ["
-                                + "            \"caseworker-privatelaw-systemupdate\","
-                                + "            \"caseworker-privatelaw\","
-                                + "            \"hearing-manager\","
-                                + "            \"hearing-viewer\","
-                                + "            \"jrd-admin\","
-                                + "            \"listed-hearing-viewer\","
-                                + "            \"idam-service-account\","
-                                + "            \"judge\","
-                                + "            \"caseworker\","
-                                + "            \"judiciary\","
-                                + "            \"jrd-system-user\","
-                                + "            \"caseworker-privatelaw-courtadmin\""
-                                + "        ],"
-                                + "        \"lastModified\": \"2023-01-17T13:15:36.435Z\","
-                                + "        \"createDate\": \"2022-12-02T11:54:55.212Z\""
-                                + "    }"
-                                + "]")
+                        .withBody(idamResponseValidationJson)
                         ));
 
         sidamService.stubFor(post(urlPathMatching("/o/token"))
