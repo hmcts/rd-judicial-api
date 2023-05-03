@@ -11,15 +11,6 @@
     </suppress>
 
     <suppress>
-        <notes>Temporary suppression for spring-boot-2.7.7.jar</notes>
-        <cve>CVE-2023-20873</cve>
-    </suppress>
-    <suppress>
-        <notes>Temporary suppression for CVE-2023-20862</notes>
-        <cve>CVE-2023-20862</cve>
-    </suppress>
-
-    <suppress>
         <notes><![CDATA[
    file name: launchdarkly-java-server-sdk-5.10.7.jar (shaded: org.yaml:snakeyaml:1.32)
    ]]></notes>
