@@ -37,3 +37,8 @@ variable "postgresql_version" {
   type    = string
   default = "11"
 }
+
+variable "vm_resource_group" {
+  type = string
+  default = "cft-preview-01-rg"
+}
