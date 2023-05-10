@@ -1,11 +1,9 @@
 package uk.gov.hmcts.reform.judicialapi.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Authorization;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,44 +28,39 @@ public class TestingSupportController {
     @Autowired
     IdamUserProfileService idamUserProfileService;
 
-    @Operation(
-            description = "This API create idam user profile for all the judicial user profiles.",
+    @ApiOperation(
+            value = "This API create idam user profile for all the judicial user profiles.",
 
-            security = {
-                    @SecurityRequirement(name = "ServiceAuthorization"),
-                    @SecurityRequirement(name = "Authorization")
+            authorizations = {
+                    @Authorization(value = "ServiceAuthorization"),
+                    @Authorization(value = "Authorization")
             }
     )
     @ApiResponses({
             @ApiResponse(
-                    responseCode = "200",
-                    description = "Create list of  idam user profiles for judicial user profiles",
-                    content = @Content(schema = @Schema(implementation = IdamUserProfileResponse.class))
+                    code = 200,
+                    message = "Create list of  idam user profiles for judicial user profiles",
+                    response = IdamUserProfileResponse.class
             ),
             @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request",
-                    content = @Content
+                    code = 400,
+                    message = "Bad Request"
             ),
             @ApiResponse(
-                    responseCode = "401",
-                    description = "User Authentication Failed",
-                    content = @Content
+                    code = 401,
+                    message = "User Authentication Failed"
             ),
             @ApiResponse(
-                    responseCode = "403",
-                    description = "Unauthorized",
-                    content = @Content
+                    code = 403,
+                    message = "Unauthorized"
             ),
             @ApiResponse(
-                    responseCode = "404",
-                    description = "No Users Found",
-                    content = @Content
+                    code = 404,
+                    message = "No Users Found"
             ),
             @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content
+                    code = 500,
+                    message = "Internal Server Error"
             )
     })
     @GetMapping(path = "/testing-support/sidam/actions/create-users",

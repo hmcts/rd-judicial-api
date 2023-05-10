@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.util.List;
@@ -16,9 +15,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
 
     Page<UserProfile> findBySidamIdIn(List<String> sidamIds, Pageable pageable);
 
-    @Query(value = "select distinct new uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse"
-                  + "(per.postNominals,per.knownAs,per.surname,per.fullName"
-                   + ",per.ejudiciaryEmailId,per.sidamId,per.personalCode) "
+    @Query(value = "select distinct per "
                    + "from judicial_user_profile per "
                    + "LEFT JOIN FETCH judicial_office_appointment appt "
                    + "on per.perId = appt.perId "
@@ -36,7 +33,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
                    + "or lower(per.surname) like %:searchString% "
                    + "or lower(per.fullName)  like %:searchString% "
                    + ")")
-    List<UserSearchResponse> findBySearchString(String searchString, String serviceCode, String locationCode,
+    List<UserProfile> findBySearchString(String searchString, String serviceCode, String locationCode,
                                          List<String> ticketCode, List<String> searchServiceCode);
 
     @Query(value = "select distinct per "

@@ -61,7 +61,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserProfile;
-import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserSearchResponse;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
 
 @ExtendWith(MockitoExtension.class)
@@ -136,9 +135,9 @@ class JudicialUserServiceImplTest {
                 .location("12456")
                 .searchString("Test")
                 .build();
-
-        var userSearchResponse = createUserSearchResponse();
-        var userSearchResponse1 = createUserSearchResponse();
+        var userProfile = createUserProfile();
+        var userProfile1 = createUserProfile();
+        userProfile1.setActiveFlag(false);
         var serviceCodeMapping = ServiceCodeMapping
                 .builder()
                 .ticketCode("testTicketCode")
@@ -149,7 +148,7 @@ class JudicialUserServiceImplTest {
         when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
                 userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode"),
                 searchServiceCode))
-                .thenReturn(List.of(userSearchResponse,userSearchResponse1));
+                .thenReturn(List.of(userProfile,userProfile1));
 
         var responseEntity =
                 judicialUserService.retrieveUserProfile(userSearchRequest);
@@ -166,9 +165,9 @@ class JudicialUserServiceImplTest {
                 .location("12456")
                 .searchString("Test")
                 .build();
-
-        var userSearchResponse = createUserSearchResponse();
-        var userSearchResponse1 = createUserSearchResponse();
+        var userProfile = createUserProfile();
+        var userProfile1 = createUserProfile();
+        userProfile1.setActiveFlag(false);
         var serviceCodeMapping = ServiceCodeMapping
                 .builder()
                 .ticketCode("testTicketCode")
@@ -179,7 +178,7 @@ class JudicialUserServiceImplTest {
         when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
                 userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode"),
                 searchServiceCode))
-                .thenReturn(List.of(userSearchResponse,userSearchResponse1));
+                .thenReturn(List.of(userProfile,userProfile1));
 
         var responseEntity =
                 judicialUserService.retrieveUserProfile(userSearchRequest);

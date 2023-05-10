@@ -1,0 +1,278 @@
+{
+    "results": [
+        {
+            "id": 1,
+            "name": "National",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z",
+            "region_desc_cy": "default"
+        },
+        {
+            "id": 2,
+            "name": "National England and Wales",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z",
+            "region_desc_cy": "default"
+        },
+        {
+            "id": 3,
+            "name": "Taylor House (London)",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 4,
+            "name": "Hatton Cross (London)",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 5,
+            "name": "Newport (Wales)",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 6,
+            "name": "Glasgow (Scotland and NI)",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 7,
+            "name": "Birmingham",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 8,
+            "name": "North Shields",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 9,
+            "name": "Stoke",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 10,
+            "name": "Manchester",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 11,
+            "name": "Bradford",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 12,
+            "name": "Nottingham",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 13,
+            "name": "Field House (London)",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 14,
+            "name": "London",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 15,
+            "name": "London Central",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 16,
+            "name": "London East",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 17,
+            "name": "London South",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 18,
+            "name": "South East",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 19,
+            "name": "South Eastern",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 20,
+            "name": "Midlands",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 21,
+            "name": "Midlands East",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 22,
+            "name": "Midlands West",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 23,
+            "name": "South West",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 24,
+            "name": "South Western",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 25,
+            "name": "North West",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 26,
+            "name": "North East",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 27,
+            "name": "Wales",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 28,
+            "name": "Scotland",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 29,
+            "name": "Northern",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 30,
+            "name": "Southern",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 31,
+            "name": "Eastern",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 32,
+            "name": "Yorkshire and Humberside",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 33,
+            "name": "Newcastle",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        },
+        {
+            "id": 34,
+            "name": "Bradford",
+            "start_date": null,
+            "end_date": null,
+            "created_at": "2022-10-03T15:28:19Z",
+            "updated_at": "2022-10-03T15:28:19Z"
+        }
+    ]
+}

@@ -1,3 +1,4 @@
+
 --Drop tables
 DROP TABLE dbjudicialdata.judicial_role_type;
 DROP TABLE dbjudicialdata.judicial_office_authorisation;

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.controller;
 
-import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
@@ -54,19 +53,6 @@ public class TestSupport {
         authorisation.setUserProfile(new UserProfile());
 
         return authorisation;
-    }
-
-    public static UserSearchResponse createUserSearchResponse() {
-        UserSearchResponse userSearchResponse = new UserSearchResponse();
-        userSearchResponse.setPersonalCode("personalCode");
-        userSearchResponse.setKnownAs("knownAs");
-        userSearchResponse.setSurname("surname");
-        userSearchResponse.setFullName("name");
-        userSearchResponse.setTitle("postNominals");
-        userSearchResponse.setEmailId("emailId");
-        userSearchResponse.setIdamId("sidamId");
-
-        return userSearchResponse;
     }
 
     public static UserProfile createUserProfile() {

@@ -40,7 +40,7 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void retrieveJudicialProfileBasedOnId(String role) {
-        mockJwtToken(role);
+
         userRequest = new UserRequest(Arrays.asList("44862987-4b00-e2e7-4ff8-281b87f16bf9"));
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, role, false);
@@ -53,7 +53,7 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn200WithValidParameters(String role) {
-        mockJwtToken(role);
+
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
@@ -66,7 +66,7 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_ValidParameters_ccdPageNumber(String role) {
-        mockJwtToken(role);
+
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(1, 1,
                 userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
@@ -80,7 +80,7 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn_200_ValidParameters_PageSize(String role) {
-        mockJwtToken(role);
+
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(2, 0,
                 userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
@@ -94,7 +94,7 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-admin"})
     void shouldReturn_200_ValidParameters_ResponseHeader(String role) {
-        mockJwtToken(role);
+
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
@@ -109,10 +109,9 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @DisplayName("Scenario-UnauthorisedUsers")
     @Test
     void shouldReturn403ForUnauthorisedUsers() {
-        mockJwtToken(INVALID_TEST_USER);
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
-                userRequest, INVALID_TEST_USER, false);
+                userRequest, "test-user-role", false);
         assertThat(response).containsEntry("http_status", "403");
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
@@ -120,10 +119,9 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @DisplayName("Scenario-InvalidTokens")
     @Test
     void shouldReturn401ForInvalidTokens() {
-        mockJwtToken(JRD_SYSTEM_USER);
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
-                userRequest, JRD_SYSTEM_USER, true);
+                userRequest, "jrd-system-user", true);
         assertThat(response).containsEntry("http_status", "401");
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
@@ -131,11 +129,10 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @DisplayName("Scenario-EmptyUserIds")
     @Test
     void shouldReturn400ForEmptyUserIds() {
-        mockJwtToken(JRD_SYSTEM_USER);
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         userRequest = new UserRequest();
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
-                userRequest, JRD_SYSTEM_USER, false);
+                userRequest, "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "400");
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
@@ -143,12 +140,11 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @DisplayName("Scenario-NoUsersFound")
     @Test
     void shouldReturn404WhenNoUsersFound() {
-        mockJwtToken(JRD_SYSTEM_USER);
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         userRequest = new UserRequest(Collections.singletonList(UUID.randomUUID().toString()));
 
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
-                userRequest, JRD_SYSTEM_USER, false);
+                userRequest, "jrd-system-user", false);
         assertThat(response).containsEntry("http_status", "404");
         JudicialReferenceDataClient.setBearerToken(EMPTY);
     }
@@ -157,13 +153,12 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @Test
     void shouldReturn403WhenLdFeatureDisabled() {
         Map<String, String> launchDarklyMap = new HashMap<>();
-        mockJwtToken(JRD_SYSTEM_USER);
         launchDarklyMap.put("JrdUsersController.fetchUsers", "test-jrd-flag");
         when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(false);
         when(featureToggleServiceImpl.getLaunchDarklyMap()).thenReturn(launchDarklyMap);
         Map<String, Object> errorResponseMap = judicialReferenceDataClient
                 .fetchJudicialProfilesById(10, 0,
-                        userRequest, JRD_SYSTEM_USER, false);
+                        userRequest, "jrd-system-user", false);
 
         assertThat(errorResponseMap).containsEntry("http_status", "403");
         assertThat((String) errorResponseMap.get("response_body"))

@@ -25,7 +25,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.reform.judicialapi.controller.JrdUsersController;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
@@ -112,21 +111,21 @@ public class JrdApiProviderTest {
 
     @State({"User profile details exist for the search request provided"})
     public void toReturnUserProfilesDetailsForTheGivenSearchRequest() {
-        var userSearchResponse = new UserSearchResponse();
-        userSearchResponse.setIdamId("44362987-4b00-f2e7-4ff8-761b87f16bf9");
-        userSearchResponse.setFullName("testFullName");
-        userSearchResponse.setKnownAs("testKnownAs");
-        userSearchResponse.setSurname("surname");
-        userSearchResponse.setEmailId("test@test.com");
-        userSearchResponse.setTitle("Dr");
-        userSearchResponse.setPersonalCode("1234");
+        var userProfile = new UserProfile();
+        userProfile.setSidamId("44362987-4b00-f2e7-4ff8-761b87f16bf9");
+        userProfile.setFullName("testFullName");
+        userProfile.setKnownAs("testKnownAs");
+        userProfile.setSurname("surname");
+        userProfile.setEjudiciaryEmailId("test@test.com");
+        userProfile.setPostNominals("Dr");
+        userProfile.setPersonalCode("1234");
 
         var serviceCodeMapping = ServiceCodeMapping
                 .builder()
                 .ticketCode("testTicketCode")
                 .build();
 
-        var userProfiles = List.of(userSearchResponse);
+        var userProfiles = List.of(userProfile);
 
         when(serviceCodeMappingRepository.findByServiceCodeIgnoreCase(any())).thenReturn(List.of(serviceCodeMapping));
         when(userProfileRepository.findBySearchString(any(),any(),any(), anyList(), anyList()))
