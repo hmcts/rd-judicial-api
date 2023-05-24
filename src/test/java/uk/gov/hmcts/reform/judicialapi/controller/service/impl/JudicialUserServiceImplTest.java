@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -128,41 +130,12 @@ class JudicialUserServiceImplTest {
             () -> judicialUserService.fetchJudicialUsers(10,0, sidamIds));
     }
 
-    @Test
-    void shouldReturn200WhenUserFoundForTheSearchRequestProvided() {
+    @ParameterizedTest
+    @ValueSource(strings = {"BFA1","BBA3"})
+    void shouldReturn200WhenUserFoundForTheServiceSearchRequestProvided(String serviceCode) {
         var userSearchRequest = UserSearchRequest
                 .builder()
-                .serviceCode("BFA1")
-                .location("12456")
-                .searchString("Test")
-                .build();
-
-        var userSearchResponse = createUserSearchResponse();
-        var userSearchResponse1 = createUserSearchResponse();
-        var serviceCodeMapping = ServiceCodeMapping
-                .builder()
-                .ticketCode("testTicketCode")
-                .build();
-
-        when(serviceCodeMappingRepository.findByServiceCodeIgnoreCase(userSearchRequest.getServiceCode()))
-                .thenReturn(List.of(serviceCodeMapping));
-        when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
-                userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode"),
-                searchServiceCode))
-                .thenReturn(List.of(userSearchResponse,userSearchResponse1));
-
-        var responseEntity =
-                judicialUserService.retrieveUserProfile(userSearchRequest);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        verify(userProfileRepository, times(1)).findBySearchString(any(),any(),
-                any(), anyList(),anyList());
-    }
-
-    @Test
-    void shouldReturn200WhenUserFoundForSscsSearchRequestProvided() {
-        var userSearchRequest = UserSearchRequest
-                .builder()
-                .serviceCode("BBA3")
+                .serviceCode(serviceCode)
                 .location("12456")
                 .searchString("Test")
                 .build();

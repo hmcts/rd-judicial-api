@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
@@ -112,8 +113,12 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
 
     @DisplayName("AC6 - Scenario: Full list of Judicial user details is sorted based on the sort_column")
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
-    void shouldReturn_200_ValidParameters_sorted(String role) {
+    @CsvSource({
+        "jrd-system-user,ASC",
+        "jrd-admin,ASC",
+        "jrd-admin,DESC"
+    })
+    void shouldReturn_200_ValidParameters_sorted(String role,String sortDirection) {
         mockJwtToken(role);
         refreshRoleRequest = RefreshRoleRequest.builder()
                 .ccdServiceNames("")
@@ -122,27 +127,7 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
                 .build();
         // sort rows in ascending order
         var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,3,
-                0,"ASC", "objectId", role, false);
-        assertThat(response).containsEntry("http_status", "200 OK");
-
-        var userProfileList = (List<?>) response.get("body");
-        assertThat(userProfileList).hasSize(3);
-
-    }
-
-    @DisplayName("AC7 - Scenario: Full list of Judicial user is sorted based on the descending order")
-    @ParameterizedTest
-    @ValueSource(strings = {"jrd-admin"})
-    void sortedDescendingOrder(String role) {
-        mockJwtToken(role);
-        refreshRoleRequest = RefreshRoleRequest.builder()
-                .ccdServiceNames("")
-                .sidamIds(Collections.emptyList())
-                .objectIds(Arrays.asList("1111122223333"))
-                .build();
-        // sort rows in descending order
-        var response = judicialReferenceDataClient.refreshUserProfile(refreshRoleRequest,20,
-                0,"DESC", "objectId", role, false);
+                0,sortDirection, "objectId", role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
 
         var userProfileList = (List<?>) response.get("body");
