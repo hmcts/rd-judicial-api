@@ -44,6 +44,7 @@ import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ import javax.validation.constraints.NotNull;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
@@ -439,6 +442,7 @@ class JudicialUserServiceImplTest {
 
 
     @Test
+    @SuppressWarnings("unchecked")
     void test_refreshUserProfile_BasedOnPersonalCodes_200() {
         var userProfile = buildUserProfileIac();
 
@@ -465,12 +469,23 @@ class JudicialUserServiceImplTest {
                 null, null, Arrays.asList("Emp", "Emp", null));
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
-
+        List<uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse>
+            userProfileRefreshResponses = (List<uk.gov.hmcts.reform.judicialapi.controller
+            .response.UserProfileRefreshResponse>) responseEntity.getBody();
         assertEquals(200, responseEntity.getStatusCodeValue());
+        assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getStartDate());
+        assertNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getEndDate());
+        assertNotNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getStartDate());
+        assertNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getEndDate());
+        assertNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getCftRegionID());
+        assertNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getCftRegion());
+        assertNotNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getServiceCodes().get(0));
+        assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getEpimmsId());
+
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnPersonalCodes_400()  {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 null, null, Arrays.asList("Emp", "Emp", null));
@@ -499,7 +514,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnCcdServiceNames_200() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnCcdServiceNames_200() throws IOException {
         var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
         lrdOrgInfoServiceResponse.setServiceCode("BFA1");
         lrdOrgInfoServiceResponse.setCcdServiceName("cmc");
