@@ -44,7 +44,6 @@ import uk.gov.hmcts.reform.judicialapi.service.impl.JudicialUserServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
