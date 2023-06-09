@@ -485,7 +485,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_400()  {
+    void test_refreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException  {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 null, null, Arrays.asList("Emp", "Emp", null));
@@ -514,7 +514,7 @@ class JudicialUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnCcdServiceNames_200() throws IOException {
+    void test_refreshUserProfile_BasedOnCcdServiceNames_200() throws JsonProcessingException {
         var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
         lrdOrgInfoServiceResponse.setServiceCode("BFA1");
         lrdOrgInfoServiceResponse.setCcdServiceName("cmc");
