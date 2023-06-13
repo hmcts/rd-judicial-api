@@ -1,9 +1,19 @@
 # rd-judicial-api
-Judicial reference data service 
+Judicial reference data service (JRD)
 
 ## Purpose
 
 Provides Judicial data to Judicial Office, implemented as a Java/SpringBoot application.
+
+Judicial Reference Data stores information such as Judicial Office Holder profiles, their authorisation, appointments and roles.
+JRD also consists of a set of REST endpoints that are used to get and search a specific set of user profiles which can be used by other reform components to assign a case to a judge.
+
+For more information about JRD, Please see the Confluence 
+https://tools.hmcts.net/confluence/display/RTRD/Reference+Data+Overview#ReferenceDataOverview-JudicialReferenceData(JRD)JudicialReferenceData(JRD)
+
+For Business/Service Requests please see confluence page
+https://tools.hmcts.net/confluence/display/RTRD/Judicial+Reference+Data
+
 
 ### Prerequisites
 
@@ -30,6 +40,10 @@ If running locally for development or testing you will need to set the following
 
 ### Running the application
 
+Please Make sure you are connected to the VPN before running application
+(https://portal.platform.hmcts.net/vdesk/webtop.eui?webtop=/Common/webtop_full&webtop_type=webtop_full)
+
+
 To run the API quickly use the docker helper script as follows:
 
 ```
@@ -42,7 +56,7 @@ docker-compose up
 ```
 
 
-Alternatively, you can start the application from the current source files using Gradle as follows:
+After, you can start the application from the current source files using Gradle as follows:
 
 ```
 ./gradlew clean bootRun
@@ -66,6 +80,12 @@ If the API is running, you should see this response:
 
 ```
 {"status":"UP"}
+```
+
+If the Application is running, you can see API's in swagger :
+
+```
+http://localhost:8091/swagger-ui.html
 ```
 
 ### DB Initialisation˙
