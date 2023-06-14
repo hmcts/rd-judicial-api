@@ -73,7 +73,7 @@ If required, to run with a low memory consumption, the following can be used:
 To understand if the application is working, you can call it's health endpoint:
 
 ```
-curl http://localhost:8091/health
+curl http://localhost:8093/health
 ```
 
 If the API is running, you should see this response:
@@ -85,7 +85,7 @@ If the API is running, you should see this response:
 If the Application is running, you can see API's in swagger :
 
 ```
-http://localhost:8091/swagger-ui.html
+http://localhost:8093/swagger-ui.html
 ```
 
 ### DB Initialisation˙
@@ -145,7 +145,7 @@ http://pitest.org/
 To test in Postman the easiest way is to start this service using the ./bin/run-in-docker.sh script.  The in postman paste the following script:
 
 ```
-pm.sendRequest('http://127.0.0.1:8089/token', function (err, res) {
+pm.sendRequest('http://127.0.0.1:8093/token', function (err, res) {
     if (err) {
         console.log(err);
     } else {
