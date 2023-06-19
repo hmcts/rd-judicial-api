@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
@@ -46,6 +47,9 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private AuthorisationsRepository authorisationsRepository;
 
     @Autowired
     private BaseLocationRepository baseLocationRepository;
@@ -720,6 +724,7 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
+        authorisationsRepository.deleteAll();
         appointmentsRepository.deleteAll();
         baseLocationRepository.deleteAll();
     }

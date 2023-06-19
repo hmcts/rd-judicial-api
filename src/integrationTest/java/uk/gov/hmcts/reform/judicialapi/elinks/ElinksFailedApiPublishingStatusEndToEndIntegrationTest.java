@@ -244,9 +244,9 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         elinkSchedularAuditRepository.deleteAll();
         elinkDataExceptionRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
+        authorisationsRepository.deleteAll();
         appointmentsRepository.deleteAll();
         baseLocationRepository.deleteAll();
-        authorisationsRepository.deleteAll();
         profileRepository.deleteAll();
 
     }

@@ -67,4 +67,8 @@ public class Authorisation implements Serializable {
     @Size(max = 16)
     private String ticketCode;
 
+    @Column(name = "appointment_id")
+    @Size(max = 32)
+    private String appointmentId;
+
 }

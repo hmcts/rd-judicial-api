@@ -7,9 +7,9 @@ java:
     POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     JUDICIAL_DB: classpath:db/migration
-    JRD_MQ_HOST: "$(JRD_MQ_HOST).servicebus.windows.net"
+    JRD_MQ_HOST: "rd-sb-preview.servicebus.windows.net"
     JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
-    JRD_MQ_TOPIC_NAME: jrdapi-aks-topic
+    JRD_MQ_TOPIC_NAME: "{{ .Release.Name }}-servicebus-jrdapi-topic"
     JRD_MQ_USERNAME: SendAndListenSharedAccessKey
     JRD_MQ_TRUST_ALL_CERTS: false
     JRD_DATA_PER_MESSAGE: 50
@@ -45,17 +45,15 @@ java:
           alias: RD_SENDGRID_API_KEY
   secrets:
     JRD_MQ_PASSWORD:
-      secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
+      secretRef: rd-sb-preview
       key: primaryKey
-    JRD_MQ_HOST:
-      secretRef: servicebus-secret-namespace-{{ .Release.Name }}-servicebus
-      key: namespaceName
+
 servicebus:
   enabled: true
   teamName: RD
-  resourceGroup: rd-aks
-  serviceplan: standard
+  resourceGroup: rd-aso-preview-rg
+  sbNamespace: rd
   setup:
     topics:
-      - name: jrdapi-aks-topic
+      - name: jrdapi-topic
         subscriptionNeeded: yes

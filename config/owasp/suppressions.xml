@@ -57,6 +57,7 @@
         <cve>CVE-2021-22044</cve>
     </suppress>
 
+
     <suppress>
         <cve>CVE-2022-45688</cve>
         <cve>CVE-2023-24998</cve>
@@ -65,6 +66,8 @@
         <cve>CVE-2023-20860</cve>
         <cve>CVE-2023-28708</cve>
         <cve>CVE-2023-20863</cve>
+        <cve>CVE-2023-28709</cve>
+        <cve>CVE-2023-20883</cve>
     </suppress>
     
 </suppressions>
