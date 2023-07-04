@@ -1,5 +1,4 @@
 --Alter dbjudicialdata.judicial_user_profile
-
 ALTER TABLE dbjudicialdata.judicial_user_profile ALTER COLUMN post_nominals type VARCHAR(256);
 ALTER TABLE dbjudicialdata.judicial_user_profile DROP COLUMN leaving_on;
 

@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-
 @Slf4j
 public final class JwtTokenUtil {
 
@@ -28,6 +27,7 @@ public final class JwtTokenUtil {
 
     /**
      * Generate JWT Signed Token.
+     *
      * @param issuer    Issuer
      * @param ttlMillis Time to live
      * @return String
@@ -39,7 +39,6 @@ public final class JwtTokenUtil {
                 .subject(role + " " + userId)
                 .issueTime(new Date())
                 .issuer(issuer)
-                .audience(role)
                 .claim("tokenName", "access_token");
 
         if (ttlMillis >= 0) {

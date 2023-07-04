@@ -75,13 +75,18 @@ security:
     - "/actuator/**"
     - "/loggers/**"
     - "/swagger-ui.html"
+    - "/swagger-ui/swagger-ui.html"
     - "/swagger-resources/**"
-    - "/v2/api-docs"
+    - "/v3/api-docs"
     - "/webjars/springfox-swagger-ui/**"
     - "/csrf"
     - "/error"
     - "/favicon.ico"
-    - "/refdata/internal/elink/**"
+    - "/swagger-ui/**"
+    - "/v3/**"
+    - "/status/health"
+    - "/actuator/**"
+
 idam:
   s2s-auth:
     totp_secret: ${JUDICIAL_API_S2S_SECRET:}

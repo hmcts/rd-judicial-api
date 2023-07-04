@@ -5,10 +5,12 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
+import uk.gov.hmcts.reform.judicialapi.util.JudicialReferenceDataClient;
 
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,6 +21,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchString(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .build();
@@ -26,9 +29,9 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(3, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("test529@test.net", profiles.get(1).get("emailId"));
-        assertEquals("test530@test.net", profiles.get(2).get("emailId"));
+        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
+        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
+        assertEquals("test529@test.net", profiles.get(2).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
@@ -36,6 +39,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @CsvSource({ "jrd-system-user,20013","jrd-system-user,200134","jrd-admin,20013","jrd-admin,200136"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCodeAndLocation(String role,
                                                                                               String location) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location(location)
@@ -52,6 +56,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
     void shouldReturn200AndIgnoreLocationWhenServiceCodeIsBfa1(String role, String location) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location(location)
@@ -61,14 +66,15 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(2, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("test530@test.net", profiles.get(1).get("emailId"));
+        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
+        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
     
     @ParameterizedTest
     @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
     void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAaa6(String role, String location) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
             .searchString("test")
             .location(location)
@@ -85,6 +91,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
     void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAaa7(String role, String location) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
             .searchString("test")
             .location(location)
@@ -101,6 +108,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
     void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAba5(String role, String location) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
             .searchString("test")
             .location(location)
@@ -117,6 +125,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
     void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAba3(String role, String location) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
             .searchString("test")
             .location(location)
@@ -133,6 +142,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndLocation(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location("20012")
@@ -148,6 +158,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCode(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .serviceCode("BFA1")
@@ -156,14 +167,16 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(2, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("test530@test.net", profiles.get(1).get("emailId"));
+        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
+        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn401ForInvalidTokens(String role) {
+        mockJwtToken(role);
+        JudicialReferenceDataClient.setBearerToken(EMPTY);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location("location")
@@ -177,6 +190,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringIsEmpty(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("")
                 .location("location")
@@ -192,6 +206,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringDoesNotContainRequiredLength(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("te")
                 .location("location")
@@ -208,6 +223,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringContainsOtherThanLetters(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test123")
                 .location("location")
@@ -224,6 +240,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchStringWithEmptyAdditionalBoolean(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .build();
@@ -231,12 +248,12 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 userSearchRequest, role, false);
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(3, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("test529@test.net", profiles.get(1).get("emailId"));
-        assertEquals("test530@test.net", profiles.get(2).get("emailId"));
-        assertEquals("27", profiles.get(0).get("personalCode"));
-        assertEquals("28", profiles.get(1).get("personalCode"));
-        assertEquals("29", profiles.get(2).get("personalCode"));
+        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
+        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
+        assertEquals("test529@test.net", profiles.get(2).get("emailId"));
+        assertEquals("29", profiles.get(0).get("personalCode"));
+        assertEquals("27", profiles.get(1).get("personalCode"));
+        assertEquals("28", profiles.get(2).get("personalCode"));
 
         assertThat(response).containsEntry("http_status", "200 OK");
     }
@@ -244,6 +261,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchStringWithEmptyAdditionalBoolean02(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("sample")
                 .build();
@@ -267,6 +285,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileApostropheString(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("Am'")
                 .build();
@@ -282,6 +301,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileApostropheStrings(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("O'j")
                 .build();
@@ -297,6 +317,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileHyphenString(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("Li-a")
                 .build();
@@ -312,6 +333,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileHyphenStrings(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("V-e")
                 .build();
@@ -327,6 +349,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileEmptySpace(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("J Ro")
                 .build();
@@ -342,6 +365,7 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileEmptySpaces(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("To N")
                 .build();

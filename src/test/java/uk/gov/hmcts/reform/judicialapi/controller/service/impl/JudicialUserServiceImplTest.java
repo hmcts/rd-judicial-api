@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -53,6 +55,8 @@ import javax.validation.constraints.NotNull;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.any;
@@ -61,6 +65,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserProfile;
+import static uk.gov.hmcts.reform.judicialapi.controller.TestSupport.createUserSearchResponse;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
 
 @ExtendWith(MockitoExtension.class)
@@ -127,17 +132,18 @@ class JudicialUserServiceImplTest {
             () -> judicialUserService.fetchJudicialUsers(10,0, sidamIds));
     }
 
-    @Test
-    void shouldReturn200WhenUserFoundForTheSearchRequestProvided() {
+    @ParameterizedTest
+    @ValueSource(strings = {"BFA1","BBA3"})
+    void shouldReturn200WhenUserFoundForTheServiceSearchRequestProvided(String serviceCode) {
         var userSearchRequest = UserSearchRequest
                 .builder()
-                .serviceCode("BFA1")
+                .serviceCode(serviceCode)
                 .location("12456")
                 .searchString("Test")
                 .build();
-        var userProfile = createUserProfile();
-        var userProfile1 = createUserProfile();
-        userProfile1.setActiveFlag(false);
+
+        var userSearchResponse = createUserSearchResponse();
+        var userSearchResponse1 = createUserSearchResponse();
         var serviceCodeMapping = ServiceCodeMapping
                 .builder()
                 .ticketCode("testTicketCode")
@@ -148,37 +154,7 @@ class JudicialUserServiceImplTest {
         when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
                 userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode"),
                 searchServiceCode))
-                .thenReturn(List.of(userProfile,userProfile1));
-
-        var responseEntity =
-                judicialUserService.retrieveUserProfile(userSearchRequest);
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        verify(userProfileRepository, times(1)).findBySearchString(any(),any(),
-                any(), anyList(),anyList());
-    }
-
-    @Test
-    void shouldReturn200WhenUserFoundForSscsSearchRequestProvided() {
-        var userSearchRequest = UserSearchRequest
-                .builder()
-                .serviceCode("BBA3")
-                .location("12456")
-                .searchString("Test")
-                .build();
-        var userProfile = createUserProfile();
-        var userProfile1 = createUserProfile();
-        userProfile1.setActiveFlag(false);
-        var serviceCodeMapping = ServiceCodeMapping
-                .builder()
-                .ticketCode("testTicketCode")
-                .build();
-
-        when(serviceCodeMappingRepository.findByServiceCodeIgnoreCase(userSearchRequest.getServiceCode()))
-                .thenReturn(List.of(serviceCodeMapping));
-        when(userProfileRepository.findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
-                userSearchRequest.getServiceCode(),userSearchRequest.getLocation(),List.of("testTicketCode"),
-                searchServiceCode))
-                .thenReturn(List.of(userProfile,userProfile1));
+                .thenReturn(List.of(userSearchResponse,userSearchResponse1));
 
         var responseEntity =
                 judicialUserService.retrieveUserProfile(userSearchRequest);
@@ -465,6 +441,7 @@ class JudicialUserServiceImplTest {
 
 
     @Test
+    @SuppressWarnings("unchecked")
     void test_refreshUserProfile_BasedOnPersonalCodes_200() {
         var userProfile = buildUserProfileIac();
 
@@ -491,12 +468,23 @@ class JudicialUserServiceImplTest {
                 null, null, Arrays.asList("Emp", "Emp", null));
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
-
+        List<uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse>
+            userProfileRefreshResponses = (List<uk.gov.hmcts.reform.judicialapi.controller
+            .response.UserProfileRefreshResponse>) responseEntity.getBody();
         assertEquals(200, responseEntity.getStatusCodeValue());
+        assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getStartDate());
+        assertNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getEndDate());
+        assertNotNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getStartDate());
+        assertNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getEndDate());
+        assertNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getCftRegionID());
+        assertNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getCftRegion());
+        assertNotNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getServiceCodes().get(0));
+        assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getEpimmsId());
+
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException {
+    void test_refreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException  {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 null, null, Arrays.asList("Emp", "Emp", null));
