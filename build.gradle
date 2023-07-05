@@ -33,7 +33,7 @@ def versions = [
         springBoot         : '2.7.12',
         restAssured        : '4.3.3',
         jackson            : '2.14.0-rc1',
-        launchDarklySdk    : '5.10.7',
+        launchDarklySdk    : '5.10.9',
         pact_version       : '4.1.7',
         log4j              : '2.18.0',
         springVersion      : '5.3.27',
@@ -357,7 +357,7 @@ dependencies {
     implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
     implementation "com.github.hmcts.java-logging:logging-appinsights:5.1.9"
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.0.1'
-    implementation group: 'com.google.guava', name: 'guava', version: '31.0.1-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '32.1.1-jre'
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
 
