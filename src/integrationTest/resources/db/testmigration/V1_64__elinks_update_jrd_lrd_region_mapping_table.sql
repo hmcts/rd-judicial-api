@@ -37,7 +37,12 @@ INSERT INTO dbjudicialdata.jrd_lrd_region_mapping (jrd_region_id,jrd_region,regi
 	 ('26','North East','3','North East'),
 	 ('27','Wales','7','Wales'),
 	 ('28','Scotland','11','Scotland'),
-	 ('32','Yorkshire and the Humber','3','North East'),
+	 ('32','Yorkshire and Humberside','3','North East'),
 	 ('33','Newcastle','3','North East');
 INSERT INTO dbjudicialdata.jrd_lrd_region_mapping (jrd_region_id,jrd_region,region_id,region) VALUES
 	 ('35','EAT - Rolls Building','1','London');
+
+
+-- update row script : dbjudicialdata.jrd_lrd_region_mapping
+
+UPDATE dbjudicialdata.jrd_lrd_region_mapping  SET jrd_region  = 'Yorkshire and the Humber' WHERE jrd_region_id  = '32';
