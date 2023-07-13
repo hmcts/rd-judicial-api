@@ -62,9 +62,9 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(6, baseLocationList.size());
+        assertEquals(7, baseLocationList.size());
         assertEquals("Aberconwy",baseLocationList.get(0).getCourtName());
-        assertEquals("1",baseLocationList.get(0).getBaseLocationId());
+        assertEquals("1029",baseLocationList.get(0).getBaseLocationId());
         assertEquals("Old Gwynedd",baseLocationList.get(0).getCourtType());
     }
 
@@ -79,11 +79,11 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(6, baseLocationList.size());
+        assertEquals(7, baseLocationList.size());
 
-        assertEquals("Prestatyn Civil and Family Justice Centre",baseLocationList.get(3).getCourtName());
-        assertEquals("1192",baseLocationList.get(3).getBaseLocationId());
-        assertEquals("County Court",baseLocationList.get(3).getCourtType());
+        assertEquals("Prestatyn Civil and Family Justice Centre",baseLocationList.get(4).getCourtName());
+        assertEquals("1192",baseLocationList.get(4).getBaseLocationId());
+        assertEquals("County Court",baseLocationList.get(4).getCourtType());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 

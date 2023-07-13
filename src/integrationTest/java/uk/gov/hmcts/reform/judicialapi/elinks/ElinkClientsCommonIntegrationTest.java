@@ -10,12 +10,14 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigPrope
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,9 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private ElinkDataExceptionRepository elinkDataExceptionRepository;
+
+    @Autowired
+    private AppointmentsRepository appointmentsRepository;
 
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
@@ -482,7 +487,7 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
             .willReturn(aResponse()
                 .withStatus(400)
-                .withHeader("Content-Type", "application/json")
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
                 .withHeader("Connection", "close")
                 .withBody("{"
                     + " }")));
@@ -491,7 +496,6 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(baseLocationResponse).containsEntry("http_status", "400");
         String baseLocations = baseLocationResponse.get("response_body").toString();
         assertTrue(baseLocations.contains("Syntax error or Bad request"));
-
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
         assertEquals(0, baseLocationList.size());
@@ -716,6 +720,8 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        baseLocationRepository.deleteAll();
     }
 
 }

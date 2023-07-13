@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +18,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperR
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -53,7 +55,8 @@ public class ElinksReferenceDataClient {
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity;
         HttpEntity<?> request =
-                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null));
+                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null,
+                    MediaType.valueOf(V2.MediaType.SERVICE)));
 
         try {
 
@@ -76,7 +79,8 @@ public class ElinksReferenceDataClient {
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity;
         HttpEntity<?> request =
-                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null));
+                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null,
+                    MediaType.valueOf(V2.MediaType.SERVICE)));
 
         try {
 
@@ -99,7 +103,8 @@ public class ElinksReferenceDataClient {
 
         ResponseEntity<ElinkLocationWrapperResponse> responseEntity;
         HttpEntity<?> request =
-            new HttpEntity<>(getMultipleAuthHeaders("jrd-system-user", null));
+            new HttpEntity<>(getMultipleAuthHeaders("jrd-system-user", null,
+                MediaType.valueOf(V2.MediaType.SERVICE)));
 
         try {
 
@@ -123,7 +128,8 @@ public class ElinksReferenceDataClient {
 
         ResponseEntity<ElinkLeaversWrapperResponse> responseEntity;
         HttpEntity<?> request =
-                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null));
+                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null,
+                    MediaType.valueOf(V2.MediaType.SERVICE)));
 
         try {
 
@@ -144,7 +150,8 @@ public class ElinksReferenceDataClient {
 
         ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity;
         HttpEntity<?> request =
-            new HttpEntity<>(getMultipleAuthHeaders("jrd-system-user", null));
+            new HttpEntity<>(getMultipleAuthHeaders("jrd-system-user", null,
+                MediaType.valueOf(V2.MediaType.SERVICE)));
 
         try {
 
@@ -168,7 +175,8 @@ public class ElinksReferenceDataClient {
 
         ResponseEntity<Object> responseEntity = null;
         HttpEntity<?> request =
-                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null));
+                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null,
+                    MediaType.valueOf(V2.MediaType.SERVICE)));
         try {
             responseEntity = restTemplate.exchange(
                     baseUrl + "/idam/elastic/search", HttpMethod.GET, request, Object.class);
@@ -188,7 +196,8 @@ public class ElinksReferenceDataClient {
 
         ResponseEntity<Object> responseEntity = null;
         HttpEntity<?> request =
-                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null));
+                new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null,
+                    MediaType.valueOf(V2.MediaType.SERVICE)));
         try {
             responseEntity = restTemplate.exchange(
                     baseUrl + "/sidam/asb/publish", HttpMethod.GET, request, Object.class);
@@ -213,9 +222,9 @@ public class ElinksReferenceDataClient {
     }
 
     @NotNull
-    private HttpHeaders getMultipleAuthHeaders(String role, String userId) {
+    private HttpHeaders getMultipleAuthHeaders(String role, String userId, MediaType value) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(APPLICATION_JSON);
+        headers.setContentType(value);
         if (StringUtils.isBlank(JWT_TOKEN)) {
 
             JWT_TOKEN = generateS2SToken(serviceName);

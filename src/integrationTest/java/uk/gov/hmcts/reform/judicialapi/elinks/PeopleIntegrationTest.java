@@ -73,18 +73,18 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofile = profileRepository.findAll();
 
         assertEquals(2, userprofile.size());
-        assertEquals("410540", userprofile.get(0).getPersonalCode());
-        assertEquals("Yuriko", userprofile.get(0).getKnownAs());
-        assertEquals("Koiko", userprofile.get(0).getSurname());
-        assertEquals("Her Honour Judge Yuriko Koiko", userprofile.get(0).getFullName());
-        assertEquals(null, userprofile.get(0).getPostNominals());
+        assertEquals("410540", userprofile.get(1).getPersonalCode());
+        assertEquals("Yuriko", userprofile.get(1).getKnownAs());
+        assertEquals("Koiko", userprofile.get(1).getSurname());
+        assertEquals("Her Honour Judge Yuriko Koiko", userprofile.get(1).getFullName());
+        assertEquals(null, userprofile.get(1).getPostNominals());
         assertEquals("HHJ.Yuriko.Koiko@judiciarystaging13232.onmicrosoft.com",
-                userprofile.get(0).getEjudiciaryEmailId());
-        assertNull(userprofile.get(0).getLastWorkingDate());
-        assertEquals("94772643-2c5f-4f84-8731-3dd7c25c9e11", userprofile.get(0).getObjectId());
-        assertEquals("B.K",userprofile.get(0).getInitials());
+                userprofile.get(1).getEjudiciaryEmailId());
+        assertNull(userprofile.get(1).getLastWorkingDate());
+        assertEquals("94772643-2c5f-4f84-8731-3dd7c25c9e11", userprofile.get(1).getObjectId());
+        assertEquals("B.K",userprofile.get(1).getInitials());
 
-        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(1).getObjectId());
+        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(0).getObjectId());
 
     }
 
@@ -144,6 +144,9 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
+        authorisationsRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        profileRepository.deleteAll();
     }
 
 }

@@ -23,6 +23,7 @@ import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.judicialapi.configuration.RestTemplateConfiguration;
 import uk.gov.hmcts.reform.judicialapi.service.impl.FeatureToggleServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.util.SpringBootIntegrationTest;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 
 import java.io.IOException;
@@ -109,14 +110,14 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
                         .withHeader("Connection", "close")
                         .withBody(locationResponseValidationJson)));
 
         elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
                         .withHeader("Connection", "close")
                         .withBody(baselocationResponseValidationJson)
                         .withTransformers("user-token-response")));
@@ -124,14 +125,14 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
         elinks.stubFor(get(urlPathMatching("/people"))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
                         .withHeader("Connection", "close")
                         .withBody(peopleResponseValidationJson)));
 
         elinks.stubFor(get(urlPathMatching("/leavers"))
                 .willReturn(aResponse()
                         .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
                         .withHeader("Connection", "close")
                         .withBody(leaversResponseValidationJson)));
 

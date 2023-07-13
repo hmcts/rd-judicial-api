@@ -66,8 +66,8 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         List<Location> locationsList = locationRepository.findAll();
 
         assertEquals(35, locationsList.size());
-        assertEquals("1", locationsList.get(1).getRegionId());
-        assertEquals("National", locationsList.get(1).getRegionDescEn());
+        assertEquals("2", locationsList.get(1).getRegionId());
+        assertEquals("National England and Wales", locationsList.get(1).getRegionDescEn());
     }
 
     @DisplayName("Elinks  Location to JRD Audit Functionality verification")
@@ -81,8 +81,8 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         List<Location> locationsList = locationRepository.findAll();
 
         assertEquals(35, locationsList.size());
-        assertEquals("2", locationsList.get(2).getRegionId());
-        assertEquals("National England and Wales", locationsList.get(2).getRegionDescEn());
+        assertEquals("2", locationsList.get(1).getRegionId());
+        assertEquals("National England and Wales", locationsList.get(1).getRegionDescEn());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 

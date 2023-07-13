@@ -20,8 +20,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.service.ELinksService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IdamElasticSearchService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.FORBIDDEN_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.INTERNAL_SERVER_ERROR;
@@ -83,7 +83,7 @@ public class ElinksController {
             )
     })
     @GetMapping (path = "/reference_data/location",
-            produces = APPLICATION_JSON_VALUE)
+            produces =V2.MediaType.SERVICE)
     public ResponseEntity<ElinkLocationWrapperResponse> loadLocation(){
 
 
@@ -123,7 +123,7 @@ public class ElinksController {
             )
     })
     @GetMapping(  path = "/reference_data/base_location",
-            produces = APPLICATION_JSON_VALUE)
+            produces = V2.MediaType.SERVICE)
     public ResponseEntity<ElinkBaseLocationWrapperResponse> loadBaseLocationType() {
 
         return eLinksService.retrieveBaseLocation();
@@ -154,7 +154,7 @@ public class ElinksController {
             )
     })
     @GetMapping (path = "/people",
-            produces = APPLICATION_JSON_VALUE)
+        produces = V2.MediaType.SERVICE)
     @ResponseBody
     public ResponseEntity<ElinkPeopleWrapperResponse> loadPeople() {
 
@@ -186,7 +186,7 @@ public class ElinksController {
             )
     })
     @GetMapping (path = "/idam/elastic/search",
-            produces = APPLICATION_JSON_VALUE)
+        produces = V2.MediaType.SERVICE)
     public ResponseEntity<Object> idamElasticSearch() {
 
         ResponseEntity<Object> response =  idamElasticSearchService.getIdamElasticSearchSyncFeed();
@@ -226,7 +226,7 @@ public class ElinksController {
             )
     })
     @GetMapping (path = "/leavers",
-            produces = APPLICATION_JSON_VALUE)
+        produces = V2.MediaType.SERVICE)
     public ResponseEntity<ElinkLeaversWrapperResponse> loadLeavers(){
         return eLinksService.retrieveLeavers();
     }
@@ -263,7 +263,7 @@ public class ElinksController {
         )
     })
     @GetMapping(path = "/sidam/asb/publish",
-        produces = APPLICATION_JSON_VALUE)
+        produces = V2.MediaType.SERVICE)
     public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() {
         return publishSidamIdService.publishSidamIdToAsb();
     }

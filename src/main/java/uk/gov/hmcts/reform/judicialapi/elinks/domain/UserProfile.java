@@ -75,5 +75,7 @@ public class UserProfile implements Serializable {
     @Size(max = 64)
     private String initials;
 
-    
+    @Column(name = "title")
+    @Size(max = 64)
+    private String title;
 }

@@ -18,6 +18,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
@@ -69,7 +71,10 @@ public class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends E
     ProfileRepository profileRepository;
     @Autowired
     BaseLocationRepository baseLocationRepository;
-
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
 
@@ -135,8 +140,8 @@ public class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends E
 
         List<Location> locationsList = locationRepository.findAll();
         assertEquals(35, locationsList.size());
-        assertEquals("1", locationsList.get(1).getRegionId());
-        assertEquals("National", locationsList.get(1).getRegionDescEn());
+        assertEquals("2", locationsList.get(1).getRegionId());
+        assertEquals("National England and Wales", locationsList.get(1).getRegionDescEn());
 
 
         //asserting baselocation data
@@ -152,12 +157,12 @@ public class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends E
 
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
-        assertEquals(6, baseLocationList.size());
-        assertEquals("Aberconwy",baseLocationList.get(0).getCourtName());
-        assertEquals("1",baseLocationList.get(0).getBaseLocationId());
-        assertEquals("Old Gwynedd",baseLocationList.get(0).getCourtType());
-        assertEquals("Gwynedd",baseLocationList.get(0).getCircuit());
-        assertEquals("LJA",baseLocationList.get(0).getAreaOfExpertise());
+        assertEquals(7, baseLocationList.size());
+        assertEquals("Aberconwy",baseLocationList.get(1).getCourtName());
+        assertEquals("1",baseLocationList.get(1).getBaseLocationId());
+        assertEquals("Old Gwynedd",baseLocationList.get(1).getCourtType());
+        assertEquals("Gwynedd",baseLocationList.get(1).getCircuit());
+        assertEquals("LJA",baseLocationList.get(1).getAreaOfExpertise());
 
         //asserting people data
         Map<String, Object> peopleResponse = elinksReferenceDataClient.getPeoples();
@@ -288,6 +293,9 @@ public class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends E
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
+        authorisationsRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        profileRepository.deleteAll();
         elinkDataExceptionRepository.deleteAll();
     }
 }

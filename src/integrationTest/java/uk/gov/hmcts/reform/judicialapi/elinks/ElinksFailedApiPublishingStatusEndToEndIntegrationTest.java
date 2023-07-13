@@ -17,6 +17,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
@@ -54,6 +56,12 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
 
     @Autowired
     LocationRepository locationRepository;
+
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
+
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
 
     @Autowired
     ProfileRepository profileRepository;
@@ -123,7 +131,7 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
 
         List<Location> locationsList = locationRepository.findAll();
 
-        assertEquals(1, locationsList.size());
+        assertEquals(2, locationsList.size());
         assertEquals("0",locationsList.get(0).getRegionId());
         assertEquals("default",locationsList.get(0).getRegionDescCy());
         assertEquals("default",locationsList.get(0).getRegionDescEn());
@@ -236,6 +244,11 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         elinkSchedularAuditRepository.deleteAll();
         elinkDataExceptionRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        baseLocationRepository.deleteAll();
+        authorisationsRepository.deleteAll();
+        profileRepository.deleteAll();
+
     }
 
     @BeforeEach

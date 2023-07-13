@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
@@ -29,6 +31,10 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
 
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
@@ -89,6 +95,9 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
     }
 
     private void cleanupData() {
+        authorisationsRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        profileRepository.deleteAll();
         elinkSchedularAuditRepository.deleteAll();
     }
 }
