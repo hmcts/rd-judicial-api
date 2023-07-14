@@ -27,6 +27,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
@@ -50,6 +51,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDSUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_DATA_STORE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
@@ -442,4 +445,135 @@ public class ELinksServiceImpl implements ELinksService {
                     }
                 });
     }
+
+    private Response getDeletedResponseFromElinks(int currentPage) {
+        String leftSince = getDeletedSince();
+        try {
+            return elinksFeignClient.getDeletedDetails(leftSince, perPage, String.valueOf(currentPage));
+        } catch (FeignException ex) {
+            throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
+        }
+    }
+
+    private String getDeletedSince() {
+        String updatedSince;
+        LocalDateTime maxSchedulerEndTime;
+        try {
+            maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime();
+        } catch (Exception ex) {
+            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
+        }
+        if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+            updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
+        } else {
+            updatedSince = maxSchedulerEndTime.toString();
+            updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+        }
+        log.info("updatedSince : " + updatedSince);
+        return updatedSince;
+    }
+
+    @Override
+    @Transactional("transactionManager")
+    public ResponseEntity<ElinkDeletedWrapperResponse> retrieveDeleted() {
+        boolean isMorePagesAvailable = true;
+        HttpStatus httpStatus = null;
+        LocalDateTime schedulerStartTime = now();
+        ElinkDeletedWrapperResponse elinkDeletedWrapperResponse = new ElinkDeletedWrapperResponse();
+
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            null,
+            RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), DELETEDAPI);
+
+        int pageValue = Integer.parseInt(page);
+        do {
+            Response deletedApiResponse = getDeletedResponseFromElinks(pageValue++);
+            httpStatus = HttpStatus.valueOf(deletedApiResponse.status());
+            ResponseEntity<Object> responseEntity;
+
+            if (httpStatus.is2xxSuccessful()) {
+                responseEntity = JsonFeignResponseUtil.toResponseEntity(deletedApiResponse, PeopleRequest.class);
+                PeopleRequest elinkDeletedResponseRequest = (PeopleRequest) responseEntity.getBody();
+                if (Optional.ofNullable(elinkDeletedResponseRequest).isPresent()
+                    && Optional.ofNullable(elinkDeletedResponseRequest.getPagination()).isPresent()
+                    && Optional.ofNullable(elinkDeletedResponseRequest.getResultsRequests()).isPresent()) {
+                    isMorePagesAvailable = elinkDeletedResponseRequest.getPagination().getMorePages();
+                    processDeletedResponse(elinkDeletedResponseRequest);
+
+                } else {
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        schedulerStartTime,
+                        now(),
+                        RefDataElinksConstants.JobStatus.FAILED.getStatus(), DELETEDAPI);
+                    throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
+                }
+            } else {
+                elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                    schedulerStartTime,
+                    now(),
+                    RefDataElinksConstants.JobStatus.FAILED.getStatus(), DELETEDAPI);
+                handleELinksErrorResponse(httpStatus);
+            }
+            pauseDeletedThread(Long.valueOf(threadPauseTime));
+        } while (isMorePagesAvailable);
+
+        elinkDeletedWrapperResponse.setMessage(DELETEDSUCCESS);
+
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            now(),
+            RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), DELETEDAPI);
+
+        return ResponseEntity
+            .status(httpStatus)
+            .body(elinkDeletedWrapperResponse);
+    }
+
+    private static void pauseDeletedThread(Long thredPauseTime) {
+        try {
+            Thread.sleep(thredPauseTime);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, THREAD_INVOCATION_EXCEPTION,
+                THREAD_INVOCATION_EXCEPTION);
+        }
+    }
+
+
+
+    private void processDeletedResponse(PeopleRequest elinkDeletedResponseRequest) {
+        try {
+            updateDeleted(elinkDeletedResponseRequest.getResultsRequests());
+        } catch (Exception ex) {
+            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
+        }
+
+    }
+
+    public void updateDeleted(List<ResultsRequest> resultsRequests) {
+
+        List<Triple<String, String,String>> deletedId = new ArrayList<>();
+
+        String updateDeletedId = "UPDATE dbjudicialdata.judicial_user_profile SET date_of_deletion = Date(?) , "
+            + "deleted_flag = ?, last_loaded_date= NOW() AT TIME ZONE 'utc' WHERE personal_code = ?";
+
+        resultsRequests.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
+            deletedId.add(Triple.of(s.getPersonalCode(), s.getDeleted(),s.getDeletedOn())));
+        log.info("Insert Query batch Response from Deleted" + deletedId.size());
+        jdbcTemplate.batchUpdate(
+            updateDeletedId,
+            deletedId,
+            10,
+            new ParameterizedPreparedStatementSetter<Triple<String, String, String>>() {
+                public void setValues(PreparedStatement ps, Triple<String, String, String> argument)
+                    throws SQLException {
+                    ps.setString(1, argument.getRight());
+                    ps.setBoolean(2, !(Boolean.valueOf(argument.getMiddle())));
+                    ps.setString(3, argument.getLeft());
+                }
+            });
+    }
+
+
 }

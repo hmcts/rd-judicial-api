@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
@@ -129,6 +130,12 @@ public class ElinksApiJobScheduler {
             log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Leavers Response");
         }
         try{
+            ResponseEntity<ElinkDeletedWrapperResponse> deletedResponse
+                = retrieveDeletedDetails();
+        } catch(Exception ex) {
+            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Deleted Response");
+        }
+        try{
         ResponseEntity<Object> idamSearchResponse
                 = retrieveIdamElasticSearchDetails();
         } catch(Exception ex) {
@@ -207,6 +214,23 @@ public class ElinksApiJobScheduler {
 
         return restTemplate.exchange(apiUrl,
                 HttpMethod.GET, request, ElinkLeaversWrapperResponse.class);
+
+    }
+
+    public ResponseEntity<ElinkDeletedWrapperResponse> retrieveDeletedDetails() {
+
+
+        String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
+            .concat("/deleted");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+
+        HttpEntity<String> request =
+            new HttpEntity<>(headers);
+
+        return restTemplate.exchange(apiUrl,
+            HttpMethod.GET, request, ElinkDeletedWrapperResponse.class);
 
     }
 

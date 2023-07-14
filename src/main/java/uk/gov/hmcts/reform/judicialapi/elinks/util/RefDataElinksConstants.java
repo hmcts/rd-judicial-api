@@ -49,9 +49,14 @@ public class RefDataElinksConstants {
 
     public static final String LEAVERSSUCCESS = "Leavers Data Loaded Successfully";
 
+    public static final String DELETEDSUCCESS = "Deleted users Data Loaded Successfully";
+
     public static final String JUDICIAL_REF_DATA_ELINKS = "judicial-ref-data-elinks";
 
     public static final String LEAVERSAPI = "Leavers";
+
+    public static final String DELETEDAPI = "Deleted";
+
     public static final String LOCATIONAPI = "Location";
 
     public static final String PEOPLEAPI = "People";

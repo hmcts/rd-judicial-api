@@ -20,7 +20,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class ElinksApiJobSchedulerTest {
+class ElinksApiJobSchedulerTest {
 
 
     @Mock
@@ -61,6 +61,7 @@ public class ElinksApiJobSchedulerTest {
         verify(elinksApiJobScheduler, times(0)).retrieveBaseLocationDetails();
         verify(elinksApiJobScheduler, times(0)). retrievePeopleDetails();
         verify(elinksApiJobScheduler, times(0)). retrieveLeaversDetails();
+        verify(elinksApiJobScheduler, times(0)). retrieveDeletedDetails();
         verify(elinksApiJobScheduler, times(0)).  retrieveIdamElasticSearchDetails();
 
     }

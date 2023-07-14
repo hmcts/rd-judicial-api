@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
@@ -135,6 +136,30 @@ public class ElinksReferenceDataClient {
 
             responseEntity = restTemplate.exchange(
               baseUrl + "/leavers",HttpMethod.GET,request, ElinkLeaversWrapperResponse.class);
+
+        } catch (RestClientResponseException ex) {
+            var statusAndBody = new HashMap<String, Object>(2);
+            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("response_body", ex.getResponseBodyAsString());
+            return statusAndBody;
+        }
+
+        return getResponse(responseEntity);
+    }
+
+    public Map<String, Object>  getDeleted() {
+
+        var stringBuilder = new StringBuilder();
+
+        ResponseEntity<ElinkDeletedWrapperResponse> responseEntity;
+        HttpEntity<?> request =
+            new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null,
+                MediaType.valueOf(V2.MediaType.SERVICE)));
+
+        try {
+
+            responseEntity = restTemplate.exchange(
+                baseUrl + "/deleted",HttpMethod.GET,request, ElinkDeletedWrapperResponse.class);
 
         } catch (RestClientResponseException ex) {
             var statusAndBody = new HashMap<String, Object>(2);

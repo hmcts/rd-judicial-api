@@ -106,6 +106,8 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                 loadJson("src/integrationTest/resources/wiremock_responses/people.json");
         String leaversResponseValidationJson =
                 loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
+        String deletedResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
                 .willReturn(aResponse()
@@ -135,6 +137,13 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                         .withHeader("Content-Type", V2.MediaType.SERVICE)
                         .withHeader("Connection", "close")
                         .withBody(leaversResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(deletedResponseValidationJson)));
 
         String idamResponseValidationJson =
                 loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");

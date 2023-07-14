@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
@@ -229,6 +230,43 @@ public class ElinksController {
         produces = V2.MediaType.SERVICE)
     public ResponseEntity<ElinkLeaversWrapperResponse> loadLeavers(){
         return eLinksService.retrieveLeavers();
+    }
+
+    @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Get Deleted Idam Users ",
+            response = ElinkLeaversWrapperResponse.class
+        ),
+        @ApiResponse(
+            code = 400,
+            message = BAD_REQUEST
+        ),
+        @ApiResponse(
+            code = 401,
+            message = UNAUTHORIZED_ERROR
+        ),
+        @ApiResponse(
+            code = 403,
+            message = FORBIDDEN_ERROR
+        ),
+        @ApiResponse(
+            code = 404,
+            message = NO_DATA_FOUND
+        ),
+        @ApiResponse(
+            code = 429,
+            message = TOO_MANY_REQUESTS
+        ),
+        @ApiResponse(
+            code = 500,
+            message = INTERNAL_SERVER_ERROR
+        )
+    })
+    @GetMapping (path = "/deleted",
+        produces = V2.MediaType.SERVICE)
+    public ResponseEntity<ElinkDeletedWrapperResponse> loadDeleted(){
+        return eLinksService.retrieveDeleted();
     }
 
     @ApiResponses({
