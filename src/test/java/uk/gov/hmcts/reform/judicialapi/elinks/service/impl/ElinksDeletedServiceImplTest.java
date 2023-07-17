@@ -18,9 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.DeleteRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PaginationRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.DeletedResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
@@ -69,15 +69,15 @@ class ElinksDeletedServiceImplTest {
     @InjectMocks
     private ELinksServiceImpl elinksServiceImpl;
 
-    private ResultsRequest result1;
+    private DeletedResponse result1;
 
-    private ResultsRequest result2;
+    private DeletedResponse result2;
 
     private PaginationRequest pagination;
 
-    private PeopleRequest elinksApiResponseFirstHit;
+    private DeleteRequest elinksApiResponseFirstHit;
 
-    private PeopleRequest elinksApiResponseSecondHit;
+    private DeleteRequest elinksApiResponseSecondHit;
 
     JdbcTemplate jdbcTemplate =  mock(JdbcTemplate.class);
 
@@ -100,21 +100,21 @@ class ElinksDeletedServiceImplTest {
                 .pages(1).currentPage(1).resultsPerPage(3).morePages(true).build();
 
 
-        result1 = ResultsRequest.builder().personalCode("1234").deletedOn("2022-12-20")
+        result1 = DeletedResponse.builder().personalCode("1234").deletedOn("2022-12-20")
                 .deleted("true").build();
 
-        result2 = ResultsRequest.builder().personalCode("1234").deletedOn("2022-12-20")
+        result2 = DeletedResponse.builder().personalCode("1234").deletedOn("2022-12-20")
                 .deleted("true").build();
 
-        List<ResultsRequest> results = Arrays.asList(result1,result2);
+        List<DeletedResponse> results = Arrays.asList(result1,result2);
 
-        elinksApiResponseFirstHit = PeopleRequest.builder().resultsRequests(results).pagination(pagination).build();
+        elinksApiResponseFirstHit = DeleteRequest.builder().deletedResponse(results).pagination(pagination).build();
 
 
         PaginationRequest paginationFalse = PaginationRequest.builder()
                 .results(1)
                 .pages(1).currentPage(1).resultsPerPage(3).morePages(false).build();
-        elinksApiResponseSecondHit = PeopleRequest.builder().resultsRequests(results).pagination(paginationFalse)
+        elinksApiResponseSecondHit = DeleteRequest.builder().deletedResponse(results).pagination(paginationFalse)
                 .build();
     }
 
@@ -213,7 +213,7 @@ class ElinksDeletedServiceImplTest {
     void load_deleted_should_return_elinksException_when_ElinksApi_Response_does_not_have_results()
             throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        elinksApiResponseFirstHit.setResultsRequests(null);
+        elinksApiResponseFirstHit.setDeletedResponse(null);
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
 
         when(dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime()).thenReturn(LocalDateTime.now());
