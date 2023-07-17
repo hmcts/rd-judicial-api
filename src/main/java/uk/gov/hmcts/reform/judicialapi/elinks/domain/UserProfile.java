@@ -78,4 +78,11 @@ public class UserProfile implements Serializable {
     @Column(name = "title")
     @Size(max = 64)
     private String title;
+
+    @Column(name= "deleted_flag")
+    private Boolean deletedFlag;
+
+    @Column(name= "date_of_deletion")
+    private LocalDateTime deletedOn;
+
 }

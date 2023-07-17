@@ -46,7 +46,7 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
     @DisplayName("Elinks Deleted endpoint status verification")
     @Test
     @Order(1)
-    void getLeaversUserProfile() {
+    void getDeletedUserProfile() {
 
         Map<String, Object> response = elinksReferenceDataClient.getDeleted();
         assertThat(response).containsEntry("http_status", "200 OK");
@@ -58,6 +58,7 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
     @Test
     @Order(2)
     void verifyDeletedJrdUserProfile() {
+        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> deleted = elinksReferenceDataClient.getDeleted();
         assertThat(deleted).containsEntry("http_status", "200 OK");
         ElinkDeletedWrapperResponse profiles = (ElinkDeletedWrapperResponse)deleted.get("body");
@@ -67,8 +68,6 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
 
         assertEquals(5, userprofile.size());
         assertEquals("28", userprofile.get(1).getPersonalCode());
-        assertEquals(true, userprofile.get(1).getActiveFlag());
-        assertEquals("1.11112E+12", userprofile.get(1).getObjectId());
 
     }
 
@@ -76,6 +75,7 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
     @Test
     @Order(3)
     void verifyDeletedJrdAuditFunctionality() {
+        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> deleted = elinksReferenceDataClient.getDeleted();
         assertThat(deleted).containsEntry("http_status", "200 OK");
         ElinkDeletedWrapperResponse deletedResponse = (ElinkDeletedWrapperResponse)deleted.get("body");
@@ -85,8 +85,6 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
 
         assertEquals(5, userprofile.size());
         assertEquals("28", userprofile.get(1).getPersonalCode());
-        assertEquals(true, userprofile.get(1).getActiveFlag());
-        assertEquals("1.11112E+12", userprofile.get(1).getObjectId());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 

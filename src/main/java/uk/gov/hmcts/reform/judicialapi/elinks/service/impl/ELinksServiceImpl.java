@@ -556,7 +556,7 @@ public class ELinksServiceImpl implements ELinksService {
         List<Triple<String, String,String>> deletedId = new ArrayList<>();
 
         String updateDeletedId = "UPDATE dbjudicialdata.judicial_user_profile SET date_of_deletion = Date(?) , "
-            + "deleted_flag = ?, last_loaded_date= NOW() AT TIME ZONE 'utc' WHERE personal_code = ?";
+            + "deleted_flag = ? WHERE personal_code = ?";
 
         resultsRequests.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
             deletedId.add(Triple.of(s.getPersonalCode(), s.getDeleted(),s.getDeletedOn())));
@@ -569,7 +569,7 @@ public class ELinksServiceImpl implements ELinksService {
                 public void setValues(PreparedStatement ps, Triple<String, String, String> argument)
                     throws SQLException {
                     ps.setString(1, argument.getRight());
-                    ps.setBoolean(2, !(Boolean.valueOf(argument.getMiddle())));
+                    ps.setBoolean(2, Boolean.valueOf(argument.getMiddle()));
                     ps.setString(3, argument.getLeft());
                 }
             });
