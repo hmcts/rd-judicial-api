@@ -1,4 +1,4 @@
-package uk.gov.hmcts.reform.judicialapi.elinks.controller.request;
+package uk.gov.hmcts.reform.judicialapi.elinks.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.DeletedResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PaginationRequest;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DeleteRequest {
+public class ElinksDeleteApiResponse {
 
     @JsonProperty("pagination")
     private PaginationRequest pagination;

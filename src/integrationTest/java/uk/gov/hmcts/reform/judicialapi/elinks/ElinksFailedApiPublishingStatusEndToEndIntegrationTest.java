@@ -52,7 +52,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 
-public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
+class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     LocationRepository locationRepository;
@@ -188,7 +188,7 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException.size()).isEqualTo(0);
+        assertThat(elinksException).isEmpty();
 
     }
 
@@ -229,6 +229,13 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
                         .withHeader("Connection", "close")
                         .withBody(body)
                 ));
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(statusCode)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody(body)
+            ));
 
         sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
                 .willReturn(aResponse()

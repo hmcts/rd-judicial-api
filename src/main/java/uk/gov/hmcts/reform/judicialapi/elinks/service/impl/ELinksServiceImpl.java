@@ -15,10 +15,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.DeleteRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.DeletedResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.ElinksDeleteApiResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
@@ -495,10 +495,13 @@ public class ELinksServiceImpl implements ELinksService {
             ResponseEntity<Object> responseEntity;
 
             if (httpStatus.is2xxSuccessful()) {
-                responseEntity = JsonFeignResponseUtil.toResponseEntity(deletedApiResponse, DeleteRequest.class);
-                DeleteRequest elinkDeletedResponseRequest = (DeleteRequest) responseEntity.getBody();
+                responseEntity = JsonFeignResponseUtil
+                    .toResponseEntity(deletedApiResponse, ElinksDeleteApiResponse.class);
+                ElinksDeleteApiResponse elinkDeletedResponseRequest = (ElinksDeleteApiResponse)
+                    responseEntity.getBody();
                 if (Optional.ofNullable(elinkDeletedResponseRequest).isPresent()
-                    && Optional.ofNullable(elinkDeletedResponseRequest.getPagination()).isPresent()
+                    && Optional.ofNullable(elinkDeletedResponseRequest
+                    .getPagination()).isPresent()
                     && Optional.ofNullable(elinkDeletedResponseRequest.getDeletedResponse()).isPresent()) {
                     isMorePagesAvailable = elinkDeletedResponseRequest.getPagination().getMorePages();
                     processDeletedResponse(elinkDeletedResponseRequest);
@@ -544,7 +547,7 @@ public class ELinksServiceImpl implements ELinksService {
 
 
 
-    private void processDeletedResponse(DeleteRequest elinkDeletedResponseRequest) {
+    private void processDeletedResponse(ElinksDeleteApiResponse elinkDeletedResponseRequest) {
         try {
             updateDeleted(elinkDeletedResponseRequest.getDeletedResponse());
         } catch (Exception ex) {

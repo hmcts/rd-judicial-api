@@ -49,10 +49,5 @@ public class ResultsRequest {
     private String leaver;
     @JsonProperty("left_on")
     private String leftOn;
-    //Deletedfields
-    @JsonProperty("deleted")
-    private String deleted;
-    @JsonProperty("deleted_on")
-    private String deletedOn;
 
 }

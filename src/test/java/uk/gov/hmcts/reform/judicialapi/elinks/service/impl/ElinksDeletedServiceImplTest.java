@@ -18,9 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.DeleteRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PaginationRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.DeletedResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.ElinksDeleteApiResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
@@ -75,9 +75,9 @@ class ElinksDeletedServiceImplTest {
 
     private PaginationRequest pagination;
 
-    private DeleteRequest elinksApiResponseFirstHit;
+    private ElinksDeleteApiResponse elinksApiResponseFirstHit;
 
-    private DeleteRequest elinksApiResponseSecondHit;
+    private ElinksDeleteApiResponse elinksApiResponseSecondHit;
 
     JdbcTemplate jdbcTemplate =  mock(JdbcTemplate.class);
 
@@ -108,13 +108,15 @@ class ElinksDeletedServiceImplTest {
 
         List<DeletedResponse> results = Arrays.asList(result1,result2);
 
-        elinksApiResponseFirstHit = DeleteRequest.builder().deletedResponse(results).pagination(pagination).build();
+        elinksApiResponseFirstHit = ElinksDeleteApiResponse
+            .builder().deletedResponse(results).pagination(pagination).build();
 
 
         PaginationRequest paginationFalse = PaginationRequest.builder()
                 .results(1)
                 .pages(1).currentPage(1).resultsPerPage(3).morePages(false).build();
-        elinksApiResponseSecondHit = DeleteRequest.builder().deletedResponse(results).pagination(paginationFalse)
+        elinksApiResponseSecondHit = ElinksDeleteApiResponse
+            .builder().deletedResponse(results).pagination(paginationFalse)
                 .build();
     }
 
