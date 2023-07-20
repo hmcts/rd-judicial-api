@@ -26,6 +26,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
@@ -48,11 +49,12 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 
-class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
+public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     LocationRepository locationRepository;
@@ -174,6 +176,18 @@ class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabl
         List<UserProfile> leaverUserProfile = profileRepository.findAll();
         assertEquals(0, leaverUserProfile.size());
 
+        //asserting userprofile data for deleted api
+        Map<String, Object> deletedResponse = elinksReferenceDataClient.getDeleted();
+        ElinkDeletedWrapperResponse deletedProfiles = (ElinkDeletedWrapperResponse) deletedResponse.get("body");
+        ElinkDataSchedularAudit deletedAuditEntry = elinksAudit.get(4);
+
+        assertThat(deletedResponse).containsEntry("http_status", "400");
+        assertEquals(DELETEDAPI,deletedAuditEntry.getApiName());
+        assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), deletedAuditEntry.getStatus());
+
+        List<UserProfile> deletedUserProfile = profileRepository.findAll();
+        assertEquals(0, deletedUserProfile.size());
+
         //assert elastic search api
 
         Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
@@ -188,7 +202,7 @@ class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabl
         assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException).isEmpty();
+        assertThat(elinksException.size()).isEqualTo(0);
 
     }
 
