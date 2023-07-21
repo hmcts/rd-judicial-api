@@ -16,21 +16,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
-import uk.gov.hmcts.reform.judicialapi.versions.V1;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import javax.validation.Valid;
 
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.BAD_REQUEST;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.FORBIDDEN_ERROR;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.INTERNAL_SERVER_ERROR;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.NO_DATA_FOUND;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.UNAUTHORIZED_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.BAD_REQUEST;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.FORBIDDEN_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.INTERNAL_SERVER_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.NO_DATA_FOUND;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.UNAUTHORIZED_ERROR;
 
 
 @RequestMapping(
