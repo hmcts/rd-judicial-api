@@ -5,14 +5,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -44,10 +50,10 @@ public class Authorisation implements Serializable {
     private String jurisdiction;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;
@@ -59,12 +65,25 @@ public class Authorisation implements Serializable {
     @Size(max = 256)
     private String lowerLevel;
 
-    @Column(name = "object_id")
-    @Size(max = 64)
-    private String objectId;
-
     @Column(name = "ticket_code")
     @Size(max = 16)
     private String ticketCode;
+
+    @Column(name = "appointment_id")
+    @Size(max = 256)
+    private String appointmentId;
+
+    @Column(name = "authorisation_id")
+    @Size(max = 256)
+    private String authorisationId;
+
+    @Column(name = "jurisdiction_id")
+    @Size(max = 64)
+    private String jurisdictionId;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "per_id", referencedColumnName = "per_id",
+            insertable = false, updatable = false, nullable = false)
+    private UserProfile userProfile;
 
 }

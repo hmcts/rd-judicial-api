@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.judicialapi.elinks.repository;
 
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -38,6 +40,23 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
     List<UserSearchResponseWrapper> findBySearchForString(String searchString, String serviceCode,
                                                           String locationCode, List<String> ticketCode,
                                                           List<String> searchServiceCode);
+
+
+    @Query(value = "select distinct per "
+            + "from judicial_user_profile per "
+            + "LEFT JOIN FETCH judicial_office_appointment appt "
+            + "on per.personalCode = appt.personalCode "
+            + "LEFT JOIN FETCH judicial_office_authorisation auth "
+            + "on per.personalCode = auth.personalCode "
+            + "LEFT JOIN FETCH judicial_role_type jrt "
+            + "ON per.personalCode = jrt.personalCode "
+            + "where (per.objectId != '' and per.objectId is not null) "
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "and (per.objectId IN :objectIds)")
+    Page<UserProfile> fetchUserProfileByObjectIds(List<String> objectIds, Pageable pageable);
+
+
 
 
 }

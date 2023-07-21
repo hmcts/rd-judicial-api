@@ -5,15 +5,21 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
+import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -44,7 +50,7 @@ public class Appointment implements Serializable {
     @Size(max = 64)
     private String baseLocationId;
 
-    @Column(name = "region_Id")
+    @Column(name = "hmcts_region_Id")
     @Size(max = 256)
     private String regionId;
 
@@ -67,14 +73,6 @@ public class Appointment implements Serializable {
     @Size(max = 16)
     private String epimmsId;
 
-    @Column(name = "service_code")
-    @Size(max = 64)
-    private String serviceCode;
-
-    @Column(name = "object_id")
-    @Size(max = 64)
-    private String objectId;
-
     @Column(name = "appointment")
     @Size(max = 64)
     private String appointmentRolesMapping;
@@ -82,5 +80,46 @@ public class Appointment implements Serializable {
     @Column(name = "appointment_type")
     @Size(max = 32)
     private String appointmentType;
+
+    @Column(name = "type")
+    @Size(max = 32)
+    private String type;
+
+    @Column(name = "appointment")
+    @Size(max = 64)
+    private String appointmentMapping;
+
+    @Column(name = "appointment_id")
+    @Size(max = 256)
+    private String appointmentId;
+
+    @Column(name = "role_name_id")
+    @Size(max = 256)
+    private String roleNameId;
+
+    @Column(name = "contract_type_id")
+    @Size(max = 64)
+    private String contractTypeId;
+
+    @Column(name = "location")
+    @Size(max = 64)
+    private String location;
+
+    @Column(name = "jo_base_location_id")
+    @Size(max = 64)
+    private String joBaseLocationId;
+
+    @Column(name = "appointment")
+    private String appointment;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "per_id", referencedColumnName = "per_id",
+            insertable = false, updatable = false, nullable = false)
+    private UserProfile userProfile;
+
+    @ManyToOne
+    @JoinColumn(name = "base_location_Id", referencedColumnName = "base_location_Id",
+            insertable = false, updatable = false, nullable = false)
+    private BaseLocationType baseLocationType;
 
 }
