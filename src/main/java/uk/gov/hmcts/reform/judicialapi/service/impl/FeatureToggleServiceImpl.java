@@ -43,6 +43,13 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
         launchDarklyMap.put("JrdUsersController.searchUsers", judApi);
         launchDarklyMap.put("TestingSupportController.createIdamUserProfiles", "rd-judicial-api-test-idam-users");
         launchDarklyMap.put("JrdUsersController.refreshUserProfile", judApi);
+        launchDarklyMap.put("ElinksController.loadLocation", judApi);
+        launchDarklyMap.put("ElinksController.loadBaseLocationType", judApi);
+        launchDarklyMap.put("ElinksController.loadPeople", judApi);
+        launchDarklyMap.put("ElinksController.idamElasticSearch", judApi);
+        launchDarklyMap.put("ElinksController.loadLeavers", judApi);
+        launchDarklyMap.put("ElinksController.loadDeleted", judApi);
+        launchDarklyMap.put("ElinksController.publishSidamIdToAsb", judApi);
     }
 
     @Override
