@@ -281,10 +281,9 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         for (AuthorisationsRequest authorisationsRequest : authorisationsRequests) {
             authorisationList.add(uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation.builder()
                     .personalCode(resultsRequest.getPersonalCode())
-                    .objectId(resultsRequest.getObjectId())
                     .jurisdiction(authorisationsRequest.getJurisdiction())
-                    .startDate(convertToLocalDateTime(authorisationsRequest.getStartDate()))
-                    .endDate(convertToLocalDateTime(authorisationsRequest.getEndDate()))
+                    .startDate(convertToLocalDate(authorisationsRequest.getStartDate()))
+                    .endDate(convertToLocalDate(authorisationsRequest.getEndDate()))
                     .createdDate(LocalDateTime.now())
                     .lastUpdated(LocalDateTime.now())
                     .lowerLevel(authorisationsRequest.getLowerLevel())
@@ -310,7 +309,6 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     && baseLocationRepository.findById(appointment.getBaseLocationId()).isPresent()) {
                 appointmentList.add(uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment.builder()
                         .personalCode(resultsRequest.getPersonalCode())
-                        .objectId(resultsRequest.getObjectId())
                         .baseLocationId(appointment.getBaseLocationId())
                         .regionId(regionMapping(appointment))
                         .isPrincipleAppointment(appointment.getIsPrincipleAppointment())
