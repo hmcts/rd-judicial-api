@@ -31,4 +31,11 @@ public class AuthorisationRefreshResponse implements Serializable {
 
     private String endDate;
 
+    private String appointmentId;
+
+    private String authorisationId;
+
+    private String jurisdictionId;
+
+
 }

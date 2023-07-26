@@ -35,8 +35,18 @@ public class UserProfileRefreshResponse implements Serializable {
 
     private String personalCode;
 
+    private String title;
+
+    private String initials;
+
+    private String retirementDate;
+
+    private String activeFlag;
+
     private List<AppointmentRefreshResponse> appointments;
 
     private List<AuthorisationRefreshResponse> authorisations;
+
+    private List<JudicialRoleTypeRefresh> roles;
 
 }

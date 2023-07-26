@@ -11,6 +11,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ProfileRepository extends JpaRepository<UserProfile, String> {
@@ -48,7 +49,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "on per.personalCode = appt.personalCode "
             + "LEFT JOIN FETCH judicial_office_authorisation auth "
             + "on per.personalCode = auth.personalCode "
-            + "LEFT JOIN FETCH judicial_role_type jrt "
+            + "LEFT JOIN FETCH judicial_additional_roles jrt "
             + "ON per.personalCode = jrt.personalCode "
             + "where (per.objectId != '' and per.objectId is not null) "
             + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
@@ -57,6 +58,49 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
     Page<UserProfile> fetchUserProfileByObjectIds(List<String> objectIds, Pageable pageable);
 
 
+    @Query(value = "select distinct per "
+            + "from judicial_user_profile per "
+            + "LEFT JOIN FETCH judicial_office_appointment appt "
+            + "on per.personalCode = appt.personalCode "
+            + "LEFT JOIN FETCH judicial_office_authorisation auth "
+            + "on per.personalCode = auth.personalCode "
+            + "LEFT JOIN FETCH judicial_additional_roles jrt "
+            + "ON per.personalCode = jrt.personalCode "
+            + "where (per.objectId != '' and per.objectId is not null) "
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "and (per.sidamId IN :sidamIds)")
+    Page<UserProfile> fetchUserProfileBySidamIds(List<String> sidamIds, Pageable pageable);
 
+    @Query(value = "select distinct per "
+            + "from judicial_user_profile per "
+            + "LEFT JOIN FETCH judicial_office_appointment appt "
+            + "on per.personalCode = appt.personalCode "
+            + "LEFT JOIN FETCH judicial_office_authorisation auth "
+            + "on per.personalCode = auth.personalCode "
+            + "LEFT JOIN FETCH judicial_additional_roles jrt "
+            + "ON per.personalCode = jrt.personalCode "
+            + "where (per.objectId != '' and per.objectId is not null) "
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "and (per.personalCode IN :personalCodes)")
+    Page<UserProfile> fetchUserProfileByPersonalCodes(List<String> personalCodes, Pageable pageable);
+
+    @Query(value = "select distinct per "
+            + "from judicial_user_profile per "
+            + "LEFT JOIN FETCH judicial_office_appointment appt "
+            + "on per.personalCode = appt.personalCode "
+            + "LEFT JOIN FETCH judicial_office_authorisation auth "
+            + "on per.personalCode = auth.personalCode "
+            + "LEFT JOIN FETCH judicial_additional_roles jrt "
+            + "ON per.personalCode = jrt.personalCode "
+            + "LEFT JOIN FETCH judicial_location_mapping jlm "
+            + "ON appt.base_location_id = jlm.judicial_base_location_id "
+            + "where (per.objectId != '' and per.objectId is not null) "
+            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
+            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
+            + "and (jlm.serviceCode IN :ccdServiceCode or auth.ticketCode IN :ticketCode )")
+    Page<UserProfile> fetchUserProfileByServiceNames(Set<String> ccdServiceCode,
+                                                     List<String> ticketCode, Pageable pageable);
 
 }

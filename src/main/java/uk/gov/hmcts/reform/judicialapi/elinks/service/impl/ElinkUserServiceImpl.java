@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
+import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.AppointmentRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.AuthorisationRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
@@ -19,6 +25,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.RegionMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.JudicialRoleTypeRefresh;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
@@ -28,16 +35,17 @@ import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.validator.RefreshUserValidator;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants;
+import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
+import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.LOCATION;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.REGION;
+import static java.util.Objects.nonNull;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.NO_DATA_FOUND;
 
 @Slf4j
 @Service
@@ -65,7 +73,8 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     @Value("${refresh.sortColumn}")
     private String refreshDefaultSortColumn;
 
-
+    @Autowired
+    private LocationReferenceDataFeignClient locationReferenceDataFeignClient;
 
     @Autowired
     private RefreshUserValidator refreshUserValidator;
@@ -110,18 +119,80 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                                                                      PageRequest pageRequest) {
         log.info("{} : starting getRefreshUserProfile Based On Param ", loggingComponentName);
         if (refreshUserValidator.isStringNotEmptyOrNotNull(refreshRoleRequest.getCcdServiceNames())) {
-          //  return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
+            return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
         } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds())) {
-          //  return refreshUserProfileBasedOnSidamIds(
-                 //   refreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getSidamIds()), pageRequest);
+            return refreshUserProfileBasedOnSidamIds(
+                   refreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getSidamIds()), pageRequest);
         } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getObjectIds())) {
             return refreshUserProfileBasedOnObjectIds(
                     refreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getObjectIds()), pageRequest);
         } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getPersonalCodes())) {
-         //   return refreshUserProfileBasedOnPersonalCodes(refreshUserValidator.removeEmptyOrNullFromList(
-           ///         refreshRoleRequest.getPersonalCodes()), pageRequest);
+           return refreshUserProfileBasedOnPersonalCodes(refreshUserValidator.removeEmptyOrNullFromList(
+                 refreshRoleRequest.getPersonalCodes()), pageRequest);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private ResponseEntity<Object> refreshUserProfileBasedOnCcdServiceNames(String ccdServiceNames,
+                                                                            PageRequest pageRequest) {
+        log.info("{} : starting refreshUserProfile BasedOn CcdServiceNames ", loggingComponentName);
+        var lrdOrgInfoServiceResponse =
+                locationReferenceDataFeignClient.getLocationRefServiceMapping(ccdServiceNames);
+        var httpStatus = HttpStatus.valueOf(lrdOrgInfoServiceResponse.status());
+
+        if (httpStatus.is2xxSuccessful()) {
+            ResponseEntity<Object> responseEntity = JsonFeignResponseUtil.toResponseEntityWithListBody(
+                    lrdOrgInfoServiceResponse, LrdOrgInfoServiceResponse.class);
+
+            var listLrdServiceMapping =
+                    (List<LrdOrgInfoServiceResponse>) responseEntity.getBody();
+
+            if (listLrdServiceMapping != null && !listLrdServiceMapping.isEmpty()) {
+
+                var ccdServiceNameToCodeMapping =
+                        listLrdServiceMapping
+                                .stream()
+                                .filter(r -> StringUtils.isNotBlank(r.getServiceCode())
+                                        && StringUtils.isNotBlank(r.getCcdServiceName()))
+                                .collect(Collectors.toMap(LrdOrgInfoServiceResponse::getServiceCode,
+                                        LrdOrgInfoServiceResponse::getCcdServiceName));
+                log.info("ccdServiceNameToCodeMapping keySet {}", ccdServiceNameToCodeMapping.keySet());
+
+                var ticketCode = fetchTicketCodeFromServiceCode(ccdServiceNameToCodeMapping.keySet());
+                log.info("ticketCode {}", ticketCode);
+
+                var userProfilePage = userProfileRepository.fetchUserProfileByServiceNames(
+                        ccdServiceNameToCodeMapping.keySet(), ticketCode, pageRequest);
+
+                if (userProfilePage == null || userProfilePage.isEmpty()) {
+                    log.error("{}:: No data found in JRD for the ccdServiceNames {}",
+                            loggingComponentName, ccdServiceNames);
+                    throw new uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException(uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.NO_DATA_FOUND);
+                }
+
+                return getRefreshRoleResponseEntity(userProfilePage, ccdServiceNames, "ccdServiceNames");
+            }
+        }
+
+        log.error("{}:: Error in getting the data from LRD for the ccdServiceNames {} :: Status code {}",
+                loggingComponentName, ccdServiceNames, httpStatus);
+        var responseEntity = JsonFeignResponseUtil.toResponseEntity(lrdOrgInfoServiceResponse,
+                ErrorResponse.class);
+        var responseBody = responseEntity.getBody();
+
+        if (nonNull(responseBody) && responseBody instanceof ErrorResponse) {
+            ErrorResponse errorResponse = (ErrorResponse) responseBody;
+            throw new UserProfileException(httpStatus, errorResponse.getErrorMessage(),
+                    errorResponse.getErrorDescription());
+        } else {
+            throw new UserProfileException(httpStatus, uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.LRD_ERROR, uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.LRD_ERROR);
+        }
+    }
+
+
+    private List<String> fetchTicketCodeFromServiceCode(Set<String> serviceCode) {
+        log.info("{} : starting fetch Ticket CodeFrom Service Code ", loggingComponentName);
+        return serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(serviceCode);
     }
 
 
@@ -131,29 +202,52 @@ public class ElinkUserServiceImpl implements ElinkUserService {
         var userProfilePage = userProfileRepository.fetchUserProfileByObjectIds(
                 objectIds, pageRequest);
 
-
         if (userProfilePage == null || userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the objectIds {}",
                     loggingComponentName, objectIds);
-            throw new ResourceNotFoundException(RefDataConstants.NO_DATA_FOUND);
+            throw new ResourceNotFoundException(NO_DATA_FOUND);
         }
 
         return getRefreshRoleResponseEntity(userProfilePage, objectIds, "objectIds");
     }
 
-    private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage,
-                                                                Object collection, String collectionName) {
+    private ResponseEntity<Object> refreshUserProfileBasedOnPersonalCodes(List<String> personalCodes,
+                                                                          PageRequest pageRequest) {
+        log.info("{} : starting refreshUserProfile BasedOn personalCodes ", loggingComponentName);
+        var userProfilePage = userProfileRepository.fetchUserProfileByPersonalCodes(
+                personalCodes, pageRequest);
+        if (userProfilePage == null || userProfilePage.isEmpty()) {
+            log.error("{}:: No data found in JRD for the personalCodes {}",
+                    loggingComponentName, personalCodes);
+            throw new ResourceNotFoundException(NO_DATA_FOUND);
+        }
+        return getRefreshRoleResponseEntity(userProfilePage, personalCodes, "personalCodes");
+    }
+
+
+
+    private ResponseEntity<Object> refreshUserProfileBasedOnSidamIds(List<String> sidamIds,
+                                                                     PageRequest pageRequest) {
+        log.info("{} : starting refreshUserProfile BasedOn SidamIds ", loggingComponentName);
+        var userProfilePage = userProfileRepository.fetchUserProfileBySidamIds(
+                sidamIds, pageRequest);
+        if (userProfilePage == null || userProfilePage.isEmpty()) {
+            log.error("{}:: No data found in JRD for the sidamIds {}",
+                    loggingComponentName, sidamIds);
+            throw new uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException(uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.NO_DATA_FOUND);
+        }
+        return getRefreshRoleResponseEntity(userProfilePage, sidamIds, "sidamIds");
+    }
+
+    private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage, Object collection, String collectionName) {
         log.info("{} : starting getRefresh Role Response Entity ", loggingComponentName);
         var userProfileList = new ArrayList<UserProfileRefreshResponse>();//change here ...
 
         var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();//check here
         log.info("serviceCodeMappings size = {}", serviceCodeMappings.size());
 
-        var regionMappings = regionMappingRepository.findAllRegionMappingData(); // check here
-        log.info("regionMappings size = {}", regionMappings.size());
-
         userProfilePage.forEach(userProfile -> userProfileList.add(
-                buildUserProfileRefreshResponseDto(userProfile,serviceCodeMappings,regionMappings)));
+                buildUserProfileRefreshResponseDto(userProfile,serviceCodeMappings)));
 
         Map<String, List<UserProfileRefreshResponse>> groupedUserProfiles = userProfileList
                 .stream()
@@ -170,12 +264,19 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .knownAs(v.get(0).getKnownAs())
                 .postNominals(v.get(0).getPostNominals())
                 .personalCode(v.get(0).getPersonalCode())
+                .title(v.get(0).getTitle())
+                .initials(v.get(0).getInitials())
+                .retirementDate(v.get(0).getRetirementDate())
+                .activeFlag(v.get(0).getActiveFlag())
                 .appointments(v.stream()
                         .flatMap(i -> i.getAppointments().stream())
                         .toList())
                 .authorisations(v.stream()
                         .flatMap(i -> i.getAuthorisations().stream())
                         .toList())
+                .roles(v.stream()
+                                .flatMap(i -> i.getRoles().stream())
+                                .toList())
                 .build()));
 
         log.info("userProfileList size = {}", userProfileList.size());
@@ -190,7 +291,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     }
 
     private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(//change here
-            UserProfile profile, List<ServiceCodeMapping> serviceCodeMappings, List<RegionMapping> regionMappings) {
+            UserProfile profile, List<ServiceCodeMapping> serviceCodeMappings) {
         log.info("{} : starting build User Profile Refresh Response Dto ", loggingComponentName);
         return UserProfileRefreshResponse.builder()
                 .sidamId(profile.getSidamId())
@@ -201,53 +302,71 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .postNominals(profile.getPostNominals())
                 .emailId(profile.getEjudiciaryEmailId())
                 .personalCode(profile.getPersonalCode())
-                .appointments(getAppointmentRefreshResponseList(profile, regionMappings))
+                .title(profile.getTitle())
+                .initials(profile.getInitials())
+                .retirementDate(null != profile.getRetirementDate() ? String.valueOf(profile.getRetirementDate()) : null)
+                .activeFlag(String.valueOf(profile.getActiveFlag()))
+                .appointments(getAppointmentRefreshResponseList(profile))
                 .authorisations(getAuthorisationRefreshResponseList(profile, serviceCodeMappings))
+                .roles(getRolesRefreshResponseList(profile))
                 .build();
     }
 
+    private List<JudicialRoleTypeRefresh> getRolesRefreshResponseList(
+            UserProfile profile) {
+        log.info("{} : starting get Appointment Refresh Response List ", loggingComponentName);
+
+        var rolesList = new ArrayList<JudicialRoleTypeRefresh>();
+
+        profile.getJudicialRoleTypes().stream()
+                .forEach(roleTypes -> rolesList.add(
+                        buildRolesRefreshDto(roleTypes)));
+        return rolesList;
+    }
+
+    private JudicialRoleTypeRefresh buildRolesRefreshDto(
+            JudicialRoleType judicialRoleType) {
+        log.info("{} : starting build Authorisation Refresh Response Dto ", loggingComponentName);
+
+        return   JudicialRoleTypeRefresh.builder()
+                .title(judicialRoleType.getTitle())
+                .jurisdictionRoleId(judicialRoleType.getJurisdictionRoleId())
+                .startDate(null != judicialRoleType.getStartDate() ? String.valueOf(judicialRoleType.getStartDate()) : null)
+                .endDate(null != judicialRoleType.getEndDate() ? String.valueOf(judicialRoleType.getEndDate()) : null)
+                .build();
+    }
 
     private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList( // change in appointment refresh response
-            UserProfile profile, List<RegionMapping> regionMappings) {
+            UserProfile profile) {
         log.info("{} : starting get Appointment Refresh Response List ", loggingComponentName);
 
         var appointmentList = new ArrayList<AppointmentRefreshResponse>();
 
         profile.getAppointments().stream()
                 .forEach(appointment -> appointmentList.add(
-                        buildAppointmentRefreshResponseDto(appointment, profile, regionMappings)));
+                        buildAppointmentRefreshResponseDto(appointment)));
         return appointmentList;
     }
 
-    private AppointmentRefreshResponse buildAppointmentRefreshResponseDto( //change here
-            Appointment appt, UserProfile profile, List<RegionMapping> regionMappings) {
+    private AppointmentRefreshResponse buildAppointmentRefreshResponseDto(
+            Appointment appt) {
         log.info("{} : starting build Appointment Refresh Response Dto ", loggingComponentName);
-
-        RegionMapping regionMapping = regionMappings.stream()
-                .filter(rm -> rm.getJrdRegionId().equalsIgnoreCase(appt.getRegionId()))
-                .findFirst()
-                .orElse(null);
-
-        RegionMapping regionCircuitMapping = regionMappings.stream()
-                .filter(rm -> rm.getRegion().equalsIgnoreCase(appt.getBaseLocationType().getCircuit()))
-                .findFirst()
-                .orElse(null);
-
 
         return AppointmentRefreshResponse.builder()
                 .baseLocationId(appt.getBaseLocationId())
                 .epimmsId(appt.getEpimmsId())
-                .courtName(appt.getBaseLocationType().getCourtName())
-                .cftRegionID(getRegionId(appt.getEpimmsId(),regionMapping,regionCircuitMapping,REGION))
-                .cftRegion(getRegion(appt.getEpimmsId(),regionMapping,regionCircuitMapping,REGION))
-                .locationId(getRegionId(appt.getEpimmsId(),regionMapping,regionCircuitMapping,LOCATION))
-                .location(getRegion(appt.getEpimmsId(),regionMapping,regionCircuitMapping,LOCATION))
+                .cftRegionID(appt.getRegionId())
+                .cftRegion(appt.getRegionType().getRegionDescEn())
                 .isPrincipalAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
                 .appointment(appt.getAppointment())
                 .appointmentType(appt.getAppointmentType())
-                .roles(getRoleIdList(profile.getJudicialRoleTypes()))
+                .serviceCodes(appt.getLocationMappings().stream().map(LocationMapping::getServiceCode).toList())
                 .startDate(null != appt.getStartDate() ? String.valueOf(appt.getStartDate()) : null)
                 .endDate(null != appt.getEndDate() ? String.valueOf(appt.getEndDate()) : null)
+                .appointmentId(appt.getAppointmentId())
+                .roleNameId(appt.getRoleNameId())
+                .type(appt.getType())
+                .contractTypeId(appt.getContractTypeId())
                 .build();
     }
 
@@ -280,43 +399,9 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .serviceCodes(serviceCode)
                 .startDate(null != auth.getStartDate() ? String.valueOf(auth.getStartDate()) : null)
                 .endDate(null != auth.getEndDate() ? String.valueOf(auth.getEndDate()) : null)
+                .appointmentId(auth.getAppointmentId())
+                .authorisationId(auth.getAuthorisationId())
+                .jurisdictionId(auth.getJurisdictionId())
                 .build();
     }
-
-    private String getRegionId(String epimmsId, RegionMapping regionMapping, RegionMapping regionCircuitMapping,
-                               String type) {
-
-        if ((epimmsId == null || epimmsId.isEmpty())) {
-            if (LOCATION.equalsIgnoreCase(type)) {
-                return null != regionMapping ? regionMapping.getJrdRegionId() : null;
-            } else {
-                return null != regionMapping ? regionMapping.getRegionId() : null;
-            }
-        } else {
-            return null != regionCircuitMapping ? regionCircuitMapping.getRegionId() : null;
-        }
-    }
-
-    private String getRegion(String epimmsId,RegionMapping regionMapping,RegionMapping regionCircuitMapping,
-                             String type) {
-
-        if ((epimmsId == null || epimmsId.isEmpty())) {
-            if (LOCATION.equalsIgnoreCase(type)) {
-                return null != regionMapping ? regionMapping.getJrdRegion() : null;
-            } else {
-                return null != regionMapping ? regionMapping.getRegion() : null;
-            }
-        } else {
-            return null != regionCircuitMapping ? regionCircuitMapping.getRegion() : null;
-        }
-    }
-
-    private List<String> getRoleIdList(List<JudicialRoleType> judicialRoleTypes) {
-        log.info("{} : starting get RoleId List ", loggingComponentName);
-        return judicialRoleTypes.stream()
-                .filter(e -> e.getEndDate() == null || !e.getEndDate().toLocalDate().isBefore(LocalDate.now()))
-                .map(JudicialRoleType::getTitle).toList();
-    }
-
-
 }
