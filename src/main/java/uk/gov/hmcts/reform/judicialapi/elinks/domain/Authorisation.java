@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -82,7 +81,7 @@ public class Authorisation implements Serializable {
     private String jurisdictionId;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "per_id", referencedColumnName = "per_id",
+    @JoinColumn(name = "personal_code", referencedColumnName = "personal_code",
             insertable = false, updatable = false, nullable = false)
     private UserProfile userProfile;
 

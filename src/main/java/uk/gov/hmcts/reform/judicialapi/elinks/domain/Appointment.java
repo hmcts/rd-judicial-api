@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -87,10 +86,6 @@ public class Appointment implements Serializable {
     @Size(max = 32)
     private String type;
 
-    @Column(name = "appointment")
-    @Size(max = 64)
-    private String appointmentMapping;
-
     @Column(name = "appointment_id")
     @Size(max = 256)
     private String appointmentId;
@@ -111,11 +106,8 @@ public class Appointment implements Serializable {
     @Size(max = 64)
     private String joBaseLocationId;
 
-    @Column(name = "appointment")
-    private String appointment;
-
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "per_id", referencedColumnName = "per_id",
+    @JoinColumn(name = "personal_code", referencedColumnName = "personal_code",
             insertable = false, updatable = false, nullable = false)
     private UserProfile userProfile;
 
@@ -130,7 +122,7 @@ public class Appointment implements Serializable {
     private RegionType regionType;
 
     @OneToMany
-    @JoinColumn(name = "base_location_Id", referencedColumnName = "judicial_base_location_Id",
+    @JoinColumn(name = "judicial_base_location_Id", referencedColumnName = "base_location_Id",
             insertable = false, updatable = false, nullable = false)
     private List<LocationMapping> locationMappings;
 

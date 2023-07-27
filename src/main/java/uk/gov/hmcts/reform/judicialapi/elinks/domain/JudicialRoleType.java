@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
 
 import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
@@ -20,7 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-@Entity(name = "JudicialRoleType")
+@Entity(name = "judicial_additional_roles")
 @Table(name = "judicial_additional_roles", schema = "dbjudicialdata")
 @Builder
 @NoArgsConstructor
@@ -55,7 +54,7 @@ public class JudicialRoleType {
     private String jurisdictionRoleId;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "per_id", referencedColumnName = "per_id",
+    @JoinColumn(name = "personal_code", referencedColumnName = "personal_code",
             insertable = false, updatable = false, nullable = false)
     private UserProfile userProfile;
 

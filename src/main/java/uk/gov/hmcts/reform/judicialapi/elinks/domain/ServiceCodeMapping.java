@@ -9,10 +9,12 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Getter
 @Setter
-@Entity(name = "judicial_service_code_mapping")
+@Entity(name = "serviceCodeMapping")
+@Table(name = "judicial_service_code_mapping", schema = "dbjudicialdata")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

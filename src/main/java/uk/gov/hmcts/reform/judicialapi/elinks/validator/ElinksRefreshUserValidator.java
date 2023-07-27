@@ -17,7 +17,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.ONLY_
 @Component
 @Slf4j
 @NoArgsConstructor
-public class RefreshUserValidator {
+public class ElinksRefreshUserValidator {
 
     public void shouldContainOnlyOneInputParameter(RefreshRoleRequest refreshRoleRequest) {
         if (null != refreshRoleRequest) {

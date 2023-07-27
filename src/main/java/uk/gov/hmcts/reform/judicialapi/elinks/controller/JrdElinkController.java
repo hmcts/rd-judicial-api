@@ -44,7 +44,7 @@ public class JrdElinkController {
     @Autowired
     ElinkUserService elinkUserService;
 
-    @ApiOperation(
+  /*  @ApiOperation(
             value = "This Version 2 endpoint will be used for user search based on partial query. When the consumers "
                     + "inputs any 3 characters, they will call this api to fetch "
                     + "the required result.",
@@ -77,14 +77,14 @@ public class JrdElinkController {
                     message = "Internal Server Error"
             )
     })
-    @PostMapping(
+  /*  @PostMapping(
             path = "/search",
             consumes = V2.MediaType.SERVICE,
             produces = V2.MediaType.SERVICE
     )
-    public ResponseEntity<Object> retrieveUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {
-        return elinkUserService.retrieveElinkUsers(userSearchRequest);
-    }
+  //  public ResponseEntity<Object> retrieveUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {
+      //  return elinkUserService.retrieveElinkUsers(userSearchRequest);
+  //  }*/
 
     @ApiOperation(
             value = "This API to return judicial user profiles along with their active appointments "

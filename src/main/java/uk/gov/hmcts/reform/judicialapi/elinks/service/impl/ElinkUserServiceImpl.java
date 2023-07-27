@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,12 +17,10 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.AppointmentRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.AuthorisationRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.RegionMappingRepository;
@@ -34,7 +33,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RequestUtils;
-import uk.gov.hmcts.reform.judicialapi.elinks.validator.RefreshUserValidator;
+import uk.gov.hmcts.reform.judicialapi.elinks.validator.ElinksRefreshUserValidator;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
@@ -56,10 +55,11 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     private ProfileRepository userProfileRepository;
 
     @Autowired
+    @Qualifier("elinksServiceCodeMappingRepository")
     private ServiceCodeMappingRepository serviceCodeMappingRepository;
 
-    @Autowired
-    private RegionMappingRepository regionMappingRepository;
+
+
 
     @Value("${search.serviceCode}")
     private List<String> searchServiceCode;
@@ -77,10 +77,10 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     private LocationReferenceDataFeignClient locationReferenceDataFeignClient;
 
     @Autowired
-    private RefreshUserValidator refreshUserValidator;
+    private ElinksRefreshUserValidator elinksRefreshUserValidator;
 
-    @Override
-    public ResponseEntity<Object> retrieveElinkUsers(UserSearchRequest userSearchRequest) {
+ //   @Override
+  /*  public ResponseEntity<Object> retrieveElinkUsers(UserSearchRequest userSearchRequest) {
         var ticketCode = new ArrayList<String>();
 
         if (userSearchRequest.getServiceCode() != null) {
@@ -91,22 +91,22 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .forEach(s -> ticketCode.add(s.getTicketCode()));
         }
         log.info("SearchServiceCode list = {}", searchServiceCode);
-        var userSearchResponses = userProfileRepository
+      var userSearchResponses = userProfileRepository
             .findBySearchForString(userSearchRequest.getSearchString().toLowerCase(),
                 userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode,
                 searchServiceCode);
-
+        var userSearchResponses = null;
         return ResponseEntity
             .status(200)
             .body(userSearchResponses);
-    }
+    }*/
     @Override
     @SuppressWarnings("unchecked")
     public ResponseEntity<Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,
                                                      Integer pageNumber, String sortDirection, String sortColumn) {
 
         log.info("{} : starting refreshUserProfile ", loggingComponentName);
-        refreshUserValidator.shouldContainOnlyOneInputParameter(refreshRoleRequest);
+        elinksRefreshUserValidator.shouldContainOnlyOneInputParameter(refreshRoleRequest);
         var pageRequest = RequestUtils.validateAndBuildPaginationObject(pageSize, pageNumber,
                 sortDirection, sortColumn, refreshDefaultPageSize, refreshDefaultSortColumn,
                 UserProfile.class);
@@ -118,21 +118,22 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     private ResponseEntity<Object> getRefreshUserProfileBasedOnParam(RefreshRoleRequest refreshRoleRequest,
                                                                      PageRequest pageRequest) {
         log.info("{} : starting getRefreshUserProfile Based On Param ", loggingComponentName);
-        if (refreshUserValidator.isStringNotEmptyOrNotNull(refreshRoleRequest.getCcdServiceNames())) {
+        if (elinksRefreshUserValidator.isStringNotEmptyOrNotNull(refreshRoleRequest.getCcdServiceNames())) {
             return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
-        } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds())) {
+        } else if (elinksRefreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds())) {
             return refreshUserProfileBasedOnSidamIds(
-                   refreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getSidamIds()), pageRequest);
-        } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getObjectIds())) {
+                    elinksRefreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getSidamIds()), pageRequest);
+        } else if (elinksRefreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getObjectIds())) {
             return refreshUserProfileBasedOnObjectIds(
-                    refreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getObjectIds()), pageRequest);
-        } else if (refreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getPersonalCodes())) {
-           return refreshUserProfileBasedOnPersonalCodes(refreshUserValidator.removeEmptyOrNullFromList(
+                    elinksRefreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getObjectIds()), pageRequest);
+        } else if (elinksRefreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getPersonalCodes())) {
+           return refreshUserProfileBasedOnPersonalCodes(elinksRefreshUserValidator.removeEmptyOrNullFromList(
                  refreshRoleRequest.getPersonalCodes()), pageRequest);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @SuppressWarnings("unchecked")
     private ResponseEntity<Object> refreshUserProfileBasedOnCcdServiceNames(String ccdServiceNames,
                                                                             PageRequest pageRequest) {
         log.info("{} : starting refreshUserProfile BasedOn CcdServiceNames ", loggingComponentName);
@@ -358,7 +359,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .cftRegionID(appt.getRegionId())
                 .cftRegion(appt.getRegionType().getRegionDescEn())
                 .isPrincipalAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
-                .appointment(appt.getAppointment())
+                .appointment(appt.getAppointmentRolesMapping())
                 .appointmentType(appt.getAppointmentType())
                 .serviceCodes(appt.getLocationMappings().stream().map(LocationMapping::getServiceCode).toList())
                 .startDate(null != appt.getStartDate() ? String.valueOf(appt.getStartDate()) : null)

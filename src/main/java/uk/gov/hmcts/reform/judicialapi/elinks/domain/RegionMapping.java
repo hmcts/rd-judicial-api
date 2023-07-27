@@ -10,8 +10,10 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity(name = "jrd_lrd_region_mapping")
+@Entity(name = "regionMapping")
+@Table(name = "jrd_lrd_region_mapping", schema = "dbjudicialdata")
 @Getter
 @Setter
 @Builder
