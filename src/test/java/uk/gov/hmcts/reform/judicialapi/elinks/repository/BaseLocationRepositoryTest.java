@@ -34,9 +34,9 @@ class BaseLocationRepositoryTest {
 
         assertThat(result.getBaseLocationId()).isEqualTo(baseLocationOne.getBaseLocationId());
         assertThat(result.getCourtName()).isEqualTo(baseLocationOne.getCourtName());
-        assertThat(result.getCourtType()).isEqualTo(baseLocationOne.getCourtType());
-        assertThat(result.getCircuit()).isEqualTo(baseLocationOne.getCircuit());
-        assertThat(result.getAreaOfExpertise()).isEqualTo(baseLocationOne.getAreaOfExpertise());
+        assertThat(result.getJurisdictionId()).isEqualTo(baseLocationOne.getJurisdictionId());
+        assertThat(result.getParentId()).isEqualTo(baseLocationOne.getParentId());
+        assertThat(result.getTypeId()).isEqualTo(baseLocationOne.getTypeId());
 
     }
 
@@ -59,15 +59,15 @@ class BaseLocationRepositoryTest {
 
         assertThat(result.get(0).getBaseLocationId()).isEqualTo(baseLocationOne.getBaseLocationId());
         assertThat(result.get(0).getCourtName()).isEqualTo(baseLocationOne.getCourtName());
-        assertThat(result.get(0).getCourtType()).isEqualTo(baseLocationOne.getCourtType());
-        assertThat(result.get(0).getCircuit()).isEqualTo(baseLocationOne.getCircuit());
-        assertThat(result.get(0).getAreaOfExpertise()).isEqualTo(baseLocationOne.getAreaOfExpertise());
+        assertThat(result.get(0).getTypeId()).isEqualTo(baseLocationOne.getTypeId());
+        assertThat(result.get(0).getJurisdictionId()).isEqualTo(baseLocationOne.getJurisdictionId());
+        assertThat(result.get(0).getParentId()).isEqualTo(baseLocationOne.getParentId());
 
         assertThat(result.get(1).getBaseLocationId()).isEqualTo(baseLocationTwo.getBaseLocationId());
         assertThat(result.get(1).getCourtName()).isEqualTo(baseLocationTwo.getCourtName());
-        assertThat(result.get(1).getCourtType()).isEqualTo(baseLocationTwo.getCourtType());
-        assertThat(result.get(1).getCircuit()).isEqualTo(baseLocationTwo.getCircuit());
-        assertThat(result.get(1).getAreaOfExpertise()).isEqualTo(baseLocationTwo.getAreaOfExpertise());
+        assertThat(result.get(1).getParentId()).isEqualTo(baseLocationTwo.getParentId());
+        assertThat(result.get(1).getJurisdictionId()).isEqualTo(baseLocationTwo.getJurisdictionId());
+        assertThat(result.get(1).getTypeId()).isEqualTo(baseLocationTwo.getTypeId());
     }
 
 
@@ -78,17 +78,17 @@ class BaseLocationRepositoryTest {
         BaseLocation baseLocationOne = new BaseLocation();
         baseLocationOne.setBaseLocationId("1");
         baseLocationOne.setCourtName("National");
-        baseLocationOne.setCourtType("Old Gwynedd");
-        baseLocationOne.setCircuit("Gwynedd");
-        baseLocationOne.setAreaOfExpertise("LJA");
+        baseLocationOne.setJurisdictionId("Old Gwynedd");
+        baseLocationOne.setTypeId("Gwynedd");
+        baseLocationOne.setParentId("LJA");
 
 
         BaseLocation baseLocationTwo = new BaseLocation();
         baseLocationTwo.setBaseLocationId("2");
         baseLocationTwo.setCourtName("Aldridge and Brownhills");
-        baseLocationTwo.setCourtType("Nottinghamshire");
-        baseLocationTwo.setCircuit("Nottinghamshire");
-        baseLocationTwo.setAreaOfExpertise("LJA");
+        baseLocationTwo.setJurisdictionId("Nottinghamshire");
+        baseLocationTwo.setTypeId("Nottinghamshire");
+        baseLocationTwo.setParentId("LJA");
 
 
 

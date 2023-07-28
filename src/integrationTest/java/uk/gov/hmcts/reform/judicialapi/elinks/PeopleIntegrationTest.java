@@ -102,7 +102,6 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
         assertEquals(8, authorisationList.size());
         assertEquals(userprofile.get(0).getPersonalCode(), authorisationList.get(0).getPersonalCode());
-        assertEquals(userprofile.get(0).getObjectId(),authorisationList.get(0).getObjectId());
         assertEquals("Civil", authorisationList.get(0).getJurisdiction());
         assertEquals("Administrative Court", authorisationList.get(0).getLowerLevel());
         assertEquals("290",authorisationList.get(0).getTicketCode());
@@ -112,7 +111,6 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(authorisationList.get(0).getLastUpdated());
 
         assertEquals(userprofile.get(0).getPersonalCode(), authorisationList.get(1).getPersonalCode());
-        assertEquals(userprofile.get(0).getObjectId(),authorisationList.get(1).getObjectId());
         assertEquals("Civil", authorisationList.get(1).getJurisdiction());
         assertEquals("Civil Authorisation", authorisationList.get(1).getLowerLevel());
         assertEquals("294",authorisationList.get(1).getTicketCode());

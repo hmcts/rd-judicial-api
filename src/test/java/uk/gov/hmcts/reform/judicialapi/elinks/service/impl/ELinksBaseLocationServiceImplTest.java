@@ -283,9 +283,9 @@ class ELinksBaseLocationServiceImplTest {
         BaseLocationResponse baseLocationOne = new BaseLocationResponse();
         baseLocationOne.setId("1");
         baseLocationOne.setName("National");
-        baseLocationOne.setCourtType("Old Gwynedd");
-        baseLocationOne.setCircuit("Gwynedd");
-        baseLocationOne.setAreaOfExpertise("LJA");
+        baseLocationOne.setParentId("Old Gwynedd");
+        baseLocationOne.setJurisdictionId("Gwynedd");
+        baseLocationOne.setTypeId("LJA");
         baseLocationOne.setEndDate("2005-12-15");
 
         baseLocationOne.setCreatedAt("2022-10-03T15:28:20Z");
@@ -294,9 +294,9 @@ class ELinksBaseLocationServiceImplTest {
         BaseLocationResponse baseLocationTwo = new BaseLocationResponse();
         baseLocationTwo.setId("2");
         baseLocationTwo.setName("Aldridge and Brownhills");
-        baseLocationTwo.setCourtType("Nottinghamshire");
-        baseLocationTwo.setCircuit("Nottinghamshire");
-        baseLocationTwo.setAreaOfExpertise("LJA");
+        baseLocationTwo.setParentId("Nottinghamshire");
+        baseLocationTwo.setJurisdictionId("Nottinghamshire");
+        baseLocationTwo.setTypeId("LJA");
         baseLocationTwo.setEndDate("2008-09-11");
 
         baseLocationTwo.setCreatedAt("2022-10-03T15:28:20Z");

@@ -155,9 +155,9 @@ public class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest 
         assertEquals(7, baseLocationList.size());
         assertEquals("Aberconwy",baseLocationList.get(1).getCourtName());
         assertEquals("1",baseLocationList.get(1).getBaseLocationId());
-        assertEquals("Old Gwynedd",baseLocationList.get(1).getCourtType());
-        assertEquals("Gwynedd",baseLocationList.get(1).getCircuit());
-        assertEquals("LJA",baseLocationList.get(1).getAreaOfExpertise());
+        assertEquals("Old Gwynedd",baseLocationList.get(1).getJurisdictionId());
+        assertEquals("Gwynedd",baseLocationList.get(1).getParentId());
+        assertEquals("LJA",baseLocationList.get(1).getTypeId());
 
         //asserting people data
         Map<String, Object> peopleResponse = elinksReferenceDataClient.getPeoples();
