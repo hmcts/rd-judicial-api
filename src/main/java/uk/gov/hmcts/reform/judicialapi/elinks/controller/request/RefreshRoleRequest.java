@@ -1,4 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.controller.request;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

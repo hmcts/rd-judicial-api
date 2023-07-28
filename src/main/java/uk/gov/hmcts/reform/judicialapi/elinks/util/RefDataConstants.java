@@ -22,6 +22,9 @@ public class RefDataConstants {
 
     public static final String JOB_ID = "JOB_ID";
 
+    public static final String LRD_ERROR = "An error occurred while retrieving data from Location Reference Data";
+
+
     public static final String ASB_PUBLISHING_STATUS = "ASB_PUBLISHING_STATUS";
 
     public static final String CONTENT_TYPE_PLAIN = "text/plain";

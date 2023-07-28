@@ -7,6 +7,7 @@ import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 
 import java.util.List;
 import java.util.Set;
+
 @Repository
 public interface ServiceCodeMappingRepository extends JpaRepository<ServiceCodeMapping, String> {
 

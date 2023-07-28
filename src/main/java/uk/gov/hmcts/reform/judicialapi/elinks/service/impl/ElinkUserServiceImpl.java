@@ -15,21 +15,21 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.AppointmentRefreshResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.AuthorisationRefreshResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.JudicialRoleTypeRefresh;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ServiceCodeMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.AppointmentRefreshResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.AuthorisationRefreshResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.JudicialRoleTypeRefresh;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.validator.ElinksRefreshUserValidator;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
@@ -42,6 +42,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.LRD_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.NO_DATA_FOUND;
 
 @Slf4j
@@ -55,12 +56,6 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     @Autowired
     @Qualifier("elinksServiceCodeMappingRepository")
     private ServiceCodeMappingRepository serviceCodeMappingRepository;
-
-
-
-
-    @Value("${search.serviceCode}")
-    private List<String> searchServiceCode;
 
     @Value("${loggingComponentName}")
     private String loggingComponentName;
@@ -77,8 +72,8 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     @Autowired
     private ElinksRefreshUserValidator elinksRefreshUserValidator;
 
- //   @Override
-  /*  public ResponseEntity<Object> retrieveElinkUsers(UserSearchRequest userSearchRequest) {
+    //   @Override
+    /*  public ResponseEntity<Object> retrieveElinkUsers(UserSearchRequest userSearchRequest) {
         var ticketCode = new ArrayList<String>();
 
         if (userSearchRequest.getServiceCode() != null) {
@@ -120,12 +115,14 @@ public class ElinkUserServiceImpl implements ElinkUserService {
             return refreshUserProfileBasedOnCcdServiceNames(refreshRoleRequest.getCcdServiceNames(), pageRequest);
         } else if (elinksRefreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getSidamIds())) {
             return refreshUserProfileBasedOnSidamIds(
-                    elinksRefreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getSidamIds()), pageRequest);
+                    elinksRefreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getSidamIds()),
+                    pageRequest);
         } else if (elinksRefreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getObjectIds())) {
             return refreshUserProfileBasedOnObjectIds(
-                    elinksRefreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getObjectIds()), pageRequest);
+                    elinksRefreshUserValidator.removeEmptyOrNullFromList(refreshRoleRequest.getObjectIds()),
+                    pageRequest);
         } else if (elinksRefreshUserValidator.isListNotEmptyOrNotNull(refreshRoleRequest.getPersonalCodes())) {
-           return refreshUserProfileBasedOnPersonalCodes(elinksRefreshUserValidator.removeEmptyOrNullFromList(
+            return refreshUserProfileBasedOnPersonalCodes(elinksRefreshUserValidator.removeEmptyOrNullFromList(
                  refreshRoleRequest.getPersonalCodes()), pageRequest);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -166,7 +163,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 if (userProfilePage == null || userProfilePage.isEmpty()) {
                     log.error("{}:: No data found in JRD for the ccdServiceNames {}",
                             loggingComponentName, ccdServiceNames);
-                    throw new uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException(uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.NO_DATA_FOUND);
+                    throw new ResourceNotFoundException(NO_DATA_FOUND);
                 }
 
                 return getRefreshRoleResponseEntity(userProfilePage, ccdServiceNames, "ccdServiceNames");
@@ -184,7 +181,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
             throw new UserProfileException(httpStatus, errorResponse.getErrorMessage(),
                     errorResponse.getErrorDescription());
         } else {
-            throw new UserProfileException(httpStatus, uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.LRD_ERROR, uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.LRD_ERROR);
+            throw new UserProfileException(httpStatus, LRD_ERROR, LRD_ERROR);
         }
     }
 
@@ -234,16 +231,17 @@ public class ElinkUserServiceImpl implements ElinkUserService {
         if (userProfilePage == null || userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the sidamIds {}",
                     loggingComponentName, sidamIds);
-            throw new uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException(uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.NO_DATA_FOUND);
+            throw new ResourceNotFoundException(NO_DATA_FOUND);
         }
         return getRefreshRoleResponseEntity(userProfilePage, sidamIds, "sidamIds");
     }
 
-    private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage, Object collection, String collectionName) {
+    private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage, Object collection,
+                                                                String collectionName) {
         log.info("{} : starting getRefresh Role Response Entity ", loggingComponentName);
-        var userProfileList = new ArrayList<UserProfileRefreshResponse>();//change here ...
+        var userProfileList = new ArrayList<UserProfileRefreshResponse>();
 
-        var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();//check here
+        var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();
         log.info("serviceCodeMappings size = {}", serviceCodeMappings.size());
         userProfilePage.stream().findFirst().get().getAuthorisations();
         userProfilePage.forEach(userProfile -> userProfileList.add(
@@ -304,7 +302,8 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .personalCode(profile.getPersonalCode())
                 .title(profile.getTitle())
                 .initials(profile.getInitials())
-                .retirementDate(null != profile.getRetirementDate() ? String.valueOf(profile.getRetirementDate()) : null)
+                .retirementDate(null != profile.getRetirementDate() ? String.valueOf(profile.getRetirementDate())
+                        : null)
                 .activeFlag(String.valueOf(profile.getActiveFlag()))
                 .appointments(getAppointmentRefreshResponseList(profile))
                 .authorisations(getAuthorisationRefreshResponseList(profile, serviceCodeMappings))
@@ -331,12 +330,13 @@ public class ElinkUserServiceImpl implements ElinkUserService {
         return   JudicialRoleTypeRefresh.builder()
                 .title(judicialRoleType.getTitle())
                 .jurisdictionRoleId(judicialRoleType.getJurisdictionRoleId())
-                .startDate(null != judicialRoleType.getStartDate() ? String.valueOf(judicialRoleType.getStartDate()) : null)
+                .startDate(null != judicialRoleType.getStartDate() ? String.valueOf(judicialRoleType.getStartDate())
+                        : null)
                 .endDate(null != judicialRoleType.getEndDate() ? String.valueOf(judicialRoleType.getEndDate()) : null)
                 .build();
     }
 
-    private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList( // change in appointment refresh response
+    private List<AppointmentRefreshResponse> getAppointmentRefreshResponseList(
             UserProfile profile) {
         log.info("{} : starting get Appointment Refresh Response List ", loggingComponentName);
 
