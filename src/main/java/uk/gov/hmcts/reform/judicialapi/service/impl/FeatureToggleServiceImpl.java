@@ -49,6 +49,7 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
         launchDarklyMap.put("ElinksController.loadLeavers", "jrd-elinks-leavers");
         launchDarklyMap.put("ElinksController.loadDeleted", "jrd-elinks-load-deleted");
         launchDarklyMap.put("ElinksController.publishSidamIdToAsb", "jrd-elinks-publish-service-bus");
+        launchDarklyMap.put("JrdElinkController.retrieveUsers", "jrd-elinks-search-api");
     }
 
     @Override
