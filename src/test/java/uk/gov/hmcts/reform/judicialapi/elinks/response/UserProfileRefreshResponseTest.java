@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class userProfileRefreshResponseTest {
+public class UserProfileRefreshResponseTest {
 
     @Test
     void test_AppointmentResponseSetter() {
