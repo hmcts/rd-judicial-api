@@ -11,7 +11,6 @@ public class UserProfileRefreshResponseTest {
 
     @Test
     void test_AppointmentResponseSetter() {
-        UserProfileRefreshResponse userProfileRefreshResponse = new UserProfileRefreshResponse();
 
         AppointmentRefreshResponse appointmentResponse = new AppointmentRefreshResponse();
 
@@ -38,6 +37,7 @@ public class UserProfileRefreshResponseTest {
         authorisationRefreshResponseList.add(authorisationRefreshResponse);
         List<AppointmentRefreshResponse> appointmentRefreshResponseList = new ArrayList<AppointmentRefreshResponse>();
         authorisationRefreshResponseList.add(authorisationRefreshResponse);
+        UserProfileRefreshResponse userProfileRefreshResponse = new UserProfileRefreshResponse();
         userProfileRefreshResponse.setAuthorisations(authorisationRefreshResponseList);
         appointmentRefreshResponseList.add(appointmentResponse);
 
