@@ -360,7 +360,8 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .isPrincipalAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
                 .appointment(appt.getAppointmentRolesMapping())
                 .appointmentType(appt.getAppointmentType())
-                .serviceCodes(appt.getLocationMappings().stream().map(LocationMapping::getServiceCode).toList())
+                .serviceCodes(appt.getLocationMappings().stream().map(LocationMapping::getServiceCode).distinct()
+                        .toList())
                 .startDate(null != appt.getStartDate() ? String.valueOf(appt.getStartDate()) : null)
                 .endDate(null != appt.getEndDate() ? String.valueOf(appt.getEndDate()) : null)
                 .appointmentId(appt.getAppointmentId())
@@ -389,7 +390,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
 
         List<String> serviceCode = serviceCodeMappings.stream()
                 .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode()))
-                .map(ServiceCodeMapping::getServiceCode)
+                .map(ServiceCodeMapping::getServiceCode).distinct()
                 .toList();
 
         return AuthorisationRefreshResponse.builder()
