@@ -85,4 +85,5 @@ public class Authorisation implements Serializable {
             insertable = false, updatable = false, nullable = false)
     private UserProfile userProfile;
 
+
 }

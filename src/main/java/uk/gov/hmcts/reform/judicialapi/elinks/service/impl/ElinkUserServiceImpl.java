@@ -23,11 +23,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.RegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.JudicialRoleTypeRefresh;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
@@ -217,6 +215,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
         log.info("{} : starting refreshUserProfile BasedOn personalCodes ", loggingComponentName);
         var userProfilePage = userProfileRepository.fetchUserProfileByPersonalCodes(
                 personalCodes, pageRequest);
+        userProfilePage.stream().findFirst().get().getAuthorisations();
         if (userProfilePage == null || userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the personalCodes {}",
                     loggingComponentName, personalCodes);
@@ -246,7 +245,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
 
         var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();//check here
         log.info("serviceCodeMappings size = {}", serviceCodeMappings.size());
-
+        userProfilePage.stream().findFirst().get().getAuthorisations();
         userProfilePage.forEach(userProfile -> userProfileList.add(
                 buildUserProfileRefreshResponseDto(userProfile,serviceCodeMappings)));
 

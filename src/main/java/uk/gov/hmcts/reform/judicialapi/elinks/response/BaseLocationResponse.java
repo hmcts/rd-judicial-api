@@ -20,13 +20,13 @@ public class BaseLocationResponse implements Serializable {
     private String name;
 
     @JsonProperty(value = "orgunit2name")
-    private String courtType;
+    private String typeId;
 
     @JsonProperty(value = "orgunit3name")
-    private String circuit;
+    private String parentId;
 
     @JsonProperty(value = "orgunit4name")
-    private String areaOfExpertise;
+    private String jurisdictionId;
 
     @JsonProperty("start_date")
     private String startDate;
@@ -41,9 +41,10 @@ public class BaseLocationResponse implements Serializable {
         BaseLocation baseLocation = new BaseLocation();
         baseLocation.setBaseLocationId(baseLocationResponse.getId());
         baseLocation.setCourtName(baseLocationResponse.getName());
-        baseLocation.setCourtType(baseLocationResponse.getCourtType());
-        baseLocation.setCircuit(baseLocationResponse.getCircuit());
-        baseLocation.setAreaOfExpertise(baseLocationResponse.getAreaOfExpertise());
+
+        baseLocation.setTypeId(baseLocationResponse.getTypeId());
+        baseLocation.setParentId(baseLocationResponse.getParentId());
+        baseLocation.setJurisdictionId(baseLocationResponse.getJurisdictionId());
         return baseLocation;
     }
 

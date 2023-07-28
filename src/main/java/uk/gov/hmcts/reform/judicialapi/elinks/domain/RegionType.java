@@ -10,9 +10,13 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.util.List;
 
-@Entity(name = "hmctsRegionType")
+@Entity(name = "hmcts_region_type")
+@Table(name = "hmcts_region_type", schema = "dbjudicialdata")
 @Getter
 @Setter
 @Builder
@@ -32,5 +36,8 @@ public class RegionType {
     @Column(name = "hmcts_region_desc_cy")
     @Size(max = 256)
     private String RegionDescCy;
+
+    @OneToMany(targetEntity = Appointment.class, mappedBy = "regionType")
+    private List<Appointment> appointments;
 
 }

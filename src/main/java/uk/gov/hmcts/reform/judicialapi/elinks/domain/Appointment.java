@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import uk.gov.hmcts.reform.judicialapi.domain.BaseLocationType;
+
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -114,7 +114,7 @@ public class Appointment implements Serializable {
     @ManyToOne
     @JoinColumn(name = "base_location_Id", referencedColumnName = "base_location_Id",
             insertable = false, updatable = false, nullable = false)
-    private BaseLocationType baseLocationType;
+    private BaseLocation baseLocationType;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "hmcts_region_id", referencedColumnName = "hmcts_region_id",
