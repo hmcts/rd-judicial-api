@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.validator;
 
 import org.junit.jupiter.api.Test;
-import uk.gov.hmcts.reform.judicialapi.validator.RefreshUserValidator;
 
 import java.util.Collections;
 import java.util.List;
