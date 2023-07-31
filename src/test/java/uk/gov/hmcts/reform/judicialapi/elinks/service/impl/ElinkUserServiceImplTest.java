@@ -12,8 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.InvalidRequestException;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
@@ -440,9 +440,9 @@ class ElinkUserServiceImplTest {
         var page = new PageImpl<>(Collections.singletonList(userProfile));
         when(profileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
                 .thenReturn(null);
-        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+        var refreshRoleRequest = new RefreshRoleRequest("",
                 null, null, Arrays.asList("Emp", "Emp"));
-        Assertions.assertThrows(uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException.class, () -> {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "ASC", "objectId");
         });
