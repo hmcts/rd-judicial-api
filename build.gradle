@@ -358,6 +358,7 @@ dependencies {
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
 
+
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '7.10.0'
