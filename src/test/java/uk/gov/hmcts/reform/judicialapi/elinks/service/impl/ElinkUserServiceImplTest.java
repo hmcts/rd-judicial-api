@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
@@ -174,6 +175,13 @@ class ElinkUserServiceImplTest {
         userSearchResponse.setTitle("Mr");
 
         return userSearchResponse;
+    }
+
+    @NotNull
+    private PageRequest getPageRequest() {
+        return RequestUtils.validateAndBuildPaginationObject(1, 0,
+                "ASC", "objectId",
+                20, "id", uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile.class);
     }
 
     @Test
@@ -371,14 +379,75 @@ class ElinkUserServiceImplTest {
         assertEquals(2, profile.getAuthorisations().size());
     }
 
+    @Test
+    void test_refreshUserProfile_BasedOnPersonalCodes_Error() throws JsonProcessingException {
+        var userProfile = buildUserProfile();
 
+        var pageRequest = getPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
 
-    @NotNull
-    private PageRequest getPageRequest() {
-        return RequestUtils.validateAndBuildPaginationObject(1, 0,
-                "ASC", "objectId",
-                20, "id", uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile.class);
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+                Arrays.asList("test", "test"), null,null);
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
     }
+
+    @Test
+    void test_refreshUserProfile_BasedOnPersonalCodes_200() {
+        var userProfile = buildUserProfileIac();
+
+        var pageRequest = getPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+        var serviceCodeMapping = uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping
+                .builder()
+                .ticketCode("373")
+                .serviceCode("BFA1")
+                .build();
+
+        when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
+
+        when(profileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(page);
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+                null, null, Arrays.asList("Emp", "Emp", null));
+        var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId");
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void test_refreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException {
+
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+                null, null, Arrays.asList("Emp", "Emp", null));
+
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, -1,
+                    0, "ASC", "objectId");
+
+        });
+    }
+
+    @Test
+    void test_refreshUserProfile_BasedOnPersonalCodes_404() throws JsonProcessingException {
+        var userProfile = buildUserProfile();
+
+        var pageRequest = getPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+        when(profileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(null);
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+                null, null, Arrays.asList("Emp", "Emp"));
+        Assertions.assertThrows(uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
 
     UserProfile buildUserProfile() {
 

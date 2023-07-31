@@ -212,7 +212,6 @@ public class ElinkUserServiceImpl implements ElinkUserService {
         log.info("{} : starting refreshUserProfile BasedOn personalCodes ", loggingComponentName);
         var userProfilePage = userProfileRepository.fetchUserProfileByPersonalCodes(
                 personalCodes, pageRequest);
-        userProfilePage.stream().findFirst().get().getAuthorisations();
         if (userProfilePage == null || userProfilePage.isEmpty()) {
             log.error("{}:: No data found in JRD for the personalCodes {}",
                     loggingComponentName, personalCodes);
@@ -243,7 +242,6 @@ public class ElinkUserServiceImpl implements ElinkUserService {
 
         var serviceCodeMappings = serviceCodeMappingRepository.findAllServiceCodeMapping();
         log.info("serviceCodeMappings size = {}", serviceCodeMappings.size());
-        userProfilePage.stream().findFirst().get().getAuthorisations();
         userProfilePage.forEach(userProfile -> userProfileList.add(
                 buildUserProfileRefreshResponseDto(userProfile,serviceCodeMappings)));
 
