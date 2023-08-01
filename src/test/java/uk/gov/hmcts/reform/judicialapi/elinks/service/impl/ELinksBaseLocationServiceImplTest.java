@@ -77,12 +77,12 @@ class ELinksBaseLocationServiceImplTest {
         String body = mapper.writeValueAsString(elinkBaseLocationResponse);
 
 
-        when(elinksFeignClient.getBaseLocationDetails()).thenReturn(Response.builder()
+        when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(HttpStatus.OK.value()).build());
 
         when(baseLocationRepository.saveAll(anyList())).thenReturn(new ArrayList<>());
 
-        ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveBaseLocation();
+        ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
 
         assertThat(responseEntity).isNotNull();
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
@@ -108,13 +108,13 @@ class ELinksBaseLocationServiceImplTest {
 
         DataAccessException dataAccessException = mock(DataAccessException.class);
 
-        when(elinksFeignClient.getBaseLocationDetails()).thenReturn(Response.builder()
+        when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(HttpStatus.OK.value()).build());
 
 
         when(baseLocationRepository.saveAll(anyList())).thenThrow(dataAccessException);
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveBaseLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -143,11 +143,11 @@ class ELinksBaseLocationServiceImplTest {
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
 
-        when(elinksFeignClient.getBaseLocationDetails()).thenThrow(feignExceptionMock);
+        when(elinksFeignClient.getLocationDetails()).thenThrow(feignExceptionMock);
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveBaseLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
@@ -163,14 +163,14 @@ class ELinksBaseLocationServiceImplTest {
             throws JsonProcessingException {
 
 
-        when(elinksFeignClient.getBaseLocationDetails()).thenReturn(Response.builder()
+        when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class))
                 .body("", defaultCharset()).status(HttpStatus.BAD_REQUEST.value()).build());
 
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveBaseLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -187,14 +187,14 @@ class ELinksBaseLocationServiceImplTest {
             throws JsonProcessingException {
 
 
-        when(elinksFeignClient.getBaseLocationDetails()).thenReturn(Response.builder()
+        when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class))
                 .body("", defaultCharset()).status(HttpStatus.UNAUTHORIZED.value()).build());
 
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveBaseLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
 
@@ -211,14 +211,14 @@ class ELinksBaseLocationServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_http_FORBIDDEN()
             throws JsonProcessingException {
 
-        when(elinksFeignClient.getBaseLocationDetails()).thenReturn(Response.builder()
+        when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class))
                 .body("", defaultCharset()).status(HttpStatus.FORBIDDEN.value()).build());
 
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveBaseLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
 
@@ -234,14 +234,14 @@ class ELinksBaseLocationServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_http_NOT_FOUND()
             throws JsonProcessingException {
 
-        when(elinksFeignClient.getBaseLocationDetails()).thenReturn(Response.builder()
+        when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class))
                 .body("", defaultCharset()).status(HttpStatus.NOT_FOUND.value()).build());
 
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveBaseLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
@@ -256,14 +256,14 @@ class ELinksBaseLocationServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_http_TOO_MANY_REQUESTS()
             throws JsonProcessingException {
 
-        when(elinksFeignClient.getBaseLocationDetails()).thenReturn(Response.builder()
+        when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class))
                 .body("", defaultCharset()).status(HttpStatus.TOO_MANY_REQUESTS.value()).build());
 
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveBaseLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.TOO_MANY_REQUESTS.value());
@@ -282,33 +282,24 @@ class ELinksBaseLocationServiceImplTest {
 
         BaseLocationResponse baseLocationOne = new BaseLocationResponse();
         baseLocationOne.setId("1");
-        baseLocationOne.setName("National");
-        baseLocationOne.setCourtType("Old Gwynedd");
-        baseLocationOne.setCircuit("Gwynedd");
-        baseLocationOne.setAreaOfExpertise("LJA");
-        baseLocationOne.setEndDate("2005-12-15");
-
-        baseLocationOne.setCreatedAt("2022-10-03T15:28:20Z");
-        baseLocationOne.setUpdatedAt("2022-10-03T15:28:20Z");
+        baseLocationOne.setName("Aberconwy");
+        baseLocationOne.setTypeId("46");
+        baseLocationOne.setParentId("1722");
+        baseLocationOne.setTypeId("28");
+        baseLocationOne.setCreatedAt("2023-04-12T16:42:35Z");
+        baseLocationOne.setUpdatedAt("2023-04-12T16:42:35Z");
 
         BaseLocationResponse baseLocationTwo = new BaseLocationResponse();
+
         baseLocationTwo.setId("2");
         baseLocationTwo.setName("Aldridge and Brownhills");
-        baseLocationTwo.setCourtType("Nottinghamshire");
-        baseLocationTwo.setCircuit("Nottinghamshire");
-        baseLocationTwo.setAreaOfExpertise("LJA");
-        baseLocationTwo.setEndDate("2008-09-11");
+        baseLocationTwo.setTypeId("48");
+        baseLocationTwo.setParentId("1723");
+        baseLocationTwo.setTypeId("29");
+        baseLocationTwo.setCreatedAt("2023-04-12T16:42:35Z");
+        baseLocationTwo.setUpdatedAt("2023-04-12T16:42:35Z");
 
-        baseLocationTwo.setCreatedAt("2022-10-03T15:28:20Z");
-        baseLocationTwo.setUpdatedAt("2022-10-03T15:28:20Z");
-
-
-        List<BaseLocationResponse> baseLocations = new ArrayList<>();
-
-        baseLocations.add(baseLocationOne);
-        baseLocations.add(baseLocationTwo);
-
-        return baseLocations;
+        return List.of(baseLocationOne,baseLocationTwo);
 
     }
 

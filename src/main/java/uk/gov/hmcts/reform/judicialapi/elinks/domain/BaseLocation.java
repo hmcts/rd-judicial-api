@@ -6,14 +6,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
+
 @Entity(name = "BaseLocation")
-@Table(name = "base_location_type", schema = "dbjudicialdata")
+@Table(name = "location_type", schema = "dbjudicialdata")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,24 +27,40 @@ public class BaseLocation {
     @JsonProperty(value = "id")
     private String baseLocationId;
 
-    @Column(name = "court_name")
-    @Size(max = 128)
+    @Column(name = "name")
+    @Size(max = 256)
     @JsonProperty(value = "name")
-    private String courtName;
+    private String name;
 
-    @Column(name = "court_type")
-    @Size(max = 128)
-    @JsonProperty(value = "orgunit2name")
-    private String courtType;
+    @Column(name = "type_id")
+    @Size(max = 64)
+    @JsonProperty(value = "typeId")
+    private String typeId;
 
-    @Column(name = "circuit")
-    @Size(max = 128)
-    @JsonProperty(value = "orgunit3name")
-    private String circuit;
+    @Column(name = "parent_id")
+    @Size(max = 64)
+    @JsonProperty(value = "parentId")
+    private String parentId;
 
-    @Column(name = "area_of_expertise")
-    @Size(max = 128)
-    @JsonProperty(value = "orgunit4name")
-    private String areaOfExpertise;
+    @Column(name = "jurisdiction_id")
+    @Size(max = 64)
+    @JsonProperty(value = "jurisdictionId")
+    private String jurisdictionId;
+
+    @Column(name = "start_date")
+    @JsonProperty(value = "startDate")
+    private LocalDate startDate;
+
+    @Column(name = "end_date")
+    @JsonProperty(value = "endDate")
+    private LocalDate endDate;
+
+    @Column(name = "created_at")
+    @JsonProperty(value = "createAt")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @JsonProperty(value = "updatedAt")
+    private LocalDateTime updatedAt;
 
 }

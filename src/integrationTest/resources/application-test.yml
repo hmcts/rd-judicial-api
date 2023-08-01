@@ -75,12 +75,18 @@ security:
     - "/actuator/**"
     - "/loggers/**"
     - "/swagger-ui.html"
+    - "/swagger-ui/swagger-ui.html"
     - "/swagger-resources/**"
     - "/v2/api-docs"
+    - "/v3/api-docs"
     - "/webjars/springfox-swagger-ui/**"
     - "/csrf"
     - "/error"
     - "/favicon.ico"
+    - "/swagger-ui/**"
+    - "/v3/**"
+    - "/status/health"
+    - "/actuator/**"
     - "/refdata/internal/elink/**"
 idam:
   s2s-auth:
@@ -142,6 +148,7 @@ elinks:
     page: 1
     includePreviousAppointments : false
     threadPauseTime: 2000
+    threadRetriggerPauseTime: 1000
   scheduler:
     wrapperApiUrl: ${ELINKS_WRAPPER_API_URL:http://localhost:8093}
     cronExpression: ${CRON_EXPRESSION:* * */5 * * *}

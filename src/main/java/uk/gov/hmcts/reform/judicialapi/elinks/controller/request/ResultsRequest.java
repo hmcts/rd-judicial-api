@@ -34,7 +34,10 @@ public class ResultsRequest {
     private String lastWorkingDate;
     @JsonProperty("id")
     private String objectId;
-
+    @JsonProperty("title")
+    private String title;
+    @JsonProperty("retirementDate")
+    private String retirementDate;
     //TBC
     @JsonProperty("initials")
     private String initials;
@@ -42,6 +45,8 @@ public class ResultsRequest {
     private List<AppointmentsRequest> appointmentsRequests;
     @JsonProperty("authorisations_with_dates")
     private List<AuthorisationsRequest> authorisationsRequests;
+    @JsonProperty("judiciary_roles")
+    private List<RoleRequest> judiciaryRoles;
     //Leaversfields
     @JsonProperty("per_id")
     private String perId;

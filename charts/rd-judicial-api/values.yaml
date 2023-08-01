@@ -22,7 +22,8 @@ java:
     LOCATION_REF_DATA_URL: http://rd-location-ref-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     REFRESH_PAGE_SIZE: 200
     REFRESH_SORT_COLUMN: objectId
-    ELINKS_URL: https://jo-staging.elinks.judiciary.uk/api/v4
+    ELINKS_URL: https://judiciary-middleware-futureehr.herokuapp.com/api/v5
+    CRON_EXPRESSION: "* 30 12 * * *"
   image: 'hmctspublic.azurecr.io/rd/judicial-api:latest'
   keyVaults:
     rd:
@@ -31,8 +32,8 @@ java:
           alias: spring.datasource.password
         - name: judicial-api-s2s-secret
           alias: JUDICIAL_API_S2S_SECRET
-        - name: ApplicationInsightsInstrumentationKey
-          alias: azure.application-insights.instrumentation-key
+        - name: app-insights-connection-string
+          alias: app-insights-connection-string
         - name: LD-SDK-KEY
           alias: LD_SDK_KEY
         - name: judicial-api-elinks-api-key

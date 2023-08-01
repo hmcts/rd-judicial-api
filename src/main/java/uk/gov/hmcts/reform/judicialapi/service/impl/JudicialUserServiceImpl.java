@@ -50,7 +50,6 @@ import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.REGION;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.createPageableObject;
-import static uk.gov.hmcts.reform.judicialapi.util.RefDataUtil.distinctByKeys;
 
 @Slf4j
 @Service
@@ -119,19 +118,14 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                     .forEach(s -> ticketCode.add(s.getTicketCode()));
         }
         log.info("SearchServiceCode list = {}", searchServiceCode);
-        var userProfiles = userProfileRepository
+        List<UserSearchResponse> userProfileSearchResponse = userProfileRepository
                 .findBySearchString(userSearchRequest.getSearchString().toLowerCase(),
                         userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode,
                         searchServiceCode);
 
-        var userSearchResponses = userProfiles
-                .stream().filter(distinctByKeys(UserProfile::getPersonalCode))
-                .map(UserSearchResponse::new)
-                .collect(Collectors.toUnmodifiableList());
-
         return ResponseEntity
                 .status(200)
-                .body(userSearchResponses);
+                .body(userProfileSearchResponse);
 
     }
 
@@ -309,8 +303,7 @@ public class JudicialUserServiceImpl implements JudicialUserService {
                 ErrorResponse.class);
         var responseBody = responseEntity.getBody();
 
-        if (nonNull(responseBody) && responseBody instanceof ErrorResponse) {
-            ErrorResponse errorResponse = (ErrorResponse) responseBody;
+        if (nonNull(responseBody) && responseBody instanceof ErrorResponse errorResponse) {
             throw new UserProfileException(httpStatus, errorResponse.getErrorMessage(),
                     errorResponse.getErrorDescription());
         } else {

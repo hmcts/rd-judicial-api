@@ -26,7 +26,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
         + "where (per.objectId != '' and per.objectId is not null) "
         + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
         + "and (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
-        + "and ( (:serviceCode is not null and (lower(appt.serviceCode) = :serviceCode or "
+        + "and ( (:serviceCode is not null and ( "
         + "auth.ticketCode in :ticketCode)) or :serviceCode is null ) "
         + "and (( :serviceCode in :searchServiceCode) or ((:locationCode is not null "
         + "and lower(appt.epimmsId) = :locationCode)"

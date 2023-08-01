@@ -79,6 +79,11 @@ public class UserProfile implements Serializable {
     @Size(max = 64)
     private String title;
 
+    @Column(name = "retirement_date")
+    private LocalDate retirementDate;
+
+
+
     @Column(name = "deleted_flag")
     private Boolean deletedFlag;
 

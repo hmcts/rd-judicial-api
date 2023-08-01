@@ -18,9 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.LeaversRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.LeaversResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PaginationRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
@@ -69,15 +69,15 @@ class ElinksLeaversServiceImplTest {
     @InjectMocks
     private ELinksServiceImpl elinksServiceImpl;
 
-    private ResultsRequest result1;
+    private LeaversResultsRequest result1;
 
-    private ResultsRequest result2;
+    private LeaversResultsRequest result2;
 
     private PaginationRequest pagination;
 
-    private PeopleRequest elinksApiResponseFirstHit;
+    private LeaversRequest elinksApiResponseFirstHit;
 
-    private PeopleRequest elinksApiResponseSecondHit;
+    private LeaversRequest elinksApiResponseSecondHit;
 
     JdbcTemplate jdbcTemplate =  mock(JdbcTemplate.class);
 
@@ -100,21 +100,23 @@ class ElinksLeaversServiceImplTest {
                 .pages(1).currentPage(1).resultsPerPage(3).morePages(true).build();
 
 
-        result1 = ResultsRequest.builder().personalCode("1234").leftOn("2022-12-20")
+        result1 = LeaversResultsRequest.builder().personalCode("1234").leftOn("2022-12-20")
                 .objectId("objectId").leaver("true").perId("40291").build();
 
-        result2 = ResultsRequest.builder().personalCode("1234").leftOn("2022-12-20")
+        result2 = LeaversResultsRequest.builder().personalCode("1234").leftOn("2022-12-20")
                 .objectId("objectId").leaver("true").perId("40291").build();
 
-        List<ResultsRequest> results = Arrays.asList(result1,result2);
+        List<LeaversResultsRequest> results = Arrays.asList(result1,result2);
 
-        elinksApiResponseFirstHit = PeopleRequest.builder().resultsRequests(results).pagination(pagination).build();
+        elinksApiResponseFirstHit = LeaversRequest.builder().leaversResultsRequests(results)
+            .pagination(pagination).build();
 
 
         PaginationRequest paginationFalse = PaginationRequest.builder()
                 .results(1)
                 .pages(1).currentPage(1).resultsPerPage(3).morePages(false).build();
-        elinksApiResponseSecondHit = PeopleRequest.builder().resultsRequests(results).pagination(paginationFalse)
+        elinksApiResponseSecondHit = LeaversRequest.builder().leaversResultsRequests(results)
+            .pagination(paginationFalse)
                 .build();
     }
 
@@ -213,7 +215,7 @@ class ElinksLeaversServiceImplTest {
     void load_leavers_should_return_elinksException_when_ElinksApi_Response_does_not_have_results()
             throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        elinksApiResponseFirstHit.setResultsRequests(null);
+        elinksApiResponseFirstHit.setLeaversResultsRequests(null);
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
 
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());

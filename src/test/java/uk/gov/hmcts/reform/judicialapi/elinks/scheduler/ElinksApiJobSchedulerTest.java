@@ -58,7 +58,6 @@ class ElinksApiJobSchedulerTest {
 
         verify(elinksApiJobScheduler, times(1)).loadElinksJob();
         verify(elinksApiJobScheduler, times(0)).retrieveLocationDetails();
-        verify(elinksApiJobScheduler, times(0)).retrieveBaseLocationDetails();
         verify(elinksApiJobScheduler, times(0)). retrievePeopleDetails();
         verify(elinksApiJobScheduler, times(0)). retrieveLeaversDetails();
         verify(elinksApiJobScheduler, times(0)). retrieveDeletedDetails();

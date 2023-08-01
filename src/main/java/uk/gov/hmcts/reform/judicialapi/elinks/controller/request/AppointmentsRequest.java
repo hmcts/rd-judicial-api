@@ -31,10 +31,16 @@ public class AppointmentsRequest {
     private String startDate;
     @JsonProperty("end_date")
     private String endDate;
-    @JsonProperty("role_name")
-    private String appointmentRolesMapping;
+    @JsonProperty("type")
+    private String type;
+    @JsonProperty("appointment_id")
+    private String appointmentId;
     @JsonProperty("contract_type")
-    private String appointmentType;
-
-
+    private String contractType;
+    @JsonProperty("role_name")
+    private String roleName;
+    @JsonProperty("role_name_id")
+    private String roleNameId;
+    @JsonProperty("contract_type_id")
+    private String contractTypeId;
 }

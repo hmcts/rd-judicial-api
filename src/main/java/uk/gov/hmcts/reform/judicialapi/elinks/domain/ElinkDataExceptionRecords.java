@@ -53,6 +53,6 @@ public class ElinkDataExceptionRecords implements Serializable {
     private LocalDateTime updatedTimeStamp;
 
     @Column(name = "row_id")
-    private int rowId;
+    private String rowId;
 
 }

@@ -30,7 +30,8 @@ class ElinkDataExceptionHelperTest {
         elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                 LocalDateTime.now(),
                 "ElinksApiJobScheduler" +  LocalDateTime.now(),
-                "Schedular_Run_date", "JRD load failed since job has already ran for the day", "ElinksApiJobScheduler");
+                "Schedular_Run_date", "JRD load failed since job has already ran for the day",
+            "ElinksApiJobScheduler", null);
 
         verify(elinkDataExceptionRepository, times(1))
                 .save(any());
@@ -44,7 +45,7 @@ class ElinkDataExceptionHelperTest {
                 LocalDateTime.now(),
                 "ElinksApiJobScheduler" +  LocalDateTime.now(),
                 "Schedular_Run_date", "JRD load failed since job has already ran for the day",
-                "ElinksApiJobScheduler"));
+                "ElinksApiJobScheduler",null));
 
     }
 }

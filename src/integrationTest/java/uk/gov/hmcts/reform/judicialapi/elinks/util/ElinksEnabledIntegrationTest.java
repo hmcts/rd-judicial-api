@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -53,6 +54,9 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
 
     @MockBean
     protected FeatureToggleServiceImpl featureToggleServiceImpl;
+
+    @MockBean
+    protected JwtDecoder jwtDecoder;
 
     @MockBean
     LDClient ldClient;

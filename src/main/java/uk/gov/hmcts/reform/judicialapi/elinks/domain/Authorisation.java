@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,10 +45,10 @@ public class Authorisation implements Serializable {
     private String jurisdiction;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;
@@ -59,12 +60,20 @@ public class Authorisation implements Serializable {
     @Size(max = 256)
     private String lowerLevel;
 
-    @Column(name = "object_id")
-    @Size(max = 64)
-    private String objectId;
-
     @Column(name = "ticket_code")
     @Size(max = 16)
     private String ticketCode;
+
+    @Column(name = "appointment_id")
+    @Size(max = 256)
+    private String appointmentId;
+
+    @Column(name = "authorisation_id")
+    @Size(max = 256)
+    private String authorisationId;
+
+    @Column(name = "jurisdiction_id")
+    @Size(max = 64)
+    private String jurisdictionId;
 
 }

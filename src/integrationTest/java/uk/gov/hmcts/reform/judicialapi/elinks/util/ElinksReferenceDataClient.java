@@ -181,7 +181,7 @@ public class ElinksReferenceDataClient {
         try {
 
             responseEntity = restTemplate.exchange(
-                baseUrl + "/reference_data/base_location",HttpMethod.GET,request,
+                baseUrl + "/reference_data/location",HttpMethod.GET,request,
                 ElinkBaseLocationWrapperResponse.class);
 
         } catch (RestClientResponseException ex) {

@@ -21,9 +21,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.LocationResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 
 import java.util.ArrayList;
@@ -34,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_DATA_STORE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
@@ -41,7 +42,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_NOT_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_UNAUTHORIZED;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION_DATA_LOAD_SUCCESS;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -66,11 +66,11 @@ class ELinksServiceImplTest {
     @Test
     void elinksService_load_location_should_return_sucess_msg_with_status_200() throws JsonProcessingException {
 
-        List<LocationResponse> locations = getLocationResponseData();
+        List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
 
-        ElinkLocationResponse elinkLocationResponse = new ElinkLocationResponse();
-        elinkLocationResponse.setResults(locations);
+        ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
+        elinkLocationResponse.setResults(baseLocationResponses);
 
 
         ObjectMapper mapper = new ObjectMapper();
@@ -81,13 +81,13 @@ class ELinksServiceImplTest {
         when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(HttpStatus.OK.value()).build());
 
-        when(locationRepository.saveAll(anyList())).thenReturn(new ArrayList<>());
+        when(baseLocationRepository.saveAll(anyList())).thenReturn(new ArrayList<>());
 
-        ResponseEntity<ElinkLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+        ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
 
         assertThat(responseEntity).isNotNull();
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
-        assertThat(responseEntity.getBody().getMessage()).contains(LOCATION_DATA_LOAD_SUCCESS);
+        assertThat(responseEntity.getBody().getMessage()).contains(BASE_LOCATION_DATA_LOAD_SUCCESS);
 
     }
 
@@ -96,11 +96,11 @@ class ELinksServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_DataAccessException()
             throws JsonProcessingException {
 
-        List<LocationResponse> locations = getLocationResponseData();
+        List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
 
-        ElinkLocationResponse elinkLocationResponse = new ElinkLocationResponse();
-        elinkLocationResponse.setResults(locations);
+        ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
+        elinkLocationResponse.setResults(baseLocationResponses);
 
 
         ObjectMapper mapper = new ObjectMapper();
@@ -112,9 +112,9 @@ class ELinksServiceImplTest {
         when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(HttpStatus.OK.value()).build());
 
-        when(locationRepository.saveAll(anyList())).thenThrow(dataAccessException);
+        when(baseLocationRepository.saveAll(anyList())).thenThrow(dataAccessException);
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -129,11 +129,11 @@ class ELinksServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_FeignException()
             throws JsonProcessingException {
 
-        List<LocationResponse> locations = getLocationResponseData();
+        List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
 
-        ElinkLocationResponse elinkLocationResponse = new ElinkLocationResponse();
-        elinkLocationResponse.setResults(locations);
+        ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
+        elinkLocationResponse.setResults(baseLocationResponses);
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
 
@@ -146,7 +146,7 @@ class ELinksServiceImplTest {
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
@@ -161,11 +161,11 @@ class ELinksServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_http_BAD_REQUEST()
             throws JsonProcessingException {
 
-        List<LocationResponse> locations = getLocationResponseData();
+        List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
 
-        ElinkLocationResponse elinkLocationResponse = new ElinkLocationResponse();
-        elinkLocationResponse.setResults(locations);
+        ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
+        elinkLocationResponse.setResults(baseLocationResponses);
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
 
@@ -182,7 +182,7 @@ class ELinksServiceImplTest {
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -198,11 +198,11 @@ class ELinksServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_http_UNAUTHORIZED()
             throws JsonProcessingException {
 
-        List<LocationResponse> locations = getLocationResponseData();
+        List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
 
-        ElinkLocationResponse elinkLocationResponse = new ElinkLocationResponse();
-        elinkLocationResponse.setResults(locations);
+        ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
+        elinkLocationResponse.setResults(baseLocationResponses);
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
 
@@ -219,7 +219,7 @@ class ELinksServiceImplTest {
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
@@ -234,11 +234,11 @@ class ELinksServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_http_FORBIDDEN()
             throws JsonProcessingException {
 
-        List<LocationResponse> locations = getLocationResponseData();
+        List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
 
-        ElinkLocationResponse elinkLocationResponse = new ElinkLocationResponse();
-        elinkLocationResponse.setResults(locations);
+        ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
+        elinkLocationResponse.setResults(baseLocationResponses);
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
 
@@ -254,7 +254,7 @@ class ELinksServiceImplTest {
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
@@ -269,11 +269,11 @@ class ELinksServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_http_NOT_FOUND()
             throws JsonProcessingException {
 
-        List<LocationResponse> locations = getLocationResponseData();
+        List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
 
-        ElinkLocationResponse elinkLocationResponse = new ElinkLocationResponse();
-        elinkLocationResponse.setResults(locations);
+        ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
+        elinkLocationResponse.setResults(baseLocationResponses);
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
 
@@ -289,7 +289,7 @@ class ELinksServiceImplTest {
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
@@ -304,11 +304,11 @@ class ELinksServiceImplTest {
     void elinksService_load_location_should_return_elinksException_when_http_TOO_MANY_REQUESTS()
             throws JsonProcessingException {
 
-        List<LocationResponse> locations = getLocationResponseData();
+        List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
 
-        ElinkLocationResponse elinkLocationResponse = new ElinkLocationResponse();
-        elinkLocationResponse.setResults(locations);
+        ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
+        elinkLocationResponse.setResults(baseLocationResponses);
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
 
@@ -325,7 +325,7 @@ class ELinksServiceImplTest {
 
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.TOO_MANY_REQUESTS.value());
@@ -336,21 +336,21 @@ class ELinksServiceImplTest {
 
     }
 
-    private List<LocationResponse> getLocationResponseData() {
+    private List<BaseLocationResponse> getBaseLocationResponseData() {
 
 
-        LocationResponse locationOne = new LocationResponse();
-        locationOne.setId("1");
-        locationOne.setName("National");
-        locationOne.setCreatedAt("2022-10-03T15:28:19Z");
-        locationOne.setUpdatedAt("2022-10-03T15:28:19Z");
+        BaseLocationResponse baseLocationResponse = new BaseLocationResponse();
+        baseLocationResponse.setId("1");
+        baseLocationResponse.setName("Aberconwy");
+        baseLocationResponse.setTypeId("46");
+        baseLocationResponse.setParentId("1722");
+        baseLocationResponse.setTypeId("28");
+        baseLocationResponse.setCreatedAt("2023-04-12T16:42:35Z");
+        baseLocationResponse.setUpdatedAt("2023-04-12T16:42:35Z");
 
 
-        List<LocationResponse> locations = new ArrayList<>();
 
-        locations.add(locationOne);
-
-        return locations;
+        return List.of(baseLocationResponse);
 
     }
 

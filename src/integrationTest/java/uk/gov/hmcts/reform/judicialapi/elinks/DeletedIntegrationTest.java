@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -13,10 +14,14 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.util.List;
 import java.util.Map;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,6 +37,50 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+    @BeforeAll
+    void loadElinksResponse() throws Exception {
+
+        cleanupData();
+
+        String locationResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/location.json");
+        String baselocationResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/base_location.json");
+        String peopleResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/people_part.json");
+        String deletedResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(locationResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(baselocationResponseValidationJson)
+                .withTransformers("user-token-response")));
+
+        elinks.stubFor(get(urlPathMatching("/people"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(peopleResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(deletedResponseValidationJson)));
+    }
 
     @BeforeEach
     void setUp() {
@@ -58,6 +107,7 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
     @Test
     @Order(2)
     void verifyDeletedJrdUserProfile() {
+        Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> deleted = elinksReferenceDataClient.getDeleted();
         assertThat(deleted).containsEntry("http_status", "200 OK");
@@ -67,11 +117,11 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofile = profileRepository.findAll();
 
         assertEquals(5, userprofile.size());
-        assertEquals("410551", userprofile.get(3).getPersonalCode());
+        assertEquals("4913085", userprofile.get(3).getPersonalCode());
         assertEquals(true, userprofile.get(3).getDeletedFlag());
         assertEquals("2023-07-13", userprofile.get(3).getDeletedOn().toLocalDate().toString());
 
-        assertEquals("410540", userprofile.get(4).getPersonalCode());
+        assertEquals("4913086", userprofile.get(4).getPersonalCode());
         assertEquals(false, userprofile.get(4).getDeletedFlag());
         assertEquals("2022-07-10", userprofile.get(4).getDeletedOn().toLocalDate().toString());
 
@@ -83,6 +133,7 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
     @Test
     @Order(3)
     void verifyDeletedJrdAuditFunctionality() {
+        Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         Map<String, Object> deleted = elinksReferenceDataClient.getDeleted();
         assertThat(deleted).containsEntry("http_status", "200 OK");
@@ -92,18 +143,18 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofile = profileRepository.findAll();
 
         assertEquals(5, userprofile.size());
-        assertEquals("410551", userprofile.get(3).getPersonalCode());
+        assertEquals("4913085", userprofile.get(3).getPersonalCode());
         assertEquals(true, userprofile.get(3).getDeletedFlag());
         assertEquals("2023-07-13", userprofile.get(3).getDeletedOn().toLocalDate().toString());
 
-        assertEquals("410540", userprofile.get(4).getPersonalCode());
+        assertEquals("4913086", userprofile.get(4).getPersonalCode());
         assertEquals(false, userprofile.get(4).getDeletedFlag());
         assertEquals("2022-07-10", userprofile.get(4).getDeletedOn().toLocalDate().toString());
 
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 
-        ElinkDataSchedularAudit auditEntry = elinksAudit.get(1);
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(2);
 
         assertThat(auditEntry.getId()).isPositive();
 

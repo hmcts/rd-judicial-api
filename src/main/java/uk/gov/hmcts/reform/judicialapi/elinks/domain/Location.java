@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Entity(name = "Location")
-@Table(name = "region_type", schema = "dbjudicialdata")
+@Table(name = "hmcts_region_type", schema = "dbjudicialdata")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,16 +23,15 @@ import javax.validation.constraints.Size;
 public class Location implements Serializable {
 
     @Id
-    @Column(name = "region_Id")
+    @Column(name = "hmcts_region_id")
     @JsonProperty(value = "id")
     private String regionId;
 
-    @Column(name = "region_desc_en")
+    @Column(name = "hmcts_region_desc_en")
     @Size(max = 256)
-    @JsonProperty(value = "name")
     private String regionDescEn;
 
-    @Column(name = "region_desc_cy")
+    @Column(name = "hmcts_region_desc_cy")
     @Size(max = 256)
     private String regionDescCy;
 }

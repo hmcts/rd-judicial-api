@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -84,13 +83,8 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(2,idamResponse.size());
 
         List<UserProfile> userprofile = profileRepository.findAll();
-        assertEquals(2, userprofile.size());
-        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(0).getObjectId());
-
-        Assert.assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e972",
-                userprofile.get(0).getSidamId());
-        Assert.assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e971",
-                userprofile.get(1).getSidamId());
+        assertEquals(1, userprofile.size());
+        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(0).getObjectId());
 
     }
 

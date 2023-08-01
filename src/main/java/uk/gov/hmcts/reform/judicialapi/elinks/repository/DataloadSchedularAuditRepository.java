@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public interface DataloadSchedularAuditRepository extends JpaRepository<ElinkDataSchedularAudit, Long> {
 
     @Query(value = "SELECT MAX(scheduler_end_time) FROM dbjudicialdata.dataload_schedular_audit "
-            + " WHERE api_name = 'People'  AND status IN ('Success')", nativeQuery = true)
+            + " WHERE api_name = 'People'  AND status IN ('Success','PartialSuccess')", nativeQuery = true)
     LocalDateTime findLatestSchedularEndTime();
 
     @Query(value = "SELECT MAX(scheduler_end_time) FROM dbjudicialdata.dataload_schedular_audit "

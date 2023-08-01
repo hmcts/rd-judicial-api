@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 import feign.FeignException;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.LeaversRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.LeaversResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.DeletedResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.ElinksDeleteApiResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
@@ -31,9 +30,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.LocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ELinksService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
@@ -50,7 +47,6 @@ import java.util.Optional;
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUDIT_DATA_ERROR;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
@@ -107,75 +103,9 @@ public class ELinksServiceImpl implements ELinksService {
     @Autowired
     ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
 
-    @Override
-    public ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveBaseLocation() {
-
-        log.info("Get location details ELinksService.retrieveBaseLocation ");
-
-        Response baseLocationsResponse;
-        HttpStatus httpStatus;
-        LocalDateTime schedulerStartTime = now();
-
-        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-            schedulerStartTime,
-            null,
-            RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), BASELOCATIONAPI);
-
-        ResponseEntity<ElinkBaseLocationWrapperResponse> result = null;
-        try {
-
-            baseLocationsResponse = elinksFeignClient.getBaseLocationDetails();
-
-            httpStatus = HttpStatus.valueOf(baseLocationsResponse.status());
-
-            log.info("Get location details response status ELinksService.retrieveBaseLocation" + httpStatus.value());
-            if (httpStatus.is2xxSuccessful()) {
-                ResponseEntity<Object> responseEntity = JsonFeignResponseUtil
-                        .toResponseEntity(baseLocationsResponse,
-                                ElinkBaseLocationResponse.class);
-
-
-                if (nonNull(responseEntity.getBody())) {
-                    ElinkBaseLocationResponse elinkLocationResponse = (ElinkBaseLocationResponse)
-                            responseEntity.getBody();
-                    if (nonNull(elinkLocationResponse) && nonNull(elinkLocationResponse.getResults())) {
-                        List<BaseLocationResponse> locationResponseList = elinkLocationResponse.getResults();
-
-                        List<BaseLocation> baselocations = locationResponseList.stream()
-                                .map(BaseLocationResponse::toBaseLocationEntity)
-                                .toList();
-                        result = loadBaseLocationData(baselocations);
-                    }
-                } else {
-                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                        schedulerStartTime,
-                        now(),
-                        RefDataElinksConstants.JobStatus.FAILED.getStatus(), BASELOCATIONAPI);
-                    throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
-                }
-            } else {
-                elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                        schedulerStartTime,
-                        now(),
-                        RefDataElinksConstants.JobStatus.FAILED.getStatus(), BASELOCATIONAPI);
-                handleELinksErrorResponse(httpStatus);
-            }
-
-
-        } catch (FeignException ex) {
-            throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
-        }
-
-        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-            schedulerStartTime,
-            now(),
-            RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), BASELOCATIONAPI);
-
-        return result;
-    }
 
     @Override
-    public ResponseEntity<ElinkLocationWrapperResponse> retrieveLocation() {
+    public ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveLocation() {
 
         log.info("Get location details ELinksService.retrieveLocation ");
 
@@ -188,7 +118,7 @@ public class ELinksServiceImpl implements ELinksService {
 
         Response locationsResponse;
         HttpStatus httpStatus;
-        ResponseEntity<ElinkLocationWrapperResponse> result = null;
+        ResponseEntity<ElinkBaseLocationWrapperResponse> result = null;
 
         try {
 
@@ -201,20 +131,20 @@ public class ELinksServiceImpl implements ELinksService {
             log.info("Get location details response status ELinksService.retrieveLocation" + httpStatus.value());
             if (httpStatus.is2xxSuccessful()) {
                 ResponseEntity<Object> responseEntity = JsonFeignResponseUtil.toResponseEntity(locationsResponse,
-                        ElinkLocationResponse.class);
+                    ElinkBaseLocationResponse.class);
 
 
-                ElinkLocationResponse elinkLocationResponse = (ElinkLocationResponse) responseEntity.getBody();
+                ElinkBaseLocationResponse elinkBaseLocationResponse =
+                    (ElinkBaseLocationResponse) responseEntity.getBody();
 
                 if (nonNull(responseEntity.getBody())) {
-                    if (nonNull(elinkLocationResponse)) {
-                        List<LocationResponse> locationResponseList = elinkLocationResponse.getResults();
+                    if (nonNull(elinkBaseLocationResponse)) {
+                        List<BaseLocationResponse> baseLocationResponses = elinkBaseLocationResponse.getResults();
 
-                        List<Location> locations = locationResponseList.stream()
-                                .map(locationRes -> new Location(locationRes.getId(), locationRes.getName(),
-                                        StringUtils.EMPTY))
-                                .toList();
-                        result = loadLocationData(locations);
+                        List<BaseLocation> baselocations = baseLocationResponses.stream()
+                            .map(BaseLocationResponse::toBaseLocationEntity)
+                            .toList();
+                        result = loadBaseLocationData(baselocations);
                     }
                 } else {
                     elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
@@ -366,11 +296,12 @@ public class ELinksServiceImpl implements ELinksService {
             ResponseEntity<Object> responseEntity;
 
             if (httpStatus.is2xxSuccessful()) {
-                responseEntity = JsonFeignResponseUtil.toResponseEntity(leaverApiResponse, PeopleRequest.class);
-                PeopleRequest elinkLeaverResponseRequest = (PeopleRequest) responseEntity.getBody();
+                responseEntity = JsonFeignResponseUtil.toResponseEntity(leaverApiResponse, LeaversRequest.class);
+                LeaversRequest elinkLeaverResponseRequest = (LeaversRequest) responseEntity.getBody();
+                log.info(":::: elinkPeopleResponseRequest " + elinkLeaverResponseRequest);
                 if (Optional.ofNullable(elinkLeaverResponseRequest).isPresent()
                         && Optional.ofNullable(elinkLeaverResponseRequest.getPagination()).isPresent()
-                        && Optional.ofNullable(elinkLeaverResponseRequest.getResultsRequests()).isPresent()) {
+                        && Optional.ofNullable(elinkLeaverResponseRequest.getLeaversResultsRequests()).isPresent()) {
                     isMorePagesAvailable = elinkLeaverResponseRequest.getPagination().getMorePages();
                     processLeaverResponse(elinkLeaverResponseRequest);
 
@@ -415,23 +346,23 @@ public class ELinksServiceImpl implements ELinksService {
 
 
 
-    private void processLeaverResponse(PeopleRequest elinkLeaverResponseRequest) {
+    private void processLeaverResponse(LeaversRequest elinkLeaverResponseRequest) {
         try {
-            updateLeavers(elinkLeaverResponseRequest.getResultsRequests());
+            updateLeavers(elinkLeaverResponseRequest.getLeaversResultsRequests());
         } catch (Exception ex) {
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
         }
 
     }
 
-    public void updateLeavers(List<ResultsRequest> resultsRequests) {
+    public void updateLeavers(List<LeaversResultsRequest> leaversResultsRequests) {
 
         List<Triple<String, String,String>> leaversId = new ArrayList<>();
 
         String updateLeaversId = "UPDATE dbjudicialdata.judicial_user_profile SET last_working_date = Date(?) , "
                 + "active_flag = ?, last_loaded_date= NOW() AT TIME ZONE 'utc' WHERE personal_code = ?";
 
-        resultsRequests.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
+        leaversResultsRequests.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
                 leaversId.add(Triple.of(s.getPersonalCode(), s.getLeaver(),s.getLeftOn())));
         log.info("Insert Query batch Response from Leavers" + leaversId.size());
         jdbcTemplate.batchUpdate(

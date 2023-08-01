@@ -26,7 +26,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
@@ -48,13 +47,12 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 
-class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
+public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     LocationRepository locationRepository;
@@ -121,30 +119,8 @@ class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabl
         assertThat(jobDetails).isNotNull();
         assertThat(jobDetails.getPublishingStatus()).isNotNull();
 
-        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
-
         // asserting location data
-        validatelocationApi(elinksAudit);
-
-        //asserting baselocation data
-        validatebaselocationApi(elinksAudit);
-
-        //asserting userprofile data for people api
-        validatepeopleApi(elinksAudit);
-
-        //asserting userprofile data for leaver api
-        validateleaverApi(elinksAudit);
-
-        //asserting userprofile data for deleted api
-        validatedeleteApi(elinksAudit);
-
-        //assert elastic search api
-
-        validateelasticsearchApi();
-
-    }
-
-    private void validatelocationApi(List<ElinkDataSchedularAudit> elinksAudit) {
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
         Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
         ElinkDataSchedularAudit locationAuditEntry = elinksAudit.get(0);
 
@@ -155,48 +131,26 @@ class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabl
 
         List<Location> locationsList = locationRepository.findAll();
 
-        assertEquals(2, locationsList.size());
-        assertEquals("0",locationsList.get(0).getRegionId());
-        assertEquals("default",locationsList.get(0).getRegionDescCy());
-        assertEquals("default",locationsList.get(0).getRegionDescEn());
-    }
+        assertEquals(11, locationsList.size());
 
-    private void validateelasticsearchApi() {
-        Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
-        assertEquals("403",idamResponses.get("http_status"));
-
-        // asserting SIDAM publishing
-        Map<String, Object> idamResponse = elinksReferenceDataClient.publishSidamIds();
-        doNothing().when(elinkTopicPublisher).sendMessage(anyList(),anyString());
-        ;
-        assertThat(idamResponse).containsEntry("http_status", "200 OK");
-        HashMap publishSidamIdsResponse = (LinkedHashMap)idamResponse.get("body");
-
-        assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
-
-        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException).isEmpty();
-    }
-
-    private void validatebaselocationApi(List<ElinkDataSchedularAudit> elinksAudit) {
+        //asserting baselocation data
         Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
         ElinkBaseLocationWrapperResponse baseLocations =
                 (ElinkBaseLocationWrapperResponse) baseLocationResponse.get("body");
-        ElinkDataSchedularAudit baseLocationAuditEntry = elinksAudit.get(1);
+        ElinkDataSchedularAudit baseLocationAuditEntry = elinksAudit.get(0);
 
         assertThat(baseLocationResponse).containsEntry("http_status", "400");
-        assertEquals(BASELOCATIONAPI, baseLocationAuditEntry.getApiName());
+        assertEquals(LOCATION, baseLocationAuditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), baseLocationAuditEntry.getStatus());
 
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
         assertEquals(0, baseLocationList.size());
-    }
 
-    private void validatepeopleApi(List<ElinkDataSchedularAudit> elinksAudit) {
+        //asserting userprofile data for people api
         Map<String, Object> peopleResponse = elinksReferenceDataClient.getPeoples();
         ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse) peopleResponse.get("body");
-        ElinkDataSchedularAudit peopleAuditEntry = elinksAudit.get(2);
+        ElinkDataSchedularAudit peopleAuditEntry = elinksAudit.get(1);
 
         assertThat(peopleResponse).containsEntry("http_status", "400");
         assertEquals(PEOPLEAPI,peopleAuditEntry.getApiName());
@@ -204,12 +158,11 @@ class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabl
 
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(0, userprofile.size());
-    }
 
-    private void validateleaverApi(List<ElinkDataSchedularAudit> elinksAudit) {
+        //asserting userprofile data for leaver api
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
         ElinkLeaversWrapperResponse leaversProfiles = (ElinkLeaversWrapperResponse) leaversResponse.get("body");
-        ElinkDataSchedularAudit leaversAuditEntry = elinksAudit.get(3);
+        ElinkDataSchedularAudit leaversAuditEntry = elinksAudit.get(2);
 
         assertThat(leaversResponse).containsEntry("http_status", "400");
         assertEquals(LEAVERSAPI,leaversAuditEntry.getApiName());
@@ -217,20 +170,23 @@ class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabl
 
         List<UserProfile> leaverUserProfile = profileRepository.findAll();
         assertEquals(0, leaverUserProfile.size());
-    }
 
-    private void validatedeleteApi(List<ElinkDataSchedularAudit> elinksAudit) {
-        //asserting userprofile data for deleted api
-        Map<String, Object> deletedResponse = elinksReferenceDataClient.getDeleted();
-        ElinkDeletedWrapperResponse deletedProfiles = (ElinkDeletedWrapperResponse) deletedResponse.get("body");
-        ElinkDataSchedularAudit deletedAuditEntry = elinksAudit.get(4);
+        //assert elastic search api
 
-        assertThat(deletedResponse).containsEntry("http_status", "400");
-        assertEquals(DELETEDAPI,deletedAuditEntry.getApiName());
-        assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), deletedAuditEntry.getStatus());
+        Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
+        assertEquals("403",idamResponses.get("http_status"));
 
-        List<UserProfile> deletedUserProfile = profileRepository.findAll();
-        assertEquals(0, deletedUserProfile.size());
+        // asserting SIDAM publishing
+        Map<String, Object> idamResponse = elinksReferenceDataClient.publishSidamIds();
+        doNothing().when(elinkTopicPublisher).sendMessage(anyList(),anyString());;
+        assertThat(idamResponse).containsEntry("http_status", "200 OK");
+        HashMap publishSidamIdsResponse = (LinkedHashMap)idamResponse.get("body");
+
+        assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
+
+        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
+        assertThat(elinksException.size()).isEqualTo(0);
+
     }
 
     @BeforeAll

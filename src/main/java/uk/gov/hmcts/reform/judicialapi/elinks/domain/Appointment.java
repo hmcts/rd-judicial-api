@@ -44,8 +44,8 @@ public class Appointment implements Serializable {
     @Size(max = 64)
     private String baseLocationId;
 
-    @Column(name = "region_Id")
-    @Size(max = 256)
+    @Column(name = "hmcts_region_id")
+    @Size(max = 64)
     private String regionId;
 
     @Column(name = "is_prinicple_appointment")
@@ -67,20 +67,36 @@ public class Appointment implements Serializable {
     @Size(max = 16)
     private String epimmsId;
 
-    @Column(name = "service_code")
-    @Size(max = 64)
-    private String serviceCode;
-
-    @Column(name = "object_id")
-    @Size(max = 64)
-    private String objectId;
-
-    @Column(name = "appointment")
-    @Size(max = 64)
-    private String appointmentRolesMapping;
-
     @Column(name = "appointment_type")
     @Size(max = 32)
     private String appointmentType;
+
+    @Column(name = "type")
+    @Size(max = 32)
+    private String type;
+
+    @Column(name = "appointment")
+    @Size(max = 64)
+    private String appointmentMapping;
+
+    @Column(name = "appointment_id")
+    @Size(max = 256)
+    private String appointmentId;
+
+    @Column(name = "role_name_id")
+    @Size(max = 256)
+    private String roleNameId;
+
+    @Column(name = "contract_type_id")
+    @Size(max = 64)
+    private String contractTypeId;
+
+    @Column(name = "location")
+    @Size(max = 64)
+    private String location;
+
+    @Column(name = "jo_base_location_id")
+    @Size(max = 64)
+    private String joBaseLocationId;
 
 }

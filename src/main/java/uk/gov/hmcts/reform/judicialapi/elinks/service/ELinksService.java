@@ -4,13 +4,10 @@ import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 
 public interface ELinksService {
 
-    ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveBaseLocation();
-
-    ResponseEntity<ElinkLocationWrapperResponse> retrieveLocation();
+    ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveLocation();
 
     ResponseEntity<ElinkLeaversWrapperResponse> retrieveLeavers();
 

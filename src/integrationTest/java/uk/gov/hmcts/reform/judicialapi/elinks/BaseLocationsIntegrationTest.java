@@ -19,9 +19,9 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 
 class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
@@ -62,10 +62,10 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(7, baseLocationList.size());
-        assertEquals("Aberconwy",baseLocationList.get(0).getCourtName());
-        assertEquals("1029",baseLocationList.get(0).getBaseLocationId());
-        assertEquals("Old Gwynedd",baseLocationList.get(0).getCourtType());
+        assertEquals(8, baseLocationList.size());
+        assertEquals("Aberconwy",baseLocationList.get(0).getName());
+        assertEquals("1",baseLocationList.get(0).getBaseLocationId());
+        assertEquals("46",baseLocationList.get(0).getTypeId());
     }
 
     @DisplayName("Elinks Base Location to JRD Audit Functionality verification")
@@ -79,11 +79,11 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(7, baseLocationList.size());
+        assertEquals(8, baseLocationList.size());
 
-        assertEquals("Prestatyn Civil and Family Justice Centre",baseLocationList.get(4).getCourtName());
-        assertEquals("1192",baseLocationList.get(4).getBaseLocationId());
-        assertEquals("County Court",baseLocationList.get(4).getCourtType());
+        assertEquals("Arundel",baseLocationList.get(4).getName());
+        assertEquals("7",baseLocationList.get(4).getBaseLocationId());
+        assertEquals("46",baseLocationList.get(4).getTypeId());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 
@@ -91,7 +91,7 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
 
         assertThat(auditEntry.getId()).isPositive();
-        assertEquals(BASELOCATIONAPI, auditEntry.getApiName());
+        assertEquals(LOCATION, auditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
         assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
         assertNotNull(auditEntry.getSchedulerStartTime());

@@ -9,9 +9,12 @@ import java.util.List;
 
 @Repository
 public interface AppointmentsRepository extends JpaRepository<Appointment, Long> {
-    void deleteByPersonalCodeIn(List<String> personalCode);
 
-    @Query(value = "SELECT DISTINCT base_location_id  FROM "
+    void deleteByPersonalCode(String personalCode);
+
+    void deleteByAppointmentId(String appointmentId);
+
+    @Query(value = "SELECT DISTINCT base_location_Id  FROM "
             + "dbjudicialdata.judicial_office_appointment  WHERE DATE(last_loaded_date) = current_date",
             nativeQuery = true)
     List<String> fetchAppointmentBaseLocation();

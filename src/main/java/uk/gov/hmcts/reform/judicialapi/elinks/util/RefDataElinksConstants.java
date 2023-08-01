@@ -1,5 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
+import java.util.List;
+
 public class RefDataElinksConstants {
 
     private RefDataElinksConstants() {
@@ -64,13 +66,68 @@ public class RefDataElinksConstants {
 
     public static final String BASE_LOCATION_ID = "base_location_id";
 
-    public static final String LOCATIONIDFAILURE = "Appointment Base Location ID : "
-            + "not available in BASE LOCATION table";
+    public static final String LOCATION = "Location";
+
+    public static final String ROLENAME = "role_name";
+
+    public static final String IDAMSEARCH = "Idam Search";
+
+    public static final String PUBLISHASB = "Publish to ASB";
+
+    public static final String JUDICIALROLETYPE = "judicial_role_type";
+
+    public static final String USER_PROFILE = "jrd_user_profile";
+
+    public static final String APPOINTMENT = "appointments";
+
+    public static final String APPOINTMENTID = "appointmentId";
+
+    public static final String EMAILID = "email_id";
+
+    public static final String AUTHORISATION = "authorisations_with_dates";
+
+    public static final String APPOINTMENTTYPE = "appointment type";
+
+
+    public static final String LOCATIONIDFAILURE = "Appointment's Base Location ID : "
+            + "is not available in location_type table";
+
+    public static final String APPOINTMENTIDNOTAVAILABLE = "Appointment  ID : "
+        + "is not available in Appointment Table";
+
+    public static final String USERPROFILEEMAILID = "Personal Code : "
+        + " is not having any email id";
+
+    public static final String APPOINTMENTIDFAILURE = "Appointment  ID : "
+        + "is failed to load";
+
+    public static final String AUTHORISATIONIDFAILURE = "Appointment  ID : "
+        + "is failed to load";
+
+    public static final String USERPROFILEISPRESENT = "Personal  Code : "
+        + "is already loaded";
+
+    public static final String CFTREGIONIDFAILURE = "Location  : "
+        + " is not available in jrd_lrd_region_mapping table";
+
+    public static final String INVALIDROLENAMES = "Role Name  : "
+        + " is invalid";
+
+    public static final String USERPROFILEFAILURE = "UserProfile  : "
+        + "is failed to load";
+
+    public static final String APPOINTMENTTYPENOTMATCHING = "Appointment type  : "
+        + "not matching";
 
     public static final String ERRORDESCRIPTIONFORINTTEST = "Appointment Base Location ID : 1000  "
             + "not available in BASE LOCATION table";
 
     public static final String APPOINTMENT_TABLE = "judicial_office_appointment";
+
+    public static final String PERSONALCODE = "Personal_code";
+
+
+    public static final String AUTHORISATION_TABLE = "judicial_office_authorisation";
 
     public static final String ASB_PUBLISH_SIDAM_ERROR = "An error occurred while Publishing SIDAM to ASB";
 
@@ -85,6 +142,9 @@ public class RefDataElinksConstants {
 
     public static final String ASB_PUBLISH_TOPIC_ERROR
         = "An error occurred while Publishing message to service bus topic";
+
+    public static final String SPTW
+        = "SPTW-";
 
     public static final String FORBIDEN_ERROR = "Forbidden Error: Access denied for invalid permissions";
 
@@ -106,4 +166,8 @@ public class RefDataElinksConstants {
     public static final String IDAM_ERROR_MESSAGE = "Error during the IDAM elastic search query";
 
     public static final String IDAM_TOKEN_ERROR_MESSAGE = "Idam Service Failed while bearer token generate";
+
+    public static final List<String> INVALID_ROLES = List.of("CRTS TRIB - RS Admin User",
+        "MAGS - AC Admin User","Person on a List","Unknown","Senior Coroner","Assistant Coroner",
+        "Area Coroner","Acting Senior Coroner","Initial Automated Record");
 }

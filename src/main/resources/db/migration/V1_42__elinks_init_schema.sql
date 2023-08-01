@@ -8,7 +8,8 @@ CREATE TABLE dbjudicialdata.judicial_location_mapping (
 	judicial_base_location_id varchar(64) NULL,
 	building_location_name varchar(256) NULL,
 	base_location_name varchar(128) NULL,
-	service_code varchar(16) NULL
+	service_code varchar(16) NULL,
+	CONSTRAINT judicial_base_location_id PRIMARY KEY (judicial_base_location_id)
 );
 
 

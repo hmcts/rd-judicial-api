@@ -32,13 +32,6 @@ public class LocationMapping {
     @Id
     private String judicialBaseLocationId;
 
-    @Column(name = "building_location_name")
-    @Size(max = 256)
-    private String buildingLocationName;
-
-    @Column(name = "base_location_name")
-    @Size(max = 128)
-    private String baseLocationName;
 
     @Column(name = "service_code")
     @Size(max = 16)
