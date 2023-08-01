@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -53,6 +54,9 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
 
     @MockBean
     protected FeatureToggleServiceImpl featureToggleServiceImpl;
+
+    @MockBean
+    protected JwtDecoder jwtDecoder;
 
     @MockBean
     LDClient ldClient;
@@ -106,6 +110,8 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                 loadJson("src/integrationTest/resources/wiremock_responses/people.json");
         String leaversResponseValidationJson =
                 loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
+        String deletedResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
                 .willReturn(aResponse()
@@ -135,6 +141,13 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
                         .withHeader("Content-Type", V2.MediaType.SERVICE)
                         .withHeader("Connection", "close")
                         .withBody(leaversResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(deletedResponseValidationJson)));
 
         String idamResponseValidationJson =
                 loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");

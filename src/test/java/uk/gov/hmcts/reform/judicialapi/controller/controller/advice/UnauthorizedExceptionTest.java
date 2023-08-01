@@ -6,7 +6,7 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.UnauthorizedException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UnauthorizedExceptionTest {
+class UnauthorizedExceptionTest {
     @Test
     void test_handle_feign_exception() {
         UnauthorizedException unAuthorizedException =

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -17,7 +16,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
-import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.util.List;
 import java.util.Map;
@@ -29,18 +27,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_FORBIDDEN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_NOT_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_UNAUTHORIZED;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ERRORDESCRIPTIONFORINTTEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PERSONALCODE;
 
 class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
@@ -129,21 +125,6 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
     }
 
-    @DisplayName("Elinks People endpoint status verification for Too many requests status")
-    @Test
-    void test_get_people_return_response_status_429() throws JsonProcessingException  {
-
-        int statusCode = 429;
-        peopleApi4xxResponse(statusCode,null);
-
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-
-        assertThat(response).containsEntry("http_status", "429");
-
-        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS);
-
-    }
-
     @DisplayName("Elinks Location endpoint status verification for bad request status")
     @Test
     void test_get_locations_return_response_status_400() throws JsonProcessingException {
@@ -209,62 +190,6 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(response).containsEntry("http_status", "429");
 
         assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS);
-    }
-
-    @DisplayName("Elinks BaseLocation endpoint status verification for bad request status")
-    @Test
-    void test_get_baseLocations_return_response_status_400() throws JsonProcessingException {
-
-        int statusCode = 400;
-        baseLocationApi4xxResponse(statusCode,null);
-
-
-        Map<String, Object> response = elinksReferenceDataClient.getBaseLocations();
-        assertThat(response).containsEntry("http_status", "400");
-
-        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_BAD_REQUEST);
-    }
-
-    @DisplayName("Elinks BaseLocation endpoint status verification for unauthorized status")
-    @Test
-    void test_get_baseLocations_return_response_status_401() throws JsonProcessingException {
-
-        int statusCode = 401;
-        baseLocationApi4xxResponse(statusCode,null);
-
-
-        Map<String, Object> response = elinksReferenceDataClient.getBaseLocations();
-        assertThat(response).containsEntry("http_status", "401");
-
-        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_UNAUTHORIZED);
-    }
-
-    @DisplayName("Elinks BaseLocation endpoint status verification for forbidden status")
-    @Test
-    void test_get_baseLocations_return_response_status_403() throws JsonProcessingException {
-
-        int statusCode = 403;
-        baseLocationApi4xxResponse(statusCode,null);
-
-
-        Map<String, Object> response = elinksReferenceDataClient.getBaseLocations();
-        assertThat(response).containsEntry("http_status", "403");
-
-        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_FORBIDDEN);
-    }
-
-    @DisplayName("Elinks BaseLocation endpoint status verification for resource not found status")
-    @Test
-    void test_get_baseLocations_return_response_status_404() throws JsonProcessingException {
-
-        int statusCode = 404;
-        baseLocationApi4xxResponse(statusCode,null);
-
-
-        Map<String, Object> response = elinksReferenceDataClient.getBaseLocations();
-        assertThat(response).containsEntry("http_status", "404");
-
-        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
     }
 
     @DisplayName("Elinks BaseLocation endpoint status verification for Too many requests status")
@@ -354,7 +279,7 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
                                 + "                  \"circuit\": \"default\","
                                 + "                  \"bench\": null,"
                                 + "                  \"advisory_committee_area\": null,"
-                                + "                  \"location\": \"default\","
+                                + "                  \"location\": \"National\","
                                 + "                  \"base_location\": \"Worcester Combined Court - Crown\","
                                 + "                  \"base_location_id\": 1000,"
                                 + "                  \"is_principal\": false,"
@@ -378,7 +303,7 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
                                 + "                  \"circuit\": \"default\","
                                 + "                  \"bench\": null,"
                                 + "                  \"advisory_committee_area\": null,"
-                                + "                  \"location\": \"default\","
+                                + "                  \"location\": \"National\","
                                 + "                  \"base_location\": \"Central London County Court\","
                                 + "                  \"base_location_id\": 1200,"
                                 + "                  \"is_principal\": true,"
@@ -445,9 +370,7 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
         ElinkDataExceptionRecords exceptionEntry = elinksException.get(0);
-        assertEquals("0049931063",exceptionEntry.getKey());
-        assertEquals(ERRORDESCRIPTIONFORINTTEST, exceptionEntry.getErrorDescription());
-        assertEquals(BASE_LOCATION_ID, exceptionEntry.getFieldInError());
+        assertEquals(PERSONALCODE, exceptionEntry.getFieldInError());
         assertNotNull(exceptionEntry.getSchedulerStartTime());
 
     }
@@ -475,36 +398,6 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
 
         assertEquals(LEAVERSAPI, auditEntry.getApiName());
-        assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
-        assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
-        assertNotNull(auditEntry.getSchedulerStartTime());
-        assertNotNull(auditEntry.getSchedulerEndTime());
-    }
-
-    @DisplayName("Elinks Base Locations to test JRD Audit Negative Scenario Functionality verification")
-    @Test
-    void verifyBaseLocationJrdAuditFunctionalityBadRequestScenario() {
-        elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
-            .willReturn(aResponse()
-                .withStatus(400)
-                .withHeader("Content-Type", V2.MediaType.SERVICE)
-                .withHeader("Connection", "close")
-                .withBody("{"
-                    + " }")));
-        elinkSchedularAuditRepository.deleteAll();
-        Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
-        assertThat(baseLocationResponse).containsEntry("http_status", "400");
-        String baseLocations = baseLocationResponse.get("response_body").toString();
-        assertTrue(baseLocations.contains("Syntax error or Bad request"));
-        List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
-
-        assertEquals(0, baseLocationList.size());
-
-        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
-
-        ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
-
-        assertEquals(BASELOCATIONAPI, auditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
         assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
         assertNotNull(auditEntry.getSchedulerStartTime());

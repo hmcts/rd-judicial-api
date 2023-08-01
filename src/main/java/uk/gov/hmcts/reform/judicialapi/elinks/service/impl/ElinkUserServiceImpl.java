@@ -23,6 +23,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.AppointmentRefreshResponse;
@@ -52,6 +55,15 @@ public class ElinkUserServiceImpl implements ElinkUserService {
 
     @Autowired
     private ProfileRepository userProfileRepository;
+
+    @Autowired
+    private JudicialRoleTypeRepository judicialRoleTypeRepository;
+
+    @Autowired
+    private AuthorisationsRepository authorisationsRepository;
+
+    @Autowired
+    private AppointmentsRepository appointmentsRepository;
 
     @Autowired
     @Qualifier("elinksServiceCodeMappingRepository")
@@ -84,11 +96,11 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .forEach(s -> ticketCode.add(s.getTicketCode()));
         }
         log.info("SearchServiceCode list = {}", searchServiceCode);
-      var userSearchResponses = userProfileRepository
+        var userSearchResponses = userProfileRepository
             .findBySearchForString(userSearchRequest.getSearchString().toLowerCase(),
                 userSearchRequest.getServiceCode(), userSearchRequest.getLocation(), ticketCode,
                 searchServiceCode);
-        var userSearchResponses = null;
+
         return ResponseEntity
             .status(200)
             .body(userSearchResponses);

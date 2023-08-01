@@ -50,8 +50,8 @@ public class Appointment implements Serializable {
     @Size(max = 64)
     private String baseLocationId;
 
-    @Column(name = "hmcts_region_Id")
-    @Size(max = 256)
+    @Column(name = "hmcts_region_id")
+    @Size(max = 64)
     private String regionId;
 
     @Column(name = "is_prinicple_appointment")
@@ -75,7 +75,7 @@ public class Appointment implements Serializable {
 
     @Column(name = "appointment")
     @Size(max = 64)
-    private String appointmentRolesMapping;
+    private String appointmentMapping;
 
     @Column(name = "appointment_type")
     @Size(max = 32)

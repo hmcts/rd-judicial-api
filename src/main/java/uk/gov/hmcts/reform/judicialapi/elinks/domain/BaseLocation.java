@@ -30,7 +30,7 @@ public class BaseLocation {
     @Column(name = "name")
     @Size(max = 256)
     @JsonProperty(value = "name")
-    private String courtName;
+    private String name;
 
     @Column(name = "type_id")
     @Size(max = 64)
@@ -48,16 +48,19 @@ public class BaseLocation {
     private String jurisdictionId;
 
     @Column(name = "start_date")
+    @JsonProperty(value = "startDate")
     private LocalDate startDate;
 
     @Column(name = "end_date")
+    @JsonProperty(value = "endDate")
     private LocalDate endDate;
 
     @Column(name = "created_at")
-    private LocalDateTime createdDate;
+    @JsonProperty(value = "createAt")
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime lastUpdated;
-
+    @JsonProperty(value = "updatedAt")
+    private LocalDateTime updatedAt;
 
 }

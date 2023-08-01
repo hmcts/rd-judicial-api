@@ -47,8 +47,8 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASELOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 
@@ -131,19 +131,16 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
 
         List<Location> locationsList = locationRepository.findAll();
 
-        assertEquals(2, locationsList.size());
-        assertEquals("0",locationsList.get(0).getRegionId());
-        assertEquals("default",locationsList.get(0).getRegionDescCy());
-        assertEquals("default",locationsList.get(0).getRegionDescEn());
+        assertEquals(11, locationsList.size());
 
         //asserting baselocation data
         Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
         ElinkBaseLocationWrapperResponse baseLocations =
                 (ElinkBaseLocationWrapperResponse) baseLocationResponse.get("body");
-        ElinkDataSchedularAudit baseLocationAuditEntry = elinksAudit.get(1);
+        ElinkDataSchedularAudit baseLocationAuditEntry = elinksAudit.get(0);
 
         assertThat(baseLocationResponse).containsEntry("http_status", "400");
-        assertEquals(BASELOCATIONAPI, baseLocationAuditEntry.getApiName());
+        assertEquals(LOCATION, baseLocationAuditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), baseLocationAuditEntry.getStatus());
 
 
@@ -153,7 +150,7 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         //asserting userprofile data for people api
         Map<String, Object> peopleResponse = elinksReferenceDataClient.getPeoples();
         ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse) peopleResponse.get("body");
-        ElinkDataSchedularAudit peopleAuditEntry = elinksAudit.get(2);
+        ElinkDataSchedularAudit peopleAuditEntry = elinksAudit.get(1);
 
         assertThat(peopleResponse).containsEntry("http_status", "400");
         assertEquals(PEOPLEAPI,peopleAuditEntry.getApiName());
@@ -165,7 +162,7 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         //asserting userprofile data for leaver api
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
         ElinkLeaversWrapperResponse leaversProfiles = (ElinkLeaversWrapperResponse) leaversResponse.get("body");
-        ElinkDataSchedularAudit leaversAuditEntry = elinksAudit.get(3);
+        ElinkDataSchedularAudit leaversAuditEntry = elinksAudit.get(2);
 
         assertThat(leaversResponse).containsEntry("http_status", "400");
         assertEquals(LEAVERSAPI,leaversAuditEntry.getApiName());
@@ -229,6 +226,13 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
                         .withHeader("Connection", "close")
                         .withBody(body)
                 ));
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(statusCode)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody(body)
+            ));
 
         sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
                 .willReturn(aResponse()

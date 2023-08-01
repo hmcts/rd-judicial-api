@@ -7,8 +7,11 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,10 +36,10 @@ class BaseLocationRepositoryTest {
         BaseLocation result = baseLocationRepository.save(baseLocationOne);
 
         assertThat(result.getBaseLocationId()).isEqualTo(baseLocationOne.getBaseLocationId());
-        assertThat(result.getCourtName()).isEqualTo(baseLocationOne.getCourtName());
-        assertThat(result.getJurisdictionId()).isEqualTo(baseLocationOne.getJurisdictionId());
-        assertThat(result.getParentId()).isEqualTo(baseLocationOne.getParentId());
+        assertThat(result.getName()).isEqualTo(baseLocationOne.getName());
         assertThat(result.getTypeId()).isEqualTo(baseLocationOne.getTypeId());
+        assertThat(result.getParentId()).isEqualTo(baseLocationOne.getParentId());
+        assertThat(result.getJurisdictionId()).isEqualTo(baseLocationOne.getJurisdictionId());
 
     }
 
@@ -58,16 +61,16 @@ class BaseLocationRepositoryTest {
         assertThat(result).hasSize(2);
 
         assertThat(result.get(0).getBaseLocationId()).isEqualTo(baseLocationOne.getBaseLocationId());
-        assertThat(result.get(0).getCourtName()).isEqualTo(baseLocationOne.getCourtName());
+        assertThat(result.get(0).getName()).isEqualTo(baseLocationOne.getName());
         assertThat(result.get(0).getTypeId()).isEqualTo(baseLocationOne.getTypeId());
-        assertThat(result.get(0).getJurisdictionId()).isEqualTo(baseLocationOne.getJurisdictionId());
         assertThat(result.get(0).getParentId()).isEqualTo(baseLocationOne.getParentId());
+        assertThat(result.get(0).getJurisdictionId()).isEqualTo(baseLocationOne.getJurisdictionId());
 
         assertThat(result.get(1).getBaseLocationId()).isEqualTo(baseLocationTwo.getBaseLocationId());
-        assertThat(result.get(1).getCourtName()).isEqualTo(baseLocationTwo.getCourtName());
+        assertThat(result.get(1).getName()).isEqualTo(baseLocationTwo.getName());
+        assertThat(result.get(1).getTypeId()).isEqualTo(baseLocationTwo.getTypeId());
         assertThat(result.get(1).getParentId()).isEqualTo(baseLocationTwo.getParentId());
         assertThat(result.get(1).getJurisdictionId()).isEqualTo(baseLocationTwo.getJurisdictionId());
-        assertThat(result.get(1).getTypeId()).isEqualTo(baseLocationTwo.getTypeId());
     }
 
 
@@ -77,27 +80,36 @@ class BaseLocationRepositoryTest {
 
         BaseLocation baseLocationOne = new BaseLocation();
         baseLocationOne.setBaseLocationId("1");
-        baseLocationOne.setCourtName("National");
-        baseLocationOne.setJurisdictionId("Old Gwynedd");
-        baseLocationOne.setTypeId("Gwynedd");
-        baseLocationOne.setParentId("LJA");
+        baseLocationOne.setName("National");
+        baseLocationOne.setTypeId("46");
+        baseLocationOne.setParentId("1722");
+        baseLocationOne.setJurisdictionId("28");
+        baseLocationOne.setStartDate(null);
+        baseLocationOne.setCreatedAt(convertToLocalDateTime("2023-04-12T16:42:35Z"));
+        baseLocationOne.setUpdatedAt(convertToLocalDateTime("2023-04-12T16:42:35Z"));
 
 
         BaseLocation baseLocationTwo = new BaseLocation();
-        baseLocationTwo.setBaseLocationId("2");
-        baseLocationTwo.setCourtName("Aldridge and Brownhills");
-        baseLocationTwo.setJurisdictionId("Nottinghamshire");
-        baseLocationTwo.setTypeId("Nottinghamshire");
-        baseLocationTwo.setParentId("LJA");
+        baseLocationTwo.setBaseLocationId("3");
+        baseLocationTwo.setName("Alnwick");
+        baseLocationTwo.setTypeId("46");
+        baseLocationTwo.setParentId("1722");
+        baseLocationTwo.setJurisdictionId("28");
+        baseLocationTwo.setStartDate(null);
+        baseLocationTwo.setCreatedAt(convertToLocalDateTime("2023-04-12T16:42:35Z"));
+        baseLocationTwo.setUpdatedAt(convertToLocalDateTime("2023-04-12T16:42:35Z"));
 
 
 
-        List<BaseLocation> baseLocations = new ArrayList<>();
+        return List.of(baseLocationOne,baseLocationTwo);
 
-        baseLocations.add(baseLocationOne);
-        baseLocations.add(baseLocationTwo);
+    }
 
-        return baseLocations;
-
+    private  LocalDateTime convertToLocalDateTime(String date) {
+        if (Optional.ofNullable(date).isPresent()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            return LocalDate.parse(date, formatter).atStartOfDay();
+        }
+        return null;
     }
 }

@@ -98,6 +98,22 @@ public class JudicialReferenceDataClient {
         return response;
     }
 
+    public String setAndReturnJwtToken() {
+        if (StringUtils.isBlank(JWT_TOKEN)) {
+            JWT_TOKEN = generateS2SToken("rd_judicial_api");
+        }
+        return JWT_TOKEN;
+    }
+
+    public String getAndReturnBearerToken(String userId, String role) {
+        setAndReturnJwtToken();
+        if (StringUtils.isBlank(bearerToken)) {
+            bearerToken = "Bearer ".concat(getBearerToken(Objects.isNull(userId) ? UUID.randomUUID().toString()
+                    : userId, role));
+        }
+        return bearerToken;
+    }
+
     @NotNull
     private HttpHeaders getMultipleAuthHeaders(MediaType value,String role, String userId) {
         HttpHeaders headers = new HttpHeaders();
@@ -106,13 +122,10 @@ public class JudicialReferenceDataClient {
 
             JWT_TOKEN = generateS2SToken(serviceName);
         }
+        getAndReturnBearerToken(userId, role);
 
         headers.add("ServiceAuthorization", JWT_TOKEN);
 
-        if (StringUtils.isBlank(bearerToken)) {
-            bearerToken = "Bearer ".concat(getBearerToken(Objects.isNull(userId) ? UUID.randomUUID().toString()
-                    : userId, role));
-        }
         headers.add("Authorization", bearerToken);
         return headers;
     }
@@ -122,11 +135,17 @@ public class JudicialReferenceDataClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(value);
 
-        headers.add("ServiceAuthorization", "Invalid token");
+        if (StringUtils.isBlank(JWT_TOKEN)) {
+
+            JWT_TOKEN = generateS2SToken("Invalid token");
+        }
+
+        headers.add("ServiceAuthorization", JWT_TOKEN);
 
         if (StringUtils.isBlank(bearerToken)) {
             bearerToken = "Bearer ".concat("invalid token");
         }
+        getAndReturnBearerToken(userId, role);
         headers.add("Authorization", bearerToken);
 
         return headers;
@@ -234,4 +253,8 @@ public class JudicialReferenceDataClient {
     }
 
 
+    public void clearTokens() {
+        JWT_TOKEN = null;
+        bearerToken = null;
+    }
 }

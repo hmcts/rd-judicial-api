@@ -22,9 +22,15 @@ public class AuthorisationsRequest {
     private String startDate;
     @JsonProperty("end_date")
     private String endDate;
-    @JsonProperty("ticket")
-    private String lowerLevel;
     @JsonProperty("ticket_id")
     private String ticketCode;
+    @JsonProperty("ticket")
+    private String ticket;
+    @JsonProperty("authorisation_id")
+    private String authorisationId;
+    @JsonProperty("appointment_id")
+    private String appointmentId;
+    @JsonProperty("jurisdiction_id")
+    private String jurisdictionId;
 
 }

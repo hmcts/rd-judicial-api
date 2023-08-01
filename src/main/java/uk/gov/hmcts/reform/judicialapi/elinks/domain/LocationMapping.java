@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
-@Entity(name = "judicial_location_mapping")
+@Entity(name = "judicialLocationMapping")
 @Table(name = "judicial_location_mapping", schema = "dbjudicialdata")
 @Getter
 @Setter
@@ -21,6 +21,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationMapping {
+
 
     @Column(name = "epimms_id")
     @Size(max = 16)
@@ -30,6 +31,7 @@ public class LocationMapping {
     @Size(max = 64)
     @Id
     private String judicialBaseLocationId;
+
 
     @Column(name = "service_code")
     @Size(max = 16)

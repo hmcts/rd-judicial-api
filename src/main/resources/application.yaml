@@ -31,6 +31,7 @@ spring:
     name: Judicial Data API
   main:
     allow-bean-definition-overriding: true
+    allow-circular-references: true
   security:
     oauth2:
       client:
@@ -51,7 +52,6 @@ spring:
     locations: ${JUDICIAL_DB:classpath:db/migration}
     schemas:
       - dbjuddata
-
 ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
@@ -90,8 +90,10 @@ security:
     - "/actuator/**"
     - "/loggers/**"
     - "/swagger-ui.html"
+    - "/swagger-ui/**"
     - "/swagger-resources/**"
     - "/v2/api-docs"
+    - "/v3/**"
     - "/webjars/springfox-swagger-ui/**"
     - "/csrf"
     - "/error"
@@ -141,19 +143,20 @@ search:
   serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3,aaa6,aaa7,aba5,aba3}
 
 elinksApiKey: ${judicial_api_elinks_api_key:}
-elinksUrl: ${ELINKS_URL:https://jo-staging.elinks.judiciary.uk/api/v4}
+elinksUrl: ${ELINKS_URL:https:https://judiciary-middleware-futureehr.herokuapp.com/api/v5}
 
 elinks:
   people:
-    lastUpdated: 2015-01-01
-    perPage: 50
+    lastUpdated: ${LAST_UPDATED:2015-01-01}
+    perPage: ${PER_PAGE:50}
     page: 1
-    includePreviousAppointments : false
-    threadPauseTime: 2000
+    includePreviousAppointments : ${INCLUDE_PREVIOUS_APPOINTMENT:false}
+    threadPauseTime: ${THREAD_PAUSE_TIME:2000}
+    threadRetriggerPauseTime: ${THREAD_RETRIGGER_TIME:1000}
   scheduler:
     wrapperApiUrl: ${ELINKS_WRAPPER_API_URL:http://localhost:8093}
-    cronExpression: ${CRON_EXPRESSION:0 0 */5 * * *}
-    enabled: false
+    cronExpression: ${CRON_EXPRESSION:* 55 15 * * *}
+    enabled: ${SCHEDULER_ENABLED:false}
     lockAtLeastFor: ${Lock_AT_Least_For:PT10M}
     lockAtMostFor: ${Lock_AT_Most_For:PT20M}
     defaultLockAtMostFor: ${Default_Lock_At_Most_For:PT30M}

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.Set;
 public interface ProfileRepository extends JpaRepository<UserProfile, String> {
 
 
-    /* @Query(value = "select distinct new uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper"
+    @Query(value = "select distinct new uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper"
         + "(per.title,per.knownAs,per.surname,per.fullName"
         + ",per.ejudiciaryEmailId,per.sidamId,per.initials"
         + ",per.postNominals,per.personalCode)"
@@ -26,9 +27,9 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
         + "where (per.objectId != '' and per.objectId is not null) "
         + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
         + "and (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
-       // + "and ( (:serviceCode is not null and (lower(appt.serviceCode) = :serviceCode or "
-    //    + "auth.ticketCode in :ticketCode)) or :serviceCode is null ) "
-     //   + "and (( :serviceCode in :searchServiceCode) or ((:locationCode is not null "
+        + "and ( (:serviceCode is not null and ( "
+        + "auth.ticketCode in :ticketCode)) or :serviceCode is null ) "
+        + "and (( :serviceCode in :searchServiceCode) or ((:locationCode is not null "
         + "and lower(appt.epimmsId) = :locationCode)"
         + " or :locationCode is null)) "
         + "and (lower(per.knownAs) like %:searchString% "
@@ -38,7 +39,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
     List<UserSearchResponseWrapper> findBySearchForString(String searchString, String serviceCode,
                                                           String locationCode, List<String> ticketCode,
                                                           List<String> searchServiceCode);
-*/
+
 
     @Query(value = "select distinct per "
             + "from judicialUserProfile per "

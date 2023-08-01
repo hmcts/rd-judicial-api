@@ -41,4 +41,13 @@ public interface ElinksFeignClient {
                               @RequestParam("per_page") String perPage, @RequestParam("page") String page);
 
 
+    @GetMapping(value = "/deleted")
+    @RequestLine("GET /deleted")
+    @Headers({"Authorization: {authorization}",
+        "Content-Type: application/json"})
+
+    Response getDeletedDetails(@RequestParam("deleted_since") String updatedSince,
+                               @RequestParam("per_page") String perPage, @RequestParam("page") String page);
+
+
 }

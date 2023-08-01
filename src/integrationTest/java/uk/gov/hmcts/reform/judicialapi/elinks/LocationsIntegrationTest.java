@@ -19,9 +19,9 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION_DATA_LOAD_SUCCESS;
 
 class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
@@ -51,7 +51,7 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         Map<String, Object> response = elinksReferenceDataClient.getLocations();
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) response.get("body");
-        assertEquals(LOCATION_DATA_LOAD_SUCCESS, locations.getMessage());
+        assertEquals(BASE_LOCATION_DATA_LOAD_SUCCESS, locations.getMessage());
     }
 
     @DisplayName("Elinks locations verification")
@@ -61,13 +61,13 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         Map<String, Object> response = elinksReferenceDataClient.getLocations();
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) response.get("body");
-        assertEquals(LOCATION_DATA_LOAD_SUCCESS, locations.getMessage());
+        assertEquals(BASE_LOCATION_DATA_LOAD_SUCCESS, locations.getMessage());
 
         List<Location> locationsList = locationRepository.findAll();
 
-        assertEquals(35, locationsList.size());
-        assertEquals("2", locationsList.get(1).getRegionId());
-        assertEquals("National England and Wales", locationsList.get(1).getRegionDescEn());
+        assertEquals(11, locationsList.size());
+        assertEquals("1", locationsList.get(1).getRegionId());
+        assertEquals("London", locationsList.get(1).getRegionDescEn());
     }
 
     @DisplayName("Elinks  Location to JRD Audit Functionality verification")
@@ -76,13 +76,13 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         Map<String, Object> response = elinksReferenceDataClient.getLocations();
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) response.get("body");
-        assertEquals(LOCATION_DATA_LOAD_SUCCESS, locations.getMessage());
+        assertEquals(BASE_LOCATION_DATA_LOAD_SUCCESS, locations.getMessage());
 
         List<Location> locationsList = locationRepository.findAll();
 
-        assertEquals(35, locationsList.size());
-        assertEquals("2", locationsList.get(1).getRegionId());
-        assertEquals("National England and Wales", locationsList.get(1).getRegionDescEn());
+        assertEquals(11, locationsList.size());
+        assertEquals("1", locationsList.get(1).getRegionId());
+        assertEquals("London", locationsList.get(1).getRegionDescEn());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 
