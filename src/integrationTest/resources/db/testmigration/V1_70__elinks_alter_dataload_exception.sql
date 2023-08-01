@@ -134,5 +134,3 @@ INSERT INTO dbjudicialdata.judicial_ticket_code_type (ticket_code, ticket_catego
       ('1453',	'58',	'Family Presiding Justice'),
       ('1454',	'58',	'Youth Winger'),
       ('1455',	'58',	'Youth Presiding Justice');
-
- commit;
