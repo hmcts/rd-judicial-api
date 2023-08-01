@@ -2,6 +2,8 @@ package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Request;
+import feign.Response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,15 +14,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.InvalidRequestException;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ResourceNotFoundException;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
+import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
@@ -32,6 +36,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshRespons
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RequestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.validator.ElinksRefreshUserValidator;
+import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,9 +44,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import javax.validation.constraints.NotNull;
 
+import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
@@ -64,6 +72,8 @@ class ElinkUserServiceImplTest {
     @Mock
     RegionMappingRepository regionMappingRepository;
 
+    @Mock
+    private LocationReferenceDataFeignClient locationReferenceDataFeignClient;
 
     @Mock
     LocationMapppingRepository locationMappingRepository;
@@ -178,14 +188,14 @@ class ElinkUserServiceImplTest {
     }
 
     @NotNull
-    private PageRequest getPageRequest() {
+    private PageRequest getElinksPageRequest() {
         return RequestUtils.validateAndBuildPaginationObject(1, 0,
                 "ASC", "objectId",
-                20, "id", uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile.class);
+                20, "id", UserProfile.class);
     }
 
     @Test
-    void test_refreshUserProfile_Two_Input_01() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Two_Input_01() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, Arrays.asList("test", "test"),null);
@@ -197,7 +207,7 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_Two_Input_02() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Two_Input_02() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), null,null);
@@ -208,7 +218,7 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_Two_Input_03() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Two_Input_03() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"),null);
@@ -219,7 +229,7 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_Two_Input_04() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Two_Input_04() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), null,Arrays.asList("test", "test"));
@@ -230,7 +240,7 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_Multiple_Input() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Multiple_Input() throws JsonProcessingException {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"),null);
@@ -241,17 +251,17 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_No_Input() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_No_Input() throws JsonProcessingException {
         checkAssertion("");
     }
 
     @Test
-    void test_refreshUserProfile_WhenCcdServiceNameContainComma() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_WhenCcdServiceNameContainComma() throws JsonProcessingException {
         checkAssertion("abc,def");
     }
 
     @Test
-    void test_refreshUserProfile_WhenCcdServiceNameContainAll() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_WhenCcdServiceNameContainAll() throws JsonProcessingException {
         checkAssertion(" all ");
     }
 
@@ -266,10 +276,10 @@ class ElinkUserServiceImplTest {
 
 
     @Test
-    void test_refreshUserProfile_BasedOnSidamIds_200() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_200() throws JsonProcessingException {
         var userProfile = buildUserProfile();
 
-        var pageRequest = getPageRequest();
+        var pageRequest = getElinksPageRequest();
         var page = new PageImpl<>(Collections.singletonList(userProfile));
         var serviceCodeMappingOne = ServiceCodeMapping
                 .builder()
@@ -280,20 +290,6 @@ class ElinkUserServiceImplTest {
                 .builder()
                 .ticketCode("373")
                 .serviceCode("BFA1")
-                .build();
-
-        var regionMapping = RegionMapping
-                .builder()
-                .regionId("1")
-                .region("National")
-                .jrdRegionId("1")
-                .jrdRegion("National")
-                .build();
-
-        var locationMapping = LocationMapping.builder()
-                .judicialBaseLocationId("1")
-                .serviceCode("BBA3")
-                .epimmsId("2")
                 .build();
 
         when(serviceCodeMappingRepository.findAllServiceCodeMapping())
@@ -309,11 +305,11 @@ class ElinkUserServiceImplTest {
     }
 
 
-    @DisplayName("Refresh Userprofile based on IAC objectId")
+    @DisplayName("Refresh ElinksUserprofile based on IAC objectId")
     @Test
-    void test_refreshUserProfile_BasedOnObjectIds_200() {
+    void test_elinksRefreshUserProfile_BasedOnObjectIds_200() {
         var userProfile = buildUserProfileIac();
-        var pageRequest = getPageRequest();
+        var pageRequest = getElinksPageRequest();
         var page = new PageImpl<>(List.of(userProfile));
 
         var serviceCodeMappingOne = uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping
@@ -343,11 +339,11 @@ class ElinkUserServiceImplTest {
     }
 
 
-    @DisplayName("Refresh Userprofile based on NonIAC objectId")
+    @DisplayName("Refresh ElinksUserprofile based on NonIAC objectId")
     @Test
-    void test_refreshUserProfile_BasedOnObjectIds_NonIac200() {
+    void test_elinksRefreshUserProfile_BasedOnObjectIds_NonIac200() {
         var userProfile = buildUserProfileNonIac();
-        var pageRequest = getPageRequest();
+        var pageRequest = getElinksPageRequest();
         var page = new PageImpl<>(List.of(userProfile));
 
         var serviceCodeMappingOne = uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping
@@ -356,13 +352,7 @@ class ElinkUserServiceImplTest {
                 .serviceCode("BBA3")
                 .build();
 
-        var regionMapping = uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionMapping
-                .builder()
-                .regionId("1")
-                .region("National")
-                .jrdRegionId("1")
-                .jrdRegion("National")
-                .build();
+
         when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMappingOne));
         when(profileRepository.fetchUserProfileByObjectIds(List.of("test", "test"), pageRequest))
                 .thenReturn(page);
@@ -380,10 +370,10 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_Error() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_Error() throws JsonProcessingException {
         var userProfile = buildUserProfile();
 
-        var pageRequest = getPageRequest();
+        var pageRequest = getElinksPageRequest();
         var page = new PageImpl<>(Collections.singletonList(userProfile));
 
         var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
@@ -396,10 +386,10 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_200() {
+    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_200() {
         var userProfile = buildUserProfileIac();
 
-        var pageRequest = getPageRequest();
+        var pageRequest = getElinksPageRequest();
         var page = new PageImpl<>(Collections.singletonList(userProfile));
         var serviceCodeMapping = uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping
                 .builder()
@@ -420,9 +410,9 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException {
 
-        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+        var refreshRoleRequest = new RefreshRoleRequest("",
                 null, null, Arrays.asList("Emp", "Emp", null));
 
         Assertions.assertThrows(InvalidRequestException.class, () -> {
@@ -432,11 +422,13 @@ class ElinkUserServiceImplTest {
         });
     }
 
+
+
     @Test
-    void test_refreshUserProfile_BasedOnPersonalCodes_404() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_404() throws JsonProcessingException {
         var userProfile = buildUserProfile();
 
-        var pageRequest = getPageRequest();
+        var pageRequest = getElinksPageRequest();
         var page = new PageImpl<>(Collections.singletonList(userProfile));
         when(profileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
                 .thenReturn(null);
@@ -447,6 +439,131 @@ class ElinkUserServiceImplTest {
                     0, "ASC", "objectId");
         });
     }
+
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_200() throws JsonProcessingException {
+        var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
+        lrdOrgInfoServiceResponse.setServiceCode("BFA1");
+        lrdOrgInfoServiceResponse.setCcdServiceName("cmc");
+        var body = mapper.writeValueAsString(List.of(lrdOrgInfoServiceResponse));
+
+        when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
+                .thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
+
+        var userProfile = buildUserProfile();
+
+        var pageRequest = getElinksPageRequest();
+
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+
+        when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
+        when(profileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
+                .thenReturn(page);
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
+                null, null,null);
+        var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId");
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_LrdResponse_IsNon_200() {
+
+        var pageRequest = getElinksPageRequest();
+        when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
+                .thenReturn(Response.builder()
+                        .request(mock(Request.class)).body("body", defaultCharset()).status(400).build());
+
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("cmc",
+                null, null,null);
+        Assertions.assertThrows(UserProfileException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+
+    }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_Response_Empty() throws JsonProcessingException {
+
+        var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
+        lrdOrgInfoServiceResponse.setServiceCode("BFA1");
+        lrdOrgInfoServiceResponse.setCcdServiceName("cmc");
+        var body = mapper.writeValueAsString(List.of(lrdOrgInfoServiceResponse));
+
+        when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
+                .thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
+
+        var pageRequest = getElinksPageRequest();
+
+        var page = new PageImpl<uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile>(Collections.emptyList());
+        when(profileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
+                .thenReturn(page);
+        when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("cmc",
+                null, null,null);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseIsEmpty()
+            throws JsonProcessingException {
+
+        var body = mapper.writeValueAsString(Collections.emptyList());
+
+        when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
+                .thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
+                null, null,null);
+
+        Assertions.assertThrows(UserProfileException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseReturns400()
+            throws JsonProcessingException {
+        var errorResponse = ErrorResponse
+                .builder()
+                .errorCode(400)
+                .errorDescription("testErrorDesc")
+                .errorMessage("testErrorMsg")
+                .build();
+        var body = mapper.writeValueAsString(errorResponse);
+
+        when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
+                .thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(400).build());
+        var pageRequest = getElinksPageRequest();
+        var refreshRoleRequest = new RefreshRoleRequest("cmc",
+                null, null,null);
+
+        Assertions.assertThrows(UserProfileException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOn_All_400() throws JsonProcessingException {
+        var refreshRoleRequest =
+                new RefreshRoleRequest("", null, null,null);
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
 
 
     UserProfile buildUserProfile() {

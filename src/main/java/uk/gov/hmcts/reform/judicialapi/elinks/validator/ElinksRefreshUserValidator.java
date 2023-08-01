@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.InvalidRequestException;
+import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 
 import java.util.List;
