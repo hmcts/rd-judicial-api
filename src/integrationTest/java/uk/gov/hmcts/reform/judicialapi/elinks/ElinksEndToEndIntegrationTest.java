@@ -336,7 +336,7 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
     private void validateDeleted(List<ElinkDataSchedularAudit> elinksAudit) {
         Map<String, Object> deletedResponse = elinksReferenceDataClient.getDeleted();
         ElinkDeletedWrapperResponse deletedProfiles = (ElinkDeletedWrapperResponse) deletedResponse.get("body");
-        ElinkDataSchedularAudit deletedAuditEntry = elinksAudit.get(4);
+        ElinkDataSchedularAudit deletedAuditEntry = elinksAudit.get(3);
 
         assertThat(deletedResponse).containsEntry("http_status", "200 OK");
         assertEquals("Deleted users Data Loaded Successfully", deletedProfiles.getMessage());
