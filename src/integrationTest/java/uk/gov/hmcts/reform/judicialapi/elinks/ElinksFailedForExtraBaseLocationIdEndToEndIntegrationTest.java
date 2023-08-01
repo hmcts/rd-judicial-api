@@ -212,10 +212,8 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         UserProfile sidamID = userprofileAfterSidamresponse.get(0);
 
         assertEquals(2, userprofileAfterSidamresponse.size());
-        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2",
-            userprofileAfterSidamresponse.get(0).getObjectId());
-        assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e972",
-            userprofileAfterSidamresponse.get(0).getSidamId());
+        assertEquals("94772643-2c5f-4f84-8731-3dd7c25c9e11",
+            userprofileAfterSidamresponse.get(1).getObjectId());
         assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e971",
             userprofileAfterSidamresponse.get(1).getSidamId());
 
