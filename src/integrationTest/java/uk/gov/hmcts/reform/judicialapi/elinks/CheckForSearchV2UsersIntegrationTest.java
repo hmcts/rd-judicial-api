@@ -16,7 +16,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
@@ -210,8 +209,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
         assertThat(response).containsEntry("http_status", "401");
     }
 
-
-   /* @ParameterizedTest
+    /* @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringIsEmpty(String role) {
         mockJwtToken(role);
@@ -228,7 +226,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
     }*/
 
 
-  /*  @ParameterizedTest
+    /*  @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringDoesNotContainRequiredLength(String role) {
         mockJwtToken(role);
@@ -245,7 +243,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 + "apostrophe, hyphen"));
     }*/
 
-  /*  @ParameterizedTest
+    /*  @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringContainsOtherThanLetters(String role) {
         mockJwtToken(role);

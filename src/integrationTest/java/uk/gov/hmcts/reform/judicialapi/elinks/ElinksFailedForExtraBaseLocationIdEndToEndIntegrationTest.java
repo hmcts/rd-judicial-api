@@ -1,16 +1,10 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.nimbusds.jose.JOSEException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
@@ -106,7 +100,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         cleanupData();
     }
 
-  /*  @DisplayName("Elinks end to end success scenario")
+    /*  @DisplayName("Elinks end to end success scenario")
     @Test
     void test_elinks_end_to_end_partial_success_scenario()
             throws JOSEException, JsonProcessingException,IOException {
