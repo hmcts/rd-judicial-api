@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -62,10 +63,10 @@ class ElinkUserServiceImplTest {
     @InjectMocks
     ElinkUserServiceImpl elinkUserService;
 
-    @Mock
+    @Spy
     ProfileRepository profileRepository;
 
-    @Mock
+    @Spy
     ServiceCodeMappingRepository serviceCodeMappingRepository;
 
 
@@ -75,7 +76,7 @@ class ElinkUserServiceImplTest {
     @Mock
     private LocationReferenceDataFeignClient locationReferenceDataFeignClient;
 
-    @Mock
+    @Spy
     LocationMapppingRepository locationMappingRepository;
 
     private ElinksRefreshUserValidator refreshUserValidatorMock;
