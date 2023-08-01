@@ -26,6 +26,13 @@ public class LaunchDarklyConfiguration implements WebMvcConfigurer {
             .addPathPatterns("/refdata/judicial/users/fetch")
             .addPathPatterns("/refdata/judicial/users/search")
             .addPathPatterns("/refdata/judicial/users/testing-support/sidam/actions/create-users")
-            .addPathPatterns("/refdata/judicial/users");
+            .addPathPatterns("/refdata/judicial/users")
+            .addPathPatterns("/refdata/internal/elink/reference_data/location")
+            .addPathPatterns("/refdata/internal/elink/people")
+            .addPathPatterns("/refdata/internal/elink/idam/elastic/search")
+            .addPathPatterns("/refdata/internal/elink/leavers")
+            .addPathPatterns("/refdata/internal/elink/deleted")
+            .addPathPatterns("/refdata/internal/elink/sidam/asb/publish")
+            .addPathPatterns("/refdata/internal/elink");
     }
 }

@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_FORBIDDEN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_NOT_FOUND;
@@ -404,6 +405,35 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
 
+    @DisplayName("Elinks Deleted to test JRD Audit Negative Scenario Functionality verification")
+    @Test
+    void verifyDeletedJrdAuditFunctionalityBadRequestScenario() {
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(400)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody("{"
+
+                    + " }")));
+
+        elinkSchedularAuditRepository.deleteAll();
+        Map<String, Object> deletedResponse = elinksReferenceDataClient.getDeleted();
+        assertThat(deletedResponse).containsEntry("http_status", "400");
+        String profiles = deletedResponse.get("response_body").toString();
+        assertTrue(profiles.contains("Syntax error or Bad request"));
+
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
+
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(0);
+
+        assertEquals(DELETEDAPI, auditEntry.getApiName());
+        assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
+        assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
+        assertNotNull(auditEntry.getSchedulerStartTime());
+        assertNotNull(auditEntry.getSchedulerEndTime());
+    }
+
     @DisplayName("test_get_leavers_with_wrong_endpoint_return_response_status_400()")
     @Test
     void test_get_leavers_return_response_status_400() throws JsonProcessingException  {
@@ -506,6 +536,104 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_BAD_REQUEST);
     }
 
+    @DisplayName("test_get_deleted_with_wrong_endpoint_return_response_status_400()")
+    @Test
+    void test_get_deleted_return_response_status_400() throws JsonProcessingException  {
+        int statusCode = 400;
+        deletedApi4xxResponse(statusCode,null);
+
+        Map<String, Object> response = elinksReferenceDataClient.getDeleted();
+
+        assertThat(response).containsEntry("http_status", "400");
+        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_BAD_REQUEST);
+    }
+
+    @DisplayName("test_get_deleted_with_wrong_token_return_response_status_401()")
+    @Test
+    void test_get_deleted_return_response_status_401() throws JsonProcessingException  {
+
+        int statusCode = 401;
+        deletedApi4xxResponse(statusCode,null);
+
+        Map<String, Object> response = elinksReferenceDataClient.getDeleted();
+
+        assertThat(response).containsEntry("http_status", "401");
+
+
+        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_UNAUTHORIZED);
+    }
+
+    @DisplayName("test_get_deleted_return_with_invalid_token_response_status_403()")
+    @Test
+    void test_get_deleted_return_response_status_403() throws JsonProcessingException  {
+
+        int statusCode = 403;
+        deletedApi4xxResponse(statusCode,null);
+
+        Map<String, Object> response = elinksReferenceDataClient.getDeleted();
+
+        assertThat(response).containsEntry("http_status", "403");
+
+        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_FORBIDDEN);
+    }
+
+    @DisplayName("test_get_deleted_url_not_found_return_response_status_404()")
+    @Test
+    void test_get_deleted_return_response_status_404() throws JsonProcessingException  {
+
+        int statusCode = 404;
+        deletedApi4xxResponse(statusCode,null);
+
+        Map<String, Object> response = elinksReferenceDataClient.getDeleted();
+
+        assertThat(response).containsEntry("http_status", "404");
+
+        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
+    }
+
+    @DisplayName("test_get_deleted_exceeding_limit_return_response_status_429()")
+    @Test
+    void test_get_deleted_return_response_status_429() throws JsonProcessingException  {
+
+        int statusCode = 429;
+        deletedApi4xxResponse(statusCode,null);
+
+        Map<String, Object> response = elinksReferenceDataClient.getDeleted();
+
+        assertThat(response).containsEntry("http_status", "429");
+
+        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS);
+    }
+
+    @DisplayName("test_get_deleted_missing_mandatory_param_return_response_status_400()")
+    @Test
+    void test_get_deleted_missing_mandatory_param_return_response_status_400() throws JsonProcessingException  {
+
+        int statusCode = 400;
+        deletedApi4xxResponse(statusCode,null);
+
+        Map<String, Object> response = elinksReferenceDataClient.getDeleted();
+
+        assertThat(response).containsEntry("http_status", "400");
+
+        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_BAD_REQUEST);
+
+    }
+
+    @DisplayName("test_get_deleted_future_since_then_return_response_status_400()")
+    @Test
+    void test_get_deleted_future_since_then_return_response_status_400() throws JsonProcessingException  {
+
+        int statusCode = 400;
+        deletedApi4xxResponse(statusCode,null);
+
+        Map<String, Object> response = elinksReferenceDataClient.getDeleted();
+
+        assertThat(response).containsEntry("http_status", "400");
+
+        assertThat(response.get("response_body").toString()).contains(ELINKS_ERROR_RESPONSE_BAD_REQUEST);
+    }
+
     @DisplayName("Idam_return_with_invalid_token_response_status_403")
     @Test
     void test_get_idam_return_response_status_403() throws JsonProcessingException {
@@ -585,6 +713,17 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
                         .withBody(body)
                         .withTransformers("user-token-response")));
+    }
+
+    private void deletedApi4xxResponse(int statusCode, String body) {
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(statusCode)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+
+                .withBody(body)
+                .withTransformers("user-token-response")));
     }
 
     private void idamSearchApi4xxResponse(int statusCode, String body) {
