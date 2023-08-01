@@ -50,6 +50,8 @@ import javax.validation.constraints.NotNull;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -387,6 +389,7 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void test_elinksRefreshUserProfile_BasedOnPersonalCodes_200() {
         var userProfile = buildUserProfileIac();
 
@@ -406,8 +409,19 @@ class ElinkUserServiceImplTest {
                 null, null, Arrays.asList("Emp", "Emp", null));
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
+        List<uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse>
+                userProfileRefreshResponses = (List<uk.gov.hmcts.reform.judicialapi.elinks
+                .response.UserProfileRefreshResponse>) responseEntity.getBody();
 
         assertEquals(200, responseEntity.getStatusCodeValue());
+        assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getStartDate());
+        assertNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getEndDate());
+        assertNotNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getStartDate());
+        assertNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getEndDate());
+        assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getCftRegionID());
+        assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getCftRegion());
+        assertNotNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getServiceCodes().get(0));
+        assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getEpimmsId());
     }
 
     @Test
