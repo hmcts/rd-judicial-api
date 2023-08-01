@@ -590,7 +590,7 @@ class ElinkUserServiceImplTest {
         appointment.setRegionId("1");
         appointment.setPersonalCode("");
         appointment.setBaseLocationId("1");
-        appointment.setAppointmentRolesMapping("String");
+        appointment.setAppointmentMapping("String");
         appointment.setAppointmentType("test");
         appointment.setType("test");
         appointment.setAppointmentId("1");
@@ -615,7 +615,7 @@ class ElinkUserServiceImplTest {
         appointmentTwo.setRegionId("2");
         appointmentTwo.setPersonalCode("");
         appointmentTwo.setBaseLocationId("1");
-        appointmentTwo.setAppointmentRolesMapping("String");
+        appointmentTwo.setAppointmentMapping("String");
         appointmentTwo.setAppointmentType("test");
         appointmentTwo.setType("test");
         appointmentTwo.setAppointmentId("2");
@@ -639,7 +639,7 @@ class ElinkUserServiceImplTest {
         appointmentThree.setRegionId("2");
         appointmentThree.setPersonalCode("");
         appointmentThree.setBaseLocationId("1");
-        appointmentThree.setAppointmentRolesMapping("String");
+        appointmentThree.setAppointmentMapping("String");
         appointmentThree.setAppointmentType("test");
         appointmentThree.setType("test");
         appointmentThree.setAppointmentId("3");
@@ -663,7 +663,7 @@ class ElinkUserServiceImplTest {
         appointmentFour.setRegionId("3");
         appointmentFour.setPersonalCode("");
         appointmentFour.setBaseLocationId("4");
-        appointmentFour.setAppointmentRolesMapping("String");
+        appointmentFour.setAppointmentMapping("String");
         appointmentFour.setAppointmentType("test");
         appointmentFour.setType("test");
         appointmentFour.setAppointmentId("1");
@@ -775,7 +775,7 @@ class ElinkUserServiceImplTest {
         appointment.setRegionId("1");
         appointment.setPersonalCode("");
         appointment.setBaseLocationId("1");
-        appointment.setAppointmentRolesMapping("String");
+        appointment.setAppointmentMapping("String");
         appointment.setAppointmentType("test");
         appointment.setType("test");
         appointment.setAppointmentId("1");
@@ -863,7 +863,7 @@ class ElinkUserServiceImplTest {
         appointmentOne.setRegionId("2");
         appointmentOne.setPersonalCode("");
         appointmentOne.setBaseLocationId("1");
-        appointmentOne.setAppointmentRolesMapping("String");
+        appointmentOne.setAppointmentMapping("String");
         appointmentOne.setAppointmentType("test");
         appointmentOne.setType("test");
         appointmentOne.setAppointmentId("1");
@@ -888,7 +888,7 @@ class ElinkUserServiceImplTest {
         appointmentTwo.setRegionId("2");
         appointmentTwo.setPersonalCode("");
         appointmentTwo.setBaseLocationId("1");
-        appointmentTwo.setAppointmentRolesMapping("String");
+        appointmentTwo.setAppointmentMapping("String");
         appointmentTwo.setAppointmentType("test");
         appointmentTwo.setType("test");
         appointmentTwo.setAppointmentId("2");

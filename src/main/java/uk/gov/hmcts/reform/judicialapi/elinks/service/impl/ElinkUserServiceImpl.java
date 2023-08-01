@@ -368,7 +368,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .cftRegionID(appt.getRegionId())
                 .cftRegion(appt.getRegionType().getRegionDescEn())
                 .isPrincipalAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
-                .appointment(appt.getAppointmentRolesMapping())
+                .appointment(appt.getAppointmentMapping())
                 .appointmentType(appt.getAppointmentType())
                 .serviceCodes(appt.getLocationMappings().stream().map(LocationMapping::getServiceCode).distinct()
                         .toList())
