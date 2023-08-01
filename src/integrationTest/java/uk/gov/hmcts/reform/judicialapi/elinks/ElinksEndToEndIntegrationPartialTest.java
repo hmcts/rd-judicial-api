@@ -121,8 +121,6 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
             loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
         String deletedResponseValidationJson =
             loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
-        String idamResponseValidationJson =
-            loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
             .willReturn(aResponse()
@@ -159,6 +157,9 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
                 .withHeader("Content-Type", V2.MediaType.SERVICE)
                 .withHeader("Connection", "close")
                 .withBody(deletedResponseValidationJson)));
+
+        String idamResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");
 
         sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
             .willReturn(aResponse()
