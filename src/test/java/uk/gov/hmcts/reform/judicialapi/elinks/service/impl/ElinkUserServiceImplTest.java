@@ -422,6 +422,10 @@ class ElinkUserServiceImplTest {
         assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getCftRegion());
         assertNotNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getServiceCodes().get(0));
         assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getEpimmsId());
+        assertNull(userProfileRefreshResponses.get(0).getRoles().get(0).getEndDate());
+        assertNull(userProfileRefreshResponses.get(0).getRoles().get(0).getStartDate());
+        assertNull(userProfileRefreshResponses.get(0).getRetirementDate());
+
     }
 
     @Test
