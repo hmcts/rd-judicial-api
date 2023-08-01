@@ -92,7 +92,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "on per.personalCode = auth.personalCode "
             + "LEFT JOIN FETCH judicial_additional_roles jrt "
             + "ON per.personalCode = jrt.personalCode "
-            + "LEFT JOIN FETCH judicial_location_mapping jlm "
+            + "LEFT JOIN FETCH judicialLocationMapping jlm "
             + "ON appt.baseLocationId = jlm.judicialBaseLocationId "
             + "where (per.objectId != '' and per.objectId is not null) "
             + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
