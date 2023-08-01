@@ -47,6 +47,8 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -63,6 +65,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
+import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResponse;
 
 class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
@@ -115,6 +118,8 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
             loadJson("src/integrationTest/resources/wiremock_responses/people.json");
         String leaversResponseValidationJson =
             loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
+        String deletedResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
             .willReturn(aResponse()
@@ -144,6 +149,69 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
                 .withHeader("Content-Type", V2.MediaType.SERVICE)
                 .withHeader("Connection", "close")
                 .withBody(leaversResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(deletedResponseValidationJson)));
+
+
+        String idamResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");
+
+        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody(idamResponseValidationJson)
+            ));
+
+        sidamService.stubFor(post(urlPathMatching("/o/token"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody("{"
+                    + "        \"access_token\": \"12345\""
+                    + "    }")
+            ));
+
+        s2sService.stubFor(get(urlEqualTo("/details"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody("rd_judicial_api")));
+
+        sidamService.stubFor(get(urlPathMatching("/o/userinfo"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody("{"
+                    + "  \"id\": \"%s\","
+                    + "  \"uid\": \"%s\","
+                    + "  \"forename\": \"Super\","
+                    + "  \"surname\": \"User\","
+                    + "  \"email\": \"super.user@hmcts.net\","
+                    + "  \"accountStatus\": \"active\","
+                    + "  \"roles\": ["
+                    + "  \"%s\""
+                    + "  ]"
+                    + "}")
+                .withTransformers("user-token-response")));
+
+        mockHttpServerForOidc.stubFor(get(urlPathMatching("/jwks"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody(getDynamicJwksResponse())));
+
+
     }
 
     @AfterEach
@@ -322,13 +390,11 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofileAfterSidamresponse = profileRepository.findAll();
         UserProfile sidamID = userprofileAfterSidamresponse.get(0);
 
-        assertEquals(2, userprofileAfterSidamresponse.size());
-        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2",
+        assertEquals(1, userprofileAfterSidamresponse.size());
+        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae",
             userprofileAfterSidamresponse.get(0).getObjectId());
         assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e972",
             userprofileAfterSidamresponse.get(0).getSidamId());
-        assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e971",
-            userprofileAfterSidamresponse.get(1).getSidamId());
 
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), audits.get(0).getPublishingStatus());
     }
@@ -343,12 +409,12 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),deletedAuditEntry.getStatus());
 
         List<UserProfile> deletedUserProfile = profileRepository.findAll();
-        assertEquals(2, deletedUserProfile.size());
-        assertEquals("410551", deletedUserProfile.get(0).getPersonalCode());
+        assertEquals(1, deletedUserProfile.size());
+        assertEquals("4913085", deletedUserProfile.get(0).getPersonalCode());
         assertEquals(true, deletedUserProfile.get(0).getDeletedFlag());
         assertEquals("2023-07-13",deletedUserProfile.get(0).getDeletedOn().toLocalDate().toString());
 
-        ElinkDataSchedularAudit auditEntry = elinksAudit.get(4);
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(3);
         assertThat(auditEntry.getId()).isPositive();
         assertEquals(DELETEDAPI, auditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
