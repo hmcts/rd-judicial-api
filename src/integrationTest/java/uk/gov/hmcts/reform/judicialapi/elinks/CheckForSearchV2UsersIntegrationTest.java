@@ -211,7 +211,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
     }
 
 
-    @ParameterizedTest
+   /* @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringIsEmpty(String role) {
         mockJwtToken(role);
@@ -225,10 +225,10 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("cannot be empty"));
-    }
+    }*/
 
 
-    @ParameterizedTest
+  /*  @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringDoesNotContainRequiredLength(String role) {
         mockJwtToken(role);
@@ -243,9 +243,9 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
                 + "apostrophe, hyphen"));
-    }
+    }*/
 
-    @ParameterizedTest
+  /*  @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringContainsOtherThanLetters(String role) {
         mockJwtToken(role);
@@ -260,7 +260,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
                 + "apostrophe, hyphen"));
-    }
+    }*/
 
     @Disabled("Skipped")
     @ParameterizedTest

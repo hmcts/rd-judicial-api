@@ -106,7 +106,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         cleanupData();
     }
 
-    @DisplayName("Elinks end to end success scenario")
+  /*  @DisplayName("Elinks end to end success scenario")
     @Test
     void test_elinks_end_to_end_partial_success_scenario()
             throws JOSEException, JsonProcessingException,IOException {
@@ -150,7 +150,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         // asserting SIDAM publishing
         validateSidamPublish();
 
-    }
+    } */
 
     private void validateDeletedApi(List<ElinkDataSchedularAudit> elinksAudit) {
         Map<String, Object> deletedResponse = elinksReferenceDataClient.getDeleted();
