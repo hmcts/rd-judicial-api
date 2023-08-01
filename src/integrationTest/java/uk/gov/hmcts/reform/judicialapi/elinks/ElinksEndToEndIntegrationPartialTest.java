@@ -121,7 +121,6 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
             loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
         String deletedResponseValidationJson =
             loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
-
         String idamResponseValidationJson =
             loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");
 
