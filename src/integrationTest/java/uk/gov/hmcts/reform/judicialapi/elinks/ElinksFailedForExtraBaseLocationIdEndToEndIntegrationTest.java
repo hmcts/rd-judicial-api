@@ -269,17 +269,17 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
 
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(2, userprofile.size());
-        assertEquals("410540", userprofile.get(0).getPersonalCode());
-        assertEquals("Yuriko", userprofile.get(0).getKnownAs());
-        assertEquals("Koiko", userprofile.get(0).getSurname());
-        assertEquals("Her Honour Judge Yuriko Koiko", userprofile.get(0).getFullName());
+        assertEquals("410551", userprofile.get(0).getPersonalCode());
+        assertEquals("Leslie", userprofile.get(0).getKnownAs());
+        assertEquals("Jones", userprofile.get(0).getSurname());
+        assertEquals("His Honour Judge Leslie Jones", userprofile.get(0).getFullName());
         assertEquals(null, userprofile.get(0).getPostNominals());
-        assertEquals("HHJ.Yuriko.Koiko@judiciarystaging13232.onmicrosoft.com",
+        assertEquals("HHJ.Leslie.Jones@judiciarystagingtest999.onmicrosoft.com",
             userprofile.get(0).getEjudiciaryEmailId());
         assertTrue(userprofile.get(0).getActiveFlag());
-        assertEquals("94772643-2c5f-4f84-8731-3dd7c25c9e11", userprofile.get(0).getObjectId());
+        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(0).getObjectId());
         assertNull(userprofile.get(0).getSidamId());
-        assertEquals("B.K",userprofile.get(0).getInitials());
+        assertEquals("L.J",userprofile.get(0).getInitials());
 
 
     }
