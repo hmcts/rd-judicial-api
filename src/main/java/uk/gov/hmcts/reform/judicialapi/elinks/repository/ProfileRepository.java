@@ -50,8 +50,6 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "LEFT JOIN FETCH judicial_additional_roles jrt "
             + "ON per.personalCode = jrt.personalCode "
             + "where (per.objectId != '' and per.objectId is not null) "
-            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
-            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
             + "and (per.objectId IN :objectIds)")
     Page<UserProfile> fetchUserProfileByObjectIds(List<String> objectIds, Pageable pageable);
 
@@ -65,8 +63,6 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "LEFT JOIN FETCH judicial_additional_roles jrt "
             + "ON per.personalCode = jrt.personalCode "
             + "where (per.objectId != '' and per.objectId is not null) "
-            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
-            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
             + "and (per.sidamId IN :sidamIds)")
     Page<UserProfile> fetchUserProfileBySidamIds(List<String> sidamIds, Pageable pageable);
 
@@ -79,8 +75,6 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "LEFT JOIN FETCH judicial_additional_roles jrt "
             + "ON per.personalCode = jrt.personalCode "
             + "where (per.objectId != '' and per.objectId is not null) "
-            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
-            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
             + "and (per.personalCode IN :personalCodes)")
     Page<UserProfile> fetchUserProfileByPersonalCodes(List<String> personalCodes, Pageable pageable);
 
@@ -95,8 +89,6 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "LEFT JOIN FETCH judicialLocationMapping jlm "
             + "ON appt.baseLocationId = jlm.judicialBaseLocationId "
             + "where (per.objectId != '' and per.objectId is not null) "
-            + "and ((appt.endDate >= CURRENT_DATE or appt.endDate is null) "
-            + "or (auth.endDate >= CURRENT_DATE or auth.endDate is null)) "
             + "and (jlm.serviceCode IN :ccdServiceCode or auth.ticketCode IN :ticketCode )")
     Page<UserProfile> fetchUserProfileByServiceNames(Set<String> ccdServiceCode,
                                                      List<String> ticketCode, Pageable pageable);
