@@ -97,18 +97,15 @@ public class UserProfile implements Serializable {
     private LocalDateTime deletedOn;
 
 
-    @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile", cascade = ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile", cascade = ALL, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<Appointment> appointments;
 
-    @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile", cascade = ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = Authorisation.class, mappedBy = "userProfile", cascade = ALL, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<Authorisation> authorisations;
 
-    @OneToMany(targetEntity = JudicialRoleType.class, mappedBy = "userProfile", cascade = ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = JudicialRoleType.class, mappedBy = "userProfile", cascade = ALL, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<JudicialRoleType> judicialRoleTypes;
 
