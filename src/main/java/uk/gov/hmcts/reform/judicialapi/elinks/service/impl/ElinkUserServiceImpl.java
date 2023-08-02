@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
@@ -78,14 +79,17 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     @Value("${refresh.sortColumn}")
     private String refreshDefaultSortColumn;
 
+    @Value("${search.serviceCode}")
+    private List<String> searchServiceCode;
+
     @Autowired
     private LocationReferenceDataFeignClient locationReferenceDataFeignClient;
 
     @Autowired
     private ElinksRefreshUserValidator elinksRefreshUserValidator;
 
-    //   @Override
-    /*  public ResponseEntity<Object> retrieveElinkUsers(UserSearchRequest userSearchRequest) {
+    @Override
+    public ResponseEntity<Object> retrieveElinkUsers(UserSearchRequest userSearchRequest) {
         var ticketCode = new ArrayList<String>();
 
         if (userSearchRequest.getServiceCode() != null) {
@@ -104,7 +108,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
         return ResponseEntity
             .status(200)
             .body(userSearchResponses);
-    }*/
+    }
     @Override
     @SuppressWarnings("unchecked")
     public ResponseEntity<Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,

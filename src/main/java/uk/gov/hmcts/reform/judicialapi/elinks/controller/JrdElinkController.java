@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
+
+import javax.validation.Valid;
 
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.FORBIDDEN_ERROR;
@@ -40,7 +44,7 @@ public class JrdElinkController {
     @Autowired
     ElinkUserService elinkUserService;
 
-    /*  @ApiOperation(
+    @ApiOperation(
             value = "This Version 2 endpoint will be used for user search based on partial query. When the consumers "
                     + "inputs any 3 characters, they will call this api to fetch "
                     + "the required result.",
@@ -50,7 +54,7 @@ public class JrdElinkController {
                     @Authorization(value = "Authorization")
             }
     )
-    @ApiResponses({
+        @ApiResponses({
             @ApiResponse(
                     code = 200,
                     message = "Retrieve the user profiles for the given request. ",
@@ -73,14 +77,14 @@ public class JrdElinkController {
                     message = "Internal Server Error"
             )
     })
-  /*  @PostMapping(
+   @PostMapping(
             path = "/search",
             consumes = V2.MediaType.SERVICE,
             produces = V2.MediaType.SERVICE
     )
-  //  public ResponseEntity<Object> retrieveUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {
-      //  return elinkUserService.retrieveElinkUsers(userSearchRequest);
-  //  }*/
+   public ResponseEntity<Object> retrieveUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {
+       return elinkUserService.retrieveElinkUsers(userSearchRequest);
+    }
 
     @ApiOperation(
             value = "This API to return judicial user profiles along with their active appointments "

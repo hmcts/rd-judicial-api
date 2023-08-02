@@ -1,10 +1,16 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.nimbusds.jose.JOSEException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
@@ -100,7 +106,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         cleanupData();
     }
 
-    /*  @DisplayName("Elinks end to end success scenario")
+    @DisplayName("Elinks end to end success scenario")
     @Test
     void test_elinks_end_to_end_partial_success_scenario()
             throws JOSEException, JsonProcessingException,IOException {
@@ -144,7 +150,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         // asserting SIDAM publishing
         validateSidamPublish();
 
-    } */
+    }
 
     private void validateDeletedApi(List<ElinkDataSchedularAudit> elinksAudit) {
         Map<String, Object> deletedResponse = elinksReferenceDataClient.getDeleted();
@@ -263,17 +269,17 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
 
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(2, userprofile.size());
-        assertEquals("410551", userprofile.get(0).getPersonalCode());
-        assertEquals("Leslie", userprofile.get(0).getKnownAs());
-        assertEquals("Jones", userprofile.get(0).getSurname());
-        assertEquals("His Honour Judge Leslie Jones", userprofile.get(0).getFullName());
+        assertEquals("410540", userprofile.get(0).getPersonalCode());
+        assertEquals("Yuriko", userprofile.get(0).getKnownAs());
+        assertEquals("Koiko", userprofile.get(0).getSurname());
+        assertEquals("Her Honour Judge Yuriko Koiko", userprofile.get(0).getFullName());
         assertEquals(null, userprofile.get(0).getPostNominals());
-        assertEquals("HHJ.Leslie.Jones@judiciarystagingtest999.onmicrosoft.com",
+        assertEquals("HHJ.Yuriko.Koiko@judiciarystaging13232.onmicrosoft.com",
             userprofile.get(0).getEjudiciaryEmailId());
         assertTrue(userprofile.get(0).getActiveFlag());
-        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(0).getObjectId());
+        assertEquals("94772643-2c5f-4f84-8731-3dd7c25c9e11", userprofile.get(0).getObjectId());
         assertNull(userprofile.get(0).getSidamId());
-        assertEquals("L.J",userprofile.get(0).getInitials());
+        assertEquals("B.K",userprofile.get(0).getInitials());
 
 
     }
