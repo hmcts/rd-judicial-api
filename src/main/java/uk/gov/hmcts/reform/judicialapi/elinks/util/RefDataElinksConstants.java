@@ -76,7 +76,7 @@ public class RefDataElinksConstants {
 
     public static final String JUDICIALROLETYPE = "judicial_role_type";
 
-    public static final String USER_PROFILE = "jrd_user_profile";
+    public static final String USER_PROFILE = "judicial_user_profile";
 
     public static final String APPOINTMENT = "appointments";
 
