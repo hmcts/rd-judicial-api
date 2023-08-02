@@ -1,3 +1,8 @@
+
+--Alter dbjudicialdata.dataload_exception_records
+ALTER TABLE dbjudicialdata.dataload_exception_records ALTER COLUMN row_id TYPE varchar(32);
+
+
 -- insert dbjudicialdata.judicial_ticket_code_type
 INSERT INTO dbjudicialdata.judicial_ticket_code_type (ticket_code, ticket_category_id, lower_level) VALUES
       ('289',	'59',	'Welsh Language'),
@@ -129,5 +134,3 @@ INSERT INTO dbjudicialdata.judicial_ticket_code_type (ticket_code, ticket_catego
       ('1453',	'58',	'Family Presiding Justice'),
       ('1454',	'58',	'Youth Winger'),
       ('1455',	'58',	'Youth Presiding Justice');
-
- commit;
