@@ -54,7 +54,7 @@ public class JrdElinkController {
                     @Authorization(value = "Authorization")
             }
     )
-        @ApiResponses({
+    @ApiResponses({
             @ApiResponse(
                     code = 200,
                     message = "Retrieve the user profiles for the given request. ",
@@ -76,14 +76,14 @@ public class JrdElinkController {
                     code = 500,
                     message = "Internal Server Error"
             )
-    })
-   @PostMapping(
+        })
+    @PostMapping(
             path = "/search",
             consumes = V2.MediaType.SERVICE,
             produces = V2.MediaType.SERVICE
     )
    public ResponseEntity<Object> retrieveUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {
-       return elinkUserService.retrieveElinkUsers(userSearchRequest);
+        return elinkUserService.retrieveElinkUsers(userSearchRequest);
     }
 
     @ApiOperation(

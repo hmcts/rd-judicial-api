@@ -109,6 +109,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
             .status(200)
             .body(userSearchResponses);
     }
+
     @Override
     @SuppressWarnings("unchecked")
     public ResponseEntity<Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,
