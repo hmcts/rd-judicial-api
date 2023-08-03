@@ -8,8 +8,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
 @Repository
 public interface LocationMapppingRepository  extends JpaRepository<LocationMapping, String> {
 
-    @Query(value = "select epimmsId from uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping  "
-            + "lm  where judicialBaseLocationId =:locationId")
+    @Query(value = "select distinct epimmsId from uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping  "
+            + "lm  where judicialBaseLocationId =:locationId ")
     String fetchEpimmsIdfromLocationId(String locationId);
 
 }
