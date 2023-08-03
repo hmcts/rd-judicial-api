@@ -21,8 +21,7 @@ CREATE TABLE dbjudicialdata.judicial_location_mapping (
 	judicial_base_location_id varchar(64),
 	building_location_name varchar(256),
 	base_location_name varchar(128),
-	service_code varchar(16),
-	CONSTRAINT judicial_base_location_id PRIMARY KEY (judicial_base_location_id)
+	service_code varchar(16)
 );
 
 
