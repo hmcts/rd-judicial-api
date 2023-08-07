@@ -19,7 +19,7 @@ import static org.apache.commons.lang3.StringUtils.SPACE;
 
 @Component
 @AllArgsConstructor
-public class FeatureConditionEvaluation implements HandlerInterceptor {
+public class FeatureConditionEvaluation implements HandlerInterceptor { 
 
     public static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
 
