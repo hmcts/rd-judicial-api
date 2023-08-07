@@ -66,6 +66,8 @@ public class RefDataElinksConstants {
 
     public static final String BASE_LOCATION_ID = "base_location_id";
 
+    public static final String LOCATION_ID = "region_id";
+
     public static final String LOCATION = "Location";
 
     public static final String ROLENAME = "role_name";
@@ -170,4 +172,13 @@ public class RefDataElinksConstants {
     public static final List<String> INVALID_ROLES = List.of("CRTS TRIB - RS Admin User",
         "MAGS - AC Admin User","Person on a List","Unknown","Senior Coroner","Assistant Coroner",
         "Area Coroner","Acting Senior Coroner","Initial Automated Record");
+
+    public static final String DATE_PATTERN = "dd/MM/yyyy";
+
+    public static final String REGION = "region";
+    public static final String BASE_LOCATION = "baselocation";
+
+    public static final String CONTENT_TYPE_HTML = "text/html";
+
+
 }
