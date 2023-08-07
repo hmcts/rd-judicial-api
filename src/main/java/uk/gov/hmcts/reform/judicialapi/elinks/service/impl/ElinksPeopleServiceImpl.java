@@ -45,11 +45,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.EmailTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
-import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -469,7 +467,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 droppedAppointments.add(appointmentsRequest);
             }
         }
-        if(!droppedAppointments.isEmpty()) {
+        if (!droppedAppointments.isEmpty()) {
             sendEmail(droppedAppointments,
                     LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
         }

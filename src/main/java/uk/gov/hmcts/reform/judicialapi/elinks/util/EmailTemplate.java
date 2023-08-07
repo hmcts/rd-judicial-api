@@ -43,8 +43,4 @@ public class EmailTemplate {
         mailConfig.setModel(model);
         return mailConfig;
     }
-
-
-
-
 }
