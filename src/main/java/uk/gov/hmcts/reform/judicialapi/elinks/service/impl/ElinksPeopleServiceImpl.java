@@ -468,7 +468,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             }
         }
         if (!droppedAppointments.isEmpty()) {
-            sendEmail(droppedAppointments,
+            sendEmail(droppedAppointments,"baselocation",
                     LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
         }
 
@@ -643,7 +643,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     public int sendEmail(Set<AppointmentsRequest> data, String type, Object... params) {
         log.info("{} : send Email",logComponentName);
         ElinkEmailConfiguration.MailTypeConfig config = emailConfiguration.getMailTypes()
-                .get(emailConfigMapping.get(type));
+                .get(type);
         if (config != null && config.isEnabled()) {
             Email email = Email.builder()
                     .contentType(CONTENT_TYPE_HTML)
