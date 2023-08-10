@@ -21,23 +21,29 @@
     <table align="center" border="0" cellpadding="0" cellspacing="0" width="1000" style="border-collapse: collapse;">
         <tr>
             <td style="padding: 40px 30px 40px 30px;">
-                <p>Following JO profiles where with Base Location Id's newly found :</p>
+                <p>Following JO profiles where with Region Id's newly found :</p>
                 </br>
                 <div>
                     <table style="border-collapse: expression('separate', cellSpacing='15px'); border-spacing: 15px">
                         <tr bgcolor="#eaeaea">
                             <td style="text-align: center">Per Code</td>
-                            <td style="text-align: center">Object Id</td>
-                            <td style="text-align: center">Per Id</td>
-                            <td style="text-align: center">Base Location ID</td>
+                            <td style="text-align: center">Appointment ID</td>
+                            <td style="text-align: center">Contract Type</td>
+                            <td style="text-align: center">Role Name</td>
+                            <td style="text-align: center">Location</td>
+
                         </tr>
-                        <#list appointments as appointment>
+                        <#list resultsRequest as result>
+                           <#list result.appointmentsRequests as appointment>
                             <tr style="border: 1px solid black;">
-                                <td style="text-align: left">${appointment.personalCode}</td>
-                                <td style="text-align: center">${appointment.objectId}</td>
-                                <td style="text-align: center">${appointment.perId}</td>
-                                <td style="text-align: center">${appointment.baseLocationId}</td>
+                                <td style="text-align: left">${result.personalCode}</td>
+                                <td style="text-align: left">${appointment.appointmentId}</td>
+                                <td style="text-align: left">${appointment.contractType}</td>
+                                <td style="text-align: left">${appointment.roleName}</td>
+                                <td style="text-align: left">${appointment.location}</td>
+
                             </tr>
+                            </#list>
                          </#list>
                     </table>
                 </div>

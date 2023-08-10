@@ -48,6 +48,7 @@ import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -299,8 +300,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .stream()
                     .filter(this::validataUserProfile)
                     .toList();
-            resultsRequests.forEach(this::savePeopleDetails);
-
+            Set<ResultsRequest> droppedAppointments = new HashSet<>();
+            resultsRequests.forEach(r -> savePeopleDetails(r,droppedAppointments));
+            if (!droppedAppointments.isEmpty()) {
+                sendEmail(droppedAppointments, "baselocation",
+                       LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
+            }
         } catch (Exception ex) {
             auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
@@ -325,13 +330,13 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private void savePeopleDetails(
-        ResultsRequest resultsRequest) {
+        ResultsRequest resultsRequest, Set<ResultsRequest> droppedAppointments) {
 
         if (saveUserProfile(resultsRequest)) {
             try {
                 elinksPeopleDeleteServiceimpl.deleteAuth(resultsRequest);
                 saveAppointmentDetails(resultsRequest.getPersonalCode(), resultsRequest
-                    .getObjectId(), resultsRequest.getAppointmentsRequests());
+                    .getObjectId(), resultsRequest.getAppointmentsRequests(),droppedAppointments);
                 saveAuthorizationDetails(resultsRequest.getPersonalCode(), resultsRequest
                     .getObjectId(), resultsRequest.getAuthorisationsRequests());
                 saveRoleDetails(resultsRequest.getPersonalCode(), resultsRequest.getJudiciaryRoles());
@@ -423,12 +428,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
 
     private void saveAppointmentDetails(String personalCode, String objectId,
-                                        List<AppointmentsRequest> appointmentsRequests) throws JsonProcessingException {
+                                        List<AppointmentsRequest> appointmentsRequests,
+                                        Set<ResultsRequest> droppedAppointments) throws JsonProcessingException {
 
         log.info("entering into saveAppointmentDetails ");
         final List<AppointmentsRequest> validappointmentsRequests =
-            validateAppointmentRequest(appointmentsRequests,personalCode);
-        Set<AppointmentsRequest> droppedAppointments = new HashSet<>();
+            validateAppointmentRequest(appointmentsRequests,personalCode,droppedAppointments);
         Appointment appointment;
         for (AppointmentsRequest appointmentsRequest: validappointmentsRequests) {
             String baseLocationId = fetchBaseLocationId(appointmentsRequest);
@@ -464,14 +469,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     now(),
                     appointmentsRequest.getAppointmentId(),
                     APPOINTMENT_TABLE, e.getMessage(), APPOINTMENT_TABLE,personalCode);
-                droppedAppointments.add(appointmentsRequest);
             }
         }
-        if (!droppedAppointments.isEmpty()) {
-            sendEmail(droppedAppointments,"baselocation",
-                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-        }
-
     }
 
     private void saveAuthorizationDetails(String personalCode, String objectId,
@@ -509,13 +508,23 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private List<AppointmentsRequest> validateAppointmentRequest(List<AppointmentsRequest> appointmentsRequests,
-                                                                 String personalCode) {
+                                                                 String personalCode,
+                                                                 Set<ResultsRequest> droppedResults) {
+        List<AppointmentsRequest> droppedAppointments = new ArrayList<>();
 
-        return appointmentsRequests.stream().filter(appointmentsRequest ->
-            validAppointments(appointmentsRequest,personalCode)).toList();
+        List<AppointmentsRequest> appointmentsRequestlist = appointmentsRequests.stream().filter(appointmentsRequest ->
+            validAppointments(appointmentsRequest,personalCode,droppedAppointments)).toList();
+        if (!droppedAppointments.isEmpty()) {
+            droppedResults.add(ResultsRequest.builder().personalCode(personalCode)
+                    .appointmentsRequests(droppedAppointments)
+                    .build());
+        }
+        return appointmentsRequestlist;
+
     }
 
-    private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode) {
+    private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode,
+                                      List<AppointmentsRequest> droppedAppointments) {
 
         if (StringUtils.isEmpty(appointmentsRequest.getBaseLocationId())
             || StringUtils.isEmpty(fetchBaseLocationId(appointmentsRequest))) {
@@ -537,7 +546,10 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 now(),
                 appointmentsRequest.getAppointmentId(),
                 LOCATION, errorDescription, APPOINTMENT_TABLE,personalCode);
+            droppedAppointments.add(appointmentsRequest);
+
             return false;
+
         } else if (INVALID_ROLES.contains(appointmentsRequest.getRoleName())) {
             log.warn("Role Name is Invalid " + appointmentsRequest.getRoleName());
             partialSuccessFlag = true;
@@ -640,7 +652,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         }
     }
 
-    public int sendEmail(Set<AppointmentsRequest> data, String type, Object... params) {
+    public int sendEmail(Set<ResultsRequest> data, String type, Object... params) {
         log.info("{} : send Email",logComponentName);
         ElinkEmailConfiguration.MailTypeConfig config = emailConfiguration.getMailTypes()
                 .get(type);
@@ -650,7 +662,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .from(config.getFrom())
                     .to(config.getTo())
                     .subject(String.format(config.getSubject(), params))
-                    .messageBody(emailTemplate.getEmailBody(config.getTemplate(), Map.of("appointments", data)))
+                    .messageBody(emailTemplate.getEmailBody(config.getTemplate(), Map.of("resultsRequest", data)))
                     .build();
             return emailService.sendEmail(email);
         }
