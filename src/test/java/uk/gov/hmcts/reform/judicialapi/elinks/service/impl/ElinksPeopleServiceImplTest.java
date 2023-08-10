@@ -468,7 +468,6 @@ class ElinksPeopleServiceImplTest {
             .thenReturn(Response.builder().request(mock(Request.class))
                 .body(body2, defaultCharset()).status(200).build());
         when(emailConfiguration.getMailTypes()).thenReturn(Map.of("key", config));
-        when(emailService.sendEmail(any())).thenReturn(1);
 
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
