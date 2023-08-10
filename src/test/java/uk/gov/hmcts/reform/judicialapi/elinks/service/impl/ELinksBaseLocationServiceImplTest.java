@@ -30,8 +30,11 @@ import java.util.List;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
@@ -87,6 +90,8 @@ class ELinksBaseLocationServiceImplTest {
         assertThat(responseEntity).isNotNull();
         assertThat(responseEntity.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
         assertThat(responseEntity.getBody().getMessage()).contains(BASE_LOCATION_DATA_LOAD_SUCCESS);
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
 
     }
 
@@ -248,7 +253,8 @@ class ELinksBaseLocationServiceImplTest {
 
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
-
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
 
     }
 

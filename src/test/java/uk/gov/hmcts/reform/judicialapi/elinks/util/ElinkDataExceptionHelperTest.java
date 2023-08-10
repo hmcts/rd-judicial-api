@@ -5,12 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 
 import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -27,6 +29,8 @@ class ElinkDataExceptionHelperTest {
 
     @Test
     void auditExceptionSuccess() {
+
+        ElinkDataExceptionRecords audit = spy(ElinkDataExceptionRecords.class);
         elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                 LocalDateTime.now(),
                 "ElinksApiJobScheduler" +  LocalDateTime.now(),

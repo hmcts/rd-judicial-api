@@ -534,7 +534,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private String fetchRegionId(String location) {
 
         String regionId = null;
-        if ("Unassigned".equals(location) || StringUtils.isEmpty(location)) {
+        if ("Unassigned".equals(location) || StringUtils.isEmpty(location) || "Unknown".equals(location)) {
             regionId = "0";
         } else {
             regionId = regionMappingRepository.fetchRegionIdfromRegion(location);

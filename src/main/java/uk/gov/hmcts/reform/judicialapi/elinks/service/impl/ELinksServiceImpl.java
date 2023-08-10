@@ -226,28 +226,6 @@ public class ELinksServiceImpl implements ELinksService {
         return result;
     }
 
-    private ResponseEntity<ElinkLocationWrapperResponse> loadLocationData(List<Location> locations) {
-        ResponseEntity<ElinkLocationWrapperResponse> result;
-        try {
-
-            locationRepository.saveAll(locations);
-
-            ElinkLocationWrapperResponse elinkLocationWrapperResponse = new ElinkLocationWrapperResponse();
-            elinkLocationWrapperResponse.setMessage(LOCATION_DATA_LOAD_SUCCESS);
-
-
-            result = ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(elinkLocationWrapperResponse);
-        } catch (DataAccessException dae) {
-
-            throw new ElinksException(HttpStatus.INTERNAL_SERVER_ERROR, ELINKS_DATA_STORE_ERROR,
-                    ELINKS_DATA_STORE_ERROR);
-        }
-
-        return result;
-    }
-
 
     private Response getLeaversResponseFromElinks(int currentPage) {
         String leftSince = getUpdateSince();

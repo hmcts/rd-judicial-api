@@ -12,6 +12,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 import java.time.LocalDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -74,7 +76,7 @@ class ElinkDataIngestionSchedularAuditTest {
     @ParameterizedTest
     @CsvSource(value = {"Location:FAILURE", "BaseLocation:FAILURE", "People:FAILURE"}, delimiter = ':')
     void testSaveScheduleFailureAudit(String apiName, String status) {
-        ElinkDataSchedularAudit schedularAudit = new ElinkDataSchedularAudit();
+        ElinkDataSchedularAudit schedularAudit = spy(ElinkDataSchedularAudit.class);
         schedularAudit.setId(1);
         schedularAudit.setSchedulerName("Test User");
         schedularAudit.setSchedulerStartTime(LocalDateTime.now());
@@ -86,7 +88,11 @@ class ElinkDataIngestionSchedularAuditTest {
         elinkDataIngestionSchedularAudit.auditSchedulerStatus("Test User",
             LocalDateTime.now(), LocalDateTime.now().plusHours(1),
             schedularAudit.getStatus(), schedularAudit.getApiName());
-
+        verify(schedularAudit,times(2)).setSchedulerName(any());
+        verify(schedularAudit,times(2)).setSchedulerStartTime(any());
+        verify(schedularAudit,times(2)).setSchedulerEndTime(any());
+        verify(schedularAudit,times(2)).setStatus(any());
+        verify(schedularAudit,times(2)).setApiName(any());
         verify(elinkSchedularAuditRepository, times(1))
             .save(any());
 

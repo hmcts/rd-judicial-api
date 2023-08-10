@@ -278,5 +278,4 @@ public class ElinksController {
     public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() {
         return publishSidamIdService.publishSidamIdToAsb();
     }
-
 }

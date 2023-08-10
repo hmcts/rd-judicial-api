@@ -140,6 +140,8 @@ class ElinksLeaversServiceImplTest {
         assertThat(response.getBody().getMessage()).isEqualTo(LEAVERSSUCCESS);
 
         verify(elinksFeignClient, times(2)).getLeaversDetails(any(), any(), any());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
     @Test
@@ -208,7 +210,8 @@ class ElinksLeaversServiceImplTest {
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ACCESS_ERROR);
-
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
     @Test
@@ -267,7 +270,8 @@ class ElinksLeaversServiceImplTest {
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_BAD_REQUEST);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ERROR_RESPONSE_BAD_REQUEST);
-
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
     @Test

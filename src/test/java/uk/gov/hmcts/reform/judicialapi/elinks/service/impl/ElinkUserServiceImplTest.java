@@ -925,6 +925,7 @@ class ElinkUserServiceImplTest {
                 .judicialBaseLocationId("2").epimmsId("2").build()));
 
 
+        
 
         var authorisationOne = new Authorisation();
         authorisationOne.setOfficeAuthId(1L);

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperRespon
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ElinksPeopleServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.IdamElasticSearchServiceImpl;
@@ -43,6 +46,9 @@ class ElinksControllerTest {
 
     @Mock
     IdamElasticSearchServiceImpl idamElasticSearchService;
+
+    @Spy
+    PublishSidamIdService publishSidamIdService;
 
     @Test
     void test_load_location_success() {
@@ -154,6 +160,32 @@ class ElinksControllerTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
         assertThat(actual.getBody().getMessage()).isEqualTo(DELETEDSUCCESS);
+
+    }
+
+
+    @Test
+    void test_publish_sidam_ids() {
+
+        ResponseEntity<SchedulerJobStatusResponse> responseEntity;
+
+        SchedulerJobStatusResponse schedulerJobStatusResponse = SchedulerJobStatusResponse.builder().id("id")
+            .jobStatus("success").sidamIdsCount(10).statusCode(HttpStatus.OK.value()).build();
+
+
+
+        responseEntity = new ResponseEntity<>(
+            schedulerJobStatusResponse,
+            null,
+            HttpStatus.OK
+        );
+
+        when(publishSidamIdService.publishSidamIdToAsb()).thenReturn(responseEntity);
+
+        ResponseEntity<SchedulerJobStatusResponse> actual = eLinksController.publishSidamIdToAsb();
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
+        assertThat(actual.getBody().getJobStatus()).isEqualTo("success");
 
     }
 
