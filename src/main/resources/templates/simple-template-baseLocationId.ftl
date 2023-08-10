@@ -28,20 +28,18 @@
                         <tr bgcolor="#eaeaea">
                             <td style="text-align: center">Per Code</td>
                             <td style="text-align: center">Appointment ID</td>
-                            <td style="text-align: center">Contract Type</td>
-                            <td style="text-align: center">Role Name</td>
                             <td style="text-align: center">Location</td>
-
+                            <td style="text-align: center">Role Name</td>
+                            <td style="text-align: center">Contract Type</td>
                         </tr>
                         <#list resultsRequest as result>
                            <#list result.appointmentsRequests as appointment>
                             <tr style="border: 1px solid black;">
                                 <td style="text-align: left">${result.personalCode}</td>
                                 <td style="text-align: left">${appointment.appointmentId}</td>
-                                <td style="text-align: left">${appointment.contractType}</td>
-                                <td style="text-align: left">${appointment.roleName}</td>
                                 <td style="text-align: left">${appointment.location}</td>
-
+                                <td style="text-align: left">${appointment.roleName}</td>
+                                <td style="text-align: left">${appointment.contractType}</td>
                             </tr>
                             </#list>
                          </#list>
