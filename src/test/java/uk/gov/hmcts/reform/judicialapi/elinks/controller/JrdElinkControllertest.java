@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RequestUtils;
@@ -33,10 +34,10 @@ public class JrdElinkControllertest {
 
 
 
-    /* @Test
+     @Test
     void shouldFetchUsersBasedOnSearch() {
         final var userSearchRequest = UserSearchRequest.builder().build();
-        responseEntity = ResponseEntity.ok().body(null);
+        responseEntity = ResponseEntity.ok().body(userSearchRequest);
         when(elinkUserService.retrieveElinkUsers(any()))
             .thenReturn(responseEntity);
 
@@ -46,7 +47,7 @@ public class JrdElinkControllertest {
         assertNotNull(actual);
         verify(elinkUserService, times(1))
             .retrieveElinkUsers(userSearchRequest);
-    }*/
+    }
 
     @Test
     void shouldRefreshUserProfile() {
