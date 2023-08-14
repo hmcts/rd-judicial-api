@@ -233,10 +233,10 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
 
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
-        assertEquals(8, baseLocationList.size());
-        assertEquals("Alnwick",baseLocationList.get(1).getName());
-        assertEquals("3",baseLocationList.get(1).getBaseLocationId());
-        assertEquals("46",baseLocationList.get(1).getTypeId());
+        assertEquals(12, baseLocationList.size());
+        assertEquals("Alnwick",baseLocationList.get(5).getName());
+        assertEquals("3",baseLocationList.get(5).getBaseLocationId());
+        assertEquals("46",baseLocationList.get(5).getTypeId());
 
     }
 

@@ -5,6 +5,7 @@ import com.nimbusds.jose.JOSEException;
 import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -210,6 +211,11 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
                 .withHeader("Content-Type", "application/json")
                 .withHeader("Connection", "close")
                 .withBody(getDynamicJwksResponse())));
+    }
+
+    @BeforeEach
+    void before() {
+        cleanupData();
     }
 
     @AfterEach
@@ -428,6 +434,7 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
         authorisationsRepository.deleteAll();
         appointmentsRepository.deleteAll();
         judicialRoleTypeRepository.deleteAll();
+        baseLocationRepository.deleteAll();
         profileRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
     }

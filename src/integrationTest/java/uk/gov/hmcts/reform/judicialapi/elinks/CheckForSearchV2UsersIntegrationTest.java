@@ -1,19 +1,27 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
+import uk.gov.hmcts.reform.judicialapi.util.JudicialReferenceDataClient;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,10 +29,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
-    @Disabled("Skipped")
+    @Autowired
+    LocationRepository locationRepository;
+    @Autowired
+    BaseLocationRepository baseLocationRepository;
+    @Autowired
+    ProfileRepository profileRepository;
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
+
+    @AfterEach
+    void cleanUp() {
+        cleanupData();
+    }
+
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchString(String role) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .build();
@@ -40,166 +64,153 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
-    @Disabled("Skipped")
     @ParameterizedTest
-    @CsvSource({ "jrd-system-user,20013","jrd-system-user,200134","jrd-admin,20013","jrd-admin,200136"})
-    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCodeAndLocation(String role,
-                                                                                              String location) {
+    @CsvSource({"jrd-system-user,BBA3",
+        "jrd-admin,BBA3",
+        "jrd-system-user,BFA1",
+        "jrd-admin,BFA1",})
+    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringForsscsAndIac(String role,String serviceCode) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-                .searchString("test")
-                .location(location)
-                .serviceCode("BBA3")
-                .build();
+            .searchString("one")
+            .serviceCode(serviceCode)
+            .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
+            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(2, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("S.K", profiles.get(0).get("initials"));
+        assertEquals(1, profiles.size());
+        assertEquals("One531@test.net", profiles.get(0).get("emailId"));
         assertEquals("Mr", profiles.get(0).get("postNominals"));
+        assertEquals("J.K", profiles.get(0).get("initials"));
+        assertEquals("32", profiles.get(0).get("personalCode"));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
-    @Disabled("Skipped")
     @ParameterizedTest
-    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
-    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsBfa1(String role, String location) {
+    @CsvSource({"jrd-system-user,BBA3",
+        "jrd-admin,BBA3",
+        "jrd-system-user,BFA1",
+        "jrd-admin,BFA1",})
+    void shouldReturn200WhenUserProfileRequestedForSscsAndIacExpired(String role,String serviceCode) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-                .searchString("test")
-                .location(location)
-                .serviceCode("BFA1")
-                .build();
+            .searchString("two")
+            .serviceCode(serviceCode)
+            .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
+            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(2, profiles.size());
-        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
-        assertEquals("B.K", profiles.get(0).get("initials"));
-        assertEquals("Ms", profiles.get(0).get("postNominals"));
-        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
-        assertThat(response).containsEntry("http_status", "200 OK");
+        assertEquals(0, profiles.size());
     }
 
-    @Disabled("Skipped")
     @ParameterizedTest
-    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
-    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAaa6(String role, String location) {
+    @CsvSource({"jrd-system-user,BBA3",
+        "jrd-admin,BBA3",
+        "jrd-system-user,BFA1",
+        "jrd-admin,BFA1",})
+    void shouldReturn200WhenUserProfileRequestedForSscsAndIacAppointmentActiveAuthExpired(String role,
+                                                                                          String serviceCode) {
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("test")
-            .location(location)
-            .serviceCode("AAA6")
+            .searchString("three")
+            .serviceCode(serviceCode)
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(0, profiles.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"jrd-system-user,BBA3",
+        "jrd-admin,BBA3",
+        "jrd-system-user,BFA1",
+        "jrd-admin,BFA1",})
+    void shouldReturn200WhenUserProfileRequestedForSscsAndIacAppointmentExpiredAuthActive(String role,
+                                                                                          String serviceCode) {
+        mockJwtToken(role);
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("four")
+            .serviceCode(serviceCode)
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>)response.get("body");
+        assertEquals(0, profiles.size());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"jrd-system-user,BBA3",
+        "jrd-admin,BBA3",
+        "jrd-system-user,BFA1",
+        "jrd-admin,BFA1",})
+    void shouldReturn200WhenUserProfileRequestedForSscsAndIacAppointmentActiveSscsAuthActive(String role,
+                                                                                             String serviceCode) {
+
+        mockJwtToken(role);
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("five")
+            .serviceCode(serviceCode)
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>)response.get("body");
+        if (("BBA3").equals(serviceCode)) {
+            assertEquals(1, profiles.size());
+        } else if (("BFA1").equals(serviceCode)) {
+            assertEquals(0, profiles.size());
+        }
+
+    }
+
+    @ParameterizedTest
+    @CsvSource({"jrd-system-user,BBA3",
+        "jrd-admin,BBA3",
+        "jrd-system-user,BFA1",
+        "jrd-admin,BFA1",})
+    void shouldReturn200WhenUserProfileRequestedSscsAppointmentExpiredIacSscsAuthActive(String role,
+                                                                                             String serviceCode) {
+
+        mockJwtToken(role);
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("six")
+            .serviceCode(serviceCode)
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>)response.get("body");
+        if (("BBA3").equals(serviceCode)) {
+            assertEquals(0, profiles.size());
+        } else if (("BFA1").equals(serviceCode)) {
+            assertEquals(1, profiles.size());
+        }
+
+    }
+
+    @ParameterizedTest
+    @CsvSource({"jrd-system-user,BHA1",
+        "jrd-admin,BHA1"})
+    void shouldReturn200WhenUserProfileRequestedFamilyAppointmentActiveAuthExpires(String role,
+                                                                                        String serviceCode) {
+
+        mockJwtToken(role);
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("seven")
+            .serviceCode(serviceCode)
             .build();
         var response = judicialReferenceDataClient.searchUsers(
             userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("S.K", profiles.get(0).get("initials"));
-        assertEquals("Mr", profiles.get(0).get("postNominals"));
-        assertThat(response).containsEntry("http_status", "200 OK");
-    }
 
-    @Disabled("Skipped")
-    @ParameterizedTest
-    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
-    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAaa7(String role, String location) {
-        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("test")
-            .location(location)
-            .serviceCode("AAA7")
-            .build();
-        var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(1, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("S.K", profiles.get(0).get("initials"));
-        assertEquals("27", profiles.get(0).get("personalCode"));
-        assertThat(response).containsEntry("http_status", "200 OK");
     }
-
-    @Disabled("Skipped")
-    @ParameterizedTest
-    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
-    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAba5(String role, String location) {
-        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("test")
-            .location(location)
-            .serviceCode("ABA5")
-            .build();
-        var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(1, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("S.K", profiles.get(0).get("initials"));
-        assertEquals("27", profiles.get(0).get("personalCode"));
-        assertThat(response).containsEntry("http_status", "200 OK");
-    }
-
-    @Disabled("Skipped")
-    @ParameterizedTest
-    @CsvSource({ "jrd-system-user,20012","jrd-system-user,200123","jrd-admin,20012","jrd-admin,200124"})
-    void shouldReturn200AndIgnoreLocationWhenServiceCodeIsAba3(String role, String location) {
-        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("test")
-            .location(location)
-            .serviceCode("ABA3")
-            .build();
-        var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(1, profiles.size());
-        assertEquals("test528@test.net", profiles.get(0).get("emailId"));
-        assertEquals("S.K", profiles.get(0).get("initials"));
-        assertEquals("27", profiles.get(0).get("personalCode"));
-        assertThat(response).containsEntry("http_status", "200 OK");
-    }
-
-    @Disabled("Skipped")
-    @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
-    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndLocation(String role) {
-        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-                .searchString("test")
-                .location("20012")
-                .build();
-        var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(1, profiles.size());
-        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
-        assertEquals("B.K", profiles.get(0).get("initials"));
-        assertEquals("Ms", profiles.get(0).get("postNominals"));
-        assertThat(response).containsEntry("http_status", "200 OK");
-    }
-
-    @Disabled("Skipped")
-    @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
-    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringAndServiceCode(String role) {
-        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-                .searchString("test")
-                .serviceCode("BFA1")
-                .build();
-        var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
-        assertEquals(2, profiles.size());
-        assertEquals("test530@test.net", profiles.get(0).get("emailId"));
-        assertEquals("B.K", profiles.get(0).get("initials"));
-        assertEquals("Ms", profiles.get(0).get("postNominals"));
-        assertEquals("test528@test.net", profiles.get(1).get("emailId"));
-        assertEquals("S.K", profiles.get(1).get("initials"));
-        assertEquals("Mr", profiles.get(1).get("postNominals"));
-        assertThat(response).containsEntry("http_status", "200 OK");
-    }
-
 
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn401ForInvalidTokens(String role) {
+
         judicialReferenceDataClient.clearTokens();
+        JudicialReferenceDataClient.setBearerToken(EMPTY);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .location("location")
@@ -209,7 +220,6 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 userSearchRequest, role, true, MediaType.valueOf(V2.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "401");
     }
-
 
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
@@ -227,10 +237,10 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
         assertTrue(responseBody.contains("cannot be empty"));
     }
 
-
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringDoesNotContainRequiredLength(String role) {
+
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("te")
@@ -248,6 +258,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn400WhenSearchStringContainsOtherThanLetters(String role) {
+
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test123")
@@ -262,10 +273,11 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 + "apostrophe, hyphen"));
     }
 
-    @Disabled("Skipped")
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchStringWithEmptyAdditionalBoolean(String role) {
+
+        mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
                 .searchString("test")
                 .build();
@@ -281,5 +293,13 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
         assertEquals("28", profiles.get(2).get("personalCode"));
 
         assertThat(response).containsEntry("http_status", "200 OK");
+    }
+
+    private void cleanupData() {
+        authorisationsRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        locationRepository.deleteAll();
+        baseLocationRepository.deleteAll();
+        profileRepository.deleteAll();
     }
 }

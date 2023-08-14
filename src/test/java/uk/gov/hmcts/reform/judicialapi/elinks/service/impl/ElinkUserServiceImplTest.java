@@ -15,12 +15,14 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ResourceNotFoundException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.UserSearchRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
@@ -52,7 +54,11 @@ import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -91,12 +97,12 @@ class ElinkUserServiceImplTest {
         refreshUserValidatorMock = new ElinksRefreshUserValidator();
         elinkUserService.setElinksRefreshUserValidator(refreshUserValidatorMock);
 
-        //searchServiceCode = (List.of("bfa1","bba3"));
-        //elinkUserService.setSearchServiceCode(searchServiceCode);
+        searchServiceCode = (List.of("bfa1","bba3"));
+        elinkUserService.setSearchServiceCode(searchServiceCode);
     }
 
 
-    /*  @Test
+    @Test
     void shouldReturn200WhenUserFoundForTheSearchRequestProvidedForElinks() {
         var userSearchRequest = UserSearchRequest
                 .builder()
@@ -123,9 +129,9 @@ class ElinkUserServiceImplTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         verify(profileRepository, times(1)).findBySearchForString(any(),any(),
                 any(), anyList(),anyList());
-    }*/
+    }
 
-    /* @Test
+    @Test
     void shouldReturn200WhenUserFoundForSscsSearchRequestProvided() {
         var userSearchRequest = UserSearchRequest
                 .builder()
@@ -152,10 +158,10 @@ class ElinkUserServiceImplTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         verify(profileRepository, times(1)).findBySearchForString(any(),any(),
                 any(), anyList(),anyList());
-    }*/
+    }
 
 
-    /*   @Test
+    @Test
     void shouldReturn200WithEmptyResponseWhenUserNotFoundForTheSearchRequestProvided() {
 
         var userSearchRequest = UserSearchRequest
@@ -173,7 +179,7 @@ class ElinkUserServiceImplTest {
         assertEquals(Collections.EMPTY_LIST, responseEntity.getBody());
         verify(profileRepository, times(1)).findBySearchForString(any(),any(),
                 any(), anyList(),anyList());
-    }*/
+    }
 
     public static UserSearchResponseWrapper createUserSearchResponse() {
         UserSearchResponseWrapper userSearchResponse = new UserSearchResponseWrapper();

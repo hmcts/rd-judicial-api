@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigPrope
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
@@ -55,6 +56,9 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private AppointmentsRepository appointmentsRepository;
+
+    @Autowired
+    private AuthorisationsRepository authorisationsRepository;
 
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
@@ -752,6 +756,9 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
+        authorisationsRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        baseLocationRepository.deleteAll();
         appointmentsRepository.deleteAll();
         baseLocationRepository.deleteAll();
     }

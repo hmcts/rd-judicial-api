@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.JOSEException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -214,8 +215,13 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
     }
 
+    @BeforeEach
+    void before() {
+        cleanupData();
+    }
+
     @AfterEach
-    void cleanUp() {
+    void after() {
         cleanupData();
     }
 
@@ -428,6 +434,7 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         authorisationsRepository.deleteAll();
         appointmentsRepository.deleteAll();
         judicialRoleTypeRepository.deleteAll();
+        baseLocationRepository.deleteAll();
         profileRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
     }
