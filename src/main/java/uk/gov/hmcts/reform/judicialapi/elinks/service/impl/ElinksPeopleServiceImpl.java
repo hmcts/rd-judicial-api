@@ -20,6 +20,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
@@ -29,6 +30,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JrdRegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
@@ -48,7 +50,6 @@ import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -150,6 +151,9 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
     private Map<String,UserProfile> userProfileCache = new HashMap<String,UserProfile>();
 
+    @Autowired
+    ElinkDataExceptionRepository elinkDataExceptionRepository;
+
     @Value("${logging-component-name}")
     private String logComponentName;
 
@@ -230,6 +234,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         } while (isMorePagesAvailable);
         log.info(":::: countOfProfile " + countOfProfile);
 
+        List<ElinkDataExceptionRecords> list = elinkDataExceptionRepository
+                .findBySchedulerStartTime(schedulerStartTime);
+        if (!list.isEmpty()) {
+            sendEmail(new HashSet<>(list), "baselocation",
+                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
+        }
         if (partialSuccessFlag) {
             status = RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus();
         }
@@ -300,12 +310,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .stream()
                     .filter(this::validataUserProfile)
                     .toList();
-            Set<ResultsRequest> droppedAppointments = new HashSet<>();
-            resultsRequests.forEach(r -> savePeopleDetails(r,droppedAppointments));
-            if (!droppedAppointments.isEmpty()) {
-                sendEmail(droppedAppointments, "baselocation",
-                       LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-            }
+            resultsRequests.forEach(this::savePeopleDetails);
+
         } catch (Exception ex) {
             auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
@@ -330,13 +336,13 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private void savePeopleDetails(
-        ResultsRequest resultsRequest, Set<ResultsRequest> droppedAppointments) {
+        ResultsRequest resultsRequest) {
 
         if (saveUserProfile(resultsRequest)) {
             try {
                 elinksPeopleDeleteServiceimpl.deleteAuth(resultsRequest);
                 saveAppointmentDetails(resultsRequest.getPersonalCode(), resultsRequest
-                    .getObjectId(), resultsRequest.getAppointmentsRequests(),droppedAppointments);
+                    .getObjectId(), resultsRequest.getAppointmentsRequests());
                 saveAuthorizationDetails(resultsRequest.getPersonalCode(), resultsRequest
                     .getObjectId(), resultsRequest.getAuthorisationsRequests());
                 saveRoleDetails(resultsRequest.getPersonalCode(), resultsRequest.getJudiciaryRoles());
@@ -428,12 +434,11 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
 
     private void saveAppointmentDetails(String personalCode, String objectId,
-                                        List<AppointmentsRequest> appointmentsRequests,
-                                        Set<ResultsRequest> droppedAppointments) throws JsonProcessingException {
+                                        List<AppointmentsRequest> appointmentsRequests) throws JsonProcessingException {
 
         log.info("entering into saveAppointmentDetails ");
         final List<AppointmentsRequest> validappointmentsRequests =
-            validateAppointmentRequest(appointmentsRequests,personalCode,droppedAppointments);
+            validateAppointmentRequest(appointmentsRequests,personalCode);
         Appointment appointment;
         for (AppointmentsRequest appointmentsRequest: validappointmentsRequests) {
             String baseLocationId = fetchBaseLocationId(appointmentsRequest);
@@ -508,23 +513,13 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private List<AppointmentsRequest> validateAppointmentRequest(List<AppointmentsRequest> appointmentsRequests,
-                                                                 String personalCode,
-                                                                 Set<ResultsRequest> droppedResults) {
-        List<AppointmentsRequest> droppedAppointments = new ArrayList<>();
+                                                                 String personalCode) {
 
-        List<AppointmentsRequest> appointmentsRequestlist = appointmentsRequests.stream().filter(appointmentsRequest ->
-            validAppointments(appointmentsRequest,personalCode,droppedAppointments)).toList();
-        if (!droppedAppointments.isEmpty()) {
-            droppedResults.add(ResultsRequest.builder().personalCode(personalCode)
-                    .appointmentsRequests(droppedAppointments)
-                    .build());
-        }
-        return appointmentsRequestlist;
-
+        return appointmentsRequests.stream().filter(appointmentsRequest ->
+            validAppointments(appointmentsRequest,personalCode)).toList();
     }
 
-    private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode,
-                                      List<AppointmentsRequest> droppedAppointments) {
+    private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode) {
 
         if (StringUtils.isEmpty(appointmentsRequest.getBaseLocationId())
             || StringUtils.isEmpty(fetchBaseLocationId(appointmentsRequest))) {
@@ -546,10 +541,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 now(),
                 appointmentsRequest.getAppointmentId(),
                 LOCATION, errorDescription, APPOINTMENT_TABLE,personalCode);
-            droppedAppointments.add(appointmentsRequest);
-
             return false;
-
         } else if (INVALID_ROLES.contains(appointmentsRequest.getRoleName())) {
             log.warn("Role Name is Invalid " + appointmentsRequest.getRoleName());
             partialSuccessFlag = true;
@@ -652,7 +644,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         }
     }
 
-    public int sendEmail(Set<ResultsRequest> data, String type, Object... params) {
+    public int sendEmail(Set<ElinkDataExceptionRecords> data, String type, Object... params) {
         log.info("{} : send Email",logComponentName);
         ElinkEmailConfiguration.MailTypeConfig config = emailConfiguration.getMailTypes()
                 .get(type);

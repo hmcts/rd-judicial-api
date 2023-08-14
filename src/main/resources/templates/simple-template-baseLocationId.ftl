@@ -27,19 +27,14 @@
                     <table style="border-collapse: expression('separate', cellSpacing='15px'); border-spacing: 15px">
                         <tr bgcolor="#eaeaea">
                             <td style="text-align: center">Per Code</td>
-                            <td style="text-align: center">Appointment ID</td>
-                            <td style="text-align: center">Location</td>
-                            <td style="text-align: center">Role Name</td>
-                            <td style="text-align: center">Contract Type</td>
+                            <td style="text-align: center">Field In Error</td>
+                            <td style="text-align: center">Error Description</td>
                         </tr>
                         <#list resultsRequest as result>
-                           <#list result.appointmentsRequests as appointment>
                             <tr style="border: 1px solid black;">
                                 <td style="text-align: left">${result.personalCode}</td>
-                                <td style="text-align: left">${appointment.appointmentId}</td>
-                                <td style="text-align: left">${appointment.location}</td>
-                                <td style="text-align: left">${appointment.roleName}</td>
-                                <td style="text-align: left">${appointment.contractType}</td>
+                                <td style="text-align: left">${result.field_in_error}</td>
+                                <td style="text-align: left">${result.error_description}</td>
                             </tr>
                             </#list>
                          </#list>
