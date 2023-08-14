@@ -32,11 +32,10 @@
                         </tr>
                         <#list resultsRequest as result>
                             <tr style="border: 1px solid black;">
-                                <td style="text-align: left">${result.personalCode}</td>
-                                <td style="text-align: left">${result.field_in_error}</td>
-                                <td style="text-align: left">${result.error_description}</td>
+                                <td style="text-align: left">${result.key}</td>
+                                <td style="text-align: left">${result.fieldInError}</td>
+                                <td style="text-align: left">${result.errorDescription}</td>
                             </tr>
-                            </#list>
                          </#list>
                     </table>
                 </div>

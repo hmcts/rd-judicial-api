@@ -310,8 +310,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .stream()
                     .filter(this::validataUserProfile)
                     .toList();
-            resultsRequests.forEach(this::savePeopleDetails);
-
+            resultsRequests.forEach(r -> savePeopleDetails(r,schedulerStartTime));
         } catch (Exception ex) {
             auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
@@ -336,13 +335,13 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private void savePeopleDetails(
-        ResultsRequest resultsRequest) {
+        ResultsRequest resultsRequest, LocalDateTime schedulerStartTime) {
 
         if (saveUserProfile(resultsRequest)) {
             try {
                 elinksPeopleDeleteServiceimpl.deleteAuth(resultsRequest);
                 saveAppointmentDetails(resultsRequest.getPersonalCode(), resultsRequest
-                    .getObjectId(), resultsRequest.getAppointmentsRequests());
+                    .getObjectId(), resultsRequest.getAppointmentsRequests(),schedulerStartTime);
                 saveAuthorizationDetails(resultsRequest.getPersonalCode(), resultsRequest
                     .getObjectId(), resultsRequest.getAuthorisationsRequests());
                 saveRoleDetails(resultsRequest.getPersonalCode(), resultsRequest.getJudiciaryRoles());
@@ -434,11 +433,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
 
     private void saveAppointmentDetails(String personalCode, String objectId,
-                                        List<AppointmentsRequest> appointmentsRequests) throws JsonProcessingException {
+                                        List<AppointmentsRequest> appointmentsRequests,LocalDateTime schedulerStartTime)
+            throws JsonProcessingException {
 
         log.info("entering into saveAppointmentDetails ");
         final List<AppointmentsRequest> validappointmentsRequests =
-            validateAppointmentRequest(appointmentsRequests,personalCode);
+            validateAppointmentRequest(appointmentsRequests,personalCode,schedulerStartTime);
         Appointment appointment;
         for (AppointmentsRequest appointmentsRequest: validappointmentsRequests) {
             String baseLocationId = fetchBaseLocationId(appointmentsRequest);
@@ -513,13 +513,14 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private List<AppointmentsRequest> validateAppointmentRequest(List<AppointmentsRequest> appointmentsRequests,
-                                                                 String personalCode) {
+                                                                 String personalCode,LocalDateTime schedulerStartTime) {
 
         return appointmentsRequests.stream().filter(appointmentsRequest ->
-            validAppointments(appointmentsRequest,personalCode)).toList();
+            validAppointments(appointmentsRequest,personalCode,schedulerStartTime)).toList();
     }
 
-    private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode) {
+    private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode,LocalDateTime
+            schedulerStartTime) {
 
         if (StringUtils.isEmpty(appointmentsRequest.getBaseLocationId())
             || StringUtils.isEmpty(fetchBaseLocationId(appointmentsRequest))) {
@@ -538,7 +539,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             String location = appointmentsRequest.getLocation();
             String errorDescription = appendBaseLocationIdInErroDescription(CFTREGIONIDFAILURE, location);
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
-                now(),
+                    schedulerStartTime,
                 appointmentsRequest.getAppointmentId(),
                 LOCATION, errorDescription, APPOINTMENT_TABLE,personalCode);
             return false;
