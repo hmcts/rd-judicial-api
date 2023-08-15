@@ -53,8 +53,8 @@ import static java.time.LocalDateTime.now;
 import static java.util.Objects.isNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTIDFAILURE;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTIDISNULL;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTIDNOTAVAILABLE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTID_IS_NULL;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENT_TABLE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUTHORISATION_TABLE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_ID;
@@ -467,9 +467,11 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 log.warn("failed to load Authorisation details for " + authorisationsRequest.getAuthorisationId());
                 partialSuccessFlag = true;
                 String errorDescription;
-                if (null == authorisationsRequest.getAuthorisationId()) {
+                log.error("printing the exception type" + e.getStackTrace());
+                log.error("printing the exception message for null appointments" + e.getMessage());
+                if (null == authorisationsRequest.getAppointmentId()) {
                     errorDescription = appendBaseLocationIdInErroDescription(
-                            APPOINTMENTIDISNULL, authorisationsRequest.getAppointmentId());
+                            APPOINTMENTID_IS_NULL, authorisationsRequest.getAppointmentId());
                 } else {
                     errorDescription = appendBaseLocationIdInErroDescription(
                             APPOINTMENTIDNOTAVAILABLE, authorisationsRequest.getAppointmentId());
