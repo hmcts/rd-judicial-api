@@ -467,11 +467,11 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 log.warn("failed to load Authorisation details for " + authorisationsRequest.getAuthorisationId());
                 partialSuccessFlag = true;
                 String errorDescription;
-                if(null == authorisationsRequest.getAuthorisationId()) {
-                     errorDescription = appendBaseLocationIdInErroDescription(
+                if (null == authorisationsRequest.getAuthorisationId()) {
+                    errorDescription = appendBaseLocationIdInErroDescription(
                             APPOINTMENTIDISNULL, authorisationsRequest.getAppointmentId());
                 } else {
-                     errorDescription = appendBaseLocationIdInErroDescription(
+                    errorDescription = appendBaseLocationIdInErroDescription(
                             APPOINTMENTIDNOTAVAILABLE, authorisationsRequest.getAppointmentId());
                 }
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
