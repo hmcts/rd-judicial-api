@@ -95,6 +95,9 @@ public class RefDataElinksConstants {
     public static final String APPOINTMENTIDNOTAVAILABLE = "Appointment  ID : "
         + "is not available in Appointment Table";
 
+    public static final String APPOINTMENTIDISNULL = "Appointment  ID : "
+            + "is Null for the given Authorisation";
+
     public static final String USERPROFILEEMAILID = "Personal Code : "
         + " is not having any email id";
 
