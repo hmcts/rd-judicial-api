@@ -106,6 +106,9 @@ public class RefDataElinksConstants {
 
     public static final String USERPROFILEISPRESENT = "Personal  Code : "
         + "is already loaded";
+    public static final String OBJECTIDISDUPLICATED = "Object is duplicated in Request";
+
+    public static final String OBJECTIDISPRESENT = "Object  ID is already present";
 
     public static final String CFTREGIONIDFAILURE = "Location  : "
         + " is not available in jrd_lrd_region_mapping table";

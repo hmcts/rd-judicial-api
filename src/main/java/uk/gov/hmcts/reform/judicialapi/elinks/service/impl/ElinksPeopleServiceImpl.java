@@ -44,10 +44,12 @@ import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.isNull;
@@ -72,6 +74,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONIDFAILURE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISDUPLICATED;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISPRESENT;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PERSONALCODE;
@@ -134,6 +138,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private boolean partialSuccessFlag = false;
 
     private Map<String,UserProfile> userProfileCache = new HashMap<String,UserProfile>();
+    private List<UserProfile> userProfilesSnapshot = new ArrayList<>();
 
     @Value("${elinks.people.lastUpdated}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -168,7 +173,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 schedulerStartTime,
                 null,
                 RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), PEOPLEAPI);
-
+        userProfilesSnapshot=profileRepository.findAll();
         int pageValue = Integer.parseInt(page);
         int countOfProfile = 0;
         do {
@@ -295,6 +300,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 EMAILID, errorDescription, USER_PROFILE,resultsRequest.getPersonalCode());
             return false;
         }
+
         return true;
     }
 
@@ -360,7 +366,30 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     resultsRequest.getPersonalCode(),
                     USER_PROFILE,errorDescription, USER_PROFILE,personalCode);
                 return false;
-            } else {
+            } else if(!objectIdisPresent(resultsRequest).isEmpty())
+            {
+                elinksPeopleDeleteServiceimpl.deletePeople(objectIdisPresent(resultsRequest).get(0));
+                log.warn("Duplicate Object id " + resultsRequest.getPersonalCode());
+                partialSuccessFlag = true;
+                String personalCode = resultsRequest.getPersonalCode();
+                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                    now(),
+                    resultsRequest.getPersonalCode(),
+                    USER_PROFILE,OBJECTIDISDUPLICATED, USER_PROFILE,personalCode);
+                return false;
+            }
+            else if(!objectIdisPresentInDb(resultsRequest))
+            {
+                log.warn("Duplicate Object id " + resultsRequest.getPersonalCode());
+                partialSuccessFlag = true;
+                String personalCode = resultsRequest.getPersonalCode();
+                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                    now(),
+                    resultsRequest.getPersonalCode(),
+                    USER_PROFILE,OBJECTIDISPRESENT, USER_PROFILE,personalCode);
+                return false;
+            }
+            else {
                 UserProfile userProfile = UserProfile.builder()
                     .personalCode(resultsRequest.getPersonalCode())
                     .knownAs(resultsRequest.getKnownAs())
@@ -393,6 +422,17 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 USER_PROFILE, errorDescription, USER_PROFILE,personalCode);
             return false;
         }
+    }
+
+    private boolean objectIdisPresentInDb(ResultsRequest resultsRequest) {
+        return userProfilesSnapshot.stream()
+            .anyMatch(userProfile -> resultsRequest.getObjectId().equals(userProfile.getObjectId()));
+    }
+
+    private List<String> objectIdisPresent(ResultsRequest resultsRequest) {
+        return userProfileCache.entrySet().stream().filter(userProfileEntry->resultsRequest
+            .getObjectId().equals(userProfileEntry.getValue().getObjectId()))
+            .map(Map.Entry::getKey).toList();
     }
 
 
