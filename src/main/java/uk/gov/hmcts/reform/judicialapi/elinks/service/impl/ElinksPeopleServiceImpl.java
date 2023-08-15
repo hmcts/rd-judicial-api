@@ -467,11 +467,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 log.warn("failed to load Authorisation details for " + authorisationsRequest.getAuthorisationId());
                 partialSuccessFlag = true;
                 String errorDescription;
-                log.error("printing the exception type" + e.getStackTrace());
-                log.error("printing the exception message for null appointments" + e.getMessage());
                 if (null == authorisationsRequest.getAppointmentId()) {
-                    errorDescription = appendBaseLocationIdInErroDescription(
-                            APPOINTMENTID_IS_NULL, authorisationsRequest.getAppointmentId());
+                    errorDescription = APPOINTMENTID_IS_NULL;
                 } else {
                     errorDescription = appendBaseLocationIdInErroDescription(
                             APPOINTMENTIDNOTAVAILABLE, authorisationsRequest.getAppointmentId());
