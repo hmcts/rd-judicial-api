@@ -1,17 +1,17 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.controller.request;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
 
-import org.junit.jupiter.api.Test;
-
 class RefreshRoleRequestTest {
 
     @Test
     void testRegionMapping() {
-        RefreshRoleRequest refreshRoleRequest=RefreshRoleRequest.builder()
+        RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
             .ccdServiceNames("abc")
             .objectIds(List.of("obj1"))
             .personalCodes(List.of("p1"))

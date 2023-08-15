@@ -1,30 +1,24 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.stereotype.Service;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AppointmentsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AuthorisationsRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PaginationRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -82,8 +76,7 @@ class ElinksPeopleDeleteServiceimplTest {
     }
 
     @Test
-    void testdeleteAuth()
-    {
+    void testdeleteAuth() {
         elinksPeopleDeleteServiceimpl.deleteAuth(result1);
         Mockito.verify(authorisationsRepository,Mockito.times(1)).deleteByPersonalCode(any());
         Mockito.verify(appointmentsRepository,Mockito.times(1)).deleteByPersonalCode(any());

@@ -49,7 +49,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.isNull;
@@ -173,7 +172,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 schedulerStartTime,
                 null,
                 RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), PEOPLEAPI);
-        userProfilesSnapshot=profileRepository.findAll();
+        userProfilesSnapshot = profileRepository.findAll();
         int pageValue = Integer.parseInt(page);
         int countOfProfile = 0;
         do {
@@ -213,6 +212,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         }
 
         userProfileCache.clear();
+        userProfilesSnapshot = null;
         auditStatus(schedulerStartTime, status);
         ElinkPeopleWrapperResponse response = new ElinkPeopleWrapperResponse();
         response.setMessage(PEOPLE_DATA_LOAD_SUCCESS);
@@ -366,20 +366,19 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     resultsRequest.getPersonalCode(),
                     USER_PROFILE,errorDescription, USER_PROFILE,personalCode);
                 return false;
-            } else if(!objectIdisPresent(resultsRequest).isEmpty())
-            {
+            } else if (!isNull(resultsRequest.getObjectId())
+                && !resultsRequest.getObjectId().isEmpty() && !objectIdisPresent(resultsRequest).isEmpty()) {
                 elinksPeopleDeleteServiceimpl.deletePeople(objectIdisPresent(resultsRequest).get(0));
                 log.warn("Duplicate Object id " + resultsRequest.getPersonalCode());
                 partialSuccessFlag = true;
                 String personalCode = resultsRequest.getPersonalCode();
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     now(),
-                    resultsRequest.getPersonalCode(),
+                    resultsRequest.getObjectId(),
                     USER_PROFILE,OBJECTIDISDUPLICATED, USER_PROFILE,personalCode);
                 return false;
-            }
-            else if(!objectIdisPresentInDb(resultsRequest))
-            {
+            } else if (!isNull(resultsRequest.getObjectId())
+                && !resultsRequest.getObjectId().isEmpty() && objectIdisPresentInDb(resultsRequest)) {
                 log.warn("Duplicate Object id " + resultsRequest.getPersonalCode());
                 partialSuccessFlag = true;
                 String personalCode = resultsRequest.getPersonalCode();
@@ -388,8 +387,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     resultsRequest.getPersonalCode(),
                     USER_PROFILE,OBJECTIDISPRESENT, USER_PROFILE,personalCode);
                 return false;
-            }
-            else {
+            } else {
                 UserProfile userProfile = UserProfile.builder()
                     .personalCode(resultsRequest.getPersonalCode())
                     .knownAs(resultsRequest.getKnownAs())
@@ -430,7 +428,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private List<String> objectIdisPresent(ResultsRequest resultsRequest) {
-        return userProfileCache.entrySet().stream().filter(userProfileEntry->resultsRequest
+        return userProfileCache.entrySet().stream().filter(userProfileEntry -> resultsRequest
             .getObjectId().equals(userProfileEntry.getValue().getObjectId()))
             .map(Map.Entry::getKey).toList();
     }

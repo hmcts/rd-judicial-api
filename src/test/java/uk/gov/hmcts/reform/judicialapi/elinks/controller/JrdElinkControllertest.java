@@ -34,7 +34,7 @@ public class JrdElinkControllertest {
 
 
 
-     @Test
+    @Test
     void shouldFetchUsersBasedOnSearch() {
         final var userSearchRequest = UserSearchRequest.builder().build();
         responseEntity = ResponseEntity.ok().body(userSearchRequest);

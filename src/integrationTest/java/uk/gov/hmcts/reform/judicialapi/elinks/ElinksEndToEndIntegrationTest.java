@@ -344,6 +344,7 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
     }
 
     private void validateLocationData(List<ElinkDataSchedularAudit> elinksAudit) {
+        cleanupData();
         Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
         ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) locationResponse.get("body");
         ElinkDataSchedularAudit locationAuditEntry = elinksAudit.get(0);

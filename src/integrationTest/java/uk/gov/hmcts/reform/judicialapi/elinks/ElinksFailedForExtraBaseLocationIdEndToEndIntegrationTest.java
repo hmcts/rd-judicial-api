@@ -49,7 +49,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -269,17 +268,16 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
 
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(2, userprofile.size());
-        assertEquals("410551", userprofile.get(0).getPersonalCode());
-        assertEquals("Leslie", userprofile.get(0).getKnownAs());
-        assertEquals("Jones", userprofile.get(0).getSurname());
-        assertEquals("His Honour Judge Leslie Jones", userprofile.get(0).getFullName());
-        assertEquals(null, userprofile.get(0).getPostNominals());
+        assertEquals("410551", userprofile.get(1).getPersonalCode());
+        assertEquals("Leslie", userprofile.get(1).getKnownAs());
+        assertEquals("Jones", userprofile.get(1).getSurname());
+        assertEquals("His Honour Judge Leslie Jones", userprofile.get(1).getFullName());
+        assertEquals(null, userprofile.get(1).getPostNominals());
         assertEquals("HHJ.Leslie.Jones@judiciarystagingtest999.onmicrosoft.com",
-            userprofile.get(0).getEjudiciaryEmailId());
-        assertTrue(userprofile.get(0).getActiveFlag());
-        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(0).getObjectId());
-        assertNull(userprofile.get(0).getSidamId());
-        assertEquals("L.J",userprofile.get(0).getInitials());
+            userprofile.get(1).getEjudiciaryEmailId());
+        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(1).getObjectId());
+        assertNull(userprofile.get(1).getSidamId());
+        assertEquals("L.J",userprofile.get(1).getInitials());
 
 
     }

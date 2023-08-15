@@ -208,7 +208,6 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
     void shouldReturn401ForInvalidTokens(String role) {
-
         judicialReferenceDataClient.clearTokens();
         JudicialReferenceDataClient.setBearerToken(EMPTY);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
