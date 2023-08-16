@@ -474,7 +474,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     now(),
                     appointmentsRequest.getAppointmentId(),
-                    APPOINTMENT_TABLE, e.getMessage(), APPOINTMENT_TABLE,personalCode);
+                    APPOINTMENT_TABLE, errorDescription, APPOINTMENT_TABLE,personalCode);
             }
         }
     }
