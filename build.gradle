@@ -304,6 +304,7 @@ repositories {
 
 dependencies {
 
+    implementation 'org.testng:testng:7.1.0'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
@@ -313,7 +314,7 @@ dependencies {
     integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.141.59'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
@@ -355,6 +356,7 @@ dependencies {
     implementation group: 'com.azure', name: 'azure-core', version: '1.13.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.1.0'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
 
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
@@ -454,6 +456,24 @@ dependencies {
     testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
 
     testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
+
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 

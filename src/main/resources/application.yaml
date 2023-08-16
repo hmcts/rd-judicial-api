@@ -224,7 +224,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
-      subject: "Official Sensitive: JRD - New Base Location in Appointment file - %s"
+      subject: "Official Sensitive: JRD - New Location in Appointment file - %s"
       template: simple-template-baseLocationId.ftl
     lowerLevelAuth:
       enabled: true
