@@ -15,6 +15,10 @@ public interface DataloadSchedularAuditRepository extends JpaRepository<ElinkDat
     LocalDateTime findLatestSchedularEndTime();
 
     @Query(value = "SELECT MAX(scheduler_end_time) FROM dbjudicialdata.dataload_schedular_audit "
+        + " WHERE api_name = 'Leavers'  AND status IN ('SUCCESS','PARTIAL_SUCCESS')", nativeQuery = true)
+    LocalDateTime findLatestSchedularEndTimeForLeavers();
+
+    @Query(value = "SELECT MAX(scheduler_end_time) FROM dbjudicialdata.dataload_schedular_audit "
         + " WHERE api_name = 'Deleted'  AND status IN ('Success')", nativeQuery = true)
     LocalDateTime findLatestDeletedSchedularEndTime();
 

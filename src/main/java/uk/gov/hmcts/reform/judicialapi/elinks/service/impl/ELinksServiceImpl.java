@@ -237,7 +237,7 @@ public class ELinksServiceImpl implements ELinksService {
         String updatedSince;
         LocalDateTime maxSchedulerEndTime;
         try {
-            maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSchedularEndTime();
+            maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSchedularEndTimeForLeavers();
         } catch (Exception ex) {
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
         }
