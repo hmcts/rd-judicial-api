@@ -36,6 +36,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -232,10 +233,10 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
 
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
-        assertEquals(12, baseLocationList.size());
-        assertEquals("Alnwick",baseLocationList.get(5).getName());
-        assertEquals("3",baseLocationList.get(5).getBaseLocationId());
-        assertEquals("46",baseLocationList.get(5).getTypeId());
+        assertEquals(1980, baseLocationList.size());
+        assertEquals("Aberconwy",baseLocationList.get(0).getName());
+        assertEquals("1",baseLocationList.get(0).getBaseLocationId());
+        assertEquals("1722",baseLocationList.get(0).getParentId());
 
     }
 
@@ -307,7 +308,14 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         String peopleResponseValidationJson =
                 loadJson("src/integrationTest/resources"
                         + "/wiremock_responses/extrabaselocation-id-for-failure-people.json");
-
+        String locationResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/test_loc.json");
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(locationResponseValidationJson)));
         elinks.stubFor(get(urlPathMatching("/people"))
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -337,6 +345,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         dataloadSchedulerJobRepository.deleteAll();
         authorisationsRepository.deleteAll();
         appointmentsRepository.deleteAll();
+        baseLocationRepository.deleteAll();
         profileRepository.deleteAll();
         elinkDataExceptionRepository.deleteAll();
     }
