@@ -1981,6 +1981,7 @@
       "authorisations_with_dates": [
         {
           "authorisation_id": 7996,
+          "appointment_id": "",
           "jurisdiction": "Crime",
           "jurisdiction_id": 25,
           "ticket": "Criminal Authorisation",
@@ -1990,6 +1991,7 @@
         },
         {
           "authorisation_id": 8645,
+          "appointment_id": "",
           "jurisdiction": "Crime",
           "jurisdiction_id": 25,
           "ticket": "Serious Sexual Offences",
@@ -1999,6 +2001,7 @@
         },
         {
           "authorisation_id": 10351,
+          "appointment_id": "",
           "jurisdiction": "Family",
           "jurisdiction_id": 26,
           "ticket": "Private Law",
@@ -2008,6 +2011,7 @@
         },
         {
           "authorisation_id": 12580,
+          "appointment_id": "",
           "jurisdiction": "Family",
           "jurisdiction_id": 26,
           "ticket": "Public Law",

@@ -67,383 +67,377 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResponse;
 
-public class ElinksFailedForNullAppointmentIds {
-
-
-    class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
-
-        @Autowired
-        LocationRepository locationRepository;
-        @Autowired
-        ProfileRepository profileRepository;
-        @Autowired
-        JudicialRoleTypeRepository judicialRoleTypeRepository;
-        @Autowired
-        BaseLocationRepository baseLocationRepository;
-        @Autowired
-        AuthorisationsRepository authorisationsRepository;
-        @Autowired
-        AppointmentsRepository appointmentsRepository;
-        @Autowired
-        IdamTokenConfigProperties tokenConfigProperties;
-
-
-        @Autowired
-        private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
-
-        @Autowired
-        private ElinksApiJobScheduler elinksApiJobScheduler;
-
-        @Autowired
-        private DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
-
-        @Autowired
-        PublishSidamIdService publishSidamIdService;
-
-        @MockBean
-        ElinkTopicPublisher elinkTopicPublisher;
-
-        @Autowired
-        ElinkDataExceptionRepository elinkDataExceptionRepository;
-
-
-
-        @BeforeAll
-        void loadElinksResponse() throws Exception {
-
-            cleanupData();
-
-            String locationResponseValidationJson =
-                    loadJson("src/integrationTest/resources/wiremock_responses/location.json");
-            String baselocationResponseValidationJson =
-                    loadJson("src/integrationTest/resources/wiremock_responses/base_location.json");
-            String peopleResponseValidationJson =
-                    loadJson("src/integrationTest/resources/wiremock_responses/people_null_appointmentIds.json");
-            String leaversResponseValidationJson =
-                    loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
-            String deletedResponseValidationJson =
-                    loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
-
-            elinks.stubFor(get(urlPathMatching("/reference_data/location"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", V2.MediaType.SERVICE)
-                            .withHeader("Connection", "close")
-                            .withBody(locationResponseValidationJson)));
-
-            elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", V2.MediaType.SERVICE)
-                            .withHeader("Connection", "close")
-                            .withBody(baselocationResponseValidationJson)
-                            .withTransformers("user-token-response")));
-
-            elinks.stubFor(get(urlPathMatching("/people"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", V2.MediaType.SERVICE)
-                            .withHeader("Connection", "close")
-                            .withBody(peopleResponseValidationJson)));
-
-            elinks.stubFor(get(urlPathMatching("/leavers"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", V2.MediaType.SERVICE)
-                            .withHeader("Connection", "close")
-                            .withBody(leaversResponseValidationJson)));
-
-            elinks.stubFor(get(urlPathMatching("/deleted"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", V2.MediaType.SERVICE)
-                            .withHeader("Connection", "close")
-                            .withBody(deletedResponseValidationJson)));
-
-
-            String idamResponseValidationJson =
-                    loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");
-
-            sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", "application/json")
-                            .withHeader("Connection", "close")
-                            .withBody(idamResponseValidationJson)
-                    ));
-
-            sidamService.stubFor(post(urlPathMatching("/o/token"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", "application/json")
-                            .withHeader("Connection", "close")
-                            .withBody("{"
-                                    + "        \"access_token\": \"12345\""
-                                    + "    }")
-                    ));
-
-            s2sService.stubFor(get(urlEqualTo("/details"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", "application/json")
-                            .withHeader("Connection", "close")
-                            .withBody("rd_judicial_api")));
-
-            sidamService.stubFor(get(urlPathMatching("/o/userinfo"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", "application/json")
-                            .withHeader("Connection", "close")
-                            .withBody("{"
-                                    + "  \"id\": \"%s\","
-                                    + "  \"uid\": \"%s\","
-                                    + "  \"forename\": \"Super\","
-                                    + "  \"surname\": \"User\","
-                                    + "  \"email\": \"super.user@hmcts.net\","
-                                    + "  \"accountStatus\": \"active\","
-                                    + "  \"roles\": ["
-                                    + "  \"%s\""
-                                    + "  ]"
-                                    + "}")
-                            .withTransformers("user-token-response")));
-
-            mockHttpServerForOidc.stubFor(get(urlPathMatching("/jwks"))
-                    .willReturn(aResponse()
-                            .withStatus(200)
-                            .withHeader("Content-Type", "application/json")
-                            .withHeader("Connection", "close")
-                            .withBody(getDynamicJwksResponse())));
-
-
-        }
-
-        @BeforeEach
-        void before() {
-            cleanupData();
-        }
-
-        @AfterEach
-        void after() {
-            cleanupData();
-        }
-
-        @DisplayName("Elinks end to end success scenario")
-        @Test
-        void test_elinks_end_to_end_success_scenario_with_return_status_200()
-                throws JOSEException, JsonProcessingException {
-
-            ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled", true);
-            ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
-
-            dataloadSchedulerJobRepository.deleteAll();
-            elinksApiJobScheduler.loadElinksJob();
-
-            List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
-            DataloadSchedulerJob jobDetails = audits.get(0);
-
-            //assserting scheduler data
-            assertThat(jobDetails).isNotNull();
-            assertThat(jobDetails.getPublishingStatus()).isNotNull();
-            assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),jobDetails.getPublishingStatus());
-
-            List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
-            // asserting location data
-            validateLocationData(elinksAudit);
-
-            //asserting baselocation data
-            validateBaseLocation(elinksAudit);
-
-            //asserting people data
-            validatePeopleData(elinksAudit);
-
-            //asserting userprofile data for leaver api
-            validateLeaver(elinksAudit);
-
-            //asserting userprofile data for deleted api
-            validateDeleted(elinksAudit);
-
-            //assert elastic search api
-            idamSetUp();
-            validateElasticSearch(audits);
-
-            // asserting SIDAM publishing
-            validateSidamPublish();
-
-            List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-            assertThat(elinksException).isEmpty();
-
-        }
-
-        private void validateLeaver(List<ElinkDataSchedularAudit> elinksAudit) {
-            Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
-            ElinkLeaversWrapperResponse leaversProfiles = (ElinkLeaversWrapperResponse) leaversResponse.get("body");
-            ElinkDataSchedularAudit leaversAuditEntry = elinksAudit.get(2);
-
-            assertThat(leaversResponse).containsEntry("http_status", "200 OK");
-            assertEquals("Leavers Data Loaded Successfully", leaversProfiles.getMessage());
-            assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),leaversAuditEntry.getStatus());
-
-            List<UserProfile> leaverUserProfile = profileRepository.findAll();
-            assertEquals(1, leaverUserProfile.size());
-            assertEquals("4913085", leaverUserProfile.get(0).getPersonalCode());
-            assertEquals(true, leaverUserProfile.get(0).getActiveFlag());
-            assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", leaverUserProfile.get(0).getObjectId());
-            assertEquals("2026-07-23",leaverUserProfile.get(0).getLastWorkingDate().toString());
-            assertNotNull(leaverUserProfile.get(0).getLastLoadedDate());
-
-
-            ElinkDataSchedularAudit auditEntry = elinksAudit.get(2);
-            assertThat(auditEntry.getId()).isPositive();
-            assertEquals(LEAVERSAPI, auditEntry.getApiName());
-            assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
-            assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
-            assertNotNull(auditEntry.getSchedulerStartTime());
-            assertNotNull(auditEntry.getSchedulerEndTime());
-        }
-
-        private void validatePeopleData(List<ElinkDataSchedularAudit> elinksAudit) {
-            Map<String, Object> peopleResponse = elinksReferenceDataClient.getPeoples();
-            ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse) peopleResponse.get("body");
-            ElinkDataSchedularAudit peopleAuditEntry = elinksAudit.get(1);
-
-            assertThat(peopleResponse).containsEntry("http_status", "200 OK");
-            assertEquals("People data loaded successfully", profiles.getMessage());
-            assertEquals(PEOPLEAPI,peopleAuditEntry.getApiName());
-            assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), peopleAuditEntry.getStatus());
-
-            List<UserProfile> userprofile = profileRepository.findAll();
-            assertEquals(1, userprofile.size());
-            assertEquals("4913085", userprofile.get(0).getPersonalCode());
-            assertEquals("Rachel", userprofile.get(0).getKnownAs());
-            assertEquals("Jones", userprofile.get(0).getSurname());
-            assertEquals("District Judge Rachel Jones", userprofile.get(0).getFullName());
-            assertEquals(null, userprofile.get(0).getPostNominals());
-            assertEquals("DJ.Rachel.Jones@ejudiciary.net",
-                    userprofile.get(0).getEjudiciaryEmailId());
-            assertTrue(userprofile.get(0).getActiveFlag());
-            assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(0).getObjectId());
-            assertNull(userprofile.get(0).getSidamId());
-            assertEquals("RJ",userprofile.get(0).getInitials());
-        }
-
-        private void validateBaseLocation(List<ElinkDataSchedularAudit> elinksAudit) {
-            Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
-            ElinkBaseLocationWrapperResponse baseLocations =
-                    (ElinkBaseLocationWrapperResponse) baseLocationResponse.get("body");
-            ElinkDataSchedularAudit baseLocationAuditEntry = elinksAudit.get(0);
-
-            assertThat(baseLocationResponse).containsEntry("http_status", "200 OK");
-            assertEquals(BASE_LOCATION_DATA_LOAD_SUCCESS, baseLocations.getMessage());
-            assertEquals(LOCATION, baseLocationAuditEntry.getApiName());
-            assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), baseLocationAuditEntry.getStatus());
-
-
-            List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
-            assertEquals(8, baseLocationList.size());
-            assertEquals("Aberconwy",baseLocationList.get(0).getName());
-            assertEquals("3",baseLocationList.get(1).getBaseLocationId());
-            assertEquals("1742",baseLocationList.get(1).getParentId());
-        }
-
-        private void validateLocationData(List<ElinkDataSchedularAudit> elinksAudit) {
-            Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
-            ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) locationResponse.get("body");
-            ElinkDataSchedularAudit locationAuditEntry = elinksAudit.get(0);
-
-            assertThat(locationResponse).containsEntry("http_status", "200 OK");
-            assertEquals(LOCATIONAPI,locationAuditEntry.getApiName());
-            assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), locationAuditEntry.getStatus());
-
-
-            List<Location> locationsList = locationRepository.findAll();
-            assertEquals(11, locationsList.size());
-            assertEquals("1", locationsList.get(1).getRegionId());
-            assertEquals("London", locationsList.get(1).getRegionDescEn());
-        }
-
-        private void idamSetUp() {
-
-            final String clientId = "234342332";
-            final String redirectUri = "http://idam-api.aat.platform.hmcts.net";
-            //The authorization and clientAuth is the dummy value which we can evaluate using BASE64 encoder.
-            final String authorization = "ZHVtbXl2YWx1ZUBobWN0cy5uZXQ6SE1DVFMxMjM0";
-            final String clientAuth = "cmQteHl6LWFwaTp4eXo=";
-            final String url = "http://127.0.0.1:5000";
-            tokenConfigProperties.setClientId(clientId);
-            tokenConfigProperties.setClientAuthorization(clientAuth);
-            tokenConfigProperties.setAuthorization(authorization);
-            tokenConfigProperties.setRedirectUri(redirectUri);
-            tokenConfigProperties.setUrl(url);
-
-        }
-
-        private void validateSidamPublish() {
-            Map<String, Object> idamResponse = elinksReferenceDataClient.publishSidamIds();
-            doNothing().when(elinkTopicPublisher).sendMessage(anyList(),anyString());
-            assertThat(idamResponse).containsEntry("http_status", "200 OK");
-            HashMap publishSidamIdsResponse = (LinkedHashMap)idamResponse.get("body");
-
-            assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
-
-            List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-            assertThat(elinksException).isEmpty();
-        }
-
-        private void validateElasticSearch(List<DataloadSchedulerJob> audits) {
-            Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
-            assertEquals("200 OK",idamResponses.get("http_status"));
-            List<IdamResponse> idamResponseVal = (ArrayList<IdamResponse>) idamResponses.get("body");
-            assertEquals(2,idamResponseVal.size());
-
-            List<UserProfile> userprofileAfterSidamresponse = profileRepository.findAll();
-            UserProfile sidamID = userprofileAfterSidamresponse.get(0);
-
-            assertEquals(1, userprofileAfterSidamresponse.size());
-            assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae",
-                    userprofileAfterSidamresponse.get(0).getObjectId());
-            assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e972",
-                    userprofileAfterSidamresponse.get(0).getSidamId());
-
-            assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), audits.get(0).getPublishingStatus());
-        }
-
-        private void validateDeleted(List<ElinkDataSchedularAudit> elinksAudit) {
-            Map<String, Object> deletedResponse = elinksReferenceDataClient.getDeleted();
-            ElinkDeletedWrapperResponse deletedProfiles = (ElinkDeletedWrapperResponse) deletedResponse.get("body");
-            ElinkDataSchedularAudit deletedAuditEntry = elinksAudit.get(3);
-
-            assertThat(deletedResponse).containsEntry("http_status", "200 OK");
-            assertEquals("Deleted users Data Loaded Successfully", deletedProfiles.getMessage());
-            assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),deletedAuditEntry.getStatus());
-
-            List<UserProfile> deletedUserProfile = profileRepository.findAll();
-            assertEquals(1, deletedUserProfile.size());
-            assertEquals("4913085", deletedUserProfile.get(0).getPersonalCode());
-            assertEquals(true, deletedUserProfile.get(0).getDeletedFlag());
-            assertEquals("2023-07-13",deletedUserProfile.get(0).getDeletedOn().toLocalDate().toString());
-
-            ElinkDataSchedularAudit auditEntry = elinksAudit.get(3);
-            assertThat(auditEntry.getId()).isPositive();
-            assertEquals(DELETEDAPI, auditEntry.getApiName());
-            assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
-            assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
-            assertNotNull(auditEntry.getSchedulerStartTime());
-            assertNotNull(auditEntry.getSchedulerEndTime());
-        }
-
-        private void cleanupData() {
-            elinkSchedularAuditRepository.deleteAll();
-            authorisationsRepository.deleteAll();
-            appointmentsRepository.deleteAll();
-            judicialRoleTypeRepository.deleteAll();
-            baseLocationRepository.deleteAll();
-            profileRepository.deleteAll();
-            dataloadSchedulerJobRepository.deleteAll();
-        }
+
+
+class ElinksFailedForNullAppointmentIds extends ElinksEnabledIntegrationTest {
+
+    @Autowired
+    LocationRepository locationRepository;
+    @Autowired
+    ProfileRepository profileRepository;
+    @Autowired
+    JudicialRoleTypeRepository judicialRoleTypeRepository;
+    @Autowired
+    BaseLocationRepository baseLocationRepository;
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
+    @Autowired
+    IdamTokenConfigProperties tokenConfigProperties;
+
+
+    @Autowired
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+    @Autowired
+    private ElinksApiJobScheduler elinksApiJobScheduler;
+
+    @Autowired
+    private DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
+
+    @Autowired
+    PublishSidamIdService publishSidamIdService;
+
+    @MockBean
+    ElinkTopicPublisher elinkTopicPublisher;
+
+    @Autowired
+    ElinkDataExceptionRepository elinkDataExceptionRepository;
+
+
+
+    @BeforeAll
+    void loadElinksResponse() throws Exception {
+
+        cleanupData();
+
+        String locationResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/location.json");
+        String baselocationResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/base_location.json");
+        String peopleResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/people_null_appointmentId.json");
+        String leaversResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
+        String deletedResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(locationResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(baselocationResponseValidationJson)
+                        .withTransformers("user-token-response")));
+
+        elinks.stubFor(get(urlPathMatching("/people"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(peopleResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/leavers"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(leaversResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(deletedResponseValidationJson)));
+
+
+        String idamResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");
+
+        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(idamResponseValidationJson)
+                ));
+
+        sidamService.stubFor(post(urlPathMatching("/o/token"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("{"
+                                + "        \"access_token\": \"12345\""
+                                + "    }")
+                ));
+
+        s2sService.stubFor(get(urlEqualTo("/details"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("rd_judicial_api")));
+
+        sidamService.stubFor(get(urlPathMatching("/o/userinfo"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("{"
+                                + "  \"id\": \"%s\","
+                                + "  \"uid\": \"%s\","
+                                + "  \"forename\": \"Super\","
+                                + "  \"surname\": \"User\","
+                                + "  \"email\": \super.user@hmcts.net\","
+                                + "  \"accountStatus\": \"active\","
+                                + "  \"roles\": ["
+                                + "  \"%s\""
+                                + "  ]"
+                                + "}")
+                        .withTransformers("user-token-response")));
+
+        mockHttpServerForOidc.stubFor(get(urlPathMatching("/jwks"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(getDynamicJwksResponse())));
+
+
     }
 
+    @BeforeEach
+    void before() {
+        cleanupData();
+    }
+
+    @AfterEach
+    void after() {
+        cleanupData();
+    }
+
+    @DisplayName("Elinks end to end success scenario")
+    @Test
+    void test_elinks_end_to_end_success_scenario_with_return_status_200()
+            throws JOSEException, JsonProcessingException {
+
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled", true);
+        ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
+
+        dataloadSchedulerJobRepository.deleteAll();
+        elinksApiJobScheduler.loadElinksJob();
+
+        List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
+        DataloadSchedulerJob jobDetails = audits.get(0);
+
+        //assserting scheduler data
+        assertThat(jobDetails).isNotNull();
+        assertThat(jobDetails.getPublishingStatus()).isNotNull();
+        assertEquals(RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(),jobDetails.getPublishingStatus());
+
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
+        // asserting location data
+        validateLocationData(elinksAudit);
+
+        //asserting baselocation data
+        validateBaseLocation(elinksAudit);
+
+        //asserting people data
+        validatePeopleData(elinksAudit);
+
+        //asserting userprofile data for leaver api
+        validateLeaver(elinksAudit);
+
+        //asserting userprofile data for deleted api
+        validateDeleted(elinksAudit);
+
+        //assert elastic search api
+        idamSetUp();
+        validateElasticSearch(audits);
+
+        // asserting SIDAM publishing
+        validateSidamPublish();
+
+        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
+        assertThat(elinksException).isNotEmpty();
+        assertEquals("Appointment ID: is Null for the given Authorisation",elinksException.stream()
+                .filter(e -> e.getTableName().equalsIgnoreCase("judicial_office_authorisation"))
+                .findFirst().get().getErrorDescription());
+
+    }
+
+    private void validateLeaver(List<ElinkDataSchedularAudit> elinksAudit) {
+        Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
+        ElinkLeaversWrapperResponse leaversProfiles = (ElinkLeaversWrapperResponse) leaversResponse.get("body");
+        ElinkDataSchedularAudit leaversAuditEntry = elinksAudit.get(2);
+
+        assertThat(leaversResponse).containsEntry("http_status", "200 OK");
+        assertEquals("Leavers Data Loaded Successfully", leaversProfiles.getMessage());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),leaversAuditEntry.getStatus());
+
+        List<UserProfile> leaverUserProfile = profileRepository.findAll();
+        assertEquals(20, leaverUserProfile.size());
+        assertEquals("4925319", leaverUserProfile.get(0).getPersonalCode());
+        assertEquals(true, leaverUserProfile.get(0).getActiveFlag());
+        assertNotNull(leaverUserProfile.get(0).getLastLoadedDate());
+
+
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(2);
+        assertThat(auditEntry.getId()).isPositive();
+        assertEquals(LEAVERSAPI, auditEntry.getApiName());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
+        assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
+        assertNotNull(auditEntry.getSchedulerStartTime());
+        assertNotNull(auditEntry.getSchedulerEndTime());
+    }
+
+    private void validatePeopleData(List<ElinkDataSchedularAudit> elinksAudit) {
+        Map<String, Object> peopleResponse = elinksReferenceDataClient.getPeoples();
+        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse) peopleResponse.get("body");
+        ElinkDataSchedularAudit peopleAuditEntry = elinksAudit.get(1);
+
+        assertThat(peopleResponse).containsEntry("http_status", "200 OK");
+        assertEquals("People data loaded successfully", profiles.getMessage());
+        assertEquals(PEOPLEAPI,peopleAuditEntry.getApiName());
+        assertEquals(RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus(), peopleAuditEntry.getStatus());
+
+        List<UserProfile> userprofile = profileRepository.findAll();
+        assertEquals(20, userprofile.size());
+        assertEquals("4925319", userprofile.get(0).getPersonalCode());
+        assertEquals("Diana" , userprofile.get(0).getKnownAs());
+        assertEquals("Gordon", userprofile.get(0).getSurname());
+        assertEquals("Her Honour Judge Diana Gordon", userprofile.get(0).getFullName());
+        assertEquals(null, userprofile.get(0).getPostNominals());
+        assertEquals("HHJ.Diana.Gordon@ejudiciary.net",
+        userprofile.get(0).getEjudiciaryEmailId());
+        assertTrue(userprofile.get(0).getActiveFlag());
+        assertNull(userprofile.get(0).getSidamId());
+        assertEquals("DG",userprofile.get(0).getInitials());
+
+    }
+
+    private void validateBaseLocation(List<ElinkDataSchedularAudit> elinksAudit) {
+        Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
+        ElinkBaseLocationWrapperResponse baseLocations =
+                (ElinkBaseLocationWrapperResponse) baseLocationResponse.get("body");
+        ElinkDataSchedularAudit baseLocationAuditEntry = elinksAudit.get(0);
+
+        assertThat(baseLocationResponse).containsEntry("http_status", "200 OK");
+        assertEquals(BASE_LOCATION_DATA_LOAD_SUCCESS, baseLocations.getMessage());
+        assertEquals(LOCATION, baseLocationAuditEntry.getApiName());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), baseLocationAuditEntry.getStatus());
+
+
+        List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
+        assertEquals(8, baseLocationList.size());
+        assertEquals("Aberconwy",baseLocationList.get(0).getName());
+        assertEquals("3",baseLocationList.get(1).getBaseLocationId());
+        assertEquals("1742",baseLocationList.get(1).getParentId());
+    }
+
+    private void validateLocationData(List<ElinkDataSchedularAudit> elinksAudit) {
+        Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
+        ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) locationResponse.get("body");
+        ElinkDataSchedularAudit locationAuditEntry = elinksAudit.get(0);
+
+        assertThat(locationResponse).containsEntry("http_status", "200 OK");
+        assertEquals(LOCATIONAPI,locationAuditEntry.getApiName());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), locationAuditEntry.getStatus());
+
+
+        List<Location> locationsList = locationRepository.findAll();
+        assertEquals(11, locationsList.size());
+        assertEquals("1", locationsList.get(1).getRegionId());
+        assertEquals("London", locationsList.get(1).getRegionDescEn());
+    }
+
+    private void idamSetUp() {
+
+        final String clientId = "234342332";
+        final String redirectUri = "http://idam-api.aat.platform.hmcts.net";
+        //The authorization and clientAuth is the dummy value which we can evaluate using BASE64 encoder.
+        final String authorization = "ZHVtbXl2YWx1ZUBobWN0cy5uZXQ6SE1DVFMxMjM0";
+        final String clientAuth = "cmQteHl6LWFwaTp4eXo=";
+        final String url = "http://127.0.0.1:5000";
+        tokenConfigProperties.setClientId(clientId);
+        tokenConfigProperties.setClientAuthorization(clientAuth);
+        tokenConfigProperties.setAuthorization(authorization);
+        tokenConfigProperties.setRedirectUri(redirectUri);
+        tokenConfigProperties.setUrl(url);
+
+    }
+
+    private void validateSidamPublish() {
+        Map<String, Object> idamResponse = elinksReferenceDataClient.publishSidamIds();
+        doNothing().when(elinkTopicPublisher).sendMessage(anyList(),anyString());
+        assertThat(idamResponse).containsEntry("http_status", "200 OK");
+        HashMap publishSidamIdsResponse = (LinkedHashMap)idamResponse.get("body");
+
+        assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
+
+        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
+        assertThat(elinksException).isNotEmpty();
+    }
+
+    private void validateElasticSearch(List<DataloadSchedulerJob> audits) {
+        Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
+        assertEquals("200 OK",idamResponses.get("http_status"));
+        List<IdamResponse> idamResponseVal = (ArrayList<IdamResponse>) idamResponses.get("body");
+        assertEquals(2,idamResponseVal.size());
+
+        List<UserProfile> userprofileAfterSidamresponse = profileRepository.findAll();
+        UserProfile sidamID = userprofileAfterSidamresponse.get(0);
+
+        assertEquals(20, userprofileAfterSidamresponse.size());
 
 
 
+        assertEquals(RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), audits.get(0).getPublishingStatus());
+    }
 
+    private void validateDeleted(List<ElinkDataSchedularAudit> elinksAudit) {
+        Map<String, Object> deletedResponse = elinksReferenceDataClient.getDeleted();
+        ElinkDeletedWrapperResponse deletedProfiles = (ElinkDeletedWrapperResponse) deletedResponse.get("body");
+        ElinkDataSchedularAudit deletedAuditEntry = elinksAudit.get(3);
+
+        assertThat(deletedResponse).containsEntry("http_status", "200 OK");
+        assertEquals("Deleted users Data Loaded Successfully", deletedProfiles.getMessage());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),deletedAuditEntry.getStatus());
+
+        List<UserProfile> deletedUserProfile = profileRepository.findAll();
+        assertEquals(20, deletedUserProfile.size());
+        assertEquals("4925319", deletedUserProfile.get(0).getPersonalCode());
+
+        ElinkDataSchedularAudit auditEntry = elinksAudit.get(3);
+        assertThat(auditEntry.getId()).isPositive();
+        assertEquals(DELETEDAPI, auditEntry.getApiName());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
+        assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
+        assertNotNull(auditEntry.getSchedulerStartTime());
+        assertNotNull(auditEntry.getSchedulerEndTime());
+    }
+
+    private void cleanupData() {
+        elinkSchedularAuditRepository.deleteAll();
+        authorisationsRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        judicialRoleTypeRepository.deleteAll();
+        baseLocationRepository.deleteAll();
+        profileRepository.deleteAll();
+        dataloadSchedulerJobRepository.deleteAll();
+    }
 }
+
+
+
+
