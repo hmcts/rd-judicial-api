@@ -66,9 +66,12 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTID_IS_NULL;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENT_TABLE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUTHORISATION_TABLE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CFTREGIONIDFAILURE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CONTENT_TYPE_HTML;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_FORBIDDEN;
@@ -309,7 +312,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             log.info("method entred processPeopleResponse : " + new ObjectMapper().writer().withDefaultPrettyPrinter()
                 .writeValueAsString(elinkPeopleResponseRequest
                 .getResultsRequests()));
-            elinkPeopleResponseRequest.getResultsRequests().forEach(this::savePeopleDetails);
+            elinkPeopleResponseRequest.getResultsRequests()
+                .forEach(resultsRequest -> savePeopleDetails(resultsRequest,schedulerStartTime));
 
         } catch (Exception ex) {
             auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
@@ -471,8 +475,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
         log.info("entering into saveAppointmentDetails ");
         final List<AppointmentsRequest> validappointmentsRequests =
-            validateAppointmentRequest(appointmentsRequests,personalCode,schedulerStartTime);
-            validateAppointmentRequests(appointmentsRequests,personalCode);
+            validateAppointmentRequests(appointmentsRequests,personalCode,schedulerStartTime);
         Appointment appointment;
         for (AppointmentsRequest appointmentsRequest: validappointmentsRequests) {
             String baseLocationId = fetchBaseLocationId(appointmentsRequest);
@@ -552,7 +555,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private List<AppointmentsRequest> validateAppointmentRequests(List<AppointmentsRequest> appointmentsRequests,
-                                                                  String personalCode) {
+                                                                  String personalCode,
+                                                                  LocalDateTime schedulerStartTime) {
 
         return appointmentsRequests.stream().filter(appointmentsRequest ->
             validAppointments(appointmentsRequest,personalCode,schedulerStartTime)).toList();
