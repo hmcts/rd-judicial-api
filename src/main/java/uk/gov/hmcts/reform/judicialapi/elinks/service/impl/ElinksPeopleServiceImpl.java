@@ -55,6 +55,7 @@ import static java.util.Objects.isNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTIDFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTIDNOTAVAILABLE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTID_IS_NULL;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENT_TABLE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUTHORISATION_TABLE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_ID;
@@ -503,8 +504,13 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             } catch (Exception e) {
                 log.warn("failed to load Authorisation details for " + authorisationsRequest.getAuthorisationId());
                 partialSuccessFlag = true;
-                String errorDescription = appendBaseLocationIdInErroDescription(
-                    APPOINTMENTIDNOTAVAILABLE, authorisationsRequest.getAppointmentId());
+                String errorDescription;
+                if (null == authorisationsRequest.getAppointmentId()) {
+                    errorDescription = APPOINTMENTID_IS_NULL;
+                } else {
+                    errorDescription = appendBaseLocationIdInErroDescription(
+                            APPOINTMENTIDNOTAVAILABLE, authorisationsRequest.getAppointmentId());
+                }
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     now(),
                     authorisationsRequest.getAuthorisationId(),
