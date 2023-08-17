@@ -1,9 +1,11 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 
 
+import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email;
@@ -63,6 +66,8 @@ class EmailServiceTest {
     void testSendEmail() {
         when(sendGrid.api(any(Request.class))).thenReturn(response);
         emailServiceImpl.sendEmail(emailDto);
+
+        assertEquals(200,emailServiceImpl.sendEmail(emailDto));
         assertEquals("Test", emailDto.getMessageBody());
         assertEquals("Test mail", emailDto.getSubject());
     }

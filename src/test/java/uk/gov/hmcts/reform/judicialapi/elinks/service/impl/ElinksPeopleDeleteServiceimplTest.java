@@ -14,6 +14,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,9 @@ class ElinksPeopleDeleteServiceimplTest {
 
     @Spy
     private AppointmentsRepository appointmentsRepository;
+
+    @Spy
+    private ProfileRepository profileRepository;
 
     @InjectMocks
     private ElinksPeopleDeleteServiceimpl elinksPeopleDeleteServiceimpl;
@@ -84,5 +88,15 @@ class ElinksPeopleDeleteServiceimplTest {
 
     }
 
+    @Test
+    void testdeletePeople() {
+        elinksPeopleDeleteServiceimpl.deletePeople(result1.getPersonalCode());
+        Mockito.verify(profileRepository,Mockito.times(1)).deleteById(any());
+        Mockito.verify(authorisationsRepository,Mockito.times(1)).deleteByPersonalCode(any());
+        Mockito.verify(appointmentsRepository,Mockito.times(1)).deleteByPersonalCode(any());
+        Mockito.verify(judicialRoleTypeRepository,Mockito.times(1)).deleteByPersonalCode(any());
+        Mockito.verify(profileRepository,Mockito.times(1)).deleteById(any());
+
+    }
 
 }

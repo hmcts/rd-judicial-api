@@ -221,7 +221,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                         && Optional.ofNullable(elinkPeopleResponseRequest.getResultsRequests()).isPresent()) {
                     countOfProfile = countOfProfile + elinkPeopleResponseRequest.getResultsRequests().size();
                     isMorePagesAvailable = elinkPeopleResponseRequest.getPagination().getMorePages();
-                    processPeopleResponse(elinkPeopleResponseRequest, schedulerStartTime);
+                    processPeopleResponse(elinkPeopleResponseRequest, schedulerStartTime,pageValue);
                 } else {
                     auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
                     throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
@@ -306,14 +306,15 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         return updatedSince;
     }
 
-    private void processPeopleResponse(PeopleRequest elinkPeopleResponseRequest, LocalDateTime schedulerStartTime) {
+    private void processPeopleResponse(PeopleRequest elinkPeopleResponseRequest, LocalDateTime schedulerStartTime,
+                                       int pageValue) {
         try {
             // filter the profiles that do have email address for leavers
             log.info("method entred processPeopleResponse : " + new ObjectMapper().writer().withDefaultPrettyPrinter()
                 .writeValueAsString(elinkPeopleResponseRequest
                 .getResultsRequests()));
             elinkPeopleResponseRequest.getResultsRequests()
-                .forEach(resultsRequest -> savePeopleDetails(resultsRequest,schedulerStartTime));
+                .forEach(resultsRequest -> savePeopleDetails(resultsRequest,schedulerStartTime,pageValue));
 
         } catch (Exception ex) {
             auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
@@ -323,15 +324,15 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private void savePeopleDetails(
-        ResultsRequest resultsRequest, LocalDateTime schedulerStartTime) {
+        ResultsRequest resultsRequest, LocalDateTime schedulerStartTime, int pageValue) {
 
-        if (saveUserProfile(resultsRequest)) {
+        if (saveUserProfile(resultsRequest,pageValue)) {
             try {
                 elinksPeopleDeleteServiceimpl.deleteAuth(resultsRequest);
                 saveAppointmentDetails(resultsRequest.getPersonalCode(), resultsRequest
-                    .getObjectId(), resultsRequest.getAppointmentsRequests(),schedulerStartTime);
+                    .getObjectId(), resultsRequest.getAppointmentsRequests(),schedulerStartTime,pageValue);
                 saveAuthorizationDetails(resultsRequest.getPersonalCode(), resultsRequest
-                    .getObjectId(), resultsRequest.getAuthorisationsRequests());
+                    .getObjectId(), resultsRequest.getAuthorisationsRequests(),pageValue);
                 saveRoleDetails(resultsRequest.getPersonalCode(), resultsRequest.getJudiciaryRoles());
             } catch (Exception exception) {
                 log.warn("saveUserProfile is failed  " + resultsRequest.getPersonalCode());
@@ -370,9 +371,9 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
 
-    private boolean saveUserProfile(ResultsRequest resultsRequest) {
+    private boolean saveUserProfile(ResultsRequest resultsRequest, int pageValue) {
 
-        if (validateUserProfile(resultsRequest)) {
+        if (validateUserProfile(resultsRequest,pageValue)) {
             try {
                 UserProfile userProfile = UserProfile.builder()
                     .personalCode(resultsRequest.getPersonalCode())
@@ -398,7 +399,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 partialSuccessFlag = true;
                 String personalCode = resultsRequest.getPersonalCode();
                 String errorDescription = appendFieldWithErrorDescription(
-                    USERPROFILEFAILURE, resultsRequest.getPersonalCode());
+                    USERPROFILEFAILURE, resultsRequest.getPersonalCode(),pageValue);
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     now(),
                     resultsRequest.getPersonalCode(),
@@ -409,13 +410,13 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         return false;
     }
 
-    private boolean validateUserProfile(ResultsRequest resultsRequest) {
+    private boolean validateUserProfile(ResultsRequest resultsRequest, int pageValue) {
 
         if (StringUtils.isEmpty(resultsRequest.getEmail())) {
             log.warn("Mapped Base location not found in base table " + resultsRequest.getPersonalCode());
             partialSuccessFlag = true;
             String errorField = resultsRequest.getPersonalCode();
-            String errorDescription = appendFieldWithErrorDescription(USERPROFILEEMAILID, errorField);
+            String errorDescription = appendFieldWithErrorDescription(USERPROFILEEMAILID, errorField, pageValue);
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                 now(),
                 resultsRequest.getPersonalCode(),
@@ -425,7 +426,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             log.warn("User Profile not loaded for " + resultsRequest.getPersonalCode());
             partialSuccessFlag = true;
             String errorDescription = appendFieldWithErrorDescription(
-                USERPROFILEISPRESENT, resultsRequest.getPersonalCode());
+                USERPROFILEISPRESENT, resultsRequest.getPersonalCode(), pageValue);
             String personalCode = resultsRequest.getPersonalCode();
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                 now(),
@@ -470,12 +471,13 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
 
     private void saveAppointmentDetails(String personalCode, String objectId,
-                                        List<AppointmentsRequest> appointmentsRequests,LocalDateTime schedulerStartTime)
+                                        List<AppointmentsRequest> appointmentsRequests,
+                                        LocalDateTime schedulerStartTime, int pageValue)
             throws JsonProcessingException {
 
         log.info("entering into saveAppointmentDetails ");
         final List<AppointmentsRequest> validappointmentsRequests =
-            validateAppointmentRequests(appointmentsRequests,personalCode,schedulerStartTime);
+            validateAppointmentRequests(appointmentsRequests,personalCode,schedulerStartTime,pageValue);
         Appointment appointment;
         for (AppointmentsRequest appointmentsRequest: validappointmentsRequests) {
             String baseLocationId = fetchBaseLocationId(appointmentsRequest);
@@ -506,7 +508,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 log.warn("failed to load appointment details for " + appointmentsRequest.getAppointmentId());
                 partialSuccessFlag = true;
                 String errorDescription = appendFieldWithErrorDescription(
-                    APPOINTMENTIDFAILURE, appointmentsRequest.getAppointmentId());
+                    APPOINTMENTIDFAILURE, appointmentsRequest.getAppointmentId(), pageValue);
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     now(),
                     appointmentsRequest.getAppointmentId(),
@@ -516,7 +518,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     private void saveAuthorizationDetails(String personalCode, String objectId,
-                                          List<AuthorisationsRequest> authorisationsRequests) {
+                                          List<AuthorisationsRequest> authorisationsRequests, int pageValue) {
 
         log.info("entering into saveAuthorizationDetails ");
         for (AuthorisationsRequest authorisationsRequest : authorisationsRequests) {
@@ -544,7 +546,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     errorDescription = APPOINTMENTID_IS_NULL;
                 } else {
                     errorDescription = appendFieldWithErrorDescription(
-                            APPOINTMENTIDNOTAVAILABLE, authorisationsRequest.getAppointmentId());
+                            APPOINTMENTIDNOTAVAILABLE, authorisationsRequest.getAppointmentId(), pageValue);
                 }
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     now(),
@@ -556,21 +558,21 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
     private List<AppointmentsRequest> validateAppointmentRequests(List<AppointmentsRequest> appointmentsRequests,
                                                                   String personalCode,
-                                                                  LocalDateTime schedulerStartTime) {
+                                                                  LocalDateTime schedulerStartTime, int pageValue) {
 
         return appointmentsRequests.stream().filter(appointmentsRequest ->
-            validAppointments(appointmentsRequest,personalCode,schedulerStartTime)).toList();
+            validAppointments(appointmentsRequest,personalCode,schedulerStartTime,pageValue)).toList();
     }
 
-    private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode,LocalDateTime
-            schedulerStartTime) {
+    private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode, LocalDateTime
+        schedulerStartTime, int pageValue) {
 
         if (StringUtils.isEmpty(appointmentsRequest.getBaseLocationId())
             || StringUtils.isEmpty(fetchBaseLocationId(appointmentsRequest))) {
             log.warn("Mapped Base location not found in base table " + appointmentsRequest.getBaseLocationId());
             partialSuccessFlag = true;
             String baseLocationId = appointmentsRequest.getBaseLocationId();
-            String errorDescription = appendFieldWithErrorDescription(LOCATIONIDFAILURE, baseLocationId);
+            String errorDescription = appendFieldWithErrorDescription(LOCATIONIDFAILURE, baseLocationId, pageValue);
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                 now(),
                 appointmentsRequest.getAppointmentId(),
@@ -580,7 +582,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             log.warn("Mapped  location not found in jrd lrd mapping table " + appointmentsRequest.getLocation());
             partialSuccessFlag = true;
             String location = appointmentsRequest.getLocation();
-            String errorDescription = appendFieldWithErrorDescription(CFTREGIONIDFAILURE, location);
+            String errorDescription = appendFieldWithErrorDescription(CFTREGIONIDFAILURE, location, pageValue);
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                 appointmentsRequest.getAppointmentId(),
@@ -590,7 +592,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             log.warn("Role Name is Invalid " + appointmentsRequest.getRoleName());
             partialSuccessFlag = true;
             String errorDescription = appendFieldWithErrorDescription(INVALIDROLENAMES,
-                appointmentsRequest.getRoleName());
+                appointmentsRequest.getRoleName(), pageValue);
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                 now(),
                 appointmentsRequest.getAppointmentId(),
@@ -625,16 +627,16 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
     // Append the string to add error description for the given format
-    private String appendFieldWithErrorDescription(String errorDescription, String wordToAppend) {
+    private String appendFieldWithErrorDescription(String errorDescription, String wordToAppend, int pageValue) {
 
         String wordAfterWhichAppend = ":";
-        String errorDescriptionInGivenFormat = errorDescription.substring(0,
+        String wordPageNumber="PageNumber:";
+        return wordPageNumber.concat(String.valueOf(pageValue)).concat("-").concat(errorDescription.substring(0,
                 errorDescription.indexOf(wordAfterWhichAppend)
                 + wordAfterWhichAppend.length())
                 + " " + wordToAppend + " "
                 + errorDescription.substring(errorDescription.indexOf(wordAfterWhichAppend)
-                + wordAfterWhichAppend.length(), errorDescription.length());
-        return errorDescriptionInGivenFormat;
+                + wordAfterWhichAppend.length(), errorDescription.length()));
     }
 
 

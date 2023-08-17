@@ -151,7 +151,7 @@ public class ElinksLoadPeopleDataWithDuplicate extends ElinksEnabledIntegrationT
         assertEquals(RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus(), peopleAuditEntry.getStatus());
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertEquals("Personal  Code : 4925319  is already loaded",
+        assertEquals("PageNumber:2-Personal  Code : 4925319  is already loaded",
             elinksException.get(1).getErrorDescription());
         assertThat(elinksException.size()).isEqualTo(2);
 
