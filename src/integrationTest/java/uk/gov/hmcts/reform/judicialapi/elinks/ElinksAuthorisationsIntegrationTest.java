@@ -1,7 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.nimbusds.jose.JOSEException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +27,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
@@ -51,10 +48,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
@@ -67,9 +64,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResponse;
 
-
-
-class ElinksFailedForNullAppointmentIds extends ElinksEnabledIntegrationTest {
+@SuppressWarnings("unchecked")
+class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     LocationRepository locationRepository;
@@ -85,26 +81,18 @@ class ElinksFailedForNullAppointmentIds extends ElinksEnabledIntegrationTest {
     AppointmentsRepository appointmentsRepository;
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
-
-
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
-
     @Autowired
     private ElinksApiJobScheduler elinksApiJobScheduler;
-
     @Autowired
     private DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
-
     @Autowired
     PublishSidamIdService publishSidamIdService;
-
     @MockBean
     ElinkTopicPublisher elinkTopicPublisher;
-
     @Autowired
     ElinkDataExceptionRepository elinkDataExceptionRepository;
-
 
 
     @BeforeAll
@@ -198,7 +186,7 @@ class ElinksFailedForNullAppointmentIds extends ElinksEnabledIntegrationTest {
                                 + "  \"uid\": \"%s\","
                                 + "  \"forename\": \"Super\","
                                 + "  \"surname\": \"User\","
-                                + "  \"email\": \super.user@hmcts.net\","
+                                + "  \"email\": \"super.user@hmcts.net\","
                                 + "  \"accountStatus\": \"active\","
                                 + "  \"roles\": ["
                                 + "  \"%s\""
@@ -228,8 +216,7 @@ class ElinksFailedForNullAppointmentIds extends ElinksEnabledIntegrationTest {
 
     @DisplayName("Elinks end to end success scenario")
     @Test
-    void test_elinks_end_to_end_success_scenario_with_return_status_200()
-            throws JOSEException, JsonProcessingException {
+    void test_elinks_end_to_end_success_scenario_with_return_status_200() {
 
         ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled", true);
         ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
@@ -314,12 +301,11 @@ class ElinksFailedForNullAppointmentIds extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(20, userprofile.size());
         assertEquals("4925319", userprofile.get(0).getPersonalCode());
-        assertEquals("Diana" , userprofile.get(0).getKnownAs());
+        assertEquals("Diana", userprofile.get(0).getKnownAs());
         assertEquals("Gordon", userprofile.get(0).getSurname());
         assertEquals("Her Honour Judge Diana Gordon", userprofile.get(0).getFullName());
-        assertEquals(null, userprofile.get(0).getPostNominals());
-        assertEquals("HHJ.Diana.Gordon@ejudiciary.net",
-        userprofile.get(0).getEjudiciaryEmailId());
+        assertNull(userprofile.get(0).getPostNominals());
+        assertEquals("HHJ.Diana.Gordon@ejudiciary.net", userprofile.get(0).getEjudiciaryEmailId());
         assertTrue(userprofile.get(0).getActiveFlag());
         assertNull(userprofile.get(0).getSidamId());
         assertEquals("DG",userprofile.get(0).getInitials());
@@ -347,7 +333,6 @@ class ElinksFailedForNullAppointmentIds extends ElinksEnabledIntegrationTest {
 
     private void validateLocationData(List<ElinkDataSchedularAudit> elinksAudit) {
         Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
-        ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) locationResponse.get("body");
         ElinkDataSchedularAudit locationAuditEntry = elinksAudit.get(0);
 
         assertThat(locationResponse).containsEntry("http_status", "200 OK");
@@ -396,12 +381,8 @@ class ElinksFailedForNullAppointmentIds extends ElinksEnabledIntegrationTest {
         assertEquals(2,idamResponseVal.size());
 
         List<UserProfile> userprofileAfterSidamresponse = profileRepository.findAll();
-        UserProfile sidamID = userprofileAfterSidamresponse.get(0);
 
         assertEquals(20, userprofileAfterSidamresponse.size());
-
-
-
         assertEquals(RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), audits.get(0).getPublishingStatus());
     }
 
