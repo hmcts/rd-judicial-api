@@ -630,7 +630,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private String appendFieldWithErrorDescription(String errorDescription, String wordToAppend, int pageValue) {
 
         String wordAfterWhichAppend = ":";
-        String wordPageNumber="PageNumber:";
+        String wordPageNumber = "PageNumber:";
         return wordPageNumber.concat(String.valueOf(pageValue)).concat("-").concat(errorDescription.substring(0,
                 errorDescription.indexOf(wordAfterWhichAppend)
                 + wordAfterWhichAppend.length())
