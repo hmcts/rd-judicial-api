@@ -39,7 +39,7 @@ class DataloadSchedulerJobAuditTest {
 
     @Test
     void testAuditSchedulerJobStatus_withSuccess() {
-        DataloadSchedulerJob dataloadSchedulerJob = new DataloadSchedulerJob (1,
+        DataloadSchedulerJob dataloadSchedulerJob = new DataloadSchedulerJob(1,
             convertToLocalDateTime("2023-04-12T16:42:35Z"),
             convertToLocalDateTime("2023-04-12T16:42:35Z"),"success");
         DataloadSchedulerJob dataloadSchedulerJobResponse = dataloadSchedulerJobAudit

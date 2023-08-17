@@ -415,7 +415,7 @@ class ElinksPeopleServiceImplTest {
                 .baseLocationId("baselocId").circuit("circuit").location("location")
                 .isPrincipleAppointment(true).startDate("1991-12-19").endDate("2022-12-20")
                 .roleName("appointment").contractType("type").type("Tribunals").build()))
-            .authorisationsRequests(List.of( AuthorisationsRequest.builder().jurisdiction("juristriction")
+            .authorisationsRequests(List.of(AuthorisationsRequest.builder().jurisdiction("juristriction")
                 .ticket("lowerlevel").startDate("1991-12-19")
                 .endDate("2022-12-20").ticketCode("ticketId").build())).build();
         PaginationRequest pagination = PaginationRequest.builder()
