@@ -230,7 +230,7 @@ class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
         //assserting scheduler data
         assertThat(jobDetails).isNotNull();
         assertThat(jobDetails.getPublishingStatus()).isNotNull();
-        assertEquals(RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(),jobDetails.getPublishingStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),jobDetails.getPublishingStatus());
 
         List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
         // asserting location data
@@ -383,7 +383,7 @@ class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofileAfterSidamresponse = profileRepository.findAll();
 
         assertEquals(20, userprofileAfterSidamresponse.size());
-        assertEquals(RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), audits.get(0).getPublishingStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), audits.get(0).getPublishingStatus());
     }
 
     private void validateDeleted(List<ElinkDataSchedularAudit> elinksAudit) {
