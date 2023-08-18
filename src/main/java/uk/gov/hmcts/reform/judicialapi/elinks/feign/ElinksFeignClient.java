@@ -28,7 +28,7 @@ public interface ElinksFeignClient {
     @RequestLine("GET /people")
     @Headers({"Authorization: {authorization}",
             "Content-Type: application/json"})
-    Response getPeopleDetials(@RequestParam("updated_since") String updatedSince,
+    Response getPeopleDetails(@RequestParam("updated_since") String updatedSince,
                               @RequestParam("per_page") String perPage, @RequestParam("page") String page,
                               @RequestParam("include_previous_appointments") boolean includePreviousAppointments);
 

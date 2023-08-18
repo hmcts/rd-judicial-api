@@ -206,7 +206,6 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), PEOPLEAPI);
         userProfilesSnapshot = profileRepository.findAll();
         int pageValue = Integer.parseInt(page);
-        int countOfProfile = 0;
         do {
             Response peopleApiResponse = getPeopleResponseFromElinks(pageValue++, schedulerStartTime);
             httpStatus = HttpStatus.valueOf(peopleApiResponse.status());
@@ -219,7 +218,6 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 if (Optional.ofNullable(elinkPeopleResponseRequest).isPresent()
                         && Optional.ofNullable(elinkPeopleResponseRequest.getPagination()).isPresent()
                         && Optional.ofNullable(elinkPeopleResponseRequest.getResultsRequests()).isPresent()) {
-                    countOfProfile = countOfProfile + elinkPeopleResponseRequest.getResultsRequests().size();
                     isMorePagesAvailable = elinkPeopleResponseRequest.getPagination().getMorePages();
                     processPeopleResponse(elinkPeopleResponseRequest, schedulerStartTime,pageValue);
                 } else {
@@ -237,7 +235,6 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             }
             pauseThread(Long.valueOf(threadPauseTime),schedulerStartTime);
         } while (isMorePagesAvailable);
-        log.info(":::: countOfProfile " + countOfProfile);
 
         List<ElinkDataExceptionRecords> list = elinkDataExceptionRepository
                 .findBySchedulerStartTime(schedulerStartTime);
@@ -269,7 +266,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private Response getPeopleResponseFromElinks(int currentPage, LocalDateTime schedulerStartTime) {
         String updatedSince = getUpdateSince();
         try {
-            return elinksFeignClient.getPeopleDetials(updatedSince, perPage, String.valueOf(currentPage),
+            return elinksFeignClient.getPeopleDetails(updatedSince, perPage, String.valueOf(currentPage),
                     Boolean.parseBoolean(includePreviousAppointments));
         } catch (FeignException ex) {
             auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
@@ -543,7 +540,9 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 partialSuccessFlag = true;
                 String errorDescription;
                 if (isNull(authorisationsRequest.getAppointmentId())) {
-                    errorDescription = APPOINTMENTID_IS_NULL;
+                    errorDescription = "PageNumber:"
+                        .concat(String.valueOf(pageValue)).concat(" - ")
+                        .concat(APPOINTMENTID_IS_NULL);
                 } else {
                     errorDescription = appendFieldWithErrorDescription(
                             APPOINTMENTIDNOTAVAILABLE, authorisationsRequest.getAppointmentId(), pageValue);
