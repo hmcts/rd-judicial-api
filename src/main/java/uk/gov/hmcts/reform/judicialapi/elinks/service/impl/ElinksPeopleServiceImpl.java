@@ -540,9 +540,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 partialSuccessFlag = true;
                 String errorDescription;
                 if (isNull(authorisationsRequest.getAppointmentId())) {
-                    errorDescription = "PageNumber:"
-                        .concat(String.valueOf(pageValue)).concat(" - ")
-                        .concat(APPOINTMENTID_IS_NULL);
+                    errorDescription = APPOINTMENTID_IS_NULL;
                 } else {
                     errorDescription = appendFieldWithErrorDescription(
                             APPOINTMENTIDNOTAVAILABLE, authorisationsRequest.getAppointmentId(), pageValue);
