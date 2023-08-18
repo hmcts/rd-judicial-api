@@ -94,20 +94,23 @@ public class RefDataElinksConstants {
     public static final String LOCATIONIDFAILURE = "Appointment's Base Location ID : "
             + "is not available in location_type table";
 
-    public static final String APPOINTMENTIDNOTAVAILABLE = "Appointment  ID : "
+    public static final String APP_ID = "Appointment  ID : ";
+    public static final String APPOINTMENTIDNOTAVAILABLE = APP_ID
         + "is not available in Appointment Table";
 
-    public static final String APPOINTMENTID_IS_NULL = "Appointment ID: "
+    public static final String APPOINTMENTID_IS_NULL = APP_ID
             + "is Null for the given Authorisation";
 
     public static final String USERPROFILEEMAILID = "Personal Code : "
         + " is not having any email id";
 
-    public static final String APPOINTMENTIDFAILURE = "Appointment  ID : "
-        + "is failed to load";
+    public static final String FAIL_LOAD = "is failed to load";
 
-    public static final String AUTHORISATIONIDFAILURE = "Appointment  ID : "
-        + "is failed to load";
+    public static final String APPOINTMENTIDFAILURE = APP_ID
+        + FAIL_LOAD;
+
+    public static final String AUTHORISATIONIDFAILURE = APP_ID
+        + FAIL_LOAD;
 
     public static final String USERPROFILEISPRESENT = "Personal  Code : "
         + "is already loaded";
@@ -122,7 +125,7 @@ public class RefDataElinksConstants {
         + " is invalid";
 
     public static final String USERPROFILEFAILURE = "UserProfile  : "
-        + "is failed to load";
+        + FAIL_LOAD;
 
     public static final String APPOINTMENTTYPENOTMATCHING = "Appointment type  : "
         + "not matching";
