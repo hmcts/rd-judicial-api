@@ -257,7 +257,7 @@ class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
         assertThat(elinksException).isNotEmpty();
-        assertEquals("Appointment ID: is Null for the given Authorisation",elinksException.stream()
+        assertEquals("Appointment  ID: is Null for the given Authorisation",elinksException.stream()
                 .filter(e -> e.getTableName().equalsIgnoreCase("judicial_office_authorisation"))
                 .findFirst().get().getErrorDescription());
 
