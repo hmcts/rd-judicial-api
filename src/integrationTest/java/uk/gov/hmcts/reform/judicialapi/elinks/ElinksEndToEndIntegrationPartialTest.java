@@ -387,6 +387,8 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
         assertEquals(null, userprofile.get(0).getPostNominals());
         assertEquals("DJ.Rachel.Jones@ejudiciary.net",
                 userprofile.get(0).getEjudiciaryEmailId());
+        assertEquals("2026-07-23",
+            userprofile.get(0).getRetirementDate().toString());
         assertTrue(userprofile.get(0).getActiveFlag());
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(0).getObjectId());
         assertNull(userprofile.get(0).getSidamId());

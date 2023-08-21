@@ -283,7 +283,7 @@ class ElinksPeopleServiceImplTest {
         ObjectMapper mapper = new ObjectMapper();
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
         String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
                 .thenReturn(Response.builder().request(mock(Request.class))
@@ -341,7 +341,7 @@ class ElinksPeopleServiceImplTest {
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
         String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(429).build())
             .thenReturn(Response.builder().request(mock(Request.class))
@@ -382,7 +382,7 @@ class ElinksPeopleServiceImplTest {
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
         String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                  Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
                 .thenReturn(Response.builder().request(mock(Request.class))
@@ -392,7 +392,7 @@ class ElinksPeopleServiceImplTest {
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
-        verify(elinksFeignClient, times(2)).getPeopleDetials(any(), any(), any(),
+        verify(elinksFeignClient, times(2)).getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()));
         verify(profileRepository, times(2)).save(any());
         verify(baseLocationRepository, times(4)).fetchParentId(any());
@@ -439,7 +439,7 @@ class ElinksPeopleServiceImplTest {
         ObjectMapper mapper = new ObjectMapper();
         String body = mapper.writeValueAsString(peopleRequest);
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -447,7 +447,7 @@ class ElinksPeopleServiceImplTest {
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
-        verify(elinksFeignClient, times(1)).getPeopleDetials(any(), any(), any(),
+        verify(elinksFeignClient, times(1)).getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()));
         verify(profileRepository, times(1)).save(any());
         verify(baseLocationRepository, times(2)).fetchParentId(any());
@@ -473,7 +473,7 @@ class ElinksPeopleServiceImplTest {
         ObjectMapper mapper = new ObjectMapper();
         String body = mapper.writeValueAsString(elinksApiResponseThirdHit);
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -481,7 +481,7 @@ class ElinksPeopleServiceImplTest {
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
-        verify(elinksFeignClient, times(1)).getPeopleDetials(any(), any(), any(),
+        verify(elinksFeignClient, times(1)).getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()));
         verify(profileRepository, times(1)).save(any());
 
@@ -508,7 +508,7 @@ class ElinksPeopleServiceImplTest {
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
         String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
                 .thenReturn(Response.builder().request(mock(Request.class))
@@ -519,7 +519,7 @@ class ElinksPeopleServiceImplTest {
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
 
-        verify(elinksFeignClient, times(2)).getPeopleDetials(any(), any(), any(),
+        verify(elinksFeignClient, times(2)).getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()));
         verify(profileRepository, times(2)).save(any());
 
@@ -546,7 +546,7 @@ class ElinksPeopleServiceImplTest {
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
         String body2 = mapper.writeValueAsString(elinksApiResponseFourthHit);
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
             .thenReturn(Response.builder().request(mock(Request.class))
@@ -557,7 +557,7 @@ class ElinksPeopleServiceImplTest {
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
 
-        verify(elinksFeignClient, times(2)).getPeopleDetials(any(), any(), any(),
+        verify(elinksFeignClient, times(2)).getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()));
         verify(profileRepository, times(2)).save(any());
 
@@ -589,7 +589,7 @@ class ElinksPeopleServiceImplTest {
         when(locationMapppingRepository.fetchEpimmsIdfromLocationId(any())).thenReturn("234");
         String body = mapper.writeValueAsString(elinksApiResponseSecondHit);
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -598,7 +598,7 @@ class ElinksPeopleServiceImplTest {
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
 
-        verify(elinksFeignClient, times(1)).getPeopleDetials(any(), any(), any(),
+        verify(elinksFeignClient, times(1)).getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()));
         verify(profileRepository, times(1)).save(any());
 
@@ -626,7 +626,7 @@ class ElinksPeopleServiceImplTest {
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
         String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
             .thenReturn(Response.builder().request(mock(Request.class))
@@ -638,7 +638,7 @@ class ElinksPeopleServiceImplTest {
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
 
-        verify(elinksFeignClient, times(2)).getPeopleDetials(any(), any(), any(),
+        verify(elinksFeignClient, times(2)).getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()));
         verify(profileRepository, times(2)).save(any());
 
@@ -669,7 +669,7 @@ class ElinksPeopleServiceImplTest {
         elinksApiResponseFirstHit.getResultsRequests().get(0).setAppointmentsRequests(List.of(appointmentsRequestNew));
         String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -679,7 +679,7 @@ class ElinksPeopleServiceImplTest {
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
 
 
-        verify(elinksFeignClient, times(1)).getPeopleDetials(any(), any(), any(),
+        verify(elinksFeignClient, times(1)).getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()));
         verify(profileRepository, times(2)).save(any());
 
@@ -708,7 +708,7 @@ class ElinksPeopleServiceImplTest {
 
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(null);
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenThrow(feignExceptionMock);
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
@@ -725,7 +725,7 @@ class ElinksPeopleServiceImplTest {
 
         String body = "{\"test\":\"test\"}";
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(null);
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -747,7 +747,7 @@ class ElinksPeopleServiceImplTest {
 
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -769,7 +769,7 @@ class ElinksPeopleServiceImplTest {
 
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -796,7 +796,7 @@ class ElinksPeopleServiceImplTest {
 
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -829,7 +829,7 @@ class ElinksPeopleServiceImplTest {
 
         DataAccessException dataAccessException = mock(DataAccessException.class);
         when(appointmentsRepository.save(any())).thenThrow(dataAccessException);
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -858,7 +858,7 @@ class ElinksPeopleServiceImplTest {
 
         DataAccessException dataAccessException = mock(DataAccessException.class);
         when(judicialRoleTypeRepository.save(any())).thenThrow(dataAccessException);
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -887,7 +887,7 @@ class ElinksPeopleServiceImplTest {
         when(authorisationsRepository.save(any())).thenThrow(dataAccessException);
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -913,7 +913,7 @@ class ElinksPeopleServiceImplTest {
         when(locationMapppingRepository.fetchEpimmsIdfromLocationId(any())).thenReturn("234");
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
@@ -926,7 +926,7 @@ class ElinksPeopleServiceImplTest {
 
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.BAD_REQUEST.value())
                 .build());
@@ -945,7 +945,7 @@ class ElinksPeopleServiceImplTest {
 
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.UNAUTHORIZED.value())
                 .build());
@@ -964,7 +964,7 @@ class ElinksPeopleServiceImplTest {
 
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.FORBIDDEN.value()).build());
 
@@ -982,7 +982,7 @@ class ElinksPeopleServiceImplTest {
 
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
-        when(elinksFeignClient.getPeopleDetials(any(), any(), any(),
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.NOT_FOUND.value())
                 .build());

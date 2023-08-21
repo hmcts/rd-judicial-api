@@ -36,7 +36,7 @@ public class ResultsRequest {
     private String objectId;
     @JsonProperty("title")
     private String title;
-    @JsonProperty("retirementDate")
+    @JsonProperty("retirement_date")
     private String retirementDate;
     //TBC
     @JsonProperty("initials")
