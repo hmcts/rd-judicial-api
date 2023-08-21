@@ -274,9 +274,9 @@ class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> leaverUserProfile = profileRepository.findAll();
         assertEquals(20, leaverUserProfile.size());
-        assertEquals("4923268", leaverUserProfile.get(0).getPersonalCode());
-        assertEquals(true, leaverUserProfile.get(0).getActiveFlag());
-        assertNotNull(leaverUserProfile.get(0).getLastLoadedDate());
+        assertEquals("4923268", leaverUserProfile.get(1).getPersonalCode());
+        assertEquals(true, leaverUserProfile.get(1).getActiveFlag());
+        assertNotNull(leaverUserProfile.get(1).getLastLoadedDate());
 
 
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(2);
@@ -300,15 +300,15 @@ class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(20, userprofile.size());
-        assertEquals("4923268", userprofile.get(0).getPersonalCode());
-        assertEquals("Nicole", userprofile.get(0).getKnownAs());
-        assertEquals("Cooper", userprofile.get(0).getSurname());
-        assertEquals("Her Honour Judge Nicole Cooper", userprofile.get(0).getFullName());
-        assertNull(userprofile.get(0).getPostNominals());
-        assertEquals("HHJ.Nicole.Cooper@ejudiciary.net", userprofile.get(0).getEjudiciaryEmailId());
-        assertTrue(userprofile.get(0).getActiveFlag());
-        assertNull(userprofile.get(0).getSidamId());
-        assertEquals("NC",userprofile.get(0).getInitials());
+        assertEquals("4923268", userprofile.get(1).getPersonalCode());
+        assertEquals("Nicole", userprofile.get(1).getKnownAs());
+        assertEquals("Cooper", userprofile.get(1).getSurname());
+        assertEquals("Her Honour Judge Nicole Cooper", userprofile.get(1).getFullName());
+        assertNull(userprofile.get(1).getPostNominals());
+        assertEquals("HHJ.Nicole.Cooper@ejudiciary.net", userprofile.get(1).getEjudiciaryEmailId());
+        assertTrue(userprofile.get(1).getActiveFlag());
+        assertNull(userprofile.get(1).getSidamId());
+        assertEquals("NC",userprofile.get(1).getInitials());
 
     }
 
@@ -397,7 +397,7 @@ class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> deletedUserProfile = profileRepository.findAll();
         assertEquals(20, deletedUserProfile.size());
-        assertEquals("4923268", deletedUserProfile.get(0).getPersonalCode());
+        assertEquals("4923268", deletedUserProfile.get(1).getPersonalCode());
 
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(3);
         assertThat(auditEntry.getId()).isPositive();

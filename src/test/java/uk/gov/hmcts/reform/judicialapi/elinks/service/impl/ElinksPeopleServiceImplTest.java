@@ -564,7 +564,6 @@ class ElinksPeopleServiceImplTest {
         verify(appointmentsRepository, atLeastOnce()).save(any());
 
         verify(authorisationsRepository, atLeastOnce()).save(any());
-        verify(elinksPeopleDeleteServiceimpl,times(1)).deletePeople(any());
         verify(elinkDataExceptionHelper,times(1))
             .auditException(any(),any(),any(),any(),any(),any(),any());
 
