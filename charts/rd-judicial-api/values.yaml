@@ -23,7 +23,13 @@ java:
     REFRESH_PAGE_SIZE: 200
     REFRESH_SORT_COLUMN: objectId
     ELINKS_URL: https://judiciary-middleware-futureehr.herokuapp.com/api/v5
-    CRON_EXPRESSION: "* 30 12 * * *"
+    LAST_UPDATED: 2014-01-01
+    SCHEDULER_ENABLED: false
+    CRON_EXPRESSION: "0 0 0 25 03 ?"
+    PER_PAGE: 50
+    INCLUDE_PREVIOUS_APPOINTMENT: false
+    THREAD_PAUSE_TIME: 2000
+    THREAD_RETRIGGER_TIME: 1000
   image: 'hmctspublic.azurecr.io/rd/judicial-api:latest'
   keyVaults:
     rd:

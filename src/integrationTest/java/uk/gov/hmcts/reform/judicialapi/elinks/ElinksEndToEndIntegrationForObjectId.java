@@ -252,18 +252,18 @@ class ElinksEndToEndIntegrationForObjectId extends ElinksEnabledIntegrationTest 
         assertEquals("1722",baseLocationList.get(0).getParentId());
 
         List<UserProfile> userprofile = profileRepository.findAll();
-        assertEquals(18, userprofile.size());
-        assertEquals("4923268", userprofile.get(0).getPersonalCode());
-        assertEquals("Nicole", userprofile.get(0).getKnownAs());
-        assertEquals("Cooper", userprofile.get(0).getSurname());
-        assertEquals("Her Honour Judge Nicole Cooper", userprofile.get(0).getFullName());
-        assertEquals(null, userprofile.get(0).getPostNominals());
+        assertEquals(19, userprofile.size());
+        assertEquals("4923268", userprofile.get(1).getPersonalCode());
+        assertEquals("Nicole", userprofile.get(1).getKnownAs());
+        assertEquals("Cooper", userprofile.get(1).getSurname());
+        assertEquals("Her Honour Judge Nicole Cooper", userprofile.get(1).getFullName());
+        assertEquals(null, userprofile.get(1).getPostNominals());
         assertEquals("HHJ.Nicole.Cooper@ejudiciary.net",
-            userprofile.get(0).getEjudiciaryEmailId());
-        assertTrue(userprofile.get(0).getActiveFlag());
-        assertEquals("0761225c-244c-4bca-b035-81c0d430092d", userprofile.get(0).getObjectId());
-        assertNull(userprofile.get(0).getSidamId());
-        assertEquals("NC",userprofile.get(0).getInitials());
+            userprofile.get(1).getEjudiciaryEmailId());
+        assertTrue(userprofile.get(1).getActiveFlag());
+        assertEquals("0761225c-244c-4bca-b035-81c0d430092d", userprofile.get(1).getObjectId());
+        assertNull(userprofile.get(1).getSidamId());
+        assertEquals("NC",userprofile.get(1).getInitials());
 
 
 
