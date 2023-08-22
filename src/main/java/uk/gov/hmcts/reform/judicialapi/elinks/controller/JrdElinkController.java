@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.UserSearchRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
@@ -99,7 +100,7 @@ public class JrdElinkController {
     @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "200",
             description = "Retrieve the user profiles for the given request. ",
-            content = @Content(schema = @Schema(implementation = UserSearchResponseWrapper.class))
+            content = @Content(schema = @Schema(implementation = UserProfileRefreshResponse.class))
     )
     @io.swagger.v3.oas.annotations.responses.ApiResponse(
             responseCode = "400",
