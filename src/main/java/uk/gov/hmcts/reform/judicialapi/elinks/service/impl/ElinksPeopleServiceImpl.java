@@ -265,10 +265,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         if (map.containsKey(BASE_LOCATION_ID)) {
             sendEmail(new HashSet<>(map.get(BASE_LOCATION_ID)), "baselocation",
                     LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-        }  if (map.containsKey(LOCATION)) {
+        }
+        if (map.containsKey(LOCATION)) {
             sendEmail(new HashSet<>(map.get(LOCATION)), "location",
                     LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-        }  if (map.containsKey(APPOINTMENTID)) {
+        }
+        if (map.containsKey(APPOINTMENTID)) {
             sendEmail(new HashSet<>(map.get(APPOINTMENTID)), "appointment",
                     LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
         }
