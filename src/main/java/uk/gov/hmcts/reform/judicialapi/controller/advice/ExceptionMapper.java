@@ -13,10 +13,12 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
 
 import static java.util.Objects.nonNull;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -31,7 +33,8 @@ import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.UNKNOWN_E
 
 
 @Slf4j
-@ControllerAdvice(basePackages = "uk.gov.hmcts.reform.judicialapi.controller")
+@ControllerAdvice(basePackages = {"uk.gov.hmcts.reform.judicialapi.controller",
+        "uk.gov.hmcts.reform.judicialapi.elinks"})
 @RequestMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 public class ExceptionMapper {
 
@@ -108,6 +111,13 @@ public class ExceptionMapper {
                 ex.getErrorMessage(), ex.getErrorDescription(), getTimeStamp());
 
         return new ResponseEntity<>(errorDetails, ex.getStatus());
+    }
+
+    @ExceptionHandler(ElinksException.class)
+    public ResponseEntity<Object> handleElinksException(
+            HttpServletRequest request,
+            ElinksException e) {
+        return errorDetailsResponseEntity(e, e.getStatus(), e.getErrorMessage());
     }
 
     private String getTimeStamp() {

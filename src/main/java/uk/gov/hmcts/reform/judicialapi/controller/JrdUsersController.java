@@ -26,10 +26,10 @@ import uk.gov.hmcts.reform.judicialapi.controller.response.OrmResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.response.UserSearchResponse;
 import uk.gov.hmcts.reform.judicialapi.service.JudicialUserService;
+import uk.gov.hmcts.reform.judicialapi.versions.V1;
 
 import javax.validation.Valid;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.FORBIDDEN_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.INTERNAL_SERVER_ERROR;
@@ -91,8 +91,8 @@ public class JrdUsersController {
 
     @PostMapping(
         path = "/fetch",
-        consumes = APPLICATION_JSON_VALUE,
-        produces = APPLICATION_JSON_VALUE
+        consumes = V1.MediaType.SERVICE,
+        produces = V1.MediaType.SERVICE
     )
     @Secured({"jrd-system-user", "jrd-admin"})
     public ResponseEntity<Object> fetchUsers(@RequestParam(value = "page_size", required = false) Integer size,
@@ -145,8 +145,8 @@ public class JrdUsersController {
 
     @PostMapping(
             path = "/search",
-            consumes = APPLICATION_JSON_VALUE,
-            produces = APPLICATION_JSON_VALUE
+            consumes = V1.MediaType.SERVICE,
+            produces = V1.MediaType.SERVICE
     )
     public ResponseEntity<Object> searchUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {
 
@@ -195,8 +195,7 @@ public class JrdUsersController {
             )
 
     @PostMapping(
-            path = "",
-            produces = APPLICATION_JSON_VALUE
+            produces = V1.MediaType.SERVICE
     )
     @Secured({"jrd-system-user", "jrd-admin"})
     public ResponseEntity<Object> refreshUserProfile(
@@ -213,6 +212,5 @@ public class JrdUsersController {
         return judicialUserService.refreshUserProfile(refreshRoleRequest, pageSize, pageNumber,
                 sortDirection, sortColumn);
     }
-
 
 }

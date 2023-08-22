@@ -31,6 +31,7 @@ def versions = [
         reformLogging      : '6.0.1',
         serenity           : '2.0.76',
         springBoot         : '2.7.14',
+        springfoxSwagger   : '2.9.2',
         restAssured        : '4.3.3',
         jackson            : '2.14.0-rc1',
         launchDarklySdk    : '5.10.9',
@@ -237,10 +238,13 @@ pitest {
     testSourceSets = [sourceSets.test]
     excludedClasses = [
             'uk.gov.hmcts.reform.judicialapi.configuration.*',
+            'uk.gov.hmcts.reform.judicialapi.elinks.configuration.*',
             'uk.gov.hmcts.reform.judicialapi.controller.*',
+            'uk.gov.hmcts.reform.judicialapi.elinks.scheduler.*',
             'uk.gov.hmcts.reform.judicialapi.JudicialApplication',
             'uk.gov.hmcts.reform.judicialapi.repository.IdamUserProfileRepository',
-            'uk.gov.hmcts.reform.judicialapi.service.impl.IdamUserProfileServiceImpl'
+            'uk.gov.hmcts.reform.judicialapi.service.impl.IdamUserProfileServiceImpl',
+            'uk.gov.hmcts.reform.judicialapi.elinks.servicebus.TopicPublisher'
 
     ]
     threads = 10
@@ -271,7 +275,21 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/feign/IdamUserFeignClient.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/IdamUserProfileServiceImpl.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java"
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/domain/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/response/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/ElinksFeignInterceptorConfiguration.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/controller/advice/ForbiddenException.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/ELinksServiceImpl.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/ElinksPeopleServiceImpl.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/IdamElasticSearchServiceImpl.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/SchedulerConfig.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/SendGridConfig.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/util/DataloadSchedulerJobAudit.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/exception/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/scheduler/ElinksApiJobScheduler.java,"
+
     }
 }
 
@@ -288,6 +306,7 @@ repositories {
 
 dependencies {
 
+    implementation 'org.testng:testng:7.1.0'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
@@ -297,7 +316,7 @@ dependencies {
     integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-api', version: '3.141.59'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-json', version: versions.springBoot
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: versions.springBoot
@@ -307,6 +326,14 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
+
+
+
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
+
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
+
     implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
@@ -327,6 +354,15 @@ dependencies {
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.5'
+    implementation 'com.sendgrid:sendgrid-java:4.7.2'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.13.0'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.1.0'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
+
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: versions.springfoxSwagger
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: versions.springfoxSwagger
+
 
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.0.3'
 
@@ -361,16 +397,19 @@ dependencies {
     //Fix for CVE-2021-29425
     implementation 'commons-io:commons-io:2.8.0'
 
+    //Added below dependencies for shedlock
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '5.2.0'
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '5.2.0'
 
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
     implementation "io.github.openfeign:feign-httpclient:11.0"
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
+    implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
+    implementation "com.github.hmcts.java-logging:logging-appinsights:${versions.reformLogging}"
 
     implementation group: 'com.nimbusds', name: 'lang-tag', version: '1.7'
     implementation group: 'org.json', name: 'json', version: '20230227'
-
-
 
 
     testImplementation ('com.github.hmcts:rd-commons-lib:v0.0.13'){
@@ -420,6 +459,24 @@ dependencies {
 
     testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
 
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
@@ -468,6 +525,10 @@ dependencyManagement {
         //CVE-2023-24998
         dependencySet(group: 'commons-fileupload', version: '1.5') {
             entry 'commons-fileupload'
+        }
+        //CVE-2022-40152
+        dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
+            entry 'woodstox-core'
         }
     }
 }
