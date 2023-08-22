@@ -33,8 +33,8 @@
                         </tr>
                         <#list objectIds as objectId>
                             <tr style="border: 1px solid black;">
-                                <td style="text-align: left">${objectId.personalCode}</td>
-                                <td style="text-align: center">${objectId.objectId}</td>
+                                <td style="text-align: left">${result.rowId}</td>
+                                <td style="text-align: center">${result.key}</td>
                                 <td style="text-align: left">${result.fieldInError}</td>
                                 <td style="text-align: left">${result.errorDescription}</td>
                             </tr>
@@ -53,8 +53,8 @@
                                         </tr>
                                         <#list personalCodes as personalCode>
                                             <tr style="border: 1px solid black;">
-                                                <td style="text-align: left">${personalCode.personalCode}</td>
-                                                <td style="text-align: center">${personalCode.objectId}</td>
+                                                <td style="text-align: left">${result.rowId}</td>
+                                                <td style="text-align: center">${result.key}</td>
                                                 <td style="text-align: left">${result.fieldInError}</td>
                                                 <td style="text-align: left">${result.errorDescription}</td>
                                             </tr>
