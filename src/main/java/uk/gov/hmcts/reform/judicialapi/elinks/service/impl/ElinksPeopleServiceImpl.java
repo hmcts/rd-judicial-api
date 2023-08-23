@@ -258,9 +258,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
         Map<String, List<ElinkDataExceptionRecords>> map = list
                 .stream()
-                .collect(
-                        Collectors.groupingBy(ElinkDataExceptionRecords::getFieldInError)
-                );
+                .collect(Collectors.groupingBy(ElinkDataExceptionRecords::getFieldInError));
 
         if (map.containsKey(BASE_LOCATION_ID)) {
             sendEmail(new HashSet<>(map.get(BASE_LOCATION_ID)), "baselocation",
