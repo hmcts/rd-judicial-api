@@ -438,7 +438,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         return false;
     }
 
-    private boolean validateUserProfile(ResultsRequest resultsRequest, LocalDateTime schedulerStartTime, int pageValue) {
+    private boolean validateUserProfile(ResultsRequest resultsRequest,
+                                        LocalDateTime schedulerStartTime, int pageValue) {
 
         if (StringUtils.isEmpty(resultsRequest.getEmail())) {
             log.warn("Mapped Base location not found in base table " + resultsRequest.getPersonalCode());
