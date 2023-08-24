@@ -31,7 +31,7 @@
                             <td style="text-align: center">Field In Error</td>
                             <td style="text-align: center">Error Description</td>
                         </tr>
-                        <#list objectIds as objectId>
+                        <#list resultsRequest as result>
                             <tr style="border: 1px solid black;">
                                 <td style="text-align: left">${result.rowId}</td>
                                 <td style="text-align: left">${result.key}</td>
@@ -40,28 +40,7 @@
                             </tr>
                          </#list>
                     </table>
-                 </div>
-                 <hr>
-                 <p>Profiles with one Personal Code having multiple Object IDs </p>
-                                <div>
-                                    <table style="border-collapse: expression('separate', cellSpacing='15px'); border-spacing: 15px">
-                                        <tr bgcolor="#eaeaea">
-                                            <td style="text-align: center">Per Code</td>
-                                            <td style="text-align: center">Object Id</td>
-                                            <td style="text-align: center">Field In Error</td>
-                                            <td style="text-align: center">Error Description</td>
-                                        </tr>
-                                        <#list personalCodes as personalCode>
-                                            <tr style="border: 1px solid black;">
-                                                <td style="text-align: left">${result.rowId}</td>
-                                                <td style="text-align: left">${result.key}</td>
-                                                <td style="text-align: left">${result.fieldInError}</td>
-                                                <td style="text-align: left">${result.errorDescription}</td>
-                                            </tr>
-                                         </#list>
-                                    </table>
-
-                                </div>
+                </div>
             </td>
         </tr>
     </table>

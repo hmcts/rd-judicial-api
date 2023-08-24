@@ -273,7 +273,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
         }
         if (map.containsKey(USER_PROFILE)) {
-            sendEmail(new HashSet<>(map.get(USER_PROFILE)), "appointment",
+            sendEmail(new HashSet<>(map.get(USER_PROFILE)), "userprofile",
                 LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
         }
     }
@@ -358,7 +358,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private void savePeopleDetails(
         ResultsRequest resultsRequest, LocalDateTime schedulerStartTime, int pageValue) {
 
-        if (saveUserProfile(resultsRequest,pageValue)) {
+        if (saveUserProfile(resultsRequest,schedulerStartTime,pageValue)) {
             try {
                 elinksPeopleDeleteServiceimpl.deleteAuth(resultsRequest);
                 saveAppointmentDetails(resultsRequest.getPersonalCode(), resultsRequest
@@ -403,9 +403,9 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     }
 
 
-    private boolean saveUserProfile(ResultsRequest resultsRequest, int pageValue) {
+    private boolean saveUserProfile(ResultsRequest resultsRequest,LocalDateTime schedulerStartTime, int pageValue) {
 
-        if (validateUserProfile(resultsRequest,pageValue)) {
+        if (validateUserProfile(resultsRequest, schedulerStartTime,pageValue)) {
             try {
                 UserProfile userProfile = UserProfile.builder()
                     .personalCode(resultsRequest.getPersonalCode())
@@ -442,7 +442,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         return false;
     }
 
-    private boolean validateUserProfile(ResultsRequest resultsRequest, int pageValue) {
+    private boolean validateUserProfile(ResultsRequest resultsRequest,LocalDateTime schedulerStartTime, int pageValue) {
 
         if (StringUtils.isEmpty(resultsRequest.getEmail())) {
             log.warn("Mapped Base location not found in base table " + resultsRequest.getPersonalCode());
@@ -461,7 +461,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 USERPROFILEISPRESENT, resultsRequest.getPersonalCode(), pageValue);
             String personalCode = resultsRequest.getPersonalCode();
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
-                now(),
+                schedulerStartTime,
                 resultsRequest.getPersonalCode(),
                 USER_PROFILE,errorDescription, USER_PROFILE,personalCode);
             return false;
@@ -471,7 +471,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             partialSuccessFlag = true;
             String personalCode = resultsRequest.getPersonalCode();
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
-                now(),
+                schedulerStartTime,
                 resultsRequest.getObjectId(),
                 USER_PROFILE,OBJECTIDISDUPLICATED, USER_PROFILE,personalCode);
             return false;
@@ -481,7 +481,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             partialSuccessFlag = true;
             String personalCode = resultsRequest.getPersonalCode();
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
-                now(),
+                schedulerStartTime,
                 resultsRequest.getPersonalCode(),
                 USER_PROFILE,OBJECTIDISPRESENT, USER_PROFILE,personalCode);
             return false;
