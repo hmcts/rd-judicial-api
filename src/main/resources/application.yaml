@@ -231,7 +231,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
-      subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
+      subject: "Official Sensitive: JRD - New Location in Appointment file - %s"
       template: simple-template-locationId.ftl
 
 sendgrid:
