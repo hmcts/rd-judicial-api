@@ -272,6 +272,10 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             sendEmail(new HashSet<>(map.get(APPOINTMENTID)), "appointment",
                     LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
         }
+        if (map.containsKey(USER_PROFILE)) {
+            sendEmail(new HashSet<>(map.get(USER_PROFILE)), "appointment",
+                LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
+        }
     }
 
     public int sendEmail(Set<ElinkDataExceptionRecords> data, String type, Object... params) {
