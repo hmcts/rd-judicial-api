@@ -226,13 +226,13 @@ email:
         - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - New Location in Appointment file - %s"
       template: simple-template-baseLocationId.ftl
-    lowerLevelAuth:
+    location:
       enabled: true
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
-      template: lower-level-auth.ftl
+      template: simple-template-locationId.ftl
 
 sendgrid:
   key: ${RD_SENDGRID_API_KEY}
