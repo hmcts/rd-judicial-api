@@ -21,13 +21,12 @@
     <table align="center" border="0" cellpadding="0" cellspacing="0" width="1000" style="border-collapse: collapse;">
         <tr>
             <td style="padding: 40px 30px 40px 30px;">
-                <p>Following JO profiles were deleted : </p>
-                <p>Profiles with one Object ID having multiple Personal Codes </p>
+                <p>Following JO profiles with Duplicate PersonalCodes/ObjectIDs : </p>
                 <div>
                     <table style="border-collapse: expression('separate', cellSpacing='15px'); border-spacing: 15px">
                         <tr bgcolor="#eaeaea">
                             <td style="text-align: center">Per Code</td>
-                            <td style="text-align: center">Object Id</td>
+                            <td style="text-align: center">PerCode/ObjectId</td>
                             <td style="text-align: center">Field In Error</td>
                             <td style="text-align: center">Error Description</td>
                         </tr>
