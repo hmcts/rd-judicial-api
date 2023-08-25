@@ -212,13 +212,13 @@ email:
         - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
       template: simple-template-userProfile.ftl
-    region:
+    appointment:
       enabled: true
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
-      subject: "Official Sensitive: JRD - New Region ID in Appointment file - %s"
-      template: simple-template-regionId.ftl
+      subject: "Official Sensitive: JRD - New AppointmentID in Authorisation file - %s"
+      template: simple-template-appointmentId.ftl
     baselocation:
       enabled: true
       from: ${MAIL_FROM}
@@ -226,13 +226,13 @@ email:
         - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - New Location in Appointment file - %s"
       template: simple-template-baseLocationId.ftl
-    lowerLevelAuth:
+    location:
       enabled: true
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
-      subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
-      template: lower-level-auth.ftl
+      subject: "Official Sensitive: JRD - New Location in Appointment file - %s"
+      template: simple-template-locationId.ftl
 
 sendgrid:
   key: ${RD_SENDGRID_API_KEY}
