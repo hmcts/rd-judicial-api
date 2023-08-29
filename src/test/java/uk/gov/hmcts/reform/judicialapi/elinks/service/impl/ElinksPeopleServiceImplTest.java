@@ -1079,7 +1079,7 @@ class ElinksPeopleServiceImplTest {
 
         when(emailTemplate.getMailTypeConfig(any(), any())).thenReturn(mailConfig);
         when(emailConfiguration.getMailTypes()).thenReturn(Map.of("userprofile", config,
-            RefDataElinksConstants.BASE_LOCATION, config,"TEST1",config));
+            RefDataElinksConstants.USER_PROFILE, config,"TEST1",config));
         when(config.isEnabled()).thenReturn(true);
         when(config.getBody()).thenReturn("email sample body");
         when(config.getSubject()).thenReturn("email sample subject");
