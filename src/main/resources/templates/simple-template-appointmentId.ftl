@@ -21,7 +21,7 @@
     <table align="center" border="0" cellpadding="0" cellspacing="0" width="1000" style="border-collapse: collapse;">
         <tr>
             <td style="padding: 40px 30px 40px 30px;">
-                <p>Following JO profiles where with Null appointment Id's in Authorisations:</p>
+                <p>Following JO profiles where with Null/New appointment Id's in Authorisations:</p>
                 </br>
                 <div>
                     <table style="border-collapse: expression('separate', cellSpacing='15px'); border-spacing: 15px">
