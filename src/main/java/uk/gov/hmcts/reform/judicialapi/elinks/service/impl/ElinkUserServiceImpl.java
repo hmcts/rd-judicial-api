@@ -312,7 +312,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
         Sort.Order order = page.getSort().get().findFirst().orElse(null);
 
         if (order != null) {
-            Comparator comparator = Comparator.comparing(report -> {
+            Comparator<UserProfileRefreshResponse> comparator = Comparator.comparing(report -> {
                 try {
                     return (Comparable) new PropertyDescriptor(order.getProperty(), report.getClass())
                             .getReadMethod().invoke(report);
