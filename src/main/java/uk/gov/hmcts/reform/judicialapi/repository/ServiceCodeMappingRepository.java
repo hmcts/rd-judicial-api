@@ -2,11 +2,13 @@ package uk.gov.hmcts.reform.judicialapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.reform.judicialapi.domain.ServiceCodeMapping;
 
 import java.util.List;
 import java.util.Set;
 
+@Repository
 public interface ServiceCodeMappingRepository extends JpaRepository<ServiceCodeMapping, String> {
 
     List<ServiceCodeMapping> findByServiceCodeIgnoreCase(String serviceCode);

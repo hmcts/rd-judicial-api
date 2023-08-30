@@ -3,15 +3,34 @@ targetInstance: ${TEST_URL:http://localhost:8093}
 s2s-url: ${S2S_URL_FOR_TESTS:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
 s2s-name: rd_judicial_api
 scope-name: openid profile roles openid roles profile create-user manage-user
-idam.api.url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
 oauth2.client.secret: ${OAUTH2_CLIENT_SECRET:}
+idam.api.url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
 idam.auth.clientId: ${OAUTH2_CLIENT_ID:rd-judicial-api}
 idam.auth.redirectUrl: ${OAUTH2_REDIRECT_URI:https://rd-judicial-api-aat.service.core-compute-aat.internal/oauth2redirect}
 s2s-secret: ${JUDICIAL_API_S2S_SECRET:}
-
 jrd.security.roles.hmcts-admin: jrd-admin
 jrd.security.roles.system-user: jrd-system-user
 
+elinks:
+  people:
+    lastUpdated: 2015-01-01
+    perPage: 50
+    page: 1
+    includePreviousAppointments : false
+    threadPauseTime: 2000
+
+elastic:
+  search:
+    query: (roles:judiciary) AND lastModified:>now-12h
+    recordsPerPage: 500
+
+idam:
+  api:
+    url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
+    client-id: ${OAUTH2_CLIENT_ID:rd-judicial-api}
+    redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
+    authorization: ${OAUTH2_AUTH:}
+    client-authorization: ${OAUTH2_CLIENT_AUTH:}
 launchdarkly:
   sdk:
     key: ${LD_SDK_KEY:}
