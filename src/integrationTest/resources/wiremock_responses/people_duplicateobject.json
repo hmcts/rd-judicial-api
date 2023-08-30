@@ -1,0 +1,296 @@
+{
+  "pagination": {
+    "results": 23376,
+    "pages": 468,
+    "current_page": 20,
+    "results_per_page": 50,
+    "more_pages": false
+  },
+  "results": [
+    {
+      "id": "5f8b26ba-0c8b-4192-b5c7-311d737f0cae",
+      "per_id": 37992,
+      "personal_code": "4913085",
+      "title": "District Judge",
+      "known_as": "Rachel",
+      "surname": "Jones",
+      "fullname": "District Judge Rachel Jones",
+      "initials": "RJ",
+      "post_nominals": null,
+      "email": "DJ.Rachel.Jones@ejudiciary.net",
+      "sex": "female",
+      "work_phone": "07965 544394",
+      "disability": false,
+      "retirement_date": "2026-07-23",
+      "leaving_on": "2026-07-23",
+      "appointments": [
+        {
+          "appointment_id": 25502,
+          "role_name": "District Judge",
+          "role_name_id": 45,
+          "type": "Courts",
+          "court_name": "Court of Protection",
+          "court_type": null,
+          "circuit": "London",
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "London",
+          "base_location": "Court of Protection",
+          "base_location_id": 768,
+          "is_principal": true,
+          "start_date": "2010-03-23",
+          "end_date": "2026-07-23",
+          "contract_type": "SPTW-50%",
+          "contract_type_id": 5
+        },
+        {
+          "appointment_id": 25503,
+          "role_name": "Tribunal Judge",
+          "role_name_id": 84,
+          "type": "Tribunals",
+          "court_name": "Unassigned",
+          "court_type": "First Tier Tribunal",
+          "circuit": null,
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "Unassigned",
+          "base_location": "Social Entitlement Chamber - Unassigned",
+          "base_location_id": 2218,
+          "is_principal": false,
+          "start_date": "2007-05-11",
+          "end_date": "2014-06-20",
+          "contract_type": "Fee-paid",
+          "contract_type_id": 1
+        }
+      ],
+      "judiciary_roles": [
+        {
+          "name": "Course Director for COP (JC)",
+          "judiciary_role_id": 427,
+          "start_date": "2016-04-30T00:00:00.000Z",
+          "end_date": "2019-04-30T00:00:00.000Z"
+        }
+      ],
+      "authorisations": [
+        {
+          "jurisdiction": "Family",
+          "tickets": [
+            "Court of Protection"
+          ]
+        },
+        {
+          "jurisdiction": "Tribunals",
+          "tickets": [
+            "Criminal Injuries Compensations"
+          ]
+        }
+      ],
+      "authorisations_with_dates": [
+        {
+          "authorisation_id": 9918,
+          "appointment_id": 25502,
+          "jurisdiction": "Family",
+          "jurisdiction_id": 26,
+          "ticket": "Court of Protection",
+          "ticket_id": 313,
+          "start_date": "2017-03-24",
+          "end_date": "2022-07-23"
+        },
+        {
+          "authorisation_id": 14752,
+          "appointment_id": 25503,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "Criminal Injuries Compensations",
+          "ticket_id": 328,
+          "start_date": "2007-05-11",
+          "end_date": "2014-06-20"
+        }
+      ]
+    },
+    {
+      "id": "5f8b26ba-0c8b-4192-b5c7-311d737f0qrr",
+      "per_id": 38854,
+      "personal_code": "4923268",
+      "title": "Her Honour Judge",
+      "known_as": "Nicole",
+      "surname": "Cooper",
+      "fullname": "Her Honour Judge Nicole Cooper",
+      "initials": "NC",
+      "post_nominals": null,
+      "email": "HHJ.Nicole.Cooper@ejudiciary.net",
+      "sex": "female",
+      "work_phone": "07588 373837",
+      "disability": false,
+      "retirement_date": "2046-04-11",
+      "leaving_on": null,
+      "appointments": [
+        {
+          "appointment_id": 26326,
+          "role_name": "Tribunal Judge",
+          "role_name_id": 84,
+          "type": "Tribunals",
+          "court_name": "Unassigned",
+          "court_type": "First Tier Tribunal",
+          "circuit": null,
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "Unassigned",
+          "base_location": "Social Entitlement Chamber - Unassigned",
+          "base_location_id": 3,
+          "is_principal": false,
+          "start_date": "2014-05-01",
+          "end_date": null,
+          "contract_type": "Salaried",
+          "contract_type_id": 0
+        },
+        {
+          "appointment_id": 26328,
+          "role_name": "Circuit Judge",
+          "role_name_id": 19,
+          "type": "Courts",
+          "court_name": "Wolverhampton Combined Court - Crown",
+          "court_type": null,
+          "circuit": "Midlands",
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "Midlands",
+          "base_location": "Wolverhampton Combined Court - Crown",
+          "base_location_id": 7,
+          "is_principal": true,
+          "start_date": "2019-04-08",
+          "end_date": null,
+          "contract_type": "SPTW-80%",
+          "contract_type_id": 8
+        }
+      ],
+      "judiciary_roles": [
+        {
+          "name": "District Tribunal Judge",
+          "judiciary_role_id": 629,
+          "start_date": "2014-05-01T00:00:00.000Z",
+          "end_date": "2041-04-11T00:00:00.000Z"
+        },
+        {
+          "name": "IT Liaison Judge",
+          "judiciary_role_id": 640,
+          "start_date": null,
+          "end_date": null
+        }
+      ],
+      "authorisations": [
+        {
+          "jurisdiction": "Crime",
+          "tickets": [
+            "Appeals in Crown Court",
+            "Serious Sexual Offences",
+            "Criminal Authorisation"
+          ]
+        },
+        {
+          "jurisdiction": "Tribunals",
+          "tickets": [
+            "Criminal Injuries Compensations",
+            "01 - Social Security",
+            "00 - Interlocutory",
+            "Social Security and Child Support",
+            "03 - Disability Living Allowance",
+            "04 - Incapacity Benefit Employment Support"
+          ]
+        }
+      ],
+      "authorisations_with_dates": [
+        {
+          "authorisation_id": 5604,
+          "appointment_id": 26328,
+          "jurisdiction": "Crime",
+          "jurisdiction_id": 25,
+          "ticket": "Appeals in Crown Court",
+          "ticket_id": 303,
+          "start_date": "2019-04-08",
+          "end_date": "2019-04-08"
+        },
+        {
+          "authorisation_id": 5912,
+          "appointment_id": 26328,
+          "jurisdiction": "Crime",
+          "jurisdiction_id": 25,
+          "ticket": "Criminal Authorisation",
+          "ticket_id": 306,
+          "start_date": "2019-04-08",
+          "end_date": "2019-04-08"
+        },
+        {
+          "authorisation_id": 8419,
+          "appointment_id": 26328,
+          "jurisdiction": "Crime",
+          "jurisdiction_id": 25,
+          "ticket": "Serious Sexual Offences",
+          "ticket_id": 311,
+          "start_date": "2019-04-08",
+          "end_date": null
+        },
+        {
+          "authorisation_id": 27187,
+          "appointment_id": 26326,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "00 - Interlocutory",
+          "ticket_id": 368,
+          "start_date": "2014-05-01",
+          "end_date": "2019-04-04"
+        },
+        {
+          "authorisation_id": 22085,
+          "appointment_id": 26326,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "01 - Social Security",
+          "ticket_id": 364,
+          "start_date": "1901-01-01",
+          "end_date": "2019-04-04"
+        },
+        {
+          "authorisation_id": 22158,
+          "appointment_id": 26326,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "03 - Disability Living Allowance",
+          "ticket_id": 365,
+          "start_date": "1901-01-01",
+          "end_date": "2019-04-04"
+        },
+        {
+          "authorisation_id": 25165,
+          "appointment_id": 26326,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "04 - Incapacity Benefit Employment Support",
+          "ticket_id": 366,
+          "start_date": "2011-10-24",
+          "end_date": "2019-04-04"
+        },
+        {
+          "authorisation_id": 14328,
+          "appointment_id": 26328,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "Criminal Injuries Compensations",
+          "ticket_id": 328,
+          "start_date": "2019-11-11",
+          "end_date": null
+        },
+        {
+          "authorisation_id": 19689,
+          "appointment_id": 26328,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "Social Security and Child Support",
+          "ticket_id": 357,
+          "start_date": "2019-11-11",
+          "end_date": "2020-03-20"
+        }
+      ]
+    }
+  ]
+}

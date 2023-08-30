@@ -98,6 +98,7 @@ security:
     - "/csrf"
     - "/error"
     - "/favicon.ico"
+    - "/refdata/internal/elink/**"
 
 ### dependency configuration
 idam:
@@ -107,7 +108,12 @@ idam:
     url: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
   s2s-authorised:
     services: ${JRD_S2S_AUTHORISED_SERVICES:rd_judicial_api,am_org_role_mapping_service,iac,xui_webapp}
-  api.url: ${idam_url:https://idam-api.aat.platform.hmcts.net}
+  api:
+    url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
+    client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
+    redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
+    authorization: ${OAUTH2_AUTH:}
+    client-authorization: ${OAUTH2_CLIENT_AUTH:}
 
 oidc.issuer: ${OIDC_ISSUER_URL:https://forgerock-am.service.core-compute-idam-aat.internal:8443/openam/oauth2/hmcts}
 loggingComponentName: RD-Judicial-Ref-Api
@@ -115,6 +121,10 @@ feign:
   allow:
     headers:
       - authorization
+  client:
+    config:
+      default:
+        loggerLevel: full
 
 defaultPageSize: ${DEFAULTPAGESIZE:10}
 
@@ -131,3 +141,98 @@ refresh:
 
 search:
   serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3,aaa6,aaa7,aba5,aba3}
+
+elinksApiKey: ${judicial_api_elinks_api_key:}
+elinksUrl: ${ELINKS_URL:https:https://judiciary-middleware-futureehr.herokuapp.com/api/v5}
+
+elinks:
+  people:
+    lastUpdated: ${LAST_UPDATED:2015-01-01}
+    perPage: ${PER_PAGE:50}
+    page: 1
+    includePreviousAppointments : ${INCLUDE_PREVIOUS_APPOINTMENT:false}
+    threadPauseTime: ${THREAD_PAUSE_TIME:2000}
+    threadRetriggerPauseTime: ${THREAD_RETRIGGER_TIME:1000}
+  scheduler:
+    wrapperApiUrl: ${ELINKS_WRAPPER_API_URL:http://localhost:8093}
+    cronExpression: ${CRON_EXPRESSION:* 55 15 * * *}
+    enabled: ${SCHEDULER_ENABLED:false}
+    lockAtLeastFor: ${Lock_AT_Least_For:PT10M}
+    lockAtMostFor: ${Lock_AT_Most_For:PT20M}
+    defaultLockAtMostFor: ${Default_Lock_At_Most_For:PT30M}
+
+
+logging.level.uk.gov.hmcts.reform: DEBUG
+
+logging:
+  level:
+    org:
+      springframework:
+        jdbc:
+          core:
+            JdbcTemplate: DEBUG
+
+elastic:
+  search:
+    query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
+    recordsPerPage: 500
+
+jrd:
+  publisher:
+    azure:
+      service:
+        bus:
+          host: ${JRD_MQ_HOST:rd-servicebus-sandbox.servicebus.windows.net}
+          username: ${JRD_MQ_USERNAME:SendAndListenSharedAccessKey}
+          password: ${JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY:}
+          topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-sandbox}
+          # DO NOT SET THIS 'true' IN PRODUCTION!
+          trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
+    jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:50}
+email:
+  mailTypes:
+    asb:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "%s :: Publishing of JRD messages to ASB failed"
+      body: "Publishing of JRD messages to ASB failed for Job Id %s"
+    report:
+      enabled: false
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "%s :: JRD - Execution Failed"
+      body: "Execution Failed for files - %s"
+    userprofile:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
+      template: simple-template-userProfile.ftl
+    region:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "Official Sensitive: JRD - New Region ID in Appointment file - %s"
+      template: simple-template-regionId.ftl
+    baselocation:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "Official Sensitive: JRD - New Location in Appointment file - %s"
+      template: simple-template-baseLocationId.ftl
+    lowerLevelAuth:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "Official Sensitive: JRD - New Lower Level in Authorisations - %s"
+      template: lower-level-auth.ftl
+
+sendgrid:
+  key: ${RD_SENDGRID_API_KEY}

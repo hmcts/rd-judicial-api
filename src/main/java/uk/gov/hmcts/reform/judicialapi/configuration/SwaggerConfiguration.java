@@ -21,11 +21,21 @@ import org.springframework.web.method.HandlerMethod;
 public class SwaggerConfiguration {
 
     @Bean
-    public GroupedOpenApi publicApi(OperationCustomizer customGlobalHeaders) {
+    public GroupedOpenApi publicApiV1(OperationCustomizer customGlobalHeaders) {
         return GroupedOpenApi.builder()
-                .group("rd-judicial-api")
-                .pathsToMatch("/**")
+                .group("V1")
+                .packagesToScan("uk.gov.hmcts.reform.judicialapi.controller")
+                /*.addOpenApiCustomiser(new ContentTypeFilter(V1.MediaType.SERVICE))*/
                 .build();
+    }
+
+    @Bean
+    public GroupedOpenApi publicApiV2(OperationCustomizer customGlobalHeaders) {
+        return GroupedOpenApi.builder()
+            .group("V2")
+            .packagesToScan("uk.gov.hmcts.reform.judicialapi.elinks.controller")
+            /*  .addOpenApiCustomiser(new ContentTypeFilter(V2.MediaType.SERVICE))*/
+            .build();
     }
 
     @Bean
