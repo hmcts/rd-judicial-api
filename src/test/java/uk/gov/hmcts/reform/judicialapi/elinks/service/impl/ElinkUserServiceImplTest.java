@@ -203,6 +203,13 @@ class ElinkUserServiceImplTest {
                 20, "id", UserProfile.class);
     }
 
+    @NotNull
+    private PageRequest getElinksPageRequestDesc() {
+        return RequestUtils.validateAndBuildPaginationObject(1, 0,
+                "DESC", "objectId",
+                20, "id", UserProfile.class);
+    }
+
     @Test
     void test_elinksRefreshUserProfile_Two_Input_01() throws JsonProcessingException {
 
@@ -309,6 +316,36 @@ class ElinkUserServiceImplTest {
                 null, Arrays.asList("test", "test"),null);
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+    }
+
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_200_with_PageRequest_DESC() throws JsonProcessingException {
+        var userProfile = buildUserProfile();
+
+        var pageRequest = getElinksPageRequestDesc();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+        var serviceCodeMappingOne = ServiceCodeMapping
+                .builder()
+                .ticketCode("300")
+                .serviceCode("BBA3")
+                .build();
+        var serviceCodeMappingTwo = ServiceCodeMapping
+                .builder()
+                .ticketCode("373")
+                .serviceCode("BFA1")
+                .build();
+
+        when(serviceCodeMappingRepository.findAllServiceCodeMapping())
+                .thenReturn(List.of(serviceCodeMappingOne,serviceCodeMappingTwo));
+        when(profileRepository.fetchUserProfileBySidamIds(List.of("test", "test"), pageRequest))
+                .thenReturn(page);
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+                null, Arrays.asList("test", "test"),null);
+        var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "DESC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
     }
