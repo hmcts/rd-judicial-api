@@ -308,21 +308,23 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     }
 
     @SuppressWarnings("unchecked")
-    private void sort(List<UserProfileRefreshResponse> refreshResponses, PageRequest page){
-        Sort.Order order  = page.getSort().get().findFirst().orElse(null);
+    private void sort(List<UserProfileRefreshResponse> refreshResponses, PageRequest page) {
+        Sort.Order order = page.getSort().get().findFirst().orElse(null);
 
-        if(order!=null) {
-            String dir = order.getDirection().name();   //returns you Direction
-
-            refreshResponses.sort(Comparator.comparing(report -> {
+        if (order != null) {
+            Comparator comparator = Comparator.comparing(report -> {
                 try {
-                    return (Comparable)new PropertyDescriptor(order.getProperty(), report.getClass()).getReadMethod().invoke(report);
-                   // return (Comparable) report.getClass().getDeclaredField(order.getProperty()).get(report);
+                    return (Comparable) new PropertyDescriptor(order.getProperty(), report.getClass())
+                            .getReadMethod().invoke(report);
                 } catch (Exception e) {
                     log.error("not able to resolve the sorting options");
                     return null;
                 }
-            }));
+            });
+            if (Sort.Direction.DESC == order.getDirection()) {
+                comparator = comparator.reversed();
+            }
+            refreshResponses.sort(comparator);
         }
     }
 
