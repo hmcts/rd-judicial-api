@@ -15,6 +15,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
@@ -210,6 +211,10 @@ class ElinkUserServiceImplTest {
                 20, "id", UserProfile.class);
     }
 
+    private PageRequest getElinksPageRequestNull() {
+        return null;
+    }
+
     @Test
     void test_elinksRefreshUserProfile_Two_Input_01() throws JsonProcessingException {
 
@@ -322,7 +327,7 @@ class ElinkUserServiceImplTest {
 
 
     @Test
-    void test_elinksRefreshUserProfile_BasedOnSidamIds_200_with_PageRequest_DESC() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_200_with_PageRequest_Desc() throws JsonProcessingException {
         var userProfile = buildUserProfile();
 
         var pageRequest = getElinksPageRequestDesc();
@@ -344,8 +349,37 @@ class ElinkUserServiceImplTest {
                 .thenReturn(page);
         var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
                 null, Arrays.asList("test", "test"),null);
+        when(page.getSort()).thenReturn(null);
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "DESC", "objectId");
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_200_with_PageRequest_Asc() throws JsonProcessingException {
+        var userProfile = buildUserProfile();
+        var pageRequest = getElinksPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+        var serviceCodeMappingOne = ServiceCodeMapping
+                .builder()
+                .ticketCode("300")
+                .serviceCode("BBA3")
+                .build();
+        var serviceCodeMappingTwo = ServiceCodeMapping
+                .builder()
+                .ticketCode("373")
+                .serviceCode("BFA1")
+                .build();
+
+        when(serviceCodeMappingRepository.findAllServiceCodeMapping())
+                .thenReturn(List.of(serviceCodeMappingOne,serviceCodeMappingTwo));
+        when(profileRepository.fetchUserProfileBySidamIds(List.of("test", "test"), pageRequest))
+                .thenReturn(page);
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+                null, Arrays.asList("test", "test"),null);
+        var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
     }
