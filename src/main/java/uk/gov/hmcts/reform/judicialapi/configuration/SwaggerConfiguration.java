@@ -12,6 +12,8 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
+import uk.gov.hmcts.reform.judicialapi.versions.V1;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 
 @Configuration
@@ -25,7 +27,7 @@ public class SwaggerConfiguration {
         return GroupedOpenApi.builder()
                 .group("V1")
                 .packagesToScan("uk.gov.hmcts.reform.judicialapi.controller")
-                /*.addOpenApiCustomiser(new ContentTypeFilter(V1.MediaType.SERVICE))*/
+                .producesToMatch(V1.MediaType.SERVICE)
                 .build();
     }
 
@@ -34,7 +36,7 @@ public class SwaggerConfiguration {
         return GroupedOpenApi.builder()
             .group("V2")
             .packagesToScan("uk.gov.hmcts.reform.judicialapi.elinks.controller")
-            /*  .addOpenApiCustomiser(new ContentTypeFilter(V2.MediaType.SERVICE))*/
+            .producesToMatch(V2.MediaType.SERVICE)
             .build();
     }
 
