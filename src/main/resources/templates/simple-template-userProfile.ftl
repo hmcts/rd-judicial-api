@@ -28,13 +28,15 @@
                         <tr bgcolor="#eaeaea">
                             <td style="text-align: center">Per Code</td>
                             <td style="text-align: center">Object Id</td>
-                            <td style="text-align: center">Per Id</td>
+                            <td style="text-align: center">Field In Error</td>
+                            <td style="text-align: center">Error Description</td>
                         </tr>
                         <#list objectIds as objectId>
                             <tr style="border: 1px solid black;">
                                 <td style="text-align: left">${objectId.personalCode}</td>
                                 <td style="text-align: center">${objectId.objectId}</td>
-                                <td style="text-align: center">${objectId.perId}</td>
+                                <td style="text-align: left">${result.fieldInError}</td>
+                                <td style="text-align: left">${result.errorDescription}</td>
                             </tr>
                          </#list>
                     </table>
@@ -46,13 +48,15 @@
                                         <tr bgcolor="#eaeaea">
                                             <td style="text-align: center">Per Code</td>
                                             <td style="text-align: center">Object Id</td>
-                                            <td style="text-align: center">Per Id</td>
+                                           <td style="text-align: center">Field In Error</td>
+                                           <td style="text-align: center">Error Description</td>
                                         </tr>
                                         <#list personalCodes as personalCode>
                                             <tr style="border: 1px solid black;">
                                                 <td style="text-align: left">${personalCode.personalCode}</td>
                                                 <td style="text-align: center">${personalCode.objectId}</td>
-                                                <td style="text-align: center">${personalCode.perId}</td>
+                                                <td style="text-align: left">${result.fieldInError}</td>
+                                                <td style="text-align: left">${result.errorDescription}</td>
                                             </tr>
                                          </#list>
                                     </table>
