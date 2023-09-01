@@ -161,7 +161,7 @@ runProviderPactVerification.finalizedBy pactVerify
 pact {
     publish {
         pactDirectory = 'pacts'
-        pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:80'
+        pactBrokerUrl = System.getenv("PACT_BROKER_FULL_URL") ?: 'http://localhost:9292'
         tags = [System.getenv("PACT_BRANCH_NAME") ?:'Dev']
         version = project.pactVersion
     }
@@ -389,6 +389,12 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-tx', version: versions.springVersion
     implementation group: 'org.springframework', name: 'spring-web', version: versions.springVersion
     implementation group: 'org.springframework', name: 'spring-webmvc', version: versions.springVersion
+
+    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
+    contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'java8', version: '4.1.7'
+    contractTestRuntimeOnly group: 'au.com.dius.pact.consumer', name: 'junit5', version: '4.1.7'
+    contractTestRuntimeOnly group: 'au.com.dius.pact.consumer', name: 'java8', version: '4.1.7'
+
 
     implementation "com.github.hmcts.java-logging:logging:${versions.reformLogging}"
     implementation "com.github.hmcts.java-logging:logging-appinsights:5.1.9"
