@@ -326,6 +326,37 @@ class ElinkUserServiceImplTest {
         assertEquals(200, responseEntity.getStatusCodeValue());
     }
 
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_404() throws JsonProcessingException {
+        var userProfile = buildUserProfile();
+
+        var pageRequest = getElinksPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+        when(profileRepository.fetchUserProfileBySidamIds(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(null);
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, Arrays.asList("Emp", "Emp"), null);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_Empty() throws JsonProcessingException {
+        var userProfile = buildUserProfile();
+
+        var pageRequest = getElinksPageRequest();
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+        when(profileRepository.fetchUserProfileBySidamIds(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, Arrays.asList("Emp", "Emp"), null);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
 
     @Test
     @SuppressWarnings("unchecked")
@@ -555,6 +586,18 @@ class ElinkUserServiceImplTest {
         });
     }
 
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_404_Empty_PersonalCodes() throws JsonProcessingException {
+        var pageRequest = getElinksPageRequest();
+        when(profileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, null, Arrays.asList("Emp", "Emp"));
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
 
     @Test
     void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_200() throws JsonProcessingException {
@@ -587,7 +630,6 @@ class ElinkUserServiceImplTest {
     @Test
     void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_LrdResponse_IsNon_200() {
 
-        var pageRequest = getElinksPageRequest();
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
                 .thenReturn(Response.builder()
                         .request(mock(Request.class)).body("body", defaultCharset()).status(400).build());
@@ -626,6 +668,32 @@ class ElinkUserServiceImplTest {
                     0, "ASC", "objectId");
         });
     }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_Response_Null() throws JsonProcessingException {
+
+        var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
+        lrdOrgInfoServiceResponse.setServiceCode("BFA1");
+        lrdOrgInfoServiceResponse.setCcdServiceName("cmc");
+        var body = mapper.writeValueAsString(List.of(lrdOrgInfoServiceResponse));
+
+        when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
+                .thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
+
+        var pageRequest = getElinksPageRequest();
+
+        when(profileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
+                .thenReturn(null);
+        when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("cmc",
+                null, null,null);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "ASC", "objectId");
+        });
+    }
+
 
     @Test
     void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseIsEmpty()
