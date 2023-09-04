@@ -348,7 +348,6 @@ class ElinkUserServiceImplTest {
                 .thenReturn(page);
         var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
                 null, Arrays.asList("test", "test"),null);
-        when(page.getSort()).thenReturn(null);
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "DESC", "objectId");
 
