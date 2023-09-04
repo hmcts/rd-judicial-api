@@ -352,6 +352,13 @@ class ElinkUserServiceImplTest {
                 0, "DESC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
+
+        ArrayList profiles =  (ArrayList)responseEntity.getBody();
+        assertEquals(1, profiles.size());
+        uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile =
+                (uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse)profiles.get(0);
+        assertEquals(4, profile.getAppointments().size());
+        assertEquals(3, profile.getAuthorisations().size());
     }
 
     @Test
