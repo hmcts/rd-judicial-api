@@ -356,7 +356,8 @@ class ElinkUserServiceImplTest {
 
         assertEquals(200, responseEntity.getStatusCodeValue());
 
-        ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>)responseEntity.getBody();
+        ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>)responseEntity
+                .getBody();
         assertEquals(1, profiles.size());
         uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile = profiles.get(0);
         assertEquals(4, profile.getAppointments().size());
@@ -392,7 +393,8 @@ class ElinkUserServiceImplTest {
                 0, "ASC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
-        ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>)responseEntity.getBody();
+        ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>)responseEntity
+                .getBody();
         assertEquals(1, profiles.size());
         uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile = profiles.get(0);
         assertEquals(4, profile.getAppointments().size());
