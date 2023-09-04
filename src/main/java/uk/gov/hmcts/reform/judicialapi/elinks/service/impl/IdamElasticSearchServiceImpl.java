@@ -173,7 +173,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         List<Pair<String, String>> sidamObjectId = new ArrayList<>();
 
         String updateSidamIds = "UPDATE dbjudicialdata.judicial_user_profile SET sidam_id = ? "
-                + "WHERE object_id = ? AND (sidam_id IS NULL OR sidam_id <> ' ')";
+                + "WHERE object_id = ? ";
         sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s ->
                 sidamObjectId.add(Pair.of(s.getId(), s.getSsoId())));
         log.debug("Insert Query batch Response from IDAM " + sidamObjectId.size());
