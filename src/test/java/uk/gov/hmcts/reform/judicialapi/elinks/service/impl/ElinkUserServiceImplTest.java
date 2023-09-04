@@ -46,11 +46,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import static java.nio.charset.Charset.defaultCharset;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -326,6 +328,7 @@ class ElinkUserServiceImplTest {
 
 
     @Test
+    @SuppressWarnings("unchecked")
     void test_elinksRefreshUserProfile_BasedOnSidamIds_200_with_PageRequest_Desc() throws JsonProcessingException {
         var userProfile = buildUserProfile();
 
@@ -353,15 +356,17 @@ class ElinkUserServiceImplTest {
 
         assertEquals(200, responseEntity.getStatusCodeValue());
 
-        ArrayList profiles =  (ArrayList)responseEntity.getBody();
+        ArrayList<UserProfileRefreshResponse> profiles= (ArrayList<UserProfileRefreshResponse>)responseEntity.getBody();
         assertEquals(1, profiles.size());
-        uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile =
-                (uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse)profiles.get(0);
+        uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile = profiles.get(0);
         assertEquals(4, profile.getAppointments().size());
         assertEquals(3, profile.getAuthorisations().size());
+        assertThat(profiles)
+                .isSortedAccordingTo(Comparator.comparing(UserProfileRefreshResponse::getObjectId).reversed());
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void test_elinksRefreshUserProfile_BasedOnSidamIds_200_with_PageRequest_Asc() throws JsonProcessingException {
         var userProfile = buildUserProfile();
         var pageRequest = getElinksPageRequest();
@@ -387,6 +392,13 @@ class ElinkUserServiceImplTest {
                 0, "ASC", "objectId");
 
         assertEquals(200, responseEntity.getStatusCodeValue());
+        ArrayList<UserProfileRefreshResponse> profiles= (ArrayList<UserProfileRefreshResponse>)responseEntity.getBody();
+        assertEquals(1, profiles.size());
+        uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile = profiles.get(0);
+        assertEquals(4, profile.getAppointments().size());
+        assertEquals(3, profile.getAuthorisations().size());
+        assertThat(profiles)
+                .isSortedAccordingTo(Comparator.comparing(UserProfileRefreshResponse::getObjectId));
     }
 
 
