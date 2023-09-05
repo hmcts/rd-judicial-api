@@ -281,7 +281,8 @@ class ElinkUserServiceImplTest {
     private void checkAssertion(String ccdServiceNames) {
         var refreshRoleRequest = new RefreshRoleRequest(ccdServiceNames,
                 null, null,null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+        Assertions.assertThrows(InvalidRequestException.class, () -> elinkUserService
+                .refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId"));
     }
 
@@ -335,7 +336,8 @@ class ElinkUserServiceImplTest {
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         var refreshRoleRequest = new RefreshRoleRequest("",
                 null, Arrays.asList("Emp", "Emp"), null);
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> elinkUserService
+                .refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId"));
     }
 
@@ -462,7 +464,8 @@ class ElinkUserServiceImplTest {
                     .thenReturn(List.of(serviceCodeMappingOne, serviceCodeMappingTwo));
             when(profileRepository.fetchUserProfileBySidamIds(List.of("test", "test"), pageRequest))
                     .thenReturn(page);
-            var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+            var refreshRoleRequest = new
+                    uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
                     null, Arrays.asList("test", "test"), null);
             var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "DESC", "objectId");
@@ -546,10 +549,12 @@ class ElinkUserServiceImplTest {
 
     @Test
     void test_elinksRefreshUserProfile_BasedOnPersonalCodes_Error() {
-        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+        var refreshRoleRequest = new
+                uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
                 Arrays.asList("test", "test"), null,null);
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId"));
     }
 
@@ -735,7 +740,8 @@ class ElinkUserServiceImplTest {
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null,null);
 
-        Assertions.assertThrows(UserProfileException.class, () -> elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+        Assertions.assertThrows(UserProfileException.class, () -> elinkUserService
+                .refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId"));
     }
 
@@ -765,7 +771,8 @@ class ElinkUserServiceImplTest {
     void test_elinksRefreshUserProfile_BasedOn_All_400() {
         var refreshRoleRequest =
                 new RefreshRoleRequest("", null, null,null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+        Assertions.assertThrows(InvalidRequestException.class, () -> elinkUserService
+                .refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId"));
     }
 
