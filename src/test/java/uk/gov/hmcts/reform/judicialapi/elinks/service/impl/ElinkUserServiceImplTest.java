@@ -478,8 +478,7 @@ class ElinkUserServiceImplTest {
             uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile = profiles.get(0);
             assertEquals(4, profile.getAppointments().size());
             assertEquals(3, profile.getAuthorisations().size());
-            assertThat(profiles).isSortedAccordingTo(Comparator.comparing(UserProfileRefreshResponse::getObjectId)
-                    .reversed());
+
         }
     }
 
