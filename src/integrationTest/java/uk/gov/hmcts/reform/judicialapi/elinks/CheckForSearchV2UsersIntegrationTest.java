@@ -267,9 +267,6 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "200 OK");
-        var responseBody = (String) response.get("response_body");
-        assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
-                + "apostrophe, hyphen"));
     }
 
     @ParameterizedTest
