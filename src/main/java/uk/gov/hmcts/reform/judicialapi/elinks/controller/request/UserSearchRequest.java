@@ -20,7 +20,7 @@ public class UserSearchRequest {
     @JsonProperty("searchString")
     @NotNull(message = "cannot be null")
     @NotEmpty(message = "cannot be empty")
-    @Pattern(regexp = "^[(a-zA-Z0-9 )\\p{L}\\p{N}'’-]{3,}$", message = "must be at least 3 characters including "
+    @Pattern(regexp = "^[(a-zA-Z0-9 )\\p{L}\\p{N}'’-]{3,}", message = "must be at least 3 characters including "
             + "letters, apostrophe, hyphen")
     @Schema(name = "searchString",  example = "string")
     private String searchString;
