@@ -132,8 +132,9 @@ class IdamElasticSearchIntegrationForSidamTest extends ElinksEnabledIntegrationT
         assertThat(response).containsEntry("http_status", "200 OK");
 
         List<UserProfile> userprofile = profileRepository.findAll();
-        userprofile.get(1).setSidamId("6455c84c-e77d-4c4f-9759-bf4a93a8e972");
-        assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e972", userprofile.get(1).getSidamId());
+        userprofile.get(1).setSidamId("6455c84c-e77d-4c4f-9759-bf4a93a8e970");
+        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cab", userprofile.get(1).getObjectId());
+        assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e970", userprofile.get(1).getSidamId());
 
         Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamElasticSearch();
         assertEquals("200 OK",idamResponses.get("http_status"));
