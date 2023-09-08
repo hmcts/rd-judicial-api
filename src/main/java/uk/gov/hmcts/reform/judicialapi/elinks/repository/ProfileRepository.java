@@ -17,7 +17,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
 
     @Query(value = "select distinct new uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper"
         + "(per.title,per.knownAs,per.surname,per.fullName"
-        + ",per.ejudiciaryEmailId,per.sidamId,per.initials"
+        + ",per.emailId,per.sidamId,per.initials"
         + ",per.postNominals,per.personalCode)"
         + "from judicialUserProfile per "
         + "LEFT JOIN FETCH judicialOfficeAppointment appt "
