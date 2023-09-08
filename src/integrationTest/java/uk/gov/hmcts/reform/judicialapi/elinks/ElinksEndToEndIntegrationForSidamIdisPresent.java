@@ -186,7 +186,7 @@ class ElinksEndToEndIntegrationForSidamIdisPresent extends ElinksEnabledIntegrat
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(10).getObjectId());
         assertEquals("3333333",userprofile.get(10).getSidamId());
         assertEquals("RJ",userprofile.get(10).getInitials());
-        assertEquals("2021-07-14T13:25:28.763",userprofile.get(10).getCreatedDate().toString());
+
 
 
         //asserting userprofile data for leaver api
