@@ -264,7 +264,7 @@ public class JrdApiProviderV2Test {
         userProfile.setObjectId("fcb4f03c-4b3f-4c3c-bf3a-662b4557b470");
         userProfile.setAppointments(appointments);
         userProfile.setAuthorisations(authorisations);
-        userProfile.setEjudiciaryEmailId("e@mail.com");
+        userProfile.setEmailId("e@mail.com");
         userProfile.setPersonalCode("testPersonalCode");
         userProfile.setKnownAs("testKnownAs");
         userProfile.setSurname("testSurname");

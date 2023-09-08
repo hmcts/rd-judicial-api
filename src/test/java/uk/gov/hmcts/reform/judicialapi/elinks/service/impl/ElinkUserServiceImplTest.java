@@ -350,7 +350,7 @@ class ElinkUserServiceImplTest {
         var uuid = UUID.randomUUID().toString();
         userProfile2.setObjectId(uuid);
         userProfile2.setSidamId(uuid);
-        userProfile2.setEjudiciaryEmailId("xyz@gmail.com");
+        userProfile2.setEmailId("xyz@gmail.com");
         userProfile2.setPersonalCode("pme");
 
         var pageRequest = getElinksPageRequestDesc();
@@ -396,7 +396,7 @@ class ElinkUserServiceImplTest {
         var uuid = UUID.randomUUID().toString();
         userProfile2.setObjectId(uuid);
         userProfile2.setSidamId(uuid);
-        userProfile2.setEjudiciaryEmailId("xyz@gmail.com");
+        userProfile2.setEmailId("xyz@gmail.com");
         userProfile2.setPersonalCode("pme");
         var pageRequest = getElinksPageRequest();
         var page = new PageImpl<>(List.of(userProfile1, userProfile2));
@@ -440,7 +440,7 @@ class ElinkUserServiceImplTest {
         var uuid = UUID.randomUUID().toString();
         userProfile2.setObjectId(uuid);
         userProfile2.setSidamId(uuid);
-        userProfile2.setEjudiciaryEmailId("xyz@gmail.com");
+        userProfile2.setEmailId("xyz@gmail.com");
         userProfile2.setPersonalCode("pme");
         try (MockedStatic<RequestUtils> mockStatic = Mockito.mockStatic(RequestUtils.class)) {
             var pageRequest = mock(PageRequest.class);
@@ -947,7 +947,7 @@ class ElinkUserServiceImplTest {
         userProfile.setSurname("Test");
         userProfile.setFullName("Test1");
         userProfile.setPostNominals("Test Test1");
-        userProfile.setEjudiciaryEmailId("abc@gmail.com");
+        userProfile.setEmailId("abc@gmail.com");
         userProfile.setLastWorkingDate(LocalDate.now());
         userProfile.setActiveFlag(true);
         userProfile.setCreatedDate(LocalDateTime.now());
@@ -1033,7 +1033,7 @@ class ElinkUserServiceImplTest {
         userProfile.setSurname("Test");
         userProfile.setFullName("Test1");
         userProfile.setPostNominals("Test Test1");
-        userProfile.setEjudiciaryEmailId("abc@gmail.com");
+        userProfile.setEmailId("abc@gmail.com");
         userProfile.setLastWorkingDate(LocalDate.now());
         userProfile.setActiveFlag(false);
         userProfile.setCreatedDate(LocalDateTime.now());
@@ -1162,7 +1162,7 @@ class ElinkUserServiceImplTest {
         userProfile.setSurname("Test");
         userProfile.setFullName("Test1");
         userProfile.setPostNominals("Test Test1");
-        userProfile.setEjudiciaryEmailId("abcd@gmail.com");
+        userProfile.setEmailId("abcd@gmail.com");
         userProfile.setLastWorkingDate(LocalDate.now());
         userProfile.setActiveFlag(false);
         userProfile.setCreatedDate(LocalDateTime.now());

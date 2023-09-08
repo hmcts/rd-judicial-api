@@ -305,7 +305,7 @@ class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals("Cooper", userprofile.get(1).getSurname());
         assertEquals("Her Honour Judge Nicole Cooper", userprofile.get(1).getFullName());
         assertNull(userprofile.get(1).getPostNominals());
-        assertEquals("HHJ.Nicole.Cooper@ejudiciary.net", userprofile.get(1).getEjudiciaryEmailId());
+        assertEquals("HHJ.Nicole.Cooper@ejudiciary.net", userprofile.get(1).getEmailId());
         assertTrue(userprofile.get(1).getActiveFlag());
         assertNull(userprofile.get(1).getSidamId());
         assertEquals("NC",userprofile.get(1).getInitials());

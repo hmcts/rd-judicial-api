@@ -338,7 +338,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .surname(profile.getSurname())
                 .fullName(profile.getFullName())
                 .postNominals(profile.getPostNominals())
-                .emailId(profile.getEjudiciaryEmailId())
+                .emailId(profile.getEmailId())
                 .personalCode(profile.getPersonalCode())
                 .title(profile.getTitle())
                 .initials(profile.getInitials())

@@ -259,7 +259,7 @@ class ElinksEndToEndIntegrationForObjectId extends ElinksEnabledIntegrationTest 
         assertEquals("Her Honour Judge Nicole Cooper", userprofile.get(1).getFullName());
         assertEquals(null, userprofile.get(1).getPostNominals());
         assertEquals("HHJ.Nicole.Cooper@ejudiciary.net",
-            userprofile.get(1).getEjudiciaryEmailId());
+            userprofile.get(1).getEmailId());
         assertTrue(userprofile.get(1).getActiveFlag());
         assertEquals("0761225c-244c-4bca-b035-81c0d430092d", userprofile.get(1).getObjectId());
         assertNull(userprofile.get(1).getSidamId());
