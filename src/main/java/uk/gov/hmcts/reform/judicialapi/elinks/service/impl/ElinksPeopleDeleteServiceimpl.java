@@ -35,7 +35,6 @@ public class ElinksPeopleDeleteServiceimpl implements ELinksPeopleDeleteService 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteAuth(ResultsRequest resultsRequest) {
-        log.info("entering into deleteAuth : ");
         authorisationsRepository.deleteByPersonalCode(resultsRequest.getPersonalCode());
         appointmentsRepository.deleteByPersonalCode(resultsRequest.getPersonalCode());
         judicialRoleTypeRepository.deleteByPersonalCode(resultsRequest.getPersonalCode());
