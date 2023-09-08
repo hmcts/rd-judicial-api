@@ -126,6 +126,34 @@ class ELinksServiceImplTest {
     }
 
     @Test
+    void elinksService_load_location_should_return_elinksException_on_ZeroResult()
+        throws JsonProcessingException {
+
+
+
+        ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
+
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        String body = mapper.writeValueAsString(elinkLocationResponse);
+
+        when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
+            .request(mock(Request.class)).body(body, defaultCharset()).status(HttpStatus.OK.value()).build());
+
+        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+        });
+
+        assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
+
+        assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
+        assertThat(thrown.getErrorDescription()).contains(ELINKS_ACCESS_ERROR);
+
+
+    }
+
+    @Test
     void elinksService_load_location_should_return_elinksException_when_FeignException()
             throws JsonProcessingException {
 
