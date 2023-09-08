@@ -135,7 +135,6 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
     @DisplayName("Elinks load eLinks scheduler status verification failure case  for job ran already")
     @Test
     @Order(3)
-    @Disabled
     void test_load_elinks_job_status_failure_job_ran_already() {
 
         DataloadSchedulerJob audit = new DataloadSchedulerJob();
