@@ -133,7 +133,7 @@ public class JrdElinkController {
             @RequestHeader(name = "page_size", required = false) Integer pageSize,
             @RequestHeader(name = "page_number", required = false) Integer pageNumber,
             @RequestHeader(name = "sort_direction", required = false) String sortDirection,
-            @RequestHeader(name = "sort_column")
+            @RequestHeader(name = "sort_column", required = false)
             @Parameter(name = "sort_column", description = "Example Notations for the sort columns are personalCode,"
                     + "sidamId, emailId, fullName, surName, objectId etc.,")
             String sortColumn) {
