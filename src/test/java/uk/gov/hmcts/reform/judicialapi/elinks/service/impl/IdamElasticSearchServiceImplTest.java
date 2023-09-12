@@ -127,6 +127,8 @@ class IdamElasticSearchServiceImplTest {
             assertThat(useResponse.getEmail()).isEqualTo("some@some.com");
         });
         verify(idamClientMock, times(1)).getUserFeed(anyString(), any());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
     @Test
