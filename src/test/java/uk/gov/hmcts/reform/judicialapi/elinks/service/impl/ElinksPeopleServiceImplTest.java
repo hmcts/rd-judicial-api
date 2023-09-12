@@ -675,7 +675,7 @@ class ElinksPeopleServiceImplTest {
         UserProfile userProfile = UserProfile.builder()
             .personalCode("1234")
             .objectId("objectId1")
-            .ejudiciaryEmailId("email@justice")
+            .emailId("email@justice")
             .sidamId("sidamId")
             .createdDate(convertToLocalDateTime("2023-04-12T16:42:35Z"))
             .build();
