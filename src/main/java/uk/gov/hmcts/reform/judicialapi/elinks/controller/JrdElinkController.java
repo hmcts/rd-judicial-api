@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -90,7 +91,7 @@ public class JrdElinkController {
             summary = "This endpoint will be used for user search based on partial query. When the consumers "
                     + "inputs any 3 characters, they will call this api to fetch "
                     + "the required result.",
-            description = "**Valid IDAM role is required to access this endpoint**",
+            description = "**IDAM Roles to access API** :\n jrd-system-user,\n jrd-admin",
             security = {
                     @SecurityRequirement(name = "Authorization"),
                     @SecurityRequirement(name = "ServiceAuthorization")
@@ -132,8 +133,10 @@ public class JrdElinkController {
             @RequestHeader(name = "page_size", required = false) Integer pageSize,
             @RequestHeader(name = "page_number", required = false) Integer pageNumber,
             @RequestHeader(name = "sort_direction", required = false) String sortDirection,
-            @RequestHeader(name = "sort_column", required = false) String sortColumn
-    ) {
+            @RequestHeader(name = "sort_column", required = false)
+            @Parameter(name = "sort_column", description = "Example Notations for the sort columns are personalCode,"
+                    + "sidamId, emailId, fullName, surName, objectId etc.,")
+            String sortColumn) {
         log.info("starting refreshUserProfile with RefreshRoleRequest {}, pageSize = {}, pageNumber = {}, "
                         + "sortDirection = {}, sortColumn = {}", refreshRoleRequest,
                 pageSize, pageNumber,sortDirection,sortColumn);

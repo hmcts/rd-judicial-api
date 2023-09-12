@@ -413,7 +413,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .surname(resultsRequest.getSurname())
                     .fullName(resultsRequest.getFullName())
                     .postNominals(resultsRequest.getPostNominals())
-                    .ejudiciaryEmailId(resultsRequest.getEmail())
+                    .emailId(resultsRequest.getEmail())
                     .lastWorkingDate(convertToLocalDate(resultsRequest.getLastWorkingDate()))
                     .activeFlag(true)
                     .createdDate(now())

@@ -55,7 +55,7 @@ public class UserProfile implements Serializable {
 
     @Column(name = "ejudiciary_email")
     @Size(max = 256)
-    private String ejudiciaryEmailId;
+    private String emailId;
 
     @Column(name = "last_working_date")
     private LocalDate lastWorkingDate;

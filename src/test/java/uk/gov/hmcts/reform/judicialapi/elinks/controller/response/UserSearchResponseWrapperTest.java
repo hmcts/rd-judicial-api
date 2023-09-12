@@ -17,14 +17,14 @@ public class UserSearchResponseWrapperTest {
             .knownAs("knownAs")
             .surname("surname")
             .fullName("fullname")
-            .ejudiciaryEmailId("emailId")
+            .emailId("emailId")
             .sidamId("idam")
             .initials("initials")
             .postNominals("postNominals")
             .personalCode("pcode").build();
 
         UserSearchResponseWrapper userSearchResponseWrapper = new UserSearchResponseWrapper(userProfile);
-        assertThat(userSearchResponseWrapper.getEmailId(),is(userProfile.getEjudiciaryEmailId()));
+        assertThat(userSearchResponseWrapper.getEmailId(),is(userProfile.getEmailId()));
         assertThat(userSearchResponseWrapper.getSurname(),is(userProfile.getSurname()));
         assertThat(userSearchResponseWrapper.getTitle(),is(userProfile.getTitle()));
         assertThat(userSearchResponseWrapper.getKnownAs(),is(userProfile.getKnownAs()));
