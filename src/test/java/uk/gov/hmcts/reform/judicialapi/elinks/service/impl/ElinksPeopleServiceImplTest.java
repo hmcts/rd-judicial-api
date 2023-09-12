@@ -633,7 +633,7 @@ class ElinksPeopleServiceImplTest {
     void loadPeopleWithDuplicateObjectIdInDb() throws JsonProcessingException {
 
         UserProfile userProfile = UserProfile.builder()
-            .personalCode("12222").objectId("objectId1").ejudiciaryEmailId("email@justice").build();
+            .personalCode("12222").objectId("objectId1").emailId("email@justice").build();
         when(profileRepository.findAll()).thenReturn(List.of(userProfile));
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(null);
         BaseLocation location = new BaseLocation();
@@ -675,7 +675,7 @@ class ElinksPeopleServiceImplTest {
         UserProfile userProfile = UserProfile.builder()
             .personalCode("1234")
             .objectId("objectId1")
-            .ejudiciaryEmailId("email@justice")
+            .emailId("email@justice")
             .sidamId("sidamId")
             .createdDate(convertToLocalDateTime("2023-04-12T16:42:35Z"))
             .build();

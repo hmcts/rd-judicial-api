@@ -189,7 +189,7 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         assertEquals("District Judge Rachel Jones", userprofile.get(11).getFullName());
         assertEquals(null, userprofile.get(11).getPostNominals());
         assertEquals("DJ.Rachel.Jones@ejudiciary.net",
-            userprofile.get(11).getEjudiciaryEmailId());
+            userprofile.get(11).getEmailId());
         assertTrue(userprofile.get(11).getActiveFlag());
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(11).getObjectId());
         assertNull(userprofile.get(11).getSidamId());

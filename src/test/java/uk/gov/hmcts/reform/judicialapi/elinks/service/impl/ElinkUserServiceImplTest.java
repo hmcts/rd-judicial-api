@@ -11,10 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
@@ -46,15 +49,19 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import javax.validation.constraints.NotNull;
 
 import static java.nio.charset.Charset.defaultCharset;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -64,9 +71,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ElinkUserServiceImplTest {
-
-    private static final LocalDate date = LocalDate.now();
-    private static final LocalDateTime dateTime = LocalDateTime.now();
 
     @InjectMocks
     ElinkUserServiceImpl elinkUserService;
@@ -86,15 +90,13 @@ class ElinkUserServiceImplTest {
 
     @Spy
     LocationMapppingRepository locationMappingRepository;
-
-    private ElinksRefreshUserValidator refreshUserValidatorMock;
     ObjectMapper mapper = new ObjectMapper();
 
     private List<String> searchServiceCode;
 
     @BeforeEach
     void setUp() {
-        refreshUserValidatorMock = new ElinksRefreshUserValidator();
+        ElinksRefreshUserValidator refreshUserValidatorMock = new ElinksRefreshUserValidator();
         elinkUserService.setElinksRefreshUserValidator(refreshUserValidatorMock);
 
         searchServiceCode = (List.of("bfa1","bba3"));
@@ -203,89 +205,90 @@ class ElinkUserServiceImplTest {
                 20, "id", UserProfile.class);
     }
 
+    @NotNull
+    private PageRequest getElinksPageRequestDesc() {
+        return RequestUtils.validateAndBuildPaginationObject(1, 0,
+                "DESC", "objectId",
+                20, "id", UserProfile.class);
+    }
+
     @Test
-    void test_elinksRefreshUserProfile_Two_Input_01() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Two_Input_01() {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, Arrays.asList("test", "test"),null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
 
     }
 
     @Test
-    void test_elinksRefreshUserProfile_Two_Input_02() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Two_Input_02() {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), null,null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test
-    void test_elinksRefreshUserProfile_Two_Input_03() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Two_Input_03() {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"),null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test
-    void test_elinksRefreshUserProfile_Two_Input_04() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Two_Input_04() {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 Arrays.asList("test", "test"), null,Arrays.asList("test", "test"));
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test
-    void test_elinksRefreshUserProfile_Multiple_Input() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_Multiple_Input() {
 
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 Arrays.asList("test", "test"), Arrays.asList("test", "test"),null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test
-    void test_elinksRefreshUserProfile_No_Input() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_No_Input() {
         checkAssertion("");
     }
 
     @Test
-    void test_elinksRefreshUserProfile_WhenCcdServiceNameContainComma() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_WhenCcdServiceNameContainComma() {
         checkAssertion("abc,def");
     }
 
     @Test
-    void test_elinksRefreshUserProfile_WhenCcdServiceNameContainAll() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_WhenCcdServiceNameContainAll() {
         checkAssertion(" all ");
     }
 
     private void checkAssertion(String ccdServiceNames) {
         var refreshRoleRequest = new RefreshRoleRequest(ccdServiceNames,
                 null, null,null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> elinkUserService
+                .refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
 
     @Test
-    void test_elinksRefreshUserProfile_BasedOnSidamIds_200() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_200() {
         var userProfile = buildUserProfile();
 
         var pageRequest = getElinksPageRequest();
@@ -313,6 +316,171 @@ class ElinkUserServiceImplTest {
         assertEquals(200, responseEntity.getStatusCodeValue());
     }
 
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_404() {
+        var pageRequest = getElinksPageRequest();
+
+        when(profileRepository.fetchUserProfileBySidamIds(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(null);
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, Arrays.asList("Emp", "Emp"), null);
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
+    }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_Empty() {
+        var pageRequest = getElinksPageRequest();
+        when(profileRepository.fetchUserProfileBySidamIds(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, Arrays.asList("Emp", "Emp"), null);
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> elinkUserService
+                .refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_200_with_PageRequest_Desc() {
+        var userProfile1 = buildUserProfile();
+        userProfile1.setObjectId(UUID.randomUUID().toString());
+        var userProfile2 = buildUserProfile();
+        var uuid = UUID.randomUUID().toString();
+        userProfile2.setObjectId(uuid);
+        userProfile2.setSidamId(uuid);
+        userProfile2.setEmailId("xyz@gmail.com");
+        userProfile2.setPersonalCode("pme");
+
+        var pageRequest = getElinksPageRequestDesc();
+        var page = new PageImpl<>(List.of(userProfile1,userProfile2));
+        var serviceCodeMappingOne = ServiceCodeMapping
+                .builder()
+                .ticketCode("300")
+                .serviceCode("BBA3")
+                .build();
+        var serviceCodeMappingTwo = ServiceCodeMapping
+                .builder()
+                .ticketCode("373")
+                .serviceCode("BFA1")
+                .build();
+
+        when(serviceCodeMappingRepository.findAllServiceCodeMapping())
+                .thenReturn(List.of(serviceCodeMappingOne,serviceCodeMappingTwo));
+        when(profileRepository.fetchUserProfileBySidamIds(List.of("test", "test"), pageRequest))
+                .thenReturn(page);
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+                null, Arrays.asList("test", "test"),null);
+        var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "DESC", "objectId");
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+
+        ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>)responseEntity
+                .getBody();
+        assertEquals(2, profiles.size());
+        uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile = profiles.get(0);
+        assertEquals(4, profile.getAppointments().size());
+        assertEquals(3, profile.getAuthorisations().size());
+        assertThat(profiles)
+                .isSortedAccordingTo(Comparator.comparing(UserProfileRefreshResponse::getObjectId).reversed());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_200_with_PageRequest_Asc() {
+        var userProfile1 = buildUserProfile();
+        userProfile1.setObjectId(UUID.randomUUID().toString());
+        var userProfile2 = buildUserProfile();
+        var uuid = UUID.randomUUID().toString();
+        userProfile2.setObjectId(uuid);
+        userProfile2.setSidamId(uuid);
+        userProfile2.setEmailId("xyz@gmail.com");
+        userProfile2.setPersonalCode("pme");
+        var pageRequest = getElinksPageRequest();
+        var page = new PageImpl<>(List.of(userProfile1, userProfile2));
+        var serviceCodeMappingOne = ServiceCodeMapping
+                .builder()
+                .ticketCode("300")
+                .serviceCode("BBA3")
+                .build();
+        var serviceCodeMappingTwo = ServiceCodeMapping
+                .builder()
+                .ticketCode("373")
+                .serviceCode("BFA1")
+                .build();
+
+        when(serviceCodeMappingRepository.findAllServiceCodeMapping())
+                .thenReturn(List.of(serviceCodeMappingOne,serviceCodeMappingTwo));
+        when(profileRepository.fetchUserProfileBySidamIds(List.of("test", "test"), pageRequest))
+                .thenReturn(page);
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+                null, Arrays.asList("test", "test"),null);
+        var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId");
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>)responseEntity
+                .getBody();
+        assertEquals(2, profiles.size());
+        uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile = profiles.get(0);
+        assertEquals(4, profile.getAppointments().size());
+        assertEquals(3, profile.getAuthorisations().size());
+        assertThat(profiles)
+                .isSortedAccordingTo(Comparator.comparing(UserProfileRefreshResponse::getObjectId));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void test_elinksRefreshUserProfile_BasedOnSidamIds_200_with_PageRequest_null_Desc() {
+        var userProfile1 = buildUserProfile();
+        userProfile1.setObjectId(UUID.randomUUID().toString());
+        var userProfile2 = buildUserProfile();
+        var uuid = UUID.randomUUID().toString();
+        userProfile2.setObjectId(uuid);
+        userProfile2.setSidamId(uuid);
+        userProfile2.setEmailId("xyz@gmail.com");
+        userProfile2.setPersonalCode("pme");
+        try (MockedStatic<RequestUtils> mockStatic = Mockito.mockStatic(RequestUtils.class)) {
+            var pageRequest = mock(PageRequest.class);
+            mockStatic.when(() -> RequestUtils.validateAndBuildPaginationObject(anyInt(), anyInt(), any(), any(),
+                    anyInt(), any(), any(Class.class))).thenReturn(pageRequest);
+            when(pageRequest.getSort()).thenReturn(mock(Sort.class));
+
+            var page = new PageImpl<>(List.of(userProfile1, userProfile2));
+            var serviceCodeMappingOne = ServiceCodeMapping
+                    .builder()
+                    .ticketCode("300")
+                    .serviceCode("BBA3")
+                    .build();
+            var serviceCodeMappingTwo = ServiceCodeMapping
+                    .builder()
+                    .ticketCode("373")
+                    .serviceCode("BFA1")
+                    .build();
+
+            when(serviceCodeMappingRepository.findAllServiceCodeMapping())
+                    .thenReturn(List.of(serviceCodeMappingOne, serviceCodeMappingTwo));
+            when(profileRepository.fetchUserProfileBySidamIds(List.of("test", "test"), pageRequest))
+                    .thenReturn(page);
+            var refreshRoleRequest = new
+                    uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+                    null, Arrays.asList("test", "test"), null);
+            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                    0, "DESC", "objectId");
+
+            assertEquals(200, responseEntity.getStatusCodeValue());
+
+            ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>) responseEntity
+                    .getBody();
+            assertEquals(2, profiles.size());
+            uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse profile = profiles.get(0);
+            assertEquals(4, profile.getAppointments().size());
+            assertEquals(3, profile.getAuthorisations().size());
+
+        }
+    }
 
     @DisplayName("Refresh ElinksUserprofile based on IAC objectId")
     @Test
@@ -379,19 +547,14 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_Error() throws JsonProcessingException {
-        var userProfile = buildUserProfile();
-
-        var pageRequest = getElinksPageRequest();
-        var page = new PageImpl<>(Collections.singletonList(userProfile));
-
-        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
+    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_Error() {
+        var refreshRoleRequest = new
+                uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("",
                 Arrays.asList("test", "test"), null,null);
 
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test
@@ -435,36 +598,41 @@ class ElinkUserServiceImplTest {
     }
 
     @Test
-    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_400() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_400() {
 
         var refreshRoleRequest = new RefreshRoleRequest("",
                 null, null, Arrays.asList("Emp", "Emp", null));
 
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, -1,
-                    0, "ASC", "objectId");
-
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, -1,
+                0, "ASC", "objectId"));
     }
 
 
 
     @Test
-    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_404() throws JsonProcessingException {
-        var userProfile = buildUserProfile();
-
+    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_404() {
         var pageRequest = getElinksPageRequest();
-        var page = new PageImpl<>(Collections.singletonList(userProfile));
         when(profileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
                 .thenReturn(null);
         var refreshRoleRequest = new RefreshRoleRequest("",
                 null, null, Arrays.asList("Emp", "Emp"));
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnPersonalCodes_404_Empty_PersonalCodes() {
+        var pageRequest = getElinksPageRequest();
+        when(profileRepository.fetchUserProfileByPersonalCodes(List.of("Emp", "Emp"), pageRequest))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        var refreshRoleRequest = new RefreshRoleRequest("",
+                null, null, Arrays.asList("Emp", "Emp"));
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
+    }
 
     @Test
     void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_200() throws JsonProcessingException {
@@ -497,17 +665,15 @@ class ElinkUserServiceImplTest {
     @Test
     void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_LrdResponse_IsNon_200() {
 
-        var pageRequest = getElinksPageRequest();
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
                 .thenReturn(Response.builder()
                         .request(mock(Request.class)).body("body", defaultCharset()).status(400).build());
 
         var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("cmc",
                 null, null,null);
-        Assertions.assertThrows(UserProfileException.class, () -> {
-            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(UserProfileException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
 
     }
 
@@ -531,11 +697,35 @@ class ElinkUserServiceImplTest {
         when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
         var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("cmc",
                 null, null,null);
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_Response_Null() throws JsonProcessingException {
+
+        var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
+        lrdOrgInfoServiceResponse.setServiceCode("BFA1");
+        lrdOrgInfoServiceResponse.setCcdServiceName("cmc");
+        var body = mapper.writeValueAsString(List.of(lrdOrgInfoServiceResponse));
+
+        when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
+                .thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
+
+        var pageRequest = getElinksPageRequest();
+
+        when(profileRepository.fetchUserProfileByServiceNames(Set.of("BFA1"), List.of("386"), pageRequest))
+                .thenReturn(null);
+        when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BFA1"))).thenReturn(List.of("386"));
+        var refreshRoleRequest = new uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest("cmc",
+                null, null,null);
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
+    }
+
 
     @Test
     void test_elinksRefreshUserProfile_BasedOnCcdServiceNames_when_LrdResponseIsEmpty()
@@ -549,10 +739,9 @@ class ElinkUserServiceImplTest {
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null,null);
 
-        Assertions.assertThrows(UserProfileException.class, () -> {
-            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(UserProfileException.class, () -> elinkUserService
+                .refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test
@@ -569,24 +758,21 @@ class ElinkUserServiceImplTest {
         when(locationReferenceDataFeignClient.getLocationRefServiceMapping("cmc"))
                 .thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(400).build());
-        var pageRequest = getElinksPageRequest();
         var refreshRoleRequest = new RefreshRoleRequest("cmc",
                 null, null,null);
 
-        Assertions.assertThrows(UserProfileException.class, () -> {
-            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(UserProfileException.class, () ->
+                elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
     @Test
-    void test_elinksRefreshUserProfile_BasedOn_All_400() throws JsonProcessingException {
+    void test_elinksRefreshUserProfile_BasedOn_All_400() {
         var refreshRoleRequest =
                 new RefreshRoleRequest("", null, null,null);
-        Assertions.assertThrows(InvalidRequestException.class, () -> {
-            var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
-                    0, "ASC", "objectId");
-        });
+        Assertions.assertThrows(InvalidRequestException.class, () -> elinkUserService
+                .refreshUserProfile(refreshRoleRequest, 1,
+                0, "ASC", "objectId"));
     }
 
 
@@ -761,7 +947,7 @@ class ElinkUserServiceImplTest {
         userProfile.setSurname("Test");
         userProfile.setFullName("Test1");
         userProfile.setPostNominals("Test Test1");
-        userProfile.setEjudiciaryEmailId("abc@gmail.com");
+        userProfile.setEmailId("abc@gmail.com");
         userProfile.setLastWorkingDate(LocalDate.now());
         userProfile.setActiveFlag(true);
         userProfile.setCreatedDate(LocalDateTime.now());
@@ -847,7 +1033,7 @@ class ElinkUserServiceImplTest {
         userProfile.setSurname("Test");
         userProfile.setFullName("Test1");
         userProfile.setPostNominals("Test Test1");
-        userProfile.setEjudiciaryEmailId("abc@gmail.com");
+        userProfile.setEmailId("abc@gmail.com");
         userProfile.setLastWorkingDate(LocalDate.now());
         userProfile.setActiveFlag(false);
         userProfile.setCreatedDate(LocalDateTime.now());
@@ -976,7 +1162,7 @@ class ElinkUserServiceImplTest {
         userProfile.setSurname("Test");
         userProfile.setFullName("Test1");
         userProfile.setPostNominals("Test Test1");
-        userProfile.setEjudiciaryEmailId("abcd@gmail.com");
+        userProfile.setEmailId("abcd@gmail.com");
         userProfile.setLastWorkingDate(LocalDate.now());
         userProfile.setActiveFlag(false);
         userProfile.setCreatedDate(LocalDateTime.now());
