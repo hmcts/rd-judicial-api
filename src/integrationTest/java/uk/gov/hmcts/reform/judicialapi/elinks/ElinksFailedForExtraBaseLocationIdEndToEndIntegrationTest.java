@@ -275,7 +275,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         assertEquals("His Honour Judge Leslie Jones", userprofile.get(1).getFullName());
         assertEquals(null, userprofile.get(1).getPostNominals());
         assertEquals("HHJ.Leslie.Jones@judiciarystagingtest999.onmicrosoft.com",
-            userprofile.get(1).getEjudiciaryEmailId());
+            userprofile.get(1).getEmailId());
         assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(1).getObjectId());
         assertNull(userprofile.get(1).getSidamId());
         assertEquals("L.J",userprofile.get(1).getInitials());

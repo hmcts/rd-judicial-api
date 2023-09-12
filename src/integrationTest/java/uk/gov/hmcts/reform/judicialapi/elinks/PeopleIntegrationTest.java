@@ -88,7 +88,7 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals("District Judge Rachel Jones", userprofile.get(0).getFullName());
         assertEquals(null, userprofile.get(0).getPostNominals());
         assertEquals("DJ.Rachel.Jones@ejudiciary.net",
-                userprofile.get(0).getEjudiciaryEmailId());
+                userprofile.get(0).getEmailId());
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(0).getObjectId());
         assertEquals("RJ",userprofile.get(0).getInitials());
 
