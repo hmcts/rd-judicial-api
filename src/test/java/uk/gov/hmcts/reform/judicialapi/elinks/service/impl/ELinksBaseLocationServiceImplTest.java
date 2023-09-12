@@ -95,6 +95,32 @@ class ELinksBaseLocationServiceImplTest {
 
     }
 
+    @Test
+    void elinksService_load_location_should_return_sucess_msg_with_empty_response() throws JsonProcessingException {
+
+
+
+        ElinkBaseLocationResponse elinkBaseLocationResponse = new ElinkBaseLocationResponse();
+
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        String body = mapper.writeValueAsString(elinkBaseLocationResponse);
+
+
+        when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
+            .request(mock(Request.class)).body(body, defaultCharset()).status(HttpStatus.OK.value()).build());
+
+
+        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
+            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
+        });
+
+        verify(elinkDataIngestionSchedularAudit,times(3))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
+
+    }
+
 
     @Test
     void elinksService_load_location_should_return_elinksException_when_DataAccessException()
@@ -253,7 +279,7 @@ class ELinksBaseLocationServiceImplTest {
 
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
-        verify(elinkDataIngestionSchedularAudit,times(2))
+        verify(elinkDataIngestionSchedularAudit,times(3))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
 
     }

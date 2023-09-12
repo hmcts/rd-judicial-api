@@ -57,6 +57,10 @@ public class RefDataElinksConstants {
 
     public static final String LEAVERSAPI = "Leavers";
 
+    public static final String ELASTICSEARCH = "ElasticSearch";
+
+    public static final String PUBLISHSIDAM = "PublishSidamIds";
+
     public static final String DELETEDAPI = "Deleted";
 
     public static final String LOCATIONAPI = "Location";
@@ -123,6 +127,8 @@ public class RefDataElinksConstants {
 
     public static final String INVALIDROLENAMES = "Role Name  : "
         + " is invalid";
+
+    public static final String OBJECTID = "Object_id";
 
     public static final String USERPROFILEFAILURE = "UserProfile  : "
         + FAIL_LOAD;

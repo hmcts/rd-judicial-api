@@ -4,6 +4,7 @@ import feign.FeignException;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Triple;
+import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -135,13 +136,19 @@ public class ELinksServiceImpl implements ELinksService {
                     (ElinkBaseLocationResponse) responseEntity.getBody();
 
                 if (nonNull(responseEntity.getBody())) {
-                    if (nonNull(elinkBaseLocationResponse)) {
+                    if (nonNull(elinkBaseLocationResponse) && elinkBaseLocationResponse.getResults().size() > 0) {
                         List<BaseLocationResponse> baseLocationResponses = elinkBaseLocationResponse.getResults();
 
                         List<BaseLocation> baselocations = baseLocationResponses.stream()
                             .map(BaseLocationResponse::toBaseLocationEntity)
                             .toList();
                         result = loadBaseLocationData(baselocations);
+                    } else {
+                        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                            schedulerStartTime,
+                            now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), LOCATIONAPI);
+                        throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
                     }
                 } else {
                     elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
@@ -164,8 +171,19 @@ public class ELinksServiceImpl implements ELinksService {
 
         } catch (FeignException ex) {
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
+        } catch (JSONException ex) {
+            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                schedulerStartTime,
+                now(),
+                RefDataElinksConstants.JobStatus.FAILED.getStatus(), LOCATIONAPI);
+            throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
+        } catch (Exception ex) {
+            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                schedulerStartTime,
+                now(),
+                RefDataElinksConstants.JobStatus.FAILED.getStatus(), LOCATIONAPI);
+            throw ex;
         }
-
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 now(),
