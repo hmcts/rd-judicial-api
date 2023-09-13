@@ -31,6 +31,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @Slf4j
 public class SendEmail {
 
+    @Autowired
     ElinkDataExceptionRepository elinkDataExceptionRepository;
 
     @Autowired

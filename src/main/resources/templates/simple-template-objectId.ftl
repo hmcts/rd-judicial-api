@@ -21,7 +21,7 @@
     <table align="center" border="0" cellpadding="0" cellspacing="0" width="1000" style="border-collapse: collapse;">
         <tr>
             <td style="padding: 40px 30px 40px 30px;">
-                <p>Following JO profiles where with unMatched Object Id's from IDAM newly found :</p>
+                <p>Following are the JOH profiles with unmatched Object IDs that are present in IDAM but missing from Judicial Reference Data :</p>
                 </br>
                 <div>
                     <table style="border-collapse: expression('separate', cellSpacing='15px'); border-spacing: 15px">
