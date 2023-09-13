@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IdamElasticSearchService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SqlConstants;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
@@ -68,6 +69,8 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    SendEmail sendEmail;
 
     @Autowired
     private ProfileRepository userProfileRepository;
@@ -118,6 +121,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         int totalCount = 0;
         ResponseEntity<Object> responseEntity = null;
         Response response = null;
+        LocalDateTime schedulerStartTime = now();
 
         do {
             params.put("page", String.valueOf(count));
@@ -157,7 +161,9 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
 
         } while (totalCount > 0 && recordsPerPage * count < totalCount);
 
-        validateObjectIds(judicialUsers);
+        validateObjectIds(judicialUsers,schedulerStartTime);
+        sendEmail.sendEmail(schedulerStartTime);
+
         updateSidamIds(judicialUsers);
 
         return ResponseEntity
@@ -165,7 +171,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 .body(judicialUsers);
     }
 
-    public void validateObjectIds(Set<IdamResponse> sidamUsers) {
+    public void validateObjectIds(Set<IdamResponse> sidamUsers,LocalDateTime schedulerStartTime) {
 
         Map<String,String> sidamObjectId = new HashMap<>();
 
@@ -181,7 +187,6 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
 
         String errorDescription = " Received from Idam is not present in Judicial Reference Data";
 
-        LocalDateTime schedulerStartTime = now();
 
         if (!filteredObjectIds.isEmpty()) {
             for (var entry : filteredObjectIds.entrySet()) {
