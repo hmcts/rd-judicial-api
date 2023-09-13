@@ -43,7 +43,7 @@ public class UserSearchResponseWrapper implements Serializable {
         this.knownAs = userProfile.getKnownAs();
         this.surname = userProfile.getSurname();
         this.fullName = userProfile.getFullName();
-        this.emailId = userProfile.getEjudiciaryEmailId();
+        this.emailId = userProfile.getEmailId();
         this.personalCode = userProfile.getPersonalCode();
         this.idamId = userProfile.getSidamId();
         this.postNominals = userProfile.getPostNominals();

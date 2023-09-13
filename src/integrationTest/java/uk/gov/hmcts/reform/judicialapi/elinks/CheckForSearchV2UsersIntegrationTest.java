@@ -256,7 +256,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @ValueSource(strings = { "jrd-system-user","jrd-admin"})
-    void shouldReturn400WhenSearchStringContainsOtherThanLetters(String role) {
+    void shouldReturn200WhenSearchStringContainsOtherThanLetters(String role) {
 
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
@@ -266,10 +266,40 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
+        assertThat(response).containsEntry("http_status", "200 OK");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn400WhenSearchStringContainsOtherThanAccentedCharacters(String role) {
+
+        mockJwtToken(role);
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("àèÙ{}{}")
+            .location("location")
+            .serviceCode("BFA1")
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
-                + "apostrophe, hyphen"));
+            + "apostrophe, hyphen"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    void shouldReturn200WhenSearchStringContainsAccentedCharacters(String role) {
+
+        mockJwtToken(role);
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("àèÙ")
+            .location("location")
+            .serviceCode("BFA1")
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE));
+        assertThat(response).containsEntry("http_status", "200 OK");
     }
 
     @ParameterizedTest

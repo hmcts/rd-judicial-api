@@ -87,7 +87,7 @@ class PublishSidamIdIntegrationTest extends ElinksEnabledIntegrationTest {
                 .surname("TestAccount")
                 .fullName("Tribunal Judge Tester TestAccount 2")
                 .postNominals("ABC")
-                .ejudiciaryEmailId("Tester2@judiciarystaging.onmicrosoft.com")
+                .emailId("Tester2@judiciarystaging.onmicrosoft.com")
                 .lastWorkingDate(LocalDate.now())
                 .activeFlag(true)
                 .createdDate(LocalDateTime.now())

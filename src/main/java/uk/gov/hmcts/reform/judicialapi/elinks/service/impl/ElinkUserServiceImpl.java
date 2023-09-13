@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.validator.ElinksRefreshUserValidat
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
+import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -111,7 +114,6 @@ public class ElinkUserServiceImpl implements ElinkUserService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ResponseEntity<Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,
                                                      Integer pageNumber, String sortDirection, String sortColumn) {
 
@@ -183,7 +185,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                     throw new ResourceNotFoundException(NO_DATA_FOUND);
                 }
 
-                return getRefreshRoleResponseEntity(userProfilePage, ccdServiceNames, "ccdServiceNames");
+                return getRefreshRoleResponseEntity(userProfilePage, ccdServiceNames, "ccdServiceNames", pageRequest);
             }
         }
 
@@ -221,7 +223,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
             throw new ResourceNotFoundException(NO_DATA_FOUND);
         }
 
-        return getRefreshRoleResponseEntity(userProfilePage, objectIds, "objectIds");
+        return getRefreshRoleResponseEntity(userProfilePage, objectIds, "objectIds", pageRequest);
     }
 
     private ResponseEntity<Object> refreshUserProfileBasedOnPersonalCodes(List<String> personalCodes,
@@ -234,7 +236,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                     loggingComponentName, personalCodes);
             throw new ResourceNotFoundException(NO_DATA_FOUND);
         }
-        return getRefreshRoleResponseEntity(userProfilePage, personalCodes, "personalCodes");
+        return getRefreshRoleResponseEntity(userProfilePage, personalCodes, "personalCodes", pageRequest);
     }
 
 
@@ -249,11 +251,11 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                     loggingComponentName, sidamIds);
             throw new ResourceNotFoundException(NO_DATA_FOUND);
         }
-        return getRefreshRoleResponseEntity(userProfilePage, sidamIds, "sidamIds");
+        return getRefreshRoleResponseEntity(userProfilePage, sidamIds, "sidamIds", pageRequest);
     }
 
     private ResponseEntity<Object> getRefreshRoleResponseEntity(Page<UserProfile> userProfilePage, Object collection,
-                                                                String collectionName) {
+                                                                String collectionName,PageRequest pageRequest) {
         log.info("{} : starting getRefresh Role Response Entity ", loggingComponentName);
         var userProfileList = new ArrayList<UserProfileRefreshResponse>();
 
@@ -296,11 +298,34 @@ public class ElinkUserServiceImpl implements ElinkUserService {
 
         log.info("{}:: Successfully fetched the User Profile details to refresh role assignment "
                 + "for " + collectionName + " {}", loggingComponentName, collection);
+
+        sort(refreshResponse, pageRequest);
         return ResponseEntity
                 .ok()
                 .header("total_records", String.valueOf(userProfilePage.getTotalElements()))
                 .body(refreshResponse);
 
+    }
+
+    @SuppressWarnings("unchecked")
+    private void sort(List<UserProfileRefreshResponse> refreshResponses, PageRequest page) {
+        Sort.Order order = page.getSort().get().findFirst().orElse(null);
+
+        if (order != null) {
+            Comparator<UserProfileRefreshResponse> comparator = Comparator.comparing(report -> {
+                try {
+                    return (Comparable) new PropertyDescriptor(order.getProperty(), report.getClass())
+                            .getReadMethod().invoke(report);
+                } catch (Exception e) {
+                    log.error("not able to resolve the sorting options");
+                    return null;
+                }
+            });
+            if (Sort.Direction.DESC == order.getDirection()) {
+                comparator = comparator.reversed();
+            }
+            refreshResponses.sort(comparator);
+        }
     }
 
     private UserProfileRefreshResponse buildUserProfileRefreshResponseDto(//change here
@@ -313,7 +338,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .surname(profile.getSurname())
                 .fullName(profile.getFullName())
                 .postNominals(profile.getPostNominals())
-                .emailId(profile.getEjudiciaryEmailId())
+                .emailId(profile.getEmailId())
                 .personalCode(profile.getPersonalCode())
                 .title(profile.getTitle())
                 .initials(profile.getInitials())
