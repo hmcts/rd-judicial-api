@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
@@ -24,11 +25,14 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -69,6 +73,10 @@ class IdamElasticSearchServiceImplTest {
 
     @Mock
     private ElinkDataExceptionRepository elinkDataExceptionRepository;
+
+    @Mock
+    SendEmail sendEmail;
+
 
     public static final String CLIENT_AUTHORIZATION =
             "eyjfddsfsdfsdfdj03903.dffkljfke932rjf032j02f3--fskfljdskls-fdkldskll";
@@ -128,6 +136,30 @@ class IdamElasticSearchServiceImplTest {
                 .status(200).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
         when(userProfileRepository.fetchObjectId()).thenReturn(List.of("2234"));
+
+
+        ElinkDataExceptionRecords exceptionRecords1 = new ElinkDataExceptionRecords();
+        exceptionRecords1.setId(1L);
+        exceptionRecords1.setKey("key");
+        exceptionRecords1.setRowId("rowId");
+        exceptionRecords1.setSchedulerName("schedularName");
+        exceptionRecords1.setErrorDescription("errorDescr");
+        exceptionRecords1.setTableName("tableName");
+        exceptionRecords1.setFieldInError(RefDataElinksConstants.OBJECT_ID);
+        exceptionRecords1.setSchedulerStartTime(LocalDateTime.now());
+        exceptionRecords1.setUpdatedTimeStamp(LocalDateTime.now());
+        ElinkDataExceptionRecords exceptionRecords2 = new ElinkDataExceptionRecords();
+        exceptionRecords2.setId(2L);
+        exceptionRecords2.setKey("key1");
+        exceptionRecords2.setRowId("rowId1");
+        exceptionRecords2.setSchedulerName("schedularName1");
+        exceptionRecords2.setErrorDescription("errorDescr1");
+        exceptionRecords2.setTableName("tableName1");
+        exceptionRecords2.setFieldInError(RefDataElinksConstants.OBJECT_ID);
+        exceptionRecords2.setSchedulerStartTime(LocalDateTime.now());
+        exceptionRecords2.setUpdatedTimeStamp(LocalDateTime.now());
+        List<ElinkDataExceptionRecords> exceptionRecords = Arrays.asList(exceptionRecords1,exceptionRecords2);
+
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
         assertThat(response).isNotNull();

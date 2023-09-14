@@ -9,6 +9,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfigurat
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -82,7 +83,7 @@ public class SendEmail {
         ElinkEmailConfiguration.MailTypeConfig config = emailConfiguration.getMailTypes()
                 .get(type);
         if (config != null && config.isEnabled()) {
-            uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email email = uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email.builder()
+            Email email = uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email.builder()
                     .contentType(CONTENT_TYPE_HTML)
                     .from(config.getFrom())
                     .to(config.getTo())

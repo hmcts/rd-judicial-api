@@ -10,16 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfiguration;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AppointmentsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AuthorisationsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
@@ -29,7 +26,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JrdRegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
@@ -37,30 +33,21 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
-import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
-import uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
-
-import uk.gov.hmcts.reform.judicialapi.elinks.util.EmailTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
-
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
-
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.isNull;
@@ -73,9 +60,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CFTREGIONIDFAILURE;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CONTENT_TYPE_HTML;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_FORBIDDEN;
@@ -92,7 +77,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISDUPLICATED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISPRESENT;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECT_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PERSONALCODE;
