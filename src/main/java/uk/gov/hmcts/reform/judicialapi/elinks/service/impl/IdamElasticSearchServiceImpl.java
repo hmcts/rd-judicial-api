@@ -85,7 +85,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
 
     @Value("${elinks.people.page}")
-    private String page;
+    String page;
 
     @Override
     public String getIdamBearerToken(LocalDateTime schedulerStartTime) {

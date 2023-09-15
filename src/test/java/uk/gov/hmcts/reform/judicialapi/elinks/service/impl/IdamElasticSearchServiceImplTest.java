@@ -98,6 +98,7 @@ class IdamElasticSearchServiceImplTest {
         tokenConfigProperties.setUrl(url);
         idamElasticSearchServiceImpl.props = tokenConfigProperties;
         idamElasticSearchServiceImpl.recordsPerPage = 1;
+        idamElasticSearchServiceImpl.page = "1";
         idamElasticSearchServiceImpl.idamSearchQuery = "(roles:judiciary) AND lastModified:>now-%sh";
     }
 
