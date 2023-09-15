@@ -24,7 +24,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmailTest;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
@@ -72,7 +72,7 @@ class IdamElasticSearchServiceImplTest {
     private ElinkDataExceptionRepository elinkDataExceptionRepository;
 
     @Mock
-    SendEmailTest sendEmail;
+    SendEmail sendEmail;
 
 
     public static final String CLIENT_AUTHORIZATION =
