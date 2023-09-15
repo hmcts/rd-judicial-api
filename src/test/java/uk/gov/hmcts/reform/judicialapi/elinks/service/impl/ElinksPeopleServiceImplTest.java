@@ -1009,7 +1009,7 @@ class ElinksPeopleServiceImplTest {
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
-        }
+    }
 
     @Test
     void verify_send_email_negative_scenario_when_updating_authorisationsDb()
