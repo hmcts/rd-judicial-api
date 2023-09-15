@@ -11,16 +11,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfiguration;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -30,6 +35,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.CONTENT_TYPE_PLAIN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATABASE_FETCH_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JOB_DETAILS_UPDATE_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.GET_DISTINCT_SIDAM_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.SELECT_JOB_STATUS_SQL;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.UPDATE_JOB_SQL;
@@ -56,6 +63,12 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
     @Autowired
     ElinkEmailConfiguration emailConfiguration;
 
+    @Autowired
+    ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
+
+    @Autowired
+    private DataloadSchedularAuditRepository dataloadSchedularAuditRepository;
+
     @Value("${launchdarkly.sdk.environment}")
     String environment;
 
@@ -65,6 +78,11 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
 
         //Get the job details from dataload_schedular_job table
         Pair<String, String> jobDetails;
+        LocalDateTime schedulerStartTime = now();
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            null,
+            RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), PUBLISHSIDAM);
         try {
             jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
         } catch (Exception ex) {
@@ -80,10 +98,10 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
         if (isEmpty(sidamIds)) {
             log.warn("{}:: No Sidam id exists in JRD for publishing in ASB for JOB id: {} ",
                 logComponentName, jobDetails.getLeft());
-            updateAsbStatus(jobDetails.getLeft(), SUCCESS.getStatus());
+            updateAsbStatus(jobDetails.getLeft(), SUCCESS.getStatus(),schedulerStartTime);
         }
 
-        publishMessage(jobDetails.getRight(), sidamIds, jobDetails.getLeft());
+        publishMessage(jobDetails.getRight(), sidamIds, jobDetails.getLeft(),schedulerStartTime);
         jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
         log.info("{}:: completed Publish SidamId to ASB with JOB Id: {}  ",
             logComponentName, jobDetails.getLeft());
@@ -91,6 +109,10 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
         SchedulerJobStatusResponse response = SchedulerJobStatusResponse.builder().id(jobDetails.getLeft())
             .jobStatus(jobDetails.getRight()).sidamIdsCount(sidamIdcount).statusCode(HttpStatus.OK.value()).build();
 
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            now(),
+            RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), PUBLISHSIDAM);
         return ResponseEntity.status(HttpStatus.OK).body(response);
 
     }
@@ -114,13 +136,14 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
     }
 
 
-    public void publishMessage(String status, List<String> sidamIds, String jobId) {
+    public void publishMessage(String status, List<String> sidamIds, String jobId,
+                               LocalDateTime schedulerStartTime) {
         try {
             if ((IN_PROGRESS.getStatus().equals(status)) && isNotEmpty(sidamIds)) {
                 //Publish or retry Message in ASB
                 log.info("{}:: Publishing/Retrying JRD messages in ASB for Job Id {}", logComponentName, jobId);
                 elinkTopicPublisher.sendMessage(sidamIds, jobId);
-                updateAsbStatus(jobId, SUCCESS.getStatus());
+                updateAsbStatus(jobId, SUCCESS.getStatus(),schedulerStartTime);
                 log.info("{}:: Updated Total distinct Sidam Ids to ASB: {}", logComponentName, sidamIdcount);
             }
         } catch (Exception ex) {
@@ -128,7 +151,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
             ElinkEmailConfiguration.MailTypeConfig mailTypeConfig = emailConfiguration.getMailTypes().get("asb");
             final String logMessage = String.format(mailTypeConfig.getSubject(), jobId);
             log.error("{}:: {}", logComponentName, logMessage);
-            updateAsbStatus(jobId, FAILED.getStatus());
+            updateAsbStatus(jobId, FAILED.getStatus(),schedulerStartTime);
             if (mailTypeConfig.isEnabled()) {
                 Email email = Email.builder()
                     .contentType(CONTENT_TYPE_PLAIN)
@@ -139,15 +162,23 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
                     .build();
                 emailService.sendEmail(email);
             }
+            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                schedulerStartTime,
+                now(),
+                RefDataElinksConstants.JobStatus.FAILED.getStatus(), PUBLISHSIDAM);
             throw ex;
         }
     }
 
-    private void updateAsbStatus(String jobId,String jobStatus) {
+    private void updateAsbStatus(String jobId,String jobStatus,LocalDateTime schedulerStartTime) {
         //Update elinks DB with Publishing Status
         try {
             jdbcTemplate.update(UPDATE_JOB_SQL, jobStatus, Integer.valueOf(jobId));
         } catch (Exception ex) {
+            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                schedulerStartTime,
+                now(),
+                RefDataElinksConstants.JobStatus.FAILED.getStatus(), PUBLISHSIDAM);
             throw new ElinksException(HttpStatus.FORBIDDEN, JOB_DETAILS_UPDATE_ERROR, JOB_DETAILS_UPDATE_ERROR);
         }
 

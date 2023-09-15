@@ -153,6 +153,8 @@ elinks:
     includePreviousAppointments : ${INCLUDE_PREVIOUS_APPOINTMENT:false}
     threadPauseTime: ${THREAD_PAUSE_TIME:2000}
     threadRetriggerPauseTime: ${THREAD_RETRIGGER_TIME:1000}
+    retriggerStatus: ${RETRIGGER_STATUSCODE:503,429}
+    retriggerThreshold: ${RETRIGGER_THRESHOLD:5}
   scheduler:
     wrapperApiUrl: ${ELINKS_WRAPPER_API_URL:http://localhost:8093}
     cronExpression: ${CRON_EXPRESSION:* 55 15 * * *}

@@ -23,6 +23,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepos
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 
@@ -75,6 +76,9 @@ class IdamElasticSearchServiceImplTest {
     SendEmail sendEmail;
 
 
+    @Mock
+    ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
+
     public static final String CLIENT_AUTHORIZATION =
             "eyjfddsfsdfsdfdj03903.dffkljfke932rjf032j02f3--fskfljdskls-fdkldskll";
 
@@ -101,7 +105,7 @@ class IdamElasticSearchServiceImplTest {
     void getBearerToken() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
-        String actualToken = idamElasticSearchServiceImpl.getIdamBearerToken();
+        String actualToken = idamElasticSearchServiceImpl.getIdamBearerToken(LocalDateTime.now());
         assertThat(actualToken).isEqualTo(CLIENT_AUTHORIZATION);
         verify(openIdTokenResponseMock, times(1)).getAccessToken();
         verify(idamClientMock, times(1)).getOpenIdToken(any());
@@ -110,7 +114,9 @@ class IdamElasticSearchServiceImplTest {
     @Test
     void getBearerTokenWithException() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
-        assertThrows(ElinksException.class, () -> idamElasticSearchServiceImpl.getIdamBearerToken());
+        assertThrows(ElinksException.class, () -> idamElasticSearchServiceImpl.getIdamBearerToken(LocalDateTime.now()));
+        verify(elinkDataIngestionSchedularAudit,times(1))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
     @Test
@@ -141,6 +147,8 @@ class IdamElasticSearchServiceImplTest {
             assertThat(useResponse.getEmail()).isEqualTo("some@some.com");
         });
         verify(idamClientMock, times(1)).getUserFeed(anyString(), any());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
     @Test
@@ -158,6 +166,8 @@ class IdamElasticSearchServiceImplTest {
                 .status(500).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
         assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
 

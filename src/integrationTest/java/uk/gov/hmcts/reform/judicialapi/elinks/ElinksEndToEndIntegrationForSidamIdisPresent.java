@@ -14,7 +14,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
@@ -44,13 +43,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISPRESENT;
 
-
-class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrationTest {
+class ElinksEndToEndIntegrationForSidamIdisPresent extends ElinksEnabledIntegrationTest {
 
     @Autowired
     LocationRepository locationRepository;
@@ -98,11 +94,7 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         String baselocationResponseValidationJson =
             loadJson("src/integrationTest/resources/wiremock_responses/base_location.json");
         String peopleResponseValidationJson =
-            loadJson("src/integrationTest/resources/wiremock_responses/people_duplicateobject.json");
-        String leaversResponseValidationJson =
-            loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
-        String deletedResponseValidationJson =
-            loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
+            loadJson("src/integrationTest/resources/wiremock_responses/testpeople_withoutsidam.json");
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
             .willReturn(aResponse()
@@ -137,7 +129,7 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         cleanupData();
     }
 
-    @DisplayName("Elinks end to end success scenario")
+    @DisplayName("Elinks end to test sidam is not updated")
     @Test
     void test_elinks_end_to_end_success_scenario_with_partial_success_return_status_200()
             throws JOSEException, JsonProcessingException {
@@ -182,27 +174,24 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         assertEquals("1722",baseLocationList.get(4).getParentId());
 
         List<UserProfile> userprofile = profileRepository.findAll();
-        assertEquals(12, userprofile.size());
-        assertEquals("4913085", userprofile.get(11).getPersonalCode());
-        assertEquals("Rachel", userprofile.get(11).getKnownAs());
-        assertEquals("Jones", userprofile.get(11).getSurname());
-        assertEquals("District Judge Rachel Jones", userprofile.get(11).getFullName());
-        assertEquals(null, userprofile.get(11).getPostNominals());
+        assertEquals(11, userprofile.size());
+        assertEquals("123454", userprofile.get(10).getPersonalCode());
+        assertEquals("Rachel", userprofile.get(10).getKnownAs());
+        assertEquals("Jones", userprofile.get(10).getSurname());
+        assertEquals("District Judge Rachel Jones", userprofile.get(10).getFullName());
+        assertEquals(null, userprofile.get(10).getPostNominals());
         assertEquals("DJ.Rachel.Jones@ejudiciary.net",
-            userprofile.get(11).getEmailId());
-        assertTrue(userprofile.get(11).getActiveFlag());
-        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(11).getObjectId());
-        assertNull(userprofile.get(11).getSidamId());
-        assertEquals("RJ",userprofile.get(11).getInitials());
+            userprofile.get(10).getEmailId());
+        assertTrue(userprofile.get(10).getActiveFlag());
+        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(10).getObjectId());
+        assertEquals("3333333",userprofile.get(10).getSidamId());
+        assertEquals("RJ",userprofile.get(10).getInitials());
+
 
 
         //asserting userprofile data for leaver api
 
         //asserting userprofile data for deleted api
-
-        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException).hasSize(1);
-        assertThat(elinksException.get(0).getErrorDescription().equals(OBJECTIDISPRESENT));
 
     }
 

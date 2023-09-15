@@ -89,7 +89,7 @@ class ElinkDataIngestionSchedularAuditTest {
             schedularAudit.getStatus(), schedularAudit.getApiName());
         verify(schedularAudit,times(2)).setSchedulerName(any());
         verify(schedularAudit,times(2)).setSchedulerStartTime(any());
-        verify(schedularAudit,times(2)).setSchedulerEndTime(any());
+        verify(schedularAudit,times(3)).setSchedulerEndTime(any());
         verify(schedularAudit,times(2)).setStatus(any());
         verify(schedularAudit,times(2)).setApiName(any());
         verify(elinkSchedularAuditRepository, times(1))

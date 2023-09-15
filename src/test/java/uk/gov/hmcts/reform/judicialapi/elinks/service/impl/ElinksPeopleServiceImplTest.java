@@ -54,14 +54,17 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -106,8 +109,6 @@ class ElinksPeopleServiceImplTest {
     final ElinkEmailConfiguration.MailTypeConfig config = mock(ElinkEmailConfiguration.MailTypeConfig.class);
 
     final IEmailService emailService = spy(IEmailService.class);
-
-    final ElinksPeopleServiceImpl elinksPeopleService = mock(ElinksPeopleServiceImpl.class);
 
 
     @Spy
@@ -181,6 +182,10 @@ class ElinksPeopleServiceImplTest {
                 "2000");
         ReflectionTestUtils.setField(elinksPeopleServiceImpl, "threadRetriggerPauseTime",
             "1000");
+        ReflectionTestUtils.setField(elinksPeopleServiceImpl, "retriggerThreshold",
+            3);
+        ReflectionTestUtils.setField(elinksPeopleServiceImpl, "retriggerStatusCode",
+            List.of(503,429));
         ReflectionTestUtils.setField(elinksPeopleServiceImpl, "lastUpdated",
                 "Thu Jan 01 00:00:00 GMT 2015");
         ReflectionTestUtils.setField(elinksPeopleServiceImpl, "page",
@@ -379,6 +384,28 @@ class ElinksPeopleServiceImplTest {
     }
 
     @Test
+    void should_notRetriggerMorethanThreshold() throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
+        String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
+        String body3 = mapper.writeValueAsString(elinksApiResponseThirdHit);
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
+            Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(429).build())
+            .thenReturn(Response.builder().request(mock(Request.class))
+                .body(body2, defaultCharset()).status(429).build())
+            .thenReturn(Response.builder().request(mock(Request.class))
+                .body(body3, defaultCharset()).status(429).build());
+
+        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
+        });
+        verify(elinkDataIngestionSchedularAudit,times(3))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
+    }
+
+    @Test
     void loadPeopleWhenAuditEntryPresentSuccess() throws JsonProcessingException {
 
         LocalDateTime dateTime = LocalDateTime.now();
@@ -415,7 +442,31 @@ class ElinksPeopleServiceImplTest {
         verify(judicialRoleTypeRepository, atLeastOnce()).save(any());
         verify(authorisationsRepository, atLeastOnce()).save(any());
         verify(elinkDataExceptionHelper,times(2))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
+    }
+
+    @Test
+    void loadPeopleWhenAuditEntryWithoutPagination() throws JsonProcessingException {
+
+        PeopleRequest elinksApiResponseHit;
+        ResultsRequest result;
+        ObjectMapper mapper = new ObjectMapper();
+        result = ResultsRequest.builder().personalCode("1234").knownAs("knownas").fullName("fullName")
+            .surname("surname").postNominals("postNOmi").email("email").lastWorkingDate("2022-12-20")
+            .objectId("objectId1").initials("initials").appointmentsRequests(null)
+            .authorisationsRequests(null).judiciaryRoles(null).build();
+        elinksApiResponseHit = PeopleRequest.builder().resultsRequests(List.of(result)).pagination(null).build();
+        String body = mapper.writeValueAsString(elinksApiResponseHit);
+
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
+            Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
+            ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
+        });
+        verify(elinkDataIngestionSchedularAudit,times(3))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
     @Test
@@ -504,7 +555,7 @@ class ElinksPeopleServiceImplTest {
         verify(judicialRoleTypeRepository, atLeastOnce()).save(any());
         verify(authorisationsRepository, atLeastOnce()).save(any());
         verify(elinkDataExceptionHelper,times(1))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
     @Test
@@ -580,7 +631,7 @@ class ElinksPeopleServiceImplTest {
 
         verify(authorisationsRepository, atLeastOnce()).save(any());
         verify(elinkDataExceptionHelper,times(1))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
 
     }
 
@@ -620,8 +671,50 @@ class ElinksPeopleServiceImplTest {
 
         verify(authorisationsRepository, atLeastOnce()).save(any());
         verify(elinkDataExceptionHelper,times(1))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
 
+    }
+
+    @Test
+    void loadPeopleWithSidamIdPresentinDb() throws JsonProcessingException {
+
+        UserProfile userProfile = UserProfile.builder()
+            .personalCode("1234")
+            .objectId("objectId1")
+            .emailId("email@justice")
+            .sidamId("sidamId")
+            .createdDate(convertToLocalDateTime("2023-04-12T16:42:35Z"))
+            .build();
+        when(profileRepository.findAll()).thenReturn(List.of(userProfile));
+        when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(null);
+        BaseLocation location = new BaseLocation();
+        location.setBaseLocationId("12345");
+        location.setName("ABC");
+        LocationMapping locationMapping = LocationMapping.builder()
+            .serviceCode("BHA1")
+            .epimmsId("1234").build();
+        when(regionMappingRepository.fetchRegionIdfromRegion(any())).thenReturn("1");
+        when(baseLocationRepository.fetchParentId(any())).thenReturn("1234");
+        ObjectMapper mapper = new ObjectMapper();
+        when(locationMapppingRepository.fetchEpimmsIdfromLocationId(any())).thenReturn("234");
+        String body = mapper.writeValueAsString(elinksApiResponseSecondHit);
+
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
+            Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+            .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
+
+
+        verify(elinksFeignClient, times(1)).getPeopleDetails(any(), any(), any(),
+            Boolean.parseBoolean(any()));
+        verify(profileRepository, times(2)).save(any());
+
+        verify(appointmentsRepository, atLeastOnce()).save(any());
+
+        verify(authorisationsRepository, atLeastOnce()).save(any());
     }
 
     @Test
@@ -658,7 +751,7 @@ class ElinksPeopleServiceImplTest {
 
         verify(authorisationsRepository, atLeastOnce()).save(any());
         verify(elinkDataExceptionHelper,times(6))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
 
     }
 
@@ -699,7 +792,7 @@ class ElinksPeopleServiceImplTest {
 
         verify(authorisationsRepository, atLeastOnce()).save(any());
         verify(elinkDataExceptionHelper,times(1))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
 
     }
 
@@ -818,8 +911,8 @@ class ElinksPeopleServiceImplTest {
         when(profileRepository.save(any())).thenThrow(dataAccessException);
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
-        verify(elinkDataExceptionHelper,atLeastOnce()).auditException(any(),any(),any(),any(),any(),any(),any());
-
+        verify(elinkDataExceptionHelper,atLeastOnce()).auditException(any(),any(),
+            any(),any(),any(),any(),any(),anyInt());
     }
 
 
@@ -849,7 +942,7 @@ class ElinksPeopleServiceImplTest {
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(4))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
     @Test
@@ -878,7 +971,7 @@ class ElinksPeopleServiceImplTest {
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
     @Test
@@ -915,8 +1008,8 @@ class ElinksPeopleServiceImplTest {
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
-    }
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
+        }
 
     @Test
     void verify_send_email_negative_scenario_when_updating_authorisationsDb()
@@ -952,7 +1045,7 @@ class ElinksPeopleServiceImplTest {
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
-                .auditException(any(),any(),any(),any(),any(),any(),any());
+                .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
         verify(emailService, times(0)).sendEmail(any());
     }
 
@@ -989,7 +1082,7 @@ class ElinksPeopleServiceImplTest {
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
-                .auditException(any(),any(),any(),any(),any(),any(),any());
+                .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
     @Test
@@ -1025,7 +1118,7 @@ class ElinksPeopleServiceImplTest {
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
-            .auditException(any(),any(),any(),any(),any(),any(),any());
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
 
@@ -1052,7 +1145,8 @@ class ElinksPeopleServiceImplTest {
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
-        verify(elinkDataExceptionHelper,atLeastOnce()).auditException(any(),any(),any(),any(),any(),any(),any());
+        verify(elinkDataExceptionHelper,atLeastOnce()).auditException(any(),
+            any(),any(),any(),any(),any(),any(),anyInt());
     }
 
     @Test
@@ -1130,5 +1224,12 @@ class ElinksPeopleServiceImplTest {
 
     }
 
+    private static LocalDateTime convertToLocalDateTime(String date) {
+        if (Optional.ofNullable(date).isPresent()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            return LocalDateTime.parse(date, formatter);
+        }
+        return null;
+    }
 
 }

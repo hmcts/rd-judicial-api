@@ -9,8 +9,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
@@ -29,13 +31,18 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
+import static org.apache.commons.lang3.StringUtils.SPACE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAMSEARCH;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.FAILED;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELASTICSEARCH;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHASB;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.UPDATE_JOB_SQL;
+import static uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation.FORBIDDEN_EXCEPTION_LD;
 
 @Component
 @Slf4j
@@ -46,6 +53,9 @@ public class ElinksApiJobScheduler {
 
     @Value("${elinks.scheduler.wrapperApiUrl}")
     private String eLinksWrapperBaseUrl;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @Autowired
     private DataloadSchedulerJobAudit dataloadSchedulerJobAudit;
@@ -93,7 +103,7 @@ public class ElinksApiJobScheduler {
                             jobStartTime,
                             "ElinksApiJobScheduler" + jobStartTime,
                             "Schedular_Run_date", "JRD load failed since job has already ran for the day",
-                        "ElinksApiJobScheduler",null);
+                        "ElinksApiJobScheduler",null,1);
                     return;
                 }
             }
@@ -118,51 +128,110 @@ public class ElinksApiJobScheduler {
             ResponseEntity<ElinkLocationWrapperResponse> locationResponse
                 = retrieveLocationDetails();
         } catch(Exception ex) {
-            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Location Response");
-            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                now(),
-                now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),LOCATIONAPI);
+            log.error("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Location Response");
+            if (ex instanceof HttpClientErrorException)
+            {
+                HttpClientErrorException exception=(HttpClientErrorException)ex;
+                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                    .contains("jrd-elinks-location".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
+                {
+
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        now(),
+                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),LOCATIONAPI);
+                }
+            }
         }
         try{
         ResponseEntity<ElinkPeopleWrapperResponse> peopleResponse
                 = retrievePeopleDetails();
         } catch(Exception ex) {
-            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                now(),
-                now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),PEOPLEAPI);
+            if (ex instanceof HttpClientErrorException)
+            {
+                HttpClientErrorException exception=(HttpClientErrorException)ex;
+                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                    .contains("jrd-elinks-load-people".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
+                {
+
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        now(),
+                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),PEOPLEAPI);
+                }
+            }
         }
         try{
         ResponseEntity<ElinkLeaversWrapperResponse> leaversResponse
                 = retrieveLeaversDetails();
         } catch(Exception ex) {
-            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Leavers Response");
-            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                now(),
-                now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),LEAVERSAPI);
+            log.error("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Leavers Response");
+            if (ex instanceof HttpClientErrorException)
+            {
+                HttpClientErrorException exception=(HttpClientErrorException)ex;
+                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                    .contains("jrd-elinks-leavers".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
+                {
+
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        now(),
+                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),LEAVERSAPI);
+                }
+            }
         }
         try{
             ResponseEntity<ElinkDeletedWrapperResponse> deletedResponse
                 = retrieveDeletedDetails();
         } catch(Exception ex) {
-            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Deleted Response");
+            log.error("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Deleted Response");
+            if (ex instanceof HttpClientErrorException)
+            {
+                HttpClientErrorException exception=(HttpClientErrorException)ex;
+                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                    .contains("jrd-elinks-load-deleted".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
+                {
+
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        now(),
+                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),DELETEDAPI);
+                }
+            }
         }
         try{
         ResponseEntity<Object> idamSearchResponse
                 = retrieveIdamElasticSearchDetails();
         } catch(Exception ex) {
-            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for idamSearch Response");
-            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                now(),
-                now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),IDAMSEARCH);
+            log.warn("ElinksApiJobScheduler.loadElinksData Job execution completed failure for idamSearch Response");
+            if (ex instanceof HttpClientErrorException)
+            {
+                HttpClientErrorException exception=(HttpClientErrorException)ex;
+                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                .contains("jrd-elinks-idam-elastic-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
+                {
+
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        now(),
+                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),ELASTICSEARCH);
+                }
+            }
         }
         try{
         ResponseEntity<SchedulerJobStatusResponse> schedulerResponse
             = retrieveAsbPublishDetails();
         } catch(Exception ex) {
-            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Publish ASB Response");
-            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                now(),
-                now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),PUBLISHASB);
+            log.warn("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Publish ASB Response");
+            jdbcTemplate.update(UPDATE_JOB_SQL, FAILED.getStatus(),
+                dataloadSchedulerJobRepository.findFirstByOrderByIdDesc().getId());
+
+            if (ex instanceof HttpClientErrorException)
+            {
+                HttpClientErrorException exception=(HttpClientErrorException)ex;
+                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                .contains("jrd-elinks-publish-service-bus".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
+                {
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        now(),
+                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),PUBLISHSIDAM);
+                }
+            }
         }
     }
 
