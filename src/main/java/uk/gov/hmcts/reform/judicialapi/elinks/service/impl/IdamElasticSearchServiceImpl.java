@@ -21,9 +21,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IdamElasticSearchService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SqlConstants;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
