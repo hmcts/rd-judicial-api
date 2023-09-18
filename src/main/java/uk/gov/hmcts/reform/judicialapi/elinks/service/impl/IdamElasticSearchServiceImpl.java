@@ -210,7 +210,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 .filter(entry -> !jrdObjectIdsList.contains(entry.getKey()))
                 .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        String errorDescription = " Received from Idam is not present in Judicial Reference Data";
+        String errorDescription = "Object ID, received from Idam, is not present in Judicial Reference Data";
         int pageValue = Integer.parseInt(page);
 
 
@@ -219,7 +219,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                         schedulerStartTime,
                         entry.getKey(),
-                        OBJECT_ID, entry.getKey() + errorDescription, USER_PROFILE, entry.getValue(),pageValue);
+                        OBJECT_ID, errorDescription, USER_PROFILE, entry.getValue(),pageValue);
             }
         }
     }
