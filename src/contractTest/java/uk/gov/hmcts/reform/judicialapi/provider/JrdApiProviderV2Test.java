@@ -49,6 +49,7 @@ import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -285,8 +286,8 @@ public class JrdApiProviderV2Test {
         judicialRoleType.setRoleId(1L);
         judicialRoleType.setPersonalCode("testPersonalCode");
         judicialRoleType.setTitle("testTitle");
-        judicialRoleType.setStartDate(LocalDateTime.now());
-        judicialRoleType.setEndDate(LocalDateTime.now());
+        judicialRoleType.setStartDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        judicialRoleType.setEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         judicialRoleType.setJurisdictionRoleId("testJurisdictionRoleId");
         userProfile.setJudicialRoleTypes(Collections.singletonList(judicialRoleType));
 
