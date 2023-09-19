@@ -429,7 +429,8 @@ public class ElinkUserServiceImpl implements ElinkUserService {
         log.info("{} : starting build Authorisation Refresh Response Dto ", loggingComponentName);
 
         List<String> serviceCode = serviceCodeMappings.stream()
-                .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode()))
+                .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode())
+                        && StringUtils.isNotEmpty(s.getServiceCode()))
                 .map(ServiceCodeMapping::getServiceCode).distinct()
                 .toList();
 
