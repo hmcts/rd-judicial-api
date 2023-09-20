@@ -226,7 +226,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertEquals(18,elinksException.size());
+        assertEquals(20,elinksException.size());
     }
 
     private void validateBaseLocationApi(List<ElinkDataSchedularAudit> elinksAudit) {

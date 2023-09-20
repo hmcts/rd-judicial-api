@@ -281,7 +281,7 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
         validateSidamPublish();
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException).hasSize(4);
+        assertThat(elinksException).hasSize(5);
 
     }
 

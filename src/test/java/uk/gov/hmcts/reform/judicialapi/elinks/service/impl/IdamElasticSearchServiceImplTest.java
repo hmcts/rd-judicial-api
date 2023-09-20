@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,8 +19,13 @@ import org.springframework.jdbc.core.RowMapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
@@ -56,6 +63,22 @@ class IdamElasticSearchServiceImplTest {
     private IdamElasticSearchServiceImpl idamElasticSearchServiceImpl;
     JdbcTemplate jdbcTemplate =  mock(JdbcTemplate.class);
 
+    @Mock
+    ElinkDataExceptionHelper elinkDataExceptionHelper;
+
+    @Spy
+    private ProfileRepository userProfileRepository;
+
+    @Mock
+    private ElinkDataExceptionRepository elinkDataExceptionRepository;
+
+    @Mock
+    SendEmail sendEmail;
+
+
+    @Mock
+    ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
+
     public static final String CLIENT_AUTHORIZATION =
             "eyjfddsfsdfsdfdj03903.dffkljfke932rjf032j02f3--fskfljdskls-fdkldskll";
 
@@ -75,6 +98,7 @@ class IdamElasticSearchServiceImplTest {
         tokenConfigProperties.setUrl(url);
         idamElasticSearchServiceImpl.props = tokenConfigProperties;
         idamElasticSearchServiceImpl.recordsPerPage = 1;
+        idamElasticSearchServiceImpl.page = "1";
         idamElasticSearchServiceImpl.idamSearchQuery = "(roles:judiciary) AND lastModified:>now-%sh";
     }
 
@@ -82,7 +106,7 @@ class IdamElasticSearchServiceImplTest {
     void getBearerToken() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
-        String actualToken = idamElasticSearchServiceImpl.getIdamBearerToken();
+        String actualToken = idamElasticSearchServiceImpl.getIdamBearerToken(LocalDateTime.now());
         assertThat(actualToken).isEqualTo(CLIENT_AUTHORIZATION);
         verify(openIdTokenResponseMock, times(1)).getAccessToken();
         verify(idamClientMock, times(1)).getOpenIdToken(any());
@@ -91,7 +115,9 @@ class IdamElasticSearchServiceImplTest {
     @Test
     void getBearerTokenWithException() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
-        assertThrows(ElinksException.class, () -> idamElasticSearchServiceImpl.getIdamBearerToken());
+        assertThrows(ElinksException.class, () -> idamElasticSearchServiceImpl.getIdamBearerToken(LocalDateTime.now()));
+        verify(elinkDataIngestionSchedularAudit,times(1))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
     @Test
@@ -99,7 +125,7 @@ class IdamElasticSearchServiceImplTest {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
-        List<IdamResponse> users = new ArrayList<>();
+        Set<IdamResponse> users = new HashSet<>();
         users.add(createUser("some@some.com"));
         ObjectMapper mapper = new ObjectMapper();
         String body = mapper.writeValueAsString(users);
@@ -113,6 +139,8 @@ class IdamElasticSearchServiceImplTest {
                         Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
                 .status(200).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        when(userProfileRepository.fetchObjectId()).thenReturn(List.of("2234"));
+
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
         assertThat(response).isNotNull();
         Set<IdamResponse>  idamResponse = (HashSet<IdamResponse>) useResponses.getBody();
@@ -120,6 +148,8 @@ class IdamElasticSearchServiceImplTest {
             assertThat(useResponse.getEmail()).isEqualTo("some@some.com");
         });
         verify(idamClientMock, times(1)).getUserFeed(anyString(), any());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
     @Test
@@ -137,6 +167,8 @@ class IdamElasticSearchServiceImplTest {
                 .status(500).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
         assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
 
@@ -147,6 +179,7 @@ class IdamElasticSearchServiceImplTest {
         profile.setForename("some");
         profile.setId(UUID.randomUUID().toString());
         profile.setActive(true);
+        profile.setSsoId("1234");
         return profile;
     }
 

@@ -16,9 +16,14 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IdamElasticSearchService;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SqlConstants;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
@@ -34,10 +39,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELASTICSEARCH;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_TOKEN_ERROR_MESSAGE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECT_ID;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USER_PROFILE;
 
 @Slf4j
 @Component
@@ -61,8 +72,23 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    SendEmail sendEmail;
+
+    @Autowired
+    private ProfileRepository userProfileRepository;
+
+    @Autowired
+    ElinkDataExceptionHelper elinkDataExceptionHelper;
+
+    @Autowired
+    ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
+
+    @Value("${elinks.people.page}")
+    String page;
+
     @Override
-    public String getIdamBearerToken() {
+    public String getIdamBearerToken(LocalDateTime schedulerStartTime) {
         IdamOpenIdTokenResponse idamOpenIdTokenResponse = null;
         try {
 
@@ -86,6 +112,10 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                         IDAM_TOKEN_ERROR_MESSAGE);
             }
         } catch (Exception e) {
+            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                schedulerStartTime,
+                now(),
+                RefDataElinksConstants.JobStatus.FAILED.getStatus(),ELASTICSEARCH);
             throw new ElinksException(HttpStatus.FORBIDDEN, IDAM_TOKEN_ERROR_MESSAGE,
                     IDAM_TOKEN_ERROR_MESSAGE);
         }
@@ -105,12 +135,18 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         ResponseEntity<Object> responseEntity = null;
         Response response = null;
 
+        LocalDateTime schedulerStartTime = now();
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            null,
+            RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), ELASTICSEARCH);
+
         do {
             params.put("page", String.valueOf(count));
-            String bearerToken = "Bearer ".concat(getIdamBearerToken());
-            response = idamFeignClient.getUserFeed(bearerToken, params);
-            logIdamResponses(response);
             try {
+                String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
+                response = idamFeignClient.getUserFeed(bearerToken, params);
+                logIdamResponses(response);
                 responseEntity = JsonFeignResponseUtil.toResponseEntity(response,
                     new TypeReference<Set<IdamResponse>>() {
                     });
@@ -135,17 +171,57 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             } catch (Exception ex) {
                 //There is No header.
                 log.error("{}:: X-Total-Count header not return Idam Search Service::{}", loggingComponentName, ex);
+                elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                    schedulerStartTime,
+                    now(),
+                    RefDataElinksConstants.JobStatus.FAILED.getStatus(), ELASTICSEARCH);
                 throw new ElinksException(HttpStatus.valueOf(response.status()), ex.getMessage(),
                         IDAM_ERROR_MESSAGE);
             }
             count++;
             log.debug("{}:: batch count :: ", count);
         } while (totalCount > 0 && recordsPerPage * count < totalCount);
+
+        validateObjectIds(judicialUsers,schedulerStartTime);
+        sendEmail.sendEmail(schedulerStartTime);
+
         updateSidamIds(judicialUsers);
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            now(),
+            RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), ELASTICSEARCH);
 
         return ResponseEntity
                 .status(response.status())
                 .body(judicialUsers);
+    }
+
+    public void validateObjectIds(Set<IdamResponse> sidamUsers,LocalDateTime schedulerStartTime) {
+
+        Map<String,String> sidamObjectId = new HashMap<>();
+
+        sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s ->
+                sidamObjectId.put(s.getSsoId(), s.getId()));
+
+        List<String> jrdObjectIdsList = userProfileRepository.fetchObjectId();
+
+        Map<String,String> filteredObjectIds = sidamObjectId.entrySet()
+                .stream()
+                .filter(entry -> !jrdObjectIdsList.contains(entry.getKey()))
+                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        String errorDescription = "Object ID, received from Idam, is not present in Judicial Reference Data";
+        int pageValue = Integer.parseInt(page);
+
+
+        if (!filteredObjectIds.isEmpty()) {
+            for (var entry : filteredObjectIds.entrySet()) {
+                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                        schedulerStartTime,
+                        entry.getKey(),
+                        OBJECT_ID, errorDescription, USER_PROFILE, entry.getValue(),pageValue);
+            }
+        }
     }
 
     private void logIdamResponses(Response response) {
@@ -173,7 +249,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         List<Pair<String, String>> sidamObjectId = new ArrayList<>();
 
         String updateSidamIds = "UPDATE dbjudicialdata.judicial_user_profile SET sidam_id = ? "
-                + "WHERE object_id = ? AND (sidam_id IS NULL OR sidam_id <> ' ')";
+                + "WHERE object_id = ? ";
         sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s ->
                 sidamObjectId.add(Pair.of(s.getId(), s.getSsoId())));
         log.debug("Insert Query batch Response from IDAM " + sidamObjectId.size());
@@ -187,7 +263,6 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                         ps.setString(2, argument.getRight());
                     }
                 });
-
 
     }
 }

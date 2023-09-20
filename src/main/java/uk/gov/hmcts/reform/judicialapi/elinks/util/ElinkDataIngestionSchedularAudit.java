@@ -29,10 +29,17 @@ public class ElinkDataIngestionSchedularAudit {
 
         ElinkDataSchedularAudit audit = new ElinkDataSchedularAudit();
         try {
-            if (nonNull(schedulerEndTime)) {
+            if (nonNull(schedulerEndTime) && nonNull(schedulerStartTime)) {
                 audit = elinkSchedularAuditRepository.findBySchedulerStartTime(schedulerStartTime);
-                audit.setSchedulerEndTime(schedulerEndTime);
+                if (nonNull(audit)) {
+                    audit.setSchedulerEndTime(schedulerEndTime);
+                } else {
+                    /*No Audit entry in Scheduler Audit*/
+                    audit = new ElinkDataSchedularAudit();
+                    audit.setSchedulerEndTime(schedulerEndTime);
+                }
             }
+            audit.setSchedulerEndTime(schedulerEndTime);
             audit.setSchedulerName(schedulerName);
             audit.setSchedulerStartTime(schedulerStartTime);
             audit.setStatus(status);
