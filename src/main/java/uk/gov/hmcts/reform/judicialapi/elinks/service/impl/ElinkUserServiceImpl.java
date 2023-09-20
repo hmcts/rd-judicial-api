@@ -430,7 +430,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
 
         List<String> serviceCode = serviceCodeMappings.stream()
                 .filter(s -> s.getTicketCode().equalsIgnoreCase(auth.getTicketCode())
-                        && StringUtils.isNotEmpty(s.getServiceCode()))
+                        && StringUtils.isNotBlank(s.getServiceCode()))
                 .map(ServiceCodeMapping::getServiceCode).distinct()
                 .toList();
 
