@@ -235,6 +235,13 @@ email:
         - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - New Location in Appointment file - %s"
       template: simple-template-locationId.ftl
+    objectid:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "Official Sensitive: JRD - Object ID is not present in Judicial Reference Data - %s"
+      template: simple-template-objectId.ftl
 
 sendgrid:
   key: ${RD_SENDGRID_API_KEY}

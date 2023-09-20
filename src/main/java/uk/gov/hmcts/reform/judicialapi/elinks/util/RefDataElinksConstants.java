@@ -70,6 +70,8 @@ public class RefDataElinksConstants {
 
     public static final String BASE_LOCATION_ID = "base_location_id";
 
+    public static final String OBJECT_ID = "object_id";
+
     public static final String LOCATION_ID = "region_id";
 
     public static final String LOCATION = "Location";

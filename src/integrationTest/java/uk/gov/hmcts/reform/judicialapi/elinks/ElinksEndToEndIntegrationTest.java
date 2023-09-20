@@ -268,7 +268,7 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         validateSidamPublish();
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException).isEmpty();
+        assertThat(elinksException).isNotEmpty();
 
     }
 
@@ -385,7 +385,7 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException).isEmpty();
+        assertThat(elinksException).isNotEmpty();
     }
 
     private void validateElasticSearch(List<DataloadSchedulerJob> audits) {

@@ -16,11 +16,14 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IdamElasticSearchService;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SqlConstants;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
@@ -36,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
@@ -43,6 +47,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_TOKEN_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECT_ID;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USER_PROFILE;
 
 @Slf4j
 @Component
@@ -67,7 +73,19 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     JdbcTemplate jdbcTemplate;
 
     @Autowired
+    SendEmail sendEmail;
+
+    @Autowired
+    private ProfileRepository userProfileRepository;
+
+    @Autowired
+    ElinkDataExceptionHelper elinkDataExceptionHelper;
+
+    @Autowired
     ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
+
+    @Value("${elinks.people.page}")
+    String page;
 
     @Override
     public String getIdamBearerToken(LocalDateTime schedulerStartTime) {
@@ -163,6 +181,10 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             count++;
             log.debug("{}:: batch count :: ", count);
         } while (totalCount > 0 && recordsPerPage * count < totalCount);
+
+        validateObjectIds(judicialUsers,schedulerStartTime);
+        sendEmail.sendEmail(schedulerStartTime);
+
         updateSidamIds(judicialUsers);
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
             schedulerStartTime,
@@ -172,6 +194,34 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         return ResponseEntity
                 .status(response.status())
                 .body(judicialUsers);
+    }
+
+    public void validateObjectIds(Set<IdamResponse> sidamUsers,LocalDateTime schedulerStartTime) {
+
+        Map<String,String> sidamObjectId = new HashMap<>();
+
+        sidamUsers.stream().filter(user -> nonNull(user.getSsoId())).forEach(s ->
+                sidamObjectId.put(s.getSsoId(), s.getId()));
+
+        List<String> jrdObjectIdsList = userProfileRepository.fetchObjectId();
+
+        Map<String,String> filteredObjectIds = sidamObjectId.entrySet()
+                .stream()
+                .filter(entry -> !jrdObjectIdsList.contains(entry.getKey()))
+                .collect(Collectors.toUnmodifiableMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        String errorDescription = "Object ID, received from Idam, is not present in Judicial Reference Data";
+        int pageValue = Integer.parseInt(page);
+
+
+        if (!filteredObjectIds.isEmpty()) {
+            for (var entry : filteredObjectIds.entrySet()) {
+                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                        schedulerStartTime,
+                        entry.getKey(),
+                        OBJECT_ID, errorDescription, USER_PROFILE, entry.getValue(),pageValue);
+            }
+        }
     }
 
     private void logIdamResponses(Response response) {

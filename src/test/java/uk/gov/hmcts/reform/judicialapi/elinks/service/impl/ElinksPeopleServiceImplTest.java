@@ -51,6 +51,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.EmailTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -163,6 +164,11 @@ class ElinksPeopleServiceImplTest {
 
     @Spy
     CommonUtil commonUtil;
+
+
+
+    @Mock
+    SendEmail sendEmail;
 
     final EmailTemplate emailTemplate = mock(EmailTemplate.class);
     ElinkEmailConfiguration.MailTypeConfig mailConfig = mock(ElinkEmailConfiguration.MailTypeConfig.class);
@@ -1000,36 +1006,9 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
-        ElinkDataExceptionRecords exceptionRecords1 = new ElinkDataExceptionRecords();
-        exceptionRecords1.setId(1L);
-        exceptionRecords1.setKey("key");
-        exceptionRecords1.setRowId("rowId");
-        exceptionRecords1.setSchedulerName("schedularName");
-        exceptionRecords1.setErrorDescription("errorDescr");
-        exceptionRecords1.setTableName("tableName");
-        exceptionRecords1.setFieldInError(RefDataElinksConstants.APPOINTMENTID);
-        exceptionRecords1.setSchedulerStartTime(LocalDateTime.now());
-        exceptionRecords1.setUpdatedTimeStamp(LocalDateTime.now());
-        exceptionRecords1.setPageId(1);
-        ElinkDataExceptionRecords exceptionRecords2 = new ElinkDataExceptionRecords();
-        exceptionRecords2.setId(2L);
-        exceptionRecords2.setKey("key1");
-        exceptionRecords2.setRowId("rowId1");
-        exceptionRecords2.setSchedulerName("schedularName1");
-        exceptionRecords2.setErrorDescription("errorDescr1");
-        exceptionRecords2.setTableName("tableName1");
-        exceptionRecords2.setFieldInError(RefDataElinksConstants.APPOINTMENTID);
-        exceptionRecords2.setSchedulerStartTime(LocalDateTime.now());
-        exceptionRecords2.setUpdatedTimeStamp(LocalDateTime.now());
-        exceptionRecords2.setPageId(2);
-        List<ElinkDataExceptionRecords> exceptionRecords = Arrays.asList(exceptionRecords1,exceptionRecords2);
-
-        when(elinkDataExceptionRepository.findBySchedulerStartTime(any())).thenReturn(exceptionRecords);
-
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
-        verify(emailService, atLeastOnce()).sendEmail(any());
     }
 
     @Test
@@ -1063,32 +1042,6 @@ class ElinksPeopleServiceImplTest {
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
-
-        ElinkDataExceptionRecords exceptionRecords1 = new ElinkDataExceptionRecords();
-        exceptionRecords1.setId(1L);
-        exceptionRecords1.setKey("key");
-        exceptionRecords1.setRowId("rowId");
-        exceptionRecords1.setSchedulerName("schedularName");
-        exceptionRecords1.setErrorDescription("errorDescr");
-        exceptionRecords1.setTableName("tableName");
-        exceptionRecords1.setFieldInError(RefDataElinksConstants.APPOINTMENTID);
-        exceptionRecords1.setSchedulerStartTime(LocalDateTime.now());
-        exceptionRecords1.setUpdatedTimeStamp(LocalDateTime.now());
-        exceptionRecords1.setPageId(1);
-        ElinkDataExceptionRecords exceptionRecords2 = new ElinkDataExceptionRecords();
-        exceptionRecords2.setId(2L);
-        exceptionRecords2.setKey("key1");
-        exceptionRecords2.setRowId("rowId1");
-        exceptionRecords2.setSchedulerName("schedularName1");
-        exceptionRecords2.setErrorDescription("errorDescr1");
-        exceptionRecords2.setTableName("tableName1");
-        exceptionRecords2.setFieldInError(RefDataElinksConstants.APPOINTMENTID);
-        exceptionRecords2.setSchedulerStartTime(LocalDateTime.now());
-        exceptionRecords2.setUpdatedTimeStamp(LocalDateTime.now());
-        exceptionRecords2.setPageId(2);
-        List<ElinkDataExceptionRecords> exceptionRecords = Arrays.asList(exceptionRecords1,exceptionRecords2);
-
-        when(elinkDataExceptionRepository.findBySchedulerStartTime(any())).thenReturn(exceptionRecords);
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
@@ -1127,37 +1080,9 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
-        ElinkDataExceptionRecords exceptionRecords1 = new ElinkDataExceptionRecords();
-        exceptionRecords1.setId(1L);
-        exceptionRecords1.setKey("key");
-        exceptionRecords1.setRowId("rowId");
-        exceptionRecords1.setSchedulerName("schedularName");
-        exceptionRecords1.setErrorDescription("errorDescr");
-        exceptionRecords1.setTableName("tableName");
-        exceptionRecords1.setFieldInError(RefDataElinksConstants.BASE_LOCATION_ID);
-        exceptionRecords1.setSchedulerStartTime(LocalDateTime.now());
-        exceptionRecords1.setUpdatedTimeStamp(LocalDateTime.now());
-        exceptionRecords1.setPageId(1);
-        ElinkDataExceptionRecords exceptionRecords2 = new ElinkDataExceptionRecords();
-        exceptionRecords2.setId(2L);
-        exceptionRecords2.setKey("key1");
-        exceptionRecords2.setRowId("rowId1");
-        exceptionRecords2.setSchedulerName("schedularName1");
-        exceptionRecords2.setErrorDescription("errorDescr1");
-        exceptionRecords2.setTableName("tableName1");
-        exceptionRecords2.setFieldInError(RefDataElinksConstants.LOCATION);
-        exceptionRecords2.setSchedulerStartTime(LocalDateTime.now());
-        exceptionRecords2.setUpdatedTimeStamp(LocalDateTime.now());
-        exceptionRecords2.setPageId(2);
-        List<ElinkDataExceptionRecords> exceptionRecords = Arrays.asList(exceptionRecords1,exceptionRecords2);
-
-        when(elinkDataExceptionRepository.findBySchedulerStartTime(any())).thenReturn(exceptionRecords);
-
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
-        verify(emailService,times(1)).sendEmail(any());
         verify(elinkDataExceptionHelper,times(6))
                 .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
-        verify(emailService, atLeastOnce()).sendEmail(any());
     }
 
     @Test
@@ -1190,30 +1115,6 @@ class ElinksPeopleServiceImplTest {
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
-
-        ElinkDataExceptionRecords exceptionRecords1 = new ElinkDataExceptionRecords();
-        exceptionRecords1.setId(1L);
-        exceptionRecords1.setKey("key");
-        exceptionRecords1.setRowId("rowId");
-        exceptionRecords1.setSchedulerName("schedularName");
-        exceptionRecords1.setErrorDescription("errorDescr");
-        exceptionRecords1.setTableName("tableName");
-        exceptionRecords1.setFieldInError(RefDataElinksConstants.USER_PROFILE);
-        exceptionRecords1.setSchedulerStartTime(LocalDateTime.now());
-        exceptionRecords1.setUpdatedTimeStamp(LocalDateTime.now());
-        ElinkDataExceptionRecords exceptionRecords2 = new ElinkDataExceptionRecords();
-        exceptionRecords2.setId(2L);
-        exceptionRecords2.setKey("key1");
-        exceptionRecords2.setRowId("rowId1");
-        exceptionRecords2.setSchedulerName("schedularName1");
-        exceptionRecords2.setErrorDescription("errorDescr1");
-        exceptionRecords2.setTableName("tableName1");
-        exceptionRecords2.setFieldInError(RefDataElinksConstants.USER_PROFILE);
-        exceptionRecords2.setSchedulerStartTime(LocalDateTime.now());
-        exceptionRecords2.setUpdatedTimeStamp(LocalDateTime.now());
-        List<ElinkDataExceptionRecords> exceptionRecords = Arrays.asList(exceptionRecords1,exceptionRecords2);
-
-        when(elinkDataExceptionRepository.findBySchedulerStartTime(any())).thenReturn(exceptionRecords);
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))

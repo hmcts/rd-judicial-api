@@ -10,16 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfiguration;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AppointmentsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AuthorisationsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.PeopleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
@@ -29,7 +26,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JrdRegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
@@ -37,13 +33,11 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
-import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
-import uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.EmailTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.time.LocalDate;
@@ -51,12 +45,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.isNull;
@@ -68,9 +59,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CFTREGIONIDFAILURE;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CONTENT_TYPE_HTML;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_FORBIDDEN;
@@ -120,7 +109,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private AuthorisationsRepository authorisationsRepository;
 
     @Autowired
-    ElinkEmailConfiguration emailConfiguration;
+    SendEmail sendEmail;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -146,21 +135,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     @Autowired ElinksPeopleDeleteServiceimpl elinksPeopleDeleteServiceimpl;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
-
-    @Autowired
     CommonUtil commonUtil;
 
     private boolean partialSuccessFlag = false;
 
     private Map<String,UserProfile> userProfileCache = new HashMap<String,UserProfile>();
     private List<UserProfile> userProfilesSnapshot = new ArrayList<>();
-
-    @Autowired
-    ElinkDataExceptionRepository elinkDataExceptionRepository;
-
-    @Value("${logging-component-name}")
-    private String logComponentName;
 
     @Value("${elinks.people.lastUpdated}")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -187,11 +167,6 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     @Value("${elinks.people.includePreviousAppointments}")
     private String includePreviousAppointments;
 
-    @Autowired
-    EmailTemplate emailTemplate;
-
-    @Autowired
-    IEmailService emailService;
 
     private final Map<String, String> emailConfigMapping = Map.of(LOCATION_ID, REGION,
             BASE_LOCATION_ID, BASE_LOCATION);
@@ -248,12 +223,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
             throw ex;
         }
-        List<ElinkDataExceptionRecords> list = elinkDataExceptionRepository
-                .findBySchedulerStartTime(schedulerStartTime);
-        if (!list.isEmpty()) {
-            sendEmail(new HashSet<>(list), "baselocation",
-                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-        }
+        sendEmail.sendEmail(schedulerStartTime);
+
         if (partialSuccessFlag) {
             status = RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus();
         }
@@ -269,48 +240,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 .body(response);
     }
 
-    private void sendEmail(LocalDateTime schedulerStartTime) {
-        List<ElinkDataExceptionRecords> list = elinkDataExceptionRepository
-                .findBySchedulerStartTime(schedulerStartTime);
 
-        Map<String, List<ElinkDataExceptionRecords>> map = list
-                .stream()
-                .collect(Collectors.groupingBy(ElinkDataExceptionRecords::getFieldInError));
 
-        if (map.containsKey(BASE_LOCATION_ID)) {
-            sendEmail(new HashSet<>(map.get(BASE_LOCATION_ID)), "baselocation",
-                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-        }
-        if (map.containsKey(LOCATION)) {
-            sendEmail(new HashSet<>(map.get(LOCATION)), "location",
-                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-        }
-        if (map.containsKey(APPOINTMENTID)) {
-            sendEmail(new HashSet<>(map.get(APPOINTMENTID)), "appointment",
-                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-        }
-        if (map.containsKey(USER_PROFILE)) {
-            sendEmail(new HashSet<>(map.get(USER_PROFILE)), "userprofile",
-                LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
-        }
-    }
-
-    public int sendEmail(Set<ElinkDataExceptionRecords> data, String type, Object... params) {
-        log.info("{} : send Email",logComponentName);
-        ElinkEmailConfiguration.MailTypeConfig config = emailConfiguration.getMailTypes()
-                .get(type);
-        if (config != null && config.isEnabled()) {
-            Email email = Email.builder()
-                    .contentType(CONTENT_TYPE_HTML)
-                    .from(config.getFrom())
-                    .to(config.getTo())
-                    .subject(String.format(config.getSubject(), params))
-                    .messageBody(emailTemplate.getEmailBody(config.getTemplate(), Map.of("resultsRequest", data)))
-                    .build();
-            return emailService.sendEmail(email);
-        }
-        return -1;
-    }
 
     private void auditStatus(LocalDateTime schedulerStartTime, String status) {
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
@@ -421,7 +352,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
 
 
     private boolean saveUserProfile(ResultsRequest resultsRequest,LocalDateTime schedulerStartTime, int pageValue) {
-        
+
         if (validateUserProfile(resultsRequest, schedulerStartTime,pageValue)) {
             try {
                 LocalDateTime createdOn = null;
