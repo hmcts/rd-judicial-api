@@ -17,6 +17,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -251,6 +252,30 @@ class ElinksEndToEndIntegrationForObjectId extends ElinksEnabledIntegrationTest 
         assertEquals("1",baseLocationList.get(0).getBaseLocationId());
         assertEquals("1722",baseLocationList.get(0).getParentId());
 
+        validateUserProfile();
+
+        //asserting Judiciary additonal roles data
+        validateRoleType();
+
+        //asserting userprofile data for leaver api
+
+        //asserting userprofile data for deleted api
+
+        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
+        assertThat(elinksException).hasSize(1);
+
+    }
+
+    private void validateRoleType() {
+        List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
+        assertEquals(13, roleRequest.size());
+        assertEquals("District Tribunal Judge", roleRequest.get(0).getTitle());
+        assertEquals("4923268", roleRequest.get(0).getPersonalCode());
+        assertEquals("629", roleRequest.get(0).getJurisdictionRoleId());
+        assertEquals("fee", roleRequest.get(0).getJurisdictionRoleNameId());
+    }
+
+    private void validateUserProfile() {
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(19, userprofile.size());
         assertEquals("4923268", userprofile.get(1).getPersonalCode());
@@ -264,16 +289,6 @@ class ElinksEndToEndIntegrationForObjectId extends ElinksEnabledIntegrationTest 
         assertEquals("0761225c-244c-4bca-b035-81c0d430092d", userprofile.get(1).getObjectId());
         assertNull(userprofile.get(1).getSidamId());
         assertEquals("NC",userprofile.get(1).getInitials());
-
-
-
-        //asserting userprofile data for leaver api
-
-        //asserting userprofile data for deleted api
-
-        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException).hasSize(1);
-
     }
 
     private void cleanupData() {

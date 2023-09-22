@@ -16,6 +16,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -157,6 +158,31 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         Assert.assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),jobDetails.getPublishingStatus());
 
         // asserting location data
+        loadLocation();
+
+
+        validateLocation();
+
+
+        //asserting baselocation data
+        validateBaseLocation();
+
+        validateUserProfile();
+
+        validateRoleType();
+
+
+        //asserting userprofile data for leaver api
+
+        //asserting userprofile data for deleted api
+
+        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
+        assertThat(elinksException).hasSize(1);
+        assertEquals(OBJECTIDISPRESENT,elinksException.get(0).getErrorDescription());
+
+    }
+
+    private void loadLocation() {
         List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
         Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
         ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) locationResponse.get("body");
@@ -166,21 +192,33 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         assertEquals(BASE_LOCATION_DATA_LOAD_SUCCESS, locations.getMessage());
         assertEquals(LOCATIONAPI,locationAuditEntry.getApiName());
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), locationAuditEntry.getStatus());
+    }
 
-
+    private void validateLocation() {
         List<Location> locationsList = locationRepository.findAll();
         assertEquals(11, locationsList.size());
         assertEquals("1", locationsList.get(1).getRegionId());
         assertEquals("London", locationsList.get(1).getRegionDescEn());
+    }
 
-
-        //asserting baselocation data
+    private void validateBaseLocation() {
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
         assertEquals(12, baseLocationList.size());
         assertEquals("Aberconwy",baseLocationList.get(4).getName());
         assertEquals("1",baseLocationList.get(4).getBaseLocationId());
         assertEquals("1722",baseLocationList.get(4).getParentId());
+    }
 
+    private void validateRoleType() {
+        List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
+        assertEquals(1, roleRequest.size());
+        assertEquals("Course Director for COP (JC)", roleRequest.get(0).getTitle());
+        assertEquals("4913085", roleRequest.get(0).getPersonalCode());
+        assertEquals("427", roleRequest.get(0).getJurisdictionRoleId());
+        assertEquals("fee", roleRequest.get(0).getJurisdictionRoleNameId());
+    }
+
+    private void validateUserProfile() {
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(12, userprofile.size());
         assertEquals("4913085", userprofile.get(11).getPersonalCode());
@@ -194,16 +232,6 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(11).getObjectId());
         assertNull(userprofile.get(11).getSidamId());
         assertEquals("RJ",userprofile.get(11).getInitials());
-
-
-        //asserting userprofile data for leaver api
-
-        //asserting userprofile data for deleted api
-
-        List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException).hasSize(1);
-        assertThat(elinksException.get(0).getErrorDescription().equals(OBJECTIDISPRESENT));
-
     }
 
     private void cleanupData() {

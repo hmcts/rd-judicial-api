@@ -135,6 +135,8 @@ public class RefDataElinksConstants {
     public static final String USERPROFILEFAILURE = "UserProfile  : "
         + FAIL_LOAD;
 
+    public static final String INVALIDROLETYPE = "Role type not loaded for Personal Code :";
+
     public static final String APPOINTMENTTYPENOTMATCHING = "Appointment type  : "
         + "not matching";
 

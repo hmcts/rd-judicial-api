@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.JOSEException;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -23,6 +25,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
@@ -52,7 +55,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 
-public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
+class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     LocationRepository locationRepository;
@@ -69,6 +72,8 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
     @Autowired
     BaseLocationRepository baseLocationRepository;
 
+    @Autowired
+    JudicialRoleTypeRepository judicialRoleTypeRepository;
 
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
@@ -159,6 +164,10 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(0, userprofile.size());
 
+        //asserting Judiciary additonal roles data
+        List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
+        Assert.assertEquals(0, roleRequest.size());
+
         //asserting userprofile data for leaver api
         Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
         ElinkLeaversWrapperResponse leaversProfiles = (ElinkLeaversWrapperResponse) leaversResponse.get("body");
@@ -185,7 +194,7 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertThat(elinksException.size()).isEqualTo(0);
+        assertThat(elinksException.size()).isZero();
 
     }
 
@@ -253,6 +262,7 @@ public class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends Elin
         baseLocationRepository.deleteAll();
         authorisationsRepository.deleteAll();
         profileRepository.deleteAll();
+        judicialRoleTypeRepository.deleteAll();
 
     }
 

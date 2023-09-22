@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.JOSEException;
+import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -322,6 +324,15 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(0).getObjectId());
         assertNull(userprofile.get(0).getSidamId());
         assertEquals("RJ",userprofile.get(0).getInitials());
+
+        //asserting Judiciary additonal roles data
+        List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
+        Assert.assertEquals(1, roleRequest.size());
+        Assert.assertEquals("Course Director for COP (JC)", roleRequest.get(0).getTitle());
+        Assert.assertEquals("4913085", roleRequest.get(0).getPersonalCode());
+        Assert.assertEquals("427", roleRequest.get(0).getJurisdictionRoleId());
+        Assert.assertEquals("fee", roleRequest.get(0).getJurisdictionRoleNameId());
+
     }
 
     private void validateBaseLocation(List<ElinkDataSchedularAudit> elinksAudit) {

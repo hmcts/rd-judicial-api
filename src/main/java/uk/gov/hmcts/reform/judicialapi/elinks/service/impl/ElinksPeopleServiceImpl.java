@@ -18,7 +18,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
@@ -56,7 +55,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENTID_IS_NULL;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.APPOINTMENT_TABLE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUTHORISATION_TABLE;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CFTREGIONIDFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
@@ -68,20 +66,18 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_UNAUTHORIZED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.EMAILID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.INVALIDROLENAMES;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.INVALIDROLETYPE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.INVALID_ROLES;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIALROLETYPE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONIDFAILURE;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISDUPLICATED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISPRESENT;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PERSONALCODE;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.REGION;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.REGION_DEFAULT_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ROLENAME;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.THREAD_INVOCATION_EXCEPTION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USERPROFILEEMAILID;
@@ -167,9 +163,6 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     @Value("${elinks.people.includePreviousAppointments}")
     private String includePreviousAppointments;
 
-
-    private final Map<String, String> emailConfigMapping = Map.of(LOCATION_ID, REGION,
-            BASE_LOCATION_ID, BASE_LOCATION);
 
     @Override
     public ResponseEntity<ElinkPeopleWrapperResponse> updatePeople() {
@@ -337,14 +330,17 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .endDate(convertToLocalDateTime(roleRequest.getEndDate()))
                     .personalCode(personalCode)
                     .jurisdictionRoleId(roleRequest.getJudiciaryRoleId())
+                    .jurisdictionRoleNameId(roleRequest.getJudiciaryRoleNameId())
                     .build());
             } catch (Exception e) {
                 log.warn("Role type  not loaded for " + personalCode);
                 partialSuccessFlag = true;
+                String errorDescription = appendFieldWithErrorDescription(
+                    INVALIDROLETYPE, personalCode);
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     now(),
                     personalCode,
-                    JUDICIALROLETYPE, e.getMessage(), JUDICIALROLETYPE,personalCode,pageValue);
+                    JUDICIALROLETYPE, errorDescription, JUDICIALROLETYPE,personalCode,pageValue);
             }
         }
 
@@ -648,15 +644,6 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             return LocalDateTime.parse(date, formatter);
         }
         return null;
-    }
-
-    // Need to be removed after Region ID  CR fix
-    private String regionMapping(AppointmentsRequest appointment) {
-
-        String region = appointment.getCircuit() != null ? appointment.getCircuit() : appointment.getLocation();
-        Location location = locationRepository.findByRegionDescEnIgnoreCase(region);
-
-        return location != null ? location.getRegionId() : REGION_DEFAULT_ID;
     }
 
     private void handleELinksErrorResponse(HttpStatus httpStatus) {

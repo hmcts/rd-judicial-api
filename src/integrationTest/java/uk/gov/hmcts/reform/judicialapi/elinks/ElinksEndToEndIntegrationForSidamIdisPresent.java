@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigPrope
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -173,6 +174,28 @@ class ElinksEndToEndIntegrationForSidamIdisPresent extends ElinksEnabledIntegrat
         assertEquals("1",baseLocationList.get(4).getBaseLocationId());
         assertEquals("1722",baseLocationList.get(4).getParentId());
 
+        validateUserProfile();
+
+        //asserting Judiciary additonal roles data
+        validateRoleType();
+
+
+        //asserting userprofile data for leaver api
+
+        //asserting userprofile data for deleted api
+
+    }
+
+    private void validateRoleType() {
+        List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
+        assertEquals(1, roleRequest.size());
+        assertEquals("Course Director for COP (JC)", roleRequest.get(0).getTitle());
+        assertEquals("123454", roleRequest.get(0).getPersonalCode());
+        assertEquals("427", roleRequest.get(0).getJurisdictionRoleId());
+        assertEquals("fee", roleRequest.get(0).getJurisdictionRoleNameId());
+    }
+
+    private void validateUserProfile() {
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(11, userprofile.size());
         assertEquals("123454", userprofile.get(10).getPersonalCode());
@@ -186,17 +209,11 @@ class ElinksEndToEndIntegrationForSidamIdisPresent extends ElinksEnabledIntegrat
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(10).getObjectId());
         assertEquals("3333333",userprofile.get(10).getSidamId());
         assertEquals("RJ",userprofile.get(10).getInitials());
-
-
-
-        //asserting userprofile data for leaver api
-
-        //asserting userprofile data for deleted api
-
     }
 
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
+        judicialRoleTypeRepository.deleteAll();
     }
 }
