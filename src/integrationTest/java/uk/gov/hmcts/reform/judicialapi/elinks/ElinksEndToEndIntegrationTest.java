@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.JOSEException;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -327,11 +326,11 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
         //asserting Judiciary additonal roles data
         List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
-        Assert.assertEquals(1, roleRequest.size());
-        Assert.assertEquals("Course Director for COP (JC)", roleRequest.get(0).getTitle());
-        Assert.assertEquals("4913085", roleRequest.get(0).getPersonalCode());
-        Assert.assertEquals("427", roleRequest.get(0).getJurisdictionRoleId());
-        Assert.assertEquals("fee", roleRequest.get(0).getJurisdictionRoleNameId());
+        assertEquals(1, roleRequest.size());
+        assertEquals("Course Director for COP (JC)", roleRequest.get(0).getTitle());
+        assertEquals("4913085", roleRequest.get(0).getPersonalCode());
+        assertEquals("427", roleRequest.get(0).getJurisdictionRoleId());
+        assertEquals("fee", roleRequest.get(0).getJurisdictionRoleNameId());
 
     }
 

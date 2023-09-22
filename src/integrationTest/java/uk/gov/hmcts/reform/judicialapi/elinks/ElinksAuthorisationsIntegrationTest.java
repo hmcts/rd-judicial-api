@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -314,11 +313,11 @@ class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         //asserting Judiciary additonal roles data
         List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
-        Assert.assertEquals(13, roleRequest.size());
-        Assert.assertEquals("Senior Judge in the Sovereign Base Areas Cyprus", roleRequest.get(12).getTitle());
-        Assert.assertEquals("4916897", roleRequest.get(12).getPersonalCode());
-        Assert.assertEquals("2787", roleRequest.get(12).getJurisdictionRoleId());
-        Assert.assertEquals("fee", roleRequest.get(12).getJurisdictionRoleNameId());
+        assertEquals(13, roleRequest.size());
+        assertEquals("Senior Judge in the Sovereign Base Areas Cyprus", roleRequest.get(12).getTitle());
+        assertEquals("4916897", roleRequest.get(12).getPersonalCode());
+        assertEquals("2787", roleRequest.get(12).getJurisdictionRoleId());
+        assertEquals("fee", roleRequest.get(12).getJurisdictionRoleNameId());
 
     }
 

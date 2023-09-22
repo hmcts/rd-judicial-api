@@ -3,7 +3,6 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.JOSEException;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -287,7 +286,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
 
         //asserting Judiciary additonal roles data
         List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
-        Assert.assertEquals(0, roleRequest.size());
+        assertEquals(0, roleRequest.size());
 
 
     }

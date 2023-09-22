@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.JOSEException;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -155,7 +154,7 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         //assserting scheduler data
         assertThat(jobDetails).isNotNull();
         assertThat(jobDetails.getPublishingStatus()).isNotNull();
-        Assert.assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),jobDetails.getPublishingStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),jobDetails.getPublishingStatus());
 
         // asserting location data
         loadLocation();
