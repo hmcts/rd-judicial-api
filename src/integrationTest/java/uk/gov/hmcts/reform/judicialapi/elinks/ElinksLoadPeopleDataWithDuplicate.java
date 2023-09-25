@@ -153,7 +153,7 @@ class ElinksLoadPeopleDataWithDuplicate extends ElinksEnabledIntegrationTest {
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
         assertEquals("Personal  Code : 4925319  is already loaded",
             elinksException.get(3).getErrorDescription());
-        assertEquals("Role type not loaded for Personal Code : 4916897 ",
+        assertEquals("Judiciary Role Name ID is invalid",
             elinksException.get(1).getErrorDescription());
         assertThat(elinksException).hasSize(4);
 
