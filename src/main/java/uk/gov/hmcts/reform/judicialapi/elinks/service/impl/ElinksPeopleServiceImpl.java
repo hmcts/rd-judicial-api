@@ -39,6 +39,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
+import javax.naming.InvalidNameException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -325,14 +326,17 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         for (RoleRequest roleRequest: judiciaryRoles) {
 
             try {
-                judicialRoleTypeRepository.save(JudicialRoleType.builder()
-                    .title(roleRequest.getName())
-                    .startDate(convertToLocalDateTime(roleRequest.getStartDate()))
-                    .endDate(convertToLocalDateTime(roleRequest.getEndDate()))
-                    .personalCode(personalCode)
-                    .jurisdictionRoleId(roleRequest.getJudiciaryRoleId())
-                    .jurisdictionRoleNameId(roleRequest.getJudiciaryRoleNameId())
-                    .build());
+
+                    if(StringUtils.isBlank(roleRequest.getJudiciaryRoleNameId())) throw new InvalidNameException();
+                    judicialRoleTypeRepository.save(JudicialRoleType.builder()
+                        .title(roleRequest.getName())
+                        .startDate(convertToLocalDateTime(roleRequest.getStartDate()))
+                        .endDate(convertToLocalDateTime(roleRequest.getEndDate()))
+                        .personalCode(personalCode)
+                        .jurisdictionRoleId(roleRequest.getJudiciaryRoleId())
+                        .jurisdictionRoleNameId(roleRequest.getJudiciaryRoleNameId())
+                        .build());
+
             } catch (Exception e) {
                 log.warn("Judicial additional role  not loaded for " + personalCode);
                 partialSuccessFlag = true;
