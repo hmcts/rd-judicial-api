@@ -65,6 +65,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_UNAUTHORIZED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.EMAILID;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.INVALIDROLEID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.INVALIDROLENAMES;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.INVALIDROLETYPE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.INVALID_ROLES;
@@ -333,14 +334,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .jurisdictionRoleNameId(roleRequest.getJudiciaryRoleNameId())
                     .build());
             } catch (Exception e) {
-                log.warn("Role type  not loaded for " + personalCode);
+                log.warn("Judicial additional role  not loaded for " + personalCode);
                 partialSuccessFlag = true;
-                String errorDescription = appendFieldWithErrorDescription(
-                    INVALIDROLETYPE, personalCode);
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     now(),
-                    personalCode,
-                    JUDICIALROLETYPE, errorDescription, JUDICIALROLETYPE,personalCode,pageValue);
+                    roleRequest.getJudiciaryRoleId(),
+                    INVALIDROLEID, INVALIDROLETYPE, JUDICIALROLETYPE,personalCode,pageValue);
             }
         }
 
