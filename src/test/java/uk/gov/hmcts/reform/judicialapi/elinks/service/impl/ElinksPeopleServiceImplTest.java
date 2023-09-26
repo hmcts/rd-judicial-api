@@ -211,9 +211,11 @@ class ElinksPeopleServiceImplTest {
         AuthorisationsRequest authorisation2 = AuthorisationsRequest.builder().jurisdiction("juristriction")
                 .ticket("lowerlevel").startDate("1991-12-19")
                 .endDate("2022-12-20").ticketCode("ticketId").build();
-        RoleRequest roleRequestOne = RoleRequest.builder().judiciaryRoleId("427").name("name")
+        RoleRequest roleRequestOne = RoleRequest.builder().judiciaryRoleId("427")
+            .judiciaryRoleNameId("123").name("name")
             .startDate("1991-12-19T00:00:00.000Z").endDate("2024-12-20T00:00:00.000Z").build();
-        RoleRequest roleRequestTwo = RoleRequest.builder().judiciaryRoleId("427").name("name")
+        RoleRequest roleRequestTwo = RoleRequest.builder().judiciaryRoleId("427")
+            .judiciaryRoleNameId("123").name("name")
             .startDate("1991-12-19T00:00:00.000Z")
             .endDate("2024-12-20T00:00:00.000Z").build();
         List<AuthorisationsRequest> authorisations = Arrays.asList(authorisation1,authorisation2);
@@ -439,8 +441,9 @@ class ElinksPeopleServiceImplTest {
         verify(profileRepository, times(2)).save(any());
         verify(baseLocationRepository, times(4)).fetchParentId(any());
         verify(appointmentsRepository, times(4)).save(any());
+        verify(judicialRoleTypeRepository, atLeastOnce()).save(any());
         verify(authorisationsRepository, atLeastOnce()).save(any());
-        verify(elinkDataExceptionHelper,times(6))
+        verify(elinkDataExceptionHelper,times(2))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
@@ -551,8 +554,9 @@ class ElinksPeopleServiceImplTest {
         verify(profileRepository, times(1)).save(any());
 
         verify(appointmentsRepository, times(2)).save(any());
+        verify(judicialRoleTypeRepository, atLeastOnce()).save(any());
         verify(authorisationsRepository, atLeastOnce()).save(any());
-        verify(elinkDataExceptionHelper,times(3))
+        verify(elinkDataExceptionHelper,times(1))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
@@ -628,7 +632,7 @@ class ElinksPeopleServiceImplTest {
         verify(appointmentsRepository, atLeastOnce()).save(any());
 
         verify(authorisationsRepository, atLeastOnce()).save(any());
-        verify(elinkDataExceptionHelper,times(5))
+        verify(elinkDataExceptionHelper,times(1))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
 
     }
@@ -668,7 +672,7 @@ class ElinksPeopleServiceImplTest {
         verify(appointmentsRepository, atLeastOnce()).save(any());
 
         verify(authorisationsRepository, atLeastOnce()).save(any());
-        verify(elinkDataExceptionHelper,times(3))
+        verify(elinkDataExceptionHelper,times(1))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
 
     }
@@ -748,7 +752,7 @@ class ElinksPeopleServiceImplTest {
         verify(profileRepository, times(2)).save(any());
 
         verify(authorisationsRepository, atLeastOnce()).save(any());
-        verify(elinkDataExceptionHelper,times(10))
+        verify(elinkDataExceptionHelper,times(6))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
 
     }
@@ -789,7 +793,7 @@ class ElinksPeopleServiceImplTest {
         verify(profileRepository, times(2)).save(any());
 
         verify(authorisationsRepository, atLeastOnce()).save(any());
-        verify(elinkDataExceptionHelper,times(5))
+        verify(elinkDataExceptionHelper,times(1))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
 
     }
@@ -939,7 +943,7 @@ class ElinksPeopleServiceImplTest {
 
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
-        verify(elinkDataExceptionHelper,times(8))
+        verify(elinkDataExceptionHelper,times(4))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
@@ -961,6 +965,7 @@ class ElinksPeopleServiceImplTest {
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(LocalDateTime.now());
 
         DataAccessException dataAccessException = mock(DataAccessException.class);
+        when(judicialRoleTypeRepository.save(any())).thenThrow(dataAccessException);
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
@@ -1004,7 +1009,7 @@ class ElinksPeopleServiceImplTest {
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
-        verify(elinkDataExceptionHelper,times(10))
+        verify(elinkDataExceptionHelper,times(6))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
@@ -1041,7 +1046,7 @@ class ElinksPeopleServiceImplTest {
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
-        verify(elinkDataExceptionHelper,times(10))
+        verify(elinkDataExceptionHelper,times(6))
                 .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
         verify(emailService, times(0)).sendEmail(any());
     }
@@ -1078,7 +1083,7 @@ class ElinksPeopleServiceImplTest {
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
-        verify(elinkDataExceptionHelper,times(10))
+        verify(elinkDataExceptionHelper,times(6))
                 .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
@@ -1114,7 +1119,7 @@ class ElinksPeopleServiceImplTest {
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
-        verify(elinkDataExceptionHelper,times(10))
+        verify(elinkDataExceptionHelper,times(6))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
     }
 
