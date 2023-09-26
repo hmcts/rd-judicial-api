@@ -39,7 +39,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
-import javax.naming.InvalidNameException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -48,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.naming.InvalidNameException;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.isNull;
@@ -326,16 +326,17 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         for (RoleRequest roleRequest: judiciaryRoles) {
 
             try {
-
-                    if(StringUtils.isBlank(roleRequest.getJudiciaryRoleNameId())) throw new InvalidNameException();
-                    judicialRoleTypeRepository.save(JudicialRoleType.builder()
-                        .title(roleRequest.getName())
-                        .startDate(convertToLocalDateTime(roleRequest.getStartDate()))
-                        .endDate(convertToLocalDateTime(roleRequest.getEndDate()))
-                        .personalCode(personalCode)
-                        .jurisdictionRoleId(roleRequest.getJudiciaryRoleId())
-                        .jurisdictionRoleNameId(roleRequest.getJudiciaryRoleNameId())
-                        .build());
+                if (StringUtils.isBlank(roleRequest.getJudiciaryRoleNameId())) {
+                    throw new InvalidNameException();
+                }
+                judicialRoleTypeRepository.save(JudicialRoleType.builder()
+                    .title(roleRequest.getName())
+                    .startDate(convertToLocalDateTime(roleRequest.getStartDate()))
+                    .endDate(convertToLocalDateTime(roleRequest.getEndDate()))
+                    .personalCode(personalCode)
+                    .jurisdictionRoleId(roleRequest.getJudiciaryRoleId())
+                    .jurisdictionRoleNameId(roleRequest.getJudiciaryRoleNameId())
+                    .build());
 
             } catch (Exception e) {
                 log.warn("Judicial additional role  not loaded for " + personalCode);
