@@ -30,7 +30,7 @@ java:
     INCLUDE_PREVIOUS_APPOINTMENT: false
     THREAD_PAUSE_TIME: 2000
     THREAD_RETRIGGER_TIME: 1000
-    NO_OF_DAYS: 30
+    DAYS: 30
   image: 'hmctspublic.azurecr.io/rd/judicial-api:latest'
   keyVaults:
     rd:
