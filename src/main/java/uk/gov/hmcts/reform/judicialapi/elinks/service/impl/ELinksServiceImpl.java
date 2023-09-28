@@ -24,6 +24,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse;
@@ -32,6 +33,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperRespon
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ELinksService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
@@ -48,6 +50,7 @@ import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUDIT_DATA_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CLEANELINKSRESPONSES;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDSUCCESS;
@@ -68,6 +71,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @Service
 @Slf4j
 public class ELinksServiceImpl implements ELinksService {
+    @Autowired
+    private ElinksResponsesRepository elinksResponsesRepository;
 
     @Autowired
     BaseLocationRepository baseLocationRepository;
@@ -86,6 +91,9 @@ public class ELinksServiceImpl implements ELinksService {
 
     @Value("${elinks.people.page}")
     private String page;
+
+    @Value("${elinks.days}")
+    private Long days;
 
     @Autowired
     ElinksFeignClient elinksFeignClient;
@@ -106,6 +114,8 @@ public class ELinksServiceImpl implements ELinksService {
     @Autowired
     ElinksResponsesHelper elinksResponsesHelper;
 
+    @Autowired
+    ElinkDataExceptionHelper elinkDataExceptionHelper;
 
     @Override
     public ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveLocation() {
@@ -478,27 +488,41 @@ public class ELinksServiceImpl implements ELinksService {
 
     public void updateDeleted(List<DeletedResponse> deletedResponse) {
 
-        List<Triple<String, String,String>> deletedId = new ArrayList<>();
+        List<Triple<String, String, String>> deletedId = new ArrayList<>();
 
         String updateDeletedId = "UPDATE dbjudicialdata.judicial_user_profile SET date_of_deletion = Date(?) , "
-            + "deleted_flag = ? WHERE personal_code = ?";
+                + "deleted_flag = ? WHERE personal_code = ?";
 
         deletedResponse.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
-            deletedId.add(Triple.of(s.getPersonalCode(), s.getDeleted(),s.getDeletedOn())));
+                deletedId.add(Triple.of(s.getPersonalCode(), s.getDeleted(), s.getDeletedOn())));
         log.info("Insert Query batch Response from Deleted" + deletedId.size());
         jdbcTemplate.batchUpdate(
-            updateDeletedId,
-            deletedId,
-            10,
-            new ParameterizedPreparedStatementSetter<Triple<String, String, String>>() {
-                public void setValues(PreparedStatement ps, Triple<String, String, String> argument)
-                    throws SQLException {
-                    ps.setString(1, argument.getRight());
-                    ps.setBoolean(2, Boolean.valueOf(argument.getMiddle()));
-                    ps.setString(3, argument.getLeft());
-                }
-            });
+                updateDeletedId,
+                deletedId,
+                10,
+                new ParameterizedPreparedStatementSetter<Triple<String, String, String>>() {
+                    public void setValues(PreparedStatement ps, Triple<String, String, String> argument)
+                            throws SQLException {
+                        ps.setString(1, argument.getRight());
+                        ps.setBoolean(2, Boolean.valueOf(argument.getMiddle()));
+                        ps.setString(3, argument.getLeft());
+                    }
+                });
     }
 
 
+    @Transactional("transactionManager")
+    public void cleanUpElinksResponses() {
+        try {
+            elinksResponsesRepository.deleteByCreatedDateBefore(LocalDateTime.now().minusDays(days));
+            log.info("Cleaning Elinks Responses Table completed Successfully");
+        } catch (Exception exception) {
+            log.warn("Cleaning Elinks Responses Table failed");
+            int pageValue = Integer.parseInt(page);
+            elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                    now(),
+                    "CleanElinksResponses",
+                    "CleanElinksResponses", exception.getMessage(), CLEANELINKSRESPONSES,"1",pageValue);
+        }
+    }
 }

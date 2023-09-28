@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperRespon
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
@@ -76,6 +77,8 @@ public class ElinksApiJobScheduler {
     @Autowired
     DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
 
+    @Autowired
+    ELinksServiceImpl elinksServiceImpl;
 
     public static final String ELINKS_CONTROLLER_BASE_URL = "/refdata/internal/elink";
 
@@ -233,6 +236,7 @@ public class ElinksApiJobScheduler {
                 }
             }
         }
+        elinksServiceImpl.cleanUpElinksResponses();
     }
 
     public ResponseEntity<ElinkLocationWrapperResponse> retrieveLocationDetails() {
@@ -302,6 +306,7 @@ public class ElinksApiJobScheduler {
             HttpMethod.GET, request, ElinkDeletedWrapperResponse.class);
 
     }
+
 
     public ResponseEntity<Object> retrieveIdamElasticSearchDetails() {
 
