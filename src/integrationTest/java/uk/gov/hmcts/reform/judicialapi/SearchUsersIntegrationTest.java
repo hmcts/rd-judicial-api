@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.judicialapi.versions.V1;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.logging.log4j.util.Strings.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,7 +28,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .searchString("test")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(3, profiles.size());
         assertEquals("test530@test.net", profiles.get(0).get("emailId"));
@@ -48,7 +49,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .serviceCode("BBA3")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(2, profiles.size());
         assertEquals("test528@test.net", profiles.get(0).get("emailId"));
@@ -65,7 +67,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .serviceCode("BFA1")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(2, profiles.size());
         assertEquals("test530@test.net", profiles.get(0).get("emailId"));
@@ -83,7 +86,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
             .serviceCode("AAA6")
             .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+            userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test528@test.net", profiles.get(0).get("emailId"));
@@ -100,7 +104,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
             .serviceCode("AAA7")
             .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+            userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test529@test.net", profiles.get(0).get("emailId"));
@@ -117,7 +122,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
             .serviceCode("ABA5")
             .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+            userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test528@test.net", profiles.get(0).get("emailId"));
@@ -134,7 +140,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
             .serviceCode("ABA3")
             .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+            userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test530@test.net", profiles.get(0).get("emailId"));
@@ -150,7 +157,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .location("20012")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test530@test.net", profiles.get(0).get("emailId"));
@@ -166,7 +174,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .serviceCode("BFA1")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(2, profiles.size());
         assertEquals("test530@test.net", profiles.get(0).get("emailId"));
@@ -185,7 +194,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .serviceCode("BFA1")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, true,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, true,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "401");
     }
 
@@ -199,7 +209,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .serviceCode("BFA1")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("cannot be empty"));
@@ -215,7 +226,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .serviceCode("BFA1")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
@@ -232,7 +244,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .serviceCode("BFA1")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
@@ -247,7 +260,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .searchString("test")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(3, profiles.size());
         assertEquals("test530@test.net", profiles.get(0).get("emailId"));
@@ -268,7 +282,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .searchString("sample")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(5, profiles.size());
         assertEquals("test900@test.net", profiles.get(0).get("emailId"));
@@ -292,7 +307,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .searchString("Am'")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test802@test.net", profiles.get(0).get("emailId"));
@@ -308,7 +324,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .searchString("O'j")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test803@test.net", profiles.get(0).get("emailId"));
@@ -324,7 +341,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .searchString("Li-a")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test804@test.net", profiles.get(0).get("emailId"));
@@ -340,7 +358,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .searchString("V-e")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test805@test.net", profiles.get(0).get("emailId"));
@@ -356,7 +375,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .searchString("J Ro")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test806@test.net", profiles.get(0).get("emailId"));
@@ -372,7 +392,8 @@ class SearchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
                 .searchString("To N")
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, false,MediaType.valueOf(V1.MediaType.SERVICE));
+                userSearchRequest, role, false,
+            MediaType.valueOf(V1.MediaType.SERVICE),MediaType.valueOf(V1.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>)response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("test807@test.net", profiles.get(0).get("emailId"));
