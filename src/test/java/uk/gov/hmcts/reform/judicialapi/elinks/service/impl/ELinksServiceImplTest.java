@@ -7,6 +7,7 @@ import feign.FeignException;
 import feign.Request;
 import feign.Response;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,14 +18,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
 
@@ -35,6 +39,7 @@ import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
@@ -63,15 +68,30 @@ class ELinksServiceImplTest {
     @Spy
     private ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
 
-    @InjectMocks
-    private ELinksServiceImpl eLinksServiceImpl;
-
-
     @Mock
     ElinksResponsesHelper elinksResponsesHelper;
 
+
+    @InjectMocks
+    private ELinksServiceImpl eLinksServiceImpl;
+
     @Spy
     ElinksResponsesRepository elinksResponsesRepository;
+
+    @Mock
+    ElinkDataExceptionHelper elinkDataExceptionHelper;
+
+    @Mock
+    ElinkDataExceptionRepository elinkDataExceptionRepository;
+
+
+    @BeforeEach
+    void setUP() {
+
+        ReflectionTestUtils.setField(eLinksServiceImpl, "cleanElinksResponsesDays",
+                30L);
+
+    }
 
     @Test
     void elinksService_load_location_should_return_sucess_msg_with_status_200() throws JsonProcessingException {
@@ -393,6 +413,27 @@ class ELinksServiceImplTest {
 
     }
 
+    @Test
+    void elinksService_cleanUpData_should_return_sucess_msg_with_status_200() throws JsonProcessingException {
+
+        eLinksServiceImpl.cleanUpElinksResponses();
+        Mockito.verify(elinksResponsesRepository,Mockito.times(1))
+                .deleteByCreatedDateBefore(any());
+
+    }
+
+    @Test
+    void elinksService_cleanUpData_should_return_failure() throws JsonProcessingException {
+
+        DataAccessException dataAccessException = mock(DataAccessException.class);
+        doThrow(dataAccessException).when(elinksResponsesRepository).deleteByCreatedDateBefore(any());
+        eLinksServiceImpl.cleanUpElinksResponses();
+
+       // Mockito.verify(elinkDataExceptionHelper,Mockito.times(1))
+               // .auditException(any(),any(),any(),any(),any(),any(),any(),any());
+
+    }
+
     private List<BaseLocationResponse> getBaseLocationResponseData() {
 
 
@@ -404,8 +445,6 @@ class ELinksServiceImplTest {
         baseLocationResponse.setTypeId("28");
         baseLocationResponse.setCreatedAt("2023-04-12T16:42:35Z");
         baseLocationResponse.setUpdatedAt("2023-04-12T16:42:35Z");
-
-
 
         return List.of(baseLocationResponse);
 

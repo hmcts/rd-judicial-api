@@ -63,7 +63,7 @@ public class RefDataElinksConstants {
 
     public static final String DELETEDAPI = "Deleted";
 
-    public static final String CLEANELINKSRESPONSES = "CleanElinksResponses";
+    public static final String ELINKSRESPONSES = "elinks_responses";
 
 
     public static final String LOCATIONAPI = "Location";

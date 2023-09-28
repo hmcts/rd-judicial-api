@@ -50,10 +50,10 @@ import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUDIT_DATA_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CLEANELINKSRESPONSES;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATA_UPDATE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDSUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKSRESPONSES;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_DATA_STORE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
@@ -519,11 +519,11 @@ public class ELinksServiceImpl implements ELinksService {
             log.info("Cleaning Elinks Responses Table completed Successfully");
         } catch (Exception exception) {
             log.warn("Cleaning Elinks Responses Table failed");
-            int pageValue = Integer.parseInt(page);
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     now(),
-                    "CleanElinksResponses",
-                    "CleanElinksResponses", exception.getMessage(), CLEANELINKSRESPONSES,"1",pageValue);
+                    null,
+                    "elinks_responses", "Error while deleting records from elinks_responses table",
+                    ELINKSRESPONSES,null,null);
         }
     }
 }

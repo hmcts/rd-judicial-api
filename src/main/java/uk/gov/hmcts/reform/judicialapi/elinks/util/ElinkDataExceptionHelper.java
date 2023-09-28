@@ -25,7 +25,7 @@ public class ElinkDataExceptionHelper {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void auditException(String schedulerName, LocalDateTime schedulerStartTime,
                                String key, String fieldInError, String errorDescription,
-                               String tableName,String personalCode,int pageValue) {
+                               String tableName,String personalCode,Integer pageValue) {
 
         ElinkDataExceptionRecords audit = new ElinkDataExceptionRecords();
         try {
