@@ -429,8 +429,8 @@ class ELinksServiceImplTest {
         doThrow(dataAccessException).when(elinksResponsesRepository).deleteByCreatedDateBefore(any());
         eLinksServiceImpl.cleanUpElinksResponses();
 
-       // Mockito.verify(elinkDataExceptionHelper,Mockito.times(1))
-               // .auditException(any(),any(),any(),any(),any(),any(),any(),any());
+        Mockito.verify(elinkDataExceptionHelper,Mockito.times(1))
+                .auditException(any(),any(),any(),any(),any(),any(),any(),any());
 
     }
 
