@@ -92,7 +92,7 @@ public class ELinksServiceImpl implements ELinksService {
     @Value("${elinks.people.page}")
     private String page;
 
-    @Value("${elinks.days}")
+    @Value("${elinks.cleanElinksResponsesDays}")
     private Long cleanElinksResponsesDays;
 
     @Autowired
