@@ -514,7 +514,8 @@ public class ELinksServiceImpl implements ELinksService {
     @Transactional("transactionManager")
     public void cleanUpElinksResponses() {
         try {
-            elinksResponsesRepository.deleteByCreatedDateBefore(LocalDateTime.now().minusDays(cleanElinksResponsesDays));
+            elinksResponsesRepository
+                    .deleteByCreatedDateBefore(LocalDateTime.now().minusDays(cleanElinksResponsesDays));
             log.info("Cleaning Elinks Responses Table completed Successfully");
         } catch (Exception exception) {
             log.warn("Cleaning Elinks Responses Table failed");
