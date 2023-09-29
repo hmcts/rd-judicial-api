@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
 
+import com.google.common.io.CharStreams;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
 
@@ -29,9 +31,10 @@ public class ElinksResponsesHelper {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Response saveElinksResponse(String apiName, Response elinksData) {
         try {
-            byte[] jsonBody = elinksData.body().asInputStream().readAllBytes();
+            byte[] jsonBody = CharStreams.toString(elinksData.body().asReader(Charset.defaultCharset())).getBytes();
             ElinksResponses elinksResponses = ElinksResponses.builder().apiName(apiName)
-                    .createdDate(LocalDateTime.now()).elinksData(new String(jsonBody)).build();
+                    .createdDate(LocalDateTime.now()).elinksData(new String(jsonBody)
+                            .replaceAll("[\n\r]","")).build();
             elinksResponsesRepository.save(elinksResponses);
 
             return elinksData.toBuilder().body(jsonBody).build();
