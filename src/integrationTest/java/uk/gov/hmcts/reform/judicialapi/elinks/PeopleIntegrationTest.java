@@ -85,29 +85,6 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(elinksResponses.get(0).getElinksData()).isNotNull();
     }
 
-    @DisplayName("Elinks Responses cleanup status verification")
-    @Test
-    void testCleanElinksResponses() {
-
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        assertThat(response).containsEntry("http_status", "200 OK");
-        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
-        assertEquals("People data loaded successfully", profiles.getMessage());
-
-        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
-
-        elinksResponses.get(0).setCreatedDate(LocalDateTime.now().minusDays(cleanElinksResponsesDays));
-
-        elinksResponsesRepository.saveAll(elinksResponses);
-
-        elinksServiceImpl.cleanUpElinksResponses();
-
-        List<ElinksResponses> elinksResponsesAfterCleanUp = elinksResponsesRepository.findAll();
-
-        assertThat(elinksResponsesAfterCleanUp).isEmpty();
-
-    }
-
     @DisplayName("Elinks People to JRD user profile verification")
     @Test
     void verifyPeopleJrdUserProfile() {
@@ -199,12 +176,36 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
 
+    @DisplayName("Elinks Responses cleanup status verification")
+    @Test
+    void testCleanElinksResponses() {
+
+        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
+        assertThat(response).containsEntry("http_status", "200 OK");
+        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
+        assertEquals("People data loaded successfully", profiles.getMessage());
+
+        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
+
+        elinksResponses.get(0).setCreatedDate(LocalDateTime.now().minusDays(cleanElinksResponsesDays));
+
+        elinksResponsesRepository.saveAll(elinksResponses);
+
+        elinksServiceImpl.cleanUpElinksResponses();
+
+        List<ElinksResponses> elinksResponsesAfterCleanUp = elinksResponsesRepository.findAll();
+
+        assertThat(elinksResponsesAfterCleanUp).isEmpty();
+
+    }
+
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
         authorisationsRepository.deleteAll();
         judicialRoleTypeRepository.deleteAll();
         appointmentsRepository.deleteAll();
         profileRepository.deleteAll();
+        elinksResponsesRepository.deleteAll();
     }
 
 }
