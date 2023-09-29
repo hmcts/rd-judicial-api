@@ -31,7 +31,7 @@ public class ElinksResponsesHelper {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Response saveElinksResponse(String apiName, Response elinksData) {
         try {
-            byte[] jsonBody = CharStreams.toString(elinksData.body().asReader(Charset.defaultCharset())).getBytes();
+            byte[] jsonBody = elinksData.body().asInputStream().readAllBytes();
             ElinksResponses elinksResponses = ElinksResponses.builder().apiName(apiName)
                     .createdDate(LocalDateTime.now()).elinksData(new String(jsonBody)
                             .replaceAll("[\n\r]","")).build();
