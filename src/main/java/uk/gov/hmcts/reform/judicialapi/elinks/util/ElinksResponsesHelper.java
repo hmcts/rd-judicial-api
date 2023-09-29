@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
 
-import com.google.common.io.CharStreams;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 
 
