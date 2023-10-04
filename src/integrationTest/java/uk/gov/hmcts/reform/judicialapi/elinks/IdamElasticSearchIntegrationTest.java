@@ -83,8 +83,8 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(2,idamResponse.size());
 
         List<UserProfile> userprofile = profileRepository.findAll();
-        assertEquals(1, userprofile.size());
-        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(0).getObjectId());
+        assertEquals(2, userprofile.size());
+        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(1).getObjectId());
 
     }
 

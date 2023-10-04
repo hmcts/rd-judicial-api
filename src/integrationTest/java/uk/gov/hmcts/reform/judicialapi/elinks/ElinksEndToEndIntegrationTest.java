@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
@@ -29,6 +30,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkIdamWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
@@ -47,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -105,6 +108,8 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
     ElinkDataExceptionRepository elinkDataExceptionRepository;
 
 
+    @Value("${idam.find.query}")
+    String idamFindQuery;
 
     @BeforeAll
     void loadElinksResponse() throws Exception {
@@ -162,12 +167,24 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         String idamResponseValidationJson =
             loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");
 
+        String idamResponseForObjectId =
+            loadJson("src/integrationTest/resources/wiremock_responses/idamResponsefromObjectId.json");
+
         sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", "application/json")
                 .withHeader("Connection", "close")
                 .withBody(idamResponseValidationJson)
+            ));
+
+        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+            .withQueryParam("query", containing("ssoid"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody(idamResponseForObjectId)
             ));
 
         sidamService.stubFor(post(urlPathMatching("/o/token"))
@@ -264,6 +281,8 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         idamSetUp();
         validateElasticSearch(audits);
 
+        validateIdamFetch(audits);
+
         // asserting SIDAM publishing
         validateSidamPublish();
 
@@ -282,7 +301,7 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),leaversAuditEntry.getStatus());
 
         List<UserProfile> leaverUserProfile = profileRepository.findAll();
-        assertEquals(1, leaverUserProfile.size());
+        assertEquals(2, leaverUserProfile.size());
         assertEquals("4913085", leaverUserProfile.get(0).getPersonalCode());
         assertEquals(true, leaverUserProfile.get(0).getActiveFlag());
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", leaverUserProfile.get(0).getObjectId());
@@ -310,7 +329,7 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), peopleAuditEntry.getStatus());
 
         List<UserProfile> userprofile = profileRepository.findAll();
-        assertEquals(1, userprofile.size());
+        assertEquals(2, userprofile.size());
         assertEquals("4913085", userprofile.get(0).getPersonalCode());
         assertEquals("Rachel", userprofile.get(0).getKnownAs());
         assertEquals("Jones", userprofile.get(0).getSurname());
@@ -397,11 +416,29 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofileAfterSidamresponse = profileRepository.findAll();
         UserProfile sidamID = userprofileAfterSidamresponse.get(0);
 
-        assertEquals(1, userprofileAfterSidamresponse.size());
+        assertEquals(2, userprofileAfterSidamresponse.size());
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae",
-            userprofileAfterSidamresponse.get(0).getObjectId());
+            userprofileAfterSidamresponse.get(1).getObjectId());
         assertEquals("6455c84c-e77d-4c4f-9759-bf4a93a8e972",
-            userprofileAfterSidamresponse.get(0).getSidamId());
+            userprofileAfterSidamresponse.get(1).getSidamId());
+
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), audits.get(0).getPublishingStatus());
+    }
+
+    private void validateIdamFetch(List<DataloadSchedulerJob> audits) {
+        Map<String, Object> idamResponses = elinksReferenceDataClient.getIdamIds();
+        assertEquals("200 OK",idamResponses.get("http_status"));
+        ElinkIdamWrapperResponse idamResponseVal = (ElinkIdamWrapperResponse) idamResponses.get("body");
+        assertNotNull(idamResponseVal);
+
+        List<UserProfile> userprofileAfterSidamresponse = profileRepository.findAll();
+        UserProfile sidamID = userprofileAfterSidamresponse.get(0);
+
+        assertEquals(2, userprofileAfterSidamresponse.size());
+        assertEquals("8eft26ba-0c8b-4192-b5c7-311d737f0cae",
+            userprofileAfterSidamresponse.get(1).getObjectId());
+        assertEquals("f523ab5d-0a87-44c0-8c3b-28ff89878afc",
+            userprofileAfterSidamresponse.get(1).getSidamId());
 
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), audits.get(0).getPublishingStatus());
     }
@@ -416,10 +453,10 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),deletedAuditEntry.getStatus());
 
         List<UserProfile> deletedUserProfile = profileRepository.findAll();
-        assertEquals(1, deletedUserProfile.size());
-        assertEquals("4913085", deletedUserProfile.get(0).getPersonalCode());
-        assertEquals(true, deletedUserProfile.get(0).getDeletedFlag());
-        assertEquals("2023-07-13",deletedUserProfile.get(0).getDeletedOn().toLocalDate().toString());
+        assertEquals(2, deletedUserProfile.size());
+        assertEquals("4913085", deletedUserProfile.get(1).getPersonalCode());
+        assertEquals(true, deletedUserProfile.get(1).getDeletedFlag());
+        assertEquals("2023-07-13",deletedUserProfile.get(1).getDeletedOn().toLocalDate().toString());
 
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(3);
         assertThat(auditEntry.getId()).isPositive();

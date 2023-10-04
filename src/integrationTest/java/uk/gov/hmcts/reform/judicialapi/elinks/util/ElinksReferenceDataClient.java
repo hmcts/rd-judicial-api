@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkIdamWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
@@ -214,6 +215,30 @@ public class ElinksReferenceDataClient {
             return statusAndBody;
         }
         return  getResponse(responseEntity);
+    }
+
+    public Map<String, Object>  getIdamIds() {
+
+        var stringBuilder = new StringBuilder();
+
+        ResponseEntity<ElinkIdamWrapperResponse> responseEntity;
+        HttpEntity<?> request =
+            new HttpEntity<Object>(getMultipleAuthHeaders("jrd-system-user", null,
+                MediaType.valueOf(V2.MediaType.SERVICE)));
+
+        try {
+
+            responseEntity = restTemplate.exchange(
+                baseUrl + "/idam/find",HttpMethod.GET,request, ElinkIdamWrapperResponse.class);
+
+        } catch (RestClientResponseException ex) {
+            var statusAndBody = new HashMap<String, Object>(2);
+            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("response_body", ex.getResponseBodyAsString());
+            return statusAndBody;
+        }
+
+        return getResponse(responseEntity);
     }
 
     public Map<String, Object>  publishSidamIds() {

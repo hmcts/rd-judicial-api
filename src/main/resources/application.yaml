@@ -179,6 +179,11 @@ elastic:
     query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
     recordsPerPage: 500
 
+Idam:
+  find:
+    query: ${JRD_FIND_QUERY:ssoid:}
+    recordsPerPage: 500
+
 jrd:
   publisher:
     azure:
@@ -243,5 +248,3 @@ email:
       subject: "Official Sensitive: JRD - Object ID is not present in Judicial Reference Data - %s"
       template: simple-template-objectId.ftl
 
-sendgrid:
-  key: ${RD_SENDGRID_API_KEY}
