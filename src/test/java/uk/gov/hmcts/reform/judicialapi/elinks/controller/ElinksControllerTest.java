@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkIdamWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
@@ -108,6 +109,21 @@ class ElinksControllerTest {
         when(idamElasticSearchService.getIdamElasticSearchSyncFeed()).thenReturn(response);
 
         ResponseEntity<Object> actual = eLinksController.idamElasticSearch();
+        assertThat(actual).isNotNull();
+        assertThat(actual.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
+
+    }
+
+    @Test
+    void test_idam_fetch() {
+
+        ElinkIdamWrapperResponse elinkIdamWrapperResponse = new ElinkIdamWrapperResponse();
+        elinkIdamWrapperResponse.setMessage(PEOPLE_DATA_LOAD_SUCCESS);
+
+        ResponseEntity<Object> response = ResponseEntity.status(HttpStatus.OK).body(elinkIdamWrapperResponse);
+        when(idamElasticSearchService.getIdamDetails()).thenReturn(response);
+
+        ResponseEntity<Object> actual = eLinksController.fetchIdamIds();
         assertThat(actual).isNotNull();
         assertThat(actual.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
 
