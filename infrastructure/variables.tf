@@ -93,4 +93,4 @@ variable "pgsql_server_configuration" {
       value = "pg_buffercache"
     }
   ]
-}s
+}
