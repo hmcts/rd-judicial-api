@@ -89,7 +89,7 @@ module "db-judicial-ref-data-v15" {
   env                  = var.env
   pgsql_databases = [
     {
-      name = "rd-judicial-api-db"
+      name = "dbjuddata"
     }
   ]
   pgsql_version        = "15"
@@ -123,6 +123,6 @@ resource "azurerm_key_vault_secret" "POSTGRES_PORT-V15" {
 
 resource "azurerm_key_vault_secret" "POSTGRES_DATABASE-V15" {
   name          = join("-", [var.component, "POSTGRES-DATABASE-V15"])
-  value         = "rd-judicial-api-db"
+  value         = "dbjuddata"
   key_vault_id  = data.azurerm_key_vault.rd_key_vault.id
 }
