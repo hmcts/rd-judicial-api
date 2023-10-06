@@ -215,7 +215,6 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdFromCurrentDate();
         userProfiles.forEach(userProfile -> {
             Map<String, String> params = new HashMap<>();
-            params.put("size",String.valueOf(recordsPerPage));
             params.put("query", idamFindQuery.concat(userProfile.getObjectId()));
             log.debug("{}:: search elk query {}", loggingComponentName, params.get("query"));
             int count = 0;
@@ -260,13 +259,12 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         });
 
         validateObjectIds(judicialUsers,schedulerStartTime);
-        sendEmail.sendEmail(schedulerStartTime);
 
         updateSidamIds(judicialUsers);
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
             schedulerStartTime,
             now(),
-            RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), ELASTICSEARCH);
+            RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), IDAMSEARCH);
 
         ElinkIdamWrapperResponse response = new ElinkIdamWrapperResponse();
         response.setMessage(SIDAM_IDS_UPDATED);

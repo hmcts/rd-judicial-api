@@ -80,7 +80,7 @@ public class RefDataElinksConstants {
 
     public static final String ROLENAME = "role_name";
 
-    public static final String IDAMSEARCH = "IdamSearch";
+    public static final String IDAMSEARCH = "IdamCallByssoId";
 
     public static final String PUBLISHASB = "Publish to ASB";
 

@@ -223,7 +223,7 @@ public class ElinksApiJobScheduler {
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
                 if (exception.getRawStatusCode()==403 && exception.getMessage()
-                    .contains("jrd-elinks-idam-elastic-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
+                    .contains("jrd-elinks-idam-sso-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
                     elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
