@@ -215,6 +215,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdFromCurrentDate();
         userProfiles.forEach(userProfile -> {
             Map<String, String> params = new HashMap<>();
+            params.put("size",String.valueOf(recordsPerPage));
             params.put("query", idamFindQuery.concat(userProfile.getObjectId()));
             log.debug("{}:: search elk query {}", loggingComponentName, params.get("query"));
             int count = 0;
