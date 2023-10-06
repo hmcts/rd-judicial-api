@@ -30,6 +30,7 @@ public class LaunchDarklyConfiguration implements WebMvcConfigurer {
             .addPathPatterns("/refdata/internal/elink/reference_data/location")
             .addPathPatterns("/refdata/internal/elink/people")
             .addPathPatterns("/refdata/internal/elink/idam/elastic/search")
+            .addPathPatterns("/refdata/internal/elink/idam/find")
             .addPathPatterns("/refdata/internal/elink/leavers")
             .addPathPatterns("/refdata/internal/elink/deleted")
             .addPathPatterns("/refdata/internal/elink/sidam/asb/publish")
