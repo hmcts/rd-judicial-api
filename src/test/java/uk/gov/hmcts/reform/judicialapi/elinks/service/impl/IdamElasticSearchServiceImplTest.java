@@ -217,6 +217,26 @@ class IdamElasticSearchServiceImplTest {
             .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
+    @Test
+    void testIdamSearchResponseError() throws JsonProcessingException {
+        when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
+        when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
+
+        List<IdamResponse> users = new ArrayList<>();
+        users.add(createUser("some@some.com"));
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(users);
+
+        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
+                Request.Body.empty(), null)).body(body, Charset.defaultCharset())
+            .status(500).build();
+        when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        when(userProfileRepository.fetchObjectIdFromCurrentDate()).thenReturn(createUserProfile());
+        assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamDetails());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
+    }
+
 
     private IdamResponse createUser(String email) {
         IdamResponse profile = new IdamResponse();
