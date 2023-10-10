@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,16 @@ public class ElinksResponsesHelper {
     @Autowired
     private ElinksResponsesRepository elinksResponsesRepository;
 
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Response saveElinksResponse(String apiName, Response elinksData) {
         try {
             byte[] jsonBody = elinksData.body().asInputStream().readAllBytes();
             ElinksResponses elinksResponses = ElinksResponses.builder().apiName(apiName)
-                    .createdDate(LocalDateTime.now()).elinksData(new String(jsonBody)
-                            .replaceAll("[\n\r]","")).build();
+                    .createdDate(LocalDateTime.now()).elinksData(objectMapper.readTree(jsonBody)).build();
             elinksResponsesRepository.save(elinksResponses);
-
             return elinksData.toBuilder().body(jsonBody).build();
         } catch (IOException e) {
             log.error("Saving base request failed " + apiName);

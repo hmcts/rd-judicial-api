@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.domain;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,9 +46,9 @@ public class ElinksResponses {
     private String apiName;
 
     @Type(type = "jsonb")
-    @Column(name = "elinks_data", columnDefinition = "json")
+    @Column(name = "elinks_data", columnDefinition = "jsonb")
     @NotNull
-    private Object elinksData;
+    private JsonNode elinksData;
 
     @Column(name = "created_date")
     @NotNull
