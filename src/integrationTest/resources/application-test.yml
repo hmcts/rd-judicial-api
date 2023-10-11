@@ -15,6 +15,7 @@ management:
 spring:
   flyway.locations: classpath:db/testmigration
   flyway.enabled: true
+  flyway.cleanDisabled: false
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false

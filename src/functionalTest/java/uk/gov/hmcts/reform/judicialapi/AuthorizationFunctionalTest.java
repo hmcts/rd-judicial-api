@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.rest.SerenityRest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,6 @@ import uk.gov.hmcts.reform.judicialapi.config.Oauth2;
 import uk.gov.hmcts.reform.judicialapi.config.TestConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
 import uk.gov.hmcts.reform.lib.client.response.S2sClient;
-
-import javax.annotation.PostConstruct;
 
 import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 

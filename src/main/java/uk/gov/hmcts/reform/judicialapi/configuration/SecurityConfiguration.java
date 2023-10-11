@@ -3,12 +3,15 @@ package uk.gov.hmcts.reform.judicialapi.configuration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -19,7 +22,7 @@ import org.springframework.security.oauth2.jwt.JwtIssuerValidator;
 import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 import uk.gov.hmcts.reform.judicialapi.oidc.JwtGrantedAuthoritiesConverter;
@@ -27,9 +30,7 @@ import uk.gov.hmcts.reform.judicialapi.oidc.JwtGrantedAuthoritiesConverter;
 import java.util.List;
 import javax.inject.Inject;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
-@Configuration
+@EnableConfigurationProperties
 @ConfigurationProperties(prefix = "security")
 @EnableWebSecurity
 @Slf4j
@@ -44,7 +45,7 @@ public class SecurityConfiguration {
     private String issuerOverride;
 
     @Order(1)
-    private ServiceAuthFilter serviceAuthFilter;
+    private final ServiceAuthFilter serviceAuthFilter;
     @Order(2)
     private final SecurityEndpointFilter securityEndpointFilter;
     List<String> anonymousPaths;
@@ -63,7 +64,7 @@ public class SecurityConfiguration {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().antMatchers(anonymousPaths.toArray(String[]::new));
+        return web -> web.ignoring().requestMatchers(anonymousPaths.toArray(String[]::new));
     }
 
     @Inject
@@ -83,21 +84,14 @@ public class SecurityConfiguration {
         http.addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
                 .addFilterAfter(securityEndpointFilter, OAuth2AuthorizationRequestRedirectFilter.class)
 
-                .sessionManagement().sessionCreationPolicy(STATELESS).and()
-                .csrf().disable()
-                .formLogin().disable()
-                .logout().disable()
-                .authorizeRequests()
-                .antMatchers("/error").permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .oauth2ResourceServer().authenticationEntryPoint(restAuthenticationEntryPoint)
-                .jwt()
-                .jwtAuthenticationConverter(jwtAuthenticationConverter)
-                .and()
-                .and()
-             .oauth2Client();
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(a -> a.requestMatchers("/error").permitAll().anyRequest().authenticated())
+                .oauth2ResourceServer(a -> a.authenticationEntryPoint(restAuthenticationEntryPoint)
+                        .jwt(j -> j.jwtAuthenticationConverter(jwtAuthenticationConverter)))
+                .oauth2Client(Customizer.withDefaults());
         return http.build();
     }
 

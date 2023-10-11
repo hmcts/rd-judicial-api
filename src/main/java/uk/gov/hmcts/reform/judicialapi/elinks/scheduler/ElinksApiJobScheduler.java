@@ -132,7 +132,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode().value()==403 && exception.getMessage()
                     .contains("jrd-elinks-location".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -149,7 +149,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode().value()==403 && exception.getMessage()
                     .contains("jrd-elinks-load-people".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -167,7 +167,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode().value()==403 && exception.getMessage()
                     .contains("jrd-elinks-leavers".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -185,7 +185,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode().value()==403 && exception.getMessage()
                     .contains("jrd-elinks-load-deleted".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -203,7 +203,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode().value()==403 && exception.getMessage()
                 .contains("jrd-elinks-idam-elastic-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -224,7 +224,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode().value()==403 && exception.getMessage()
                 .contains("jrd-elinks-publish-service-bus".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
                     elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,

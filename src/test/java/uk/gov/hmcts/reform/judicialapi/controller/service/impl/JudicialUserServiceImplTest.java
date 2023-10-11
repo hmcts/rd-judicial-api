@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +52,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import javax.validation.constraints.NotNull;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -298,7 +298,7 @@ class JudicialUserServiceImplTest {
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
     }
 
     @DisplayName("Refresh Userprofile based on IAC objectId")
@@ -336,7 +336,7 @@ class JudicialUserServiceImplTest {
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
         ArrayList profiles =  (ArrayList)responseEntity.getBody();
         assertEquals(1, profiles.size());
 
@@ -371,7 +371,7 @@ class JudicialUserServiceImplTest {
 
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
         ArrayList profiles =  (ArrayList)responseEntity.getBody();
         assertEquals(1, profiles.size());
         UserProfileRefreshResponse profile = (UserProfileRefreshResponse)profiles.get(0);
@@ -409,7 +409,7 @@ class JudicialUserServiceImplTest {
 
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
         ArrayList profiles =  (ArrayList)responseEntity.getBody();
         assertEquals(2, profiles.size());
         UserProfileRefreshResponse profileOne = (UserProfileRefreshResponse)profiles.get(0);
@@ -471,7 +471,7 @@ class JudicialUserServiceImplTest {
         List<uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse>
             userProfileRefreshResponses = (List<uk.gov.hmcts.reform.judicialapi.controller
             .response.UserProfileRefreshResponse>) responseEntity.getBody();
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
         assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getStartDate());
         assertNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getEndDate());
         assertNotNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getStartDate());
@@ -537,7 +537,7 @@ class JudicialUserServiceImplTest {
         var responseEntity = judicialUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
     }
 
     @Test

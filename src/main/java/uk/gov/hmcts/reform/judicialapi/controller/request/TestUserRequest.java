@@ -1,13 +1,13 @@
 package uk.gov.hmcts.reform.judicialapi.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import javax.validation.Valid;
 
 @Validated
 @Data

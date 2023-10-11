@@ -165,7 +165,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
 
                 } else {
                     log.error("{}:: Idam Search Service Failed :: ", loggingComponentName);
-                    throw new ElinksException(responseEntity.getStatusCode(), IDAM_ERROR_MESSAGE,
+                    throw new ElinksException((HttpStatus) responseEntity.getStatusCode(), IDAM_ERROR_MESSAGE,
                         IDAM_ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
