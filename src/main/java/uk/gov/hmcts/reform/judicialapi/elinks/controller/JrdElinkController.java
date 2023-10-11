@@ -80,7 +80,6 @@ public class JrdElinkController {
 
     @PostMapping(
             path = "/search",
-            consumes = V2.MediaType.SERVICE,
             produces = V2.MediaType.SERVICE
     )
    public ResponseEntity<Object> retrieveUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {

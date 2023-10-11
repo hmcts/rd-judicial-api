@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.judicialapi.versions.V1;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -67,8 +68,10 @@ public class JudicialReferenceDataClient {
         ResponseEntity<Object> responseEntity;
         HttpEntity<?> request =
                 new HttpEntity<Object>(userRequest, invalidTokens
-                    ? getInvalidAuthHeaders(MediaType.valueOf(V1.MediaType.SERVICE),role, null) :
-                        getMultipleAuthHeaders(MediaType.valueOf(V1.MediaType.SERVICE), role, null));
+                    ? getInvalidAuthHeaders(MediaType.valueOf(V1.MediaType.SERVICE),role,
+                    null,MediaType.valueOf(V1.MediaType.SERVICE)) :
+                        getMultipleAuthHeaders(MediaType.valueOf(V1.MediaType.SERVICE), role,
+                            null,MediaType.valueOf(V1.MediaType.SERVICE)));
 
         try {
 
@@ -115,9 +118,10 @@ public class JudicialReferenceDataClient {
     }
 
     @NotNull
-    private HttpHeaders getMultipleAuthHeaders(MediaType value,String role, String userId) {
+    private HttpHeaders getMultipleAuthHeaders(MediaType value,String role, String userId,MediaType accept) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(value);
+        headers.setAccept(List.of(accept));
         if (StringUtils.isBlank(JWT_TOKEN)) {
 
             JWT_TOKEN = generateS2SToken(serviceName);
@@ -131,10 +135,10 @@ public class JudicialReferenceDataClient {
     }
 
     @NotNull
-    private HttpHeaders getInvalidAuthHeaders(MediaType value,String role, String userId) {
+    private HttpHeaders getInvalidAuthHeaders(MediaType value,String role, String userId,MediaType accept) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(value);
-
+        headers.setAccept(List.of(accept));
         if (StringUtils.isBlank(JWT_TOKEN)) {
 
             JWT_TOKEN = generateS2SToken("Invalid token");
@@ -168,12 +172,12 @@ public class JudicialReferenceDataClient {
     }
 
     public Map<String, Object> searchUsers(UserSearchRequest userSearchRequest, String role,
-                                           boolean invalidTokens,MediaType mediaType) {
+                                           boolean invalidTokens,MediaType mediaType,MediaType accept) {
         ResponseEntity<Object> responseEntity;
         var request =
                 new HttpEntity<Object>(userSearchRequest, invalidTokens ? getInvalidAuthHeaders(
-                    mediaType,role, null) :
-                        getMultipleAuthHeaders(mediaType,role, null));
+                    mediaType,role, null,accept) :
+                        getMultipleAuthHeaders(mediaType,role, null,accept));
 
         try {
             responseEntity = restTemplate.exchange(baseUrl + "/users/search", HttpMethod.POST, request, Object.class
@@ -199,7 +203,8 @@ public class JudicialReferenceDataClient {
         HttpEntity<?> request =
                 new HttpEntity<Object>(refreshRoleRequest,
                         invalidTokens ? getInvalidAuthHeaders(
-                            MediaType.valueOf(V1.MediaType.SERVICE),role, null) :
+                            MediaType.valueOf(V1.MediaType.SERVICE),role,
+                            null,MediaType.valueOf(V1.MediaType.SERVICE)) :
                                 getMultipleAuthHeadersForRefreshUserProfile(role, null,
                                         pageSize, pageNumber,
                                         sortDirection, sortColumn));
