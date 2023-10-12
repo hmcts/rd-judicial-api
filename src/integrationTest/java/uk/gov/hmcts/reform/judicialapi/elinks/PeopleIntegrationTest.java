@@ -5,19 +5,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +49,15 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
 
+    @Autowired
+    ELinksServiceImpl elinksServiceImpl;
+
+    @Autowired
+    private ElinksResponsesRepository elinksResponsesRepository;
+
+    @Value("${elinks.cleanElinksResponsesDays}")
+    private Long cleanElinksResponsesDays;
+
     @BeforeEach
     void setUp() {
         cleanupData();
@@ -63,6 +77,12 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
         assertEquals("People data loaded successfully", profiles.getMessage());
+
+        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
+
+        assertThat(elinksResponses.size()).isGreaterThan(0);
+        assertThat(elinksResponses.get(0).getCreatedDate()).isNotNull();
+        assertThat(elinksResponses.get(0).getElinksData()).isNotNull();
     }
 
     @DisplayName("Elinks People to JRD user profile verification")
@@ -156,12 +176,36 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
 
+    @DisplayName("Elinks Responses cleanup status verification")
+    @Test
+    void testCleanElinksResponses() {
+
+        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
+        assertThat(response).containsEntry("http_status", "200 OK");
+        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
+        assertEquals("People data loaded successfully", profiles.getMessage());
+
+        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
+
+        elinksResponses.get(0).setCreatedDate(LocalDateTime.now().minusDays(cleanElinksResponsesDays));
+
+        elinksResponsesRepository.saveAll(elinksResponses);
+
+        elinksServiceImpl.cleanUpElinksResponses();
+
+        List<ElinksResponses> elinksResponsesAfterCleanUp = elinksResponsesRepository.findAll();
+
+        assertThat(elinksResponsesAfterCleanUp).isEmpty();
+
+    }
+
     private void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
         authorisationsRepository.deleteAll();
         judicialRoleTypeRepository.deleteAll();
         appointmentsRepository.deleteAll();
         profileRepository.deleteAll();
+        elinksResponsesRepository.deleteAll();
     }
 
 }

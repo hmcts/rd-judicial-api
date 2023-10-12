@@ -327,6 +327,7 @@ dependencies {
 
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
 
+    implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '1.0.0'
 
 
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.2'
@@ -529,6 +530,29 @@ dependencyManagement {
         //CVE-2022-40152
         dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
             entry 'woodstox-core'
+        }
+
+        //        Resolves CVE-2023-4586
+        dependencySet(group: 'io.netty', version: '4.1.100.Final') {
+            entry 'netty-buffer'
+            entry 'netty-codec'
+            entry 'netty-codec-dns'
+            entry 'netty-codec-http'
+            entry 'netty-codec-http2'
+            entry 'netty-codec-socks'
+            entry 'netty-common'
+            entry 'netty-handler'
+            entry 'netty-handler-proxy'
+            entry 'netty-resolver'
+            entry 'netty-resolver-dns'
+            entry 'netty-resolver-dns-classes-macos'
+            entry 'netty-resolver-dns-native-macos'
+            entry 'netty-transport'
+            entry 'netty-transport-classes-epoll'
+            entry 'netty-transport-classes-kqueue'
+            entry 'netty-transport-native-epoll'
+            entry 'netty-transport-native-kqueue'
+            entry 'netty-transport-native-unix-common'
         }
     }
 }

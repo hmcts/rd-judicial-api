@@ -142,6 +142,7 @@ elinksApiKey: ${judicial_api_elinks_api_key:}
 elinksUrl: ${ELINKS_URL:http://127.0.0.1:8000}
 
 elinks:
+  cleanElinksResponsesDays: 30
   people:
     lastUpdated: 2015-01-01
     perPage: 50

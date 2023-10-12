@@ -9,8 +9,10 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
 import java.util.List;
@@ -30,6 +32,12 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+    @Autowired
+    private ElinksResponsesHelper elinksResponsesHelper;
+
+    @Autowired
+    private ElinksResponsesRepository elinksResponsesRepository;
 
     @BeforeEach
     void setUp() {

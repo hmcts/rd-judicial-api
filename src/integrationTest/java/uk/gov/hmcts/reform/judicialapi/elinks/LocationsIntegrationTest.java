@@ -6,8 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
@@ -29,6 +31,8 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     LocationRepository locationRepository;
 
+    @Autowired
+    private ElinksResponsesRepository elinksResponsesRepository;
 
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
@@ -52,6 +56,12 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) response.get("body");
         assertEquals(BASE_LOCATION_DATA_LOAD_SUCCESS, locations.getMessage());
+
+        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
+
+        assertThat(elinksResponses.size()).isGreaterThan(0);
+        assertThat(elinksResponses.get(0).getCreatedDate()).isNotNull();
+        assertThat(elinksResponses.get(0).getElinksData()).isNotNull();
     }
 
     @DisplayName("Elinks locations verification")

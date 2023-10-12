@@ -8,8 +8,10 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
@@ -37,6 +39,10 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+
+    @Autowired
+    private ElinksResponsesRepository elinksResponsesRepository;
 
     @BeforeAll
     void loadElinksResponse() throws Exception {
@@ -101,6 +107,10 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkDeletedWrapperResponse elinkDeletedWrapperResponse = (ElinkDeletedWrapperResponse)response.get("body");
         assertEquals("Deleted users Data Loaded Successfully", elinkDeletedWrapperResponse.getMessage());
+        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
+        assertThat(elinksResponses.size()).isGreaterThan(0);
+        assertThat(elinksResponses.get(0).getCreatedDate()).isNotNull();
+        assertThat(elinksResponses.get(0).getElinksData()).isNotNull();
     }
 
     @DisplayName("Elinks Deleted to JRD user profile verification")
