@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
@@ -18,5 +19,9 @@ public interface AppointmentsRepository extends JpaRepository<Appointment, Long>
             + "dbjudicialdata.judicial_office_appointment  WHERE DATE(last_loaded_date) = current_date",
             nativeQuery = true)
     List<String> fetchAppointmentBaseLocation();
+
+    @Modifying
+    @Query(value = "DELETE FROM judicialOfficeAppointment app WHERE app.personalCode IN :personalCode")
+    void deleteAppointmentRepository(List<String> personalCode);
 
 }

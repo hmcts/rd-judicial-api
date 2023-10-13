@@ -237,6 +237,7 @@ public class ElinksApiJobScheduler {
             }
         }
         elinksServiceImpl.cleanUpElinksResponses();
+        elinksServiceImpl.deleteJohProfiles();
     }
 
     public ResponseEntity<ElinkLocationWrapperResponse> retrieveLocationDetails() {

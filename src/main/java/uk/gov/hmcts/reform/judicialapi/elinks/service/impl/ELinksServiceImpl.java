@@ -20,12 +20,17 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.LeaversResultsR
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.DeletedResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.ElinksDeleteApiResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
@@ -41,6 +46,7 @@ import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +77,10 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @Service
 @Slf4j
 public class ELinksServiceImpl implements ELinksService {
+
+    @Autowired
+    private ProfileRepository profileRepository;
+
     @Autowired
     private ElinksResponsesRepository elinksResponsesRepository;
 
@@ -95,6 +105,12 @@ public class ELinksServiceImpl implements ELinksService {
     @Value("${elinks.cleanElinksResponsesDays}")
     private Long cleanElinksResponsesDays;
 
+    @Value("${elinks.delJohProfilesYears}")
+    private Long delJohProfilesYears;
+
+    @Value("${elinks.delJohProfiles}")
+    private Boolean delJohProfiles;
+
     @Autowired
     ElinksFeignClient elinksFeignClient;
 
@@ -116,6 +132,15 @@ public class ELinksServiceImpl implements ELinksService {
 
     @Autowired
     ElinkDataExceptionHelper elinkDataExceptionHelper;
+
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
+
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
+
+    @Autowired
+    JudicialRoleTypeRepository judicialRoleTypeRepository;
 
     @Override
     public ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveLocation() {
@@ -524,6 +549,35 @@ public class ELinksServiceImpl implements ELinksService {
                     null,
                     "elinks_responses", "Error while deleting records from elinks_responses table",
                     ELINKSRESPONSES,null,null);
+        }
+    }
+
+
+    @Transactional("transactionManager")
+    public void deleteJohProfiles() {
+        try {
+            if (delJohProfiles) {
+                List<UserProfile> userProfiles = profileRepository
+                        .fetchUserProfilesByLastWorkingDate(LocalDate.now().minusYears(delJohProfilesYears));
+
+                List<String> personalCodes = userProfiles.stream().map(a -> a.getPersonalCode()).toList();
+
+                authorisationsRepository.deleteAuthorisationRepository(personalCodes);
+
+                appointmentsRepository.deleteAppointmentRepository(personalCodes);
+                judicialRoleTypeRepository.deleteRoleTypeRepository(personalCodes);
+
+                profileRepository
+                        .deleteByLastWorkingDateBefore(LocalDate.now().minusYears(delJohProfilesYears));
+                log.info("Deleted JOH UserProfiles Successfully");
+                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                        now(),
+                        null,
+                        "elinks_responses", "Error while deleting records from elinks_responses table",
+                        ELINKSRESPONSES,null,null);
+            }
+        } catch (Exception exception) {
+            log.warn("Deleting JOH User Profiles failed");
         }
     }
 }
