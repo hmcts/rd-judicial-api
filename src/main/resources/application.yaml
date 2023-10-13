@@ -146,6 +146,7 @@ elinksApiKey: ${judicial_api_elinks_api_key:}
 elinksUrl: ${ELINKS_URL:https:https://judiciary-middleware-futureehr.herokuapp.com/api/v5}
 
 elinks:
+  cleanElinksResponsesDays: ${Clean_Elinks_Responses_Days:30}
   people:
     lastUpdated: ${LAST_UPDATED:2015-01-01}
     perPage: ${PER_PAGE:50}
@@ -177,6 +178,11 @@ logging:
 elastic:
   search:
     query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
+    recordsPerPage: 500
+
+Idam:
+  find:
+    query: ${JRD_FIND_QUERY:ssoid:}
     recordsPerPage: 500
 
 jrd:
@@ -243,5 +249,3 @@ email:
       subject: "Official Sensitive: JRD - Object ID is not present in Judicial Reference Data - %s"
       template: simple-template-objectId.ftl
 
-sendgrid:
-  key: ${RD_SENDGRID_API_KEY}

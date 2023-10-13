@@ -9,4 +9,6 @@ public interface IdamElasticSearchService {
     String getIdamBearerToken(LocalDateTime schedulerStartTime);
 
     ResponseEntity<Object> getIdamElasticSearchSyncFeed();
+
+    ResponseEntity<Object> getIdamDetails();
 }

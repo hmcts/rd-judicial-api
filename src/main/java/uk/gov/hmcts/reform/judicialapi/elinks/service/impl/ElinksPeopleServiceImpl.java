@@ -35,6 +35,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
@@ -165,6 +166,9 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     @Value("${elinks.people.includePreviousAppointments}")
     private String includePreviousAppointments;
 
+    @Autowired
+    ElinksResponsesHelper elinksResponsesHelper;
+
 
     @Override
     public ResponseEntity<ElinkPeopleWrapperResponse> updatePeople() {
@@ -186,6 +190,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         try {
             do {
                 Response peopleApiResponse = getPeopleResponseFromElinks(pageValue++, schedulerStartTime);
+                peopleApiResponse = elinksResponsesHelper.saveElinksResponse(PEOPLEAPI, peopleApiResponse);
                 httpStatus = HttpStatus.valueOf(peopleApiResponse.status());
                 ResponseEntity<Object> responseEntity;
 

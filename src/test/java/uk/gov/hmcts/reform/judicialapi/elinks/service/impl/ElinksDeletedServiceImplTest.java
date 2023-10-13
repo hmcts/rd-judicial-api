@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,10 +25,12 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.ElinksDeleteAp
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -37,11 +40,13 @@ import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUDIT_DATA_ERROR;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDSUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
@@ -80,6 +85,12 @@ class ElinksDeletedServiceImplTest {
     private ElinksDeleteApiResponse elinksApiResponseSecondHit;
 
     JdbcTemplate jdbcTemplate =  mock(JdbcTemplate.class);
+
+    @Mock
+    ElinksResponsesHelper elinksResponsesHelper;
+
+    @Spy
+    ElinksResponsesRepository elinksResponsesRepository;
 
     @Spy
     CommonUtil commonUtil;
@@ -129,8 +140,37 @@ class ElinksDeletedServiceImplTest {
         LocalDateTime dateTime = LocalDateTime.now();
 
         when(dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime()).thenReturn(dateTime);
+        Response r1 = Response.builder().request(mock(Request.class)).body(body, defaultCharset()).status(200).build();
+        Response r2 = Response.builder().request(mock(Request.class)).body(body2, defaultCharset()).status(200).build();
+        when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(r1).thenReturn(r2);
 
-        when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(Response.builder()
+        when(elinksResponsesHelper.saveElinksResponse(eq(DELETEDAPI),eq(r1))).thenReturn(r1);
+        when(elinksResponsesHelper.saveElinksResponse(eq(DELETEDAPI),eq(r2))).thenReturn(r2);
+        ResponseEntity<ElinkDeletedWrapperResponse> response = elinksServiceImpl.retrieveDeleted();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(DELETEDSUCCESS);
+
+        verify(elinksFeignClient, times(2)).getDeletedDetails(any(), any(), any());
+        org.assertj.core.api.Assertions.assertThat(elinksFeignClient.getDeletedDetails(any(),any(),any())).isNotNull();
+
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
+
+    }
+
+    @Test
+    void loadDeletedNullFromElinksTest() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
+        String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
+
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        when(dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime()).thenReturn(dateTime);
+
+        when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(null);
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
                 .thenReturn(Response.builder().request(mock(Request.class))
                         .body(body2, defaultCharset()).status(200).build());
@@ -140,8 +180,9 @@ class ElinksDeletedServiceImplTest {
         assertThat(response.getBody().getMessage()).isEqualTo(DELETEDSUCCESS);
 
         verify(elinksFeignClient, times(2)).getDeletedDetails(any(), any(), any());
+        org.assertj.core.api.Assertions.assertThat(elinksFeignClient.getDeletedDetails(any(),any(),any())).isNull();
         verify(elinkDataIngestionSchedularAudit,times(2))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+                .auditSchedulerStatus(any(),any(),any(),any(),any());
 
     }
 
@@ -153,6 +194,12 @@ class ElinksDeletedServiceImplTest {
         when(dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime()).thenReturn(null);
 
         when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(200).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
                 .thenReturn(Response.builder().request(mock(Request.class))
                         .body(body2, defaultCharset()).status(200).build());
@@ -205,6 +252,10 @@ class ElinksDeletedServiceImplTest {
         when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkDeletedWrapperResponse> responseEntity = elinksServiceImpl.retrieveDeleted();
         });
@@ -224,6 +275,10 @@ class ElinksDeletedServiceImplTest {
         when(dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime()).thenReturn(LocalDateTime.now());
 
         when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
@@ -248,6 +303,9 @@ class ElinksDeletedServiceImplTest {
         when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkDeletedWrapperResponse> responseEntity = elinksServiceImpl.retrieveDeleted();
         });
@@ -262,6 +320,10 @@ class ElinksDeletedServiceImplTest {
         when(dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime()).thenReturn(LocalDateTime.now());
 
         when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.BAD_REQUEST.value())
+                .build());
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.BAD_REQUEST.value())
                 .build());
 
@@ -284,6 +346,10 @@ class ElinksDeletedServiceImplTest {
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.UNAUTHORIZED.value())
                 .build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.UNAUTHORIZED.value())
+                .build());
+
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkDeletedWrapperResponse> responseEntity = elinksServiceImpl.retrieveDeleted();
         });
@@ -301,6 +367,9 @@ class ElinksDeletedServiceImplTest {
         when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.FORBIDDEN.value()).build());
 
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.FORBIDDEN.value()).build());
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkDeletedWrapperResponse> responseEntity = elinksServiceImpl.retrieveDeleted();
         });
@@ -319,6 +388,11 @@ class ElinksDeletedServiceImplTest {
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.NOT_FOUND.value())
                 .build());
 
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.NOT_FOUND.value())
+                .build());
+
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkDeletedWrapperResponse> responseEntity = elinksServiceImpl.retrieveDeleted();
         });
@@ -333,6 +407,11 @@ class ElinksDeletedServiceImplTest {
         when(dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime()).thenReturn(LocalDateTime.now());
 
         when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body("", defaultCharset())
+                .status(HttpStatus.TOO_MANY_REQUESTS.value()).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset())
                 .status(HttpStatus.TOO_MANY_REQUESTS.value()).build());
 

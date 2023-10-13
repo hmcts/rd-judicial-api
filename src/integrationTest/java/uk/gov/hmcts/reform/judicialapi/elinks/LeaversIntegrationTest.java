@@ -7,11 +7,13 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
@@ -41,6 +43,8 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
     @Autowired
     private ProfileRepository profileRepository;
 
+    @Autowired
+    private ElinksResponsesRepository elinksResponsesRepository;
 
     @Autowired
     private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
@@ -64,6 +68,12 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkLeaversWrapperResponse profiles = (ElinkLeaversWrapperResponse)response.get("body");
         assertEquals("Leavers Data Loaded Successfully", profiles.getMessage());
+
+        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
+
+        assertThat(elinksResponses.size()).isGreaterThan(0);
+        assertThat(elinksResponses.get(0).getCreatedDate()).isNotNull();
+        assertThat(elinksResponses.get(0).getElinksData()).isNotNull();
     }
 
     @DisplayName("Elinks Leavers to JRD user profile verification")
@@ -78,7 +88,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(12, userprofile.size());
+        assertEquals(13, userprofile.size());
         assertEquals("28", userprofile.get(1).getPersonalCode());
         assertEquals(true, userprofile.get(1).getActiveFlag());
         assertEquals("1.11112E+12", userprofile.get(1).getObjectId());
@@ -97,7 +107,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(12, userprofile.size());
+        assertEquals(13, userprofile.size());
         assertEquals("28", userprofile.get(1).getPersonalCode());
         assertEquals(true, userprofile.get(1).getActiveFlag());
         assertEquals("1.11112E+12", userprofile.get(1).getObjectId());

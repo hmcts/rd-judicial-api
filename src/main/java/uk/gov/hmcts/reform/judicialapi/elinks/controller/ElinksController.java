@@ -167,6 +167,40 @@ public class ElinksController {
     @ApiOperation(
         value = "", hidden = true)
     @ApiResponses({
+        @ApiResponse(
+            code = 200,
+            message = "Get list of idam users.",
+            response = IdamResponse.class
+        ),
+        @ApiResponse(
+            code = 400,
+            message = BAD_REQUEST
+        ),
+        @ApiResponse(
+            code = 401,
+            message = UNAUTHORIZED_ERROR
+        ),
+        @ApiResponse(
+            code = 403,
+            message = FORBIDDEN_ERROR
+        ),
+        @ApiResponse(
+            code = 500,
+            message = INTERNAL_SERVER_ERROR
+        )
+    })
+    @GetMapping (path = "/idam/find",
+        produces = V2.MediaType.SERVICE)
+    public ResponseEntity<Object> fetchIdamIds() {
+
+        ResponseEntity<Object> response =  idamElasticSearchService.getIdamDetails();
+
+        return response;
+    }
+
+    @ApiOperation(
+        value = "", hidden = true)
+    @ApiResponses({
             @ApiResponse(
                     code = 200,
                     message = "Get list of leavers.",

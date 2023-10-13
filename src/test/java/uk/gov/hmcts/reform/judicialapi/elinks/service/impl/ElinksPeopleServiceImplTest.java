@@ -39,6 +39,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JrdRegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
@@ -49,6 +50,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.EmailTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
@@ -173,7 +175,11 @@ class ElinksPeopleServiceImplTest {
     final EmailTemplate emailTemplate = mock(EmailTemplate.class);
     ElinkEmailConfiguration.MailTypeConfig mailConfig = mock(ElinkEmailConfiguration.MailTypeConfig.class);
 
+    @Mock
+    ElinksResponsesHelper elinksResponsesHelper;
 
+    @Spy
+    ElinksResponsesRepository elinksResponsesRepository;
 
     @BeforeEach
     void setUP() {
@@ -311,6 +317,13 @@ class ElinksPeopleServiceImplTest {
                 .thenReturn(Response.builder().request(mock(Request.class))
                         .body(body2, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(200).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(200).build());
+
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
@@ -369,6 +382,13 @@ class ElinksPeopleServiceImplTest {
             .thenReturn(Response.builder().request(mock(Request.class))
                 .body(body2, defaultCharset()).status(200).build());
 
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(429).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(200).build());
+
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
@@ -399,6 +419,14 @@ class ElinksPeopleServiceImplTest {
                 .body(body2, defaultCharset()).status(429).build())
             .thenReturn(Response.builder().request(mock(Request.class))
                 .body(body3, defaultCharset()).status(429).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(429).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(429).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body3, defaultCharset()).status(429).build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
@@ -432,6 +460,12 @@ class ElinksPeopleServiceImplTest {
                 .thenReturn(Response.builder().request(mock(Request.class))
                         .body(body2, defaultCharset()).status(200).build());
 
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(200).build());
+
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
@@ -462,6 +496,9 @@ class ElinksPeopleServiceImplTest {
 
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
@@ -511,6 +548,10 @@ class ElinksPeopleServiceImplTest {
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
@@ -545,6 +586,11 @@ class ElinksPeopleServiceImplTest {
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+                .thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
@@ -578,6 +624,11 @@ class ElinksPeopleServiceImplTest {
 
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(200).build());
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
                 .thenReturn(Response.builder().request(mock(Request.class))
                         .body(body2, defaultCharset()).status(200).build());
@@ -620,6 +671,11 @@ class ElinksPeopleServiceImplTest {
             .thenReturn(Response.builder().request(mock(Request.class))
                 .body(body2, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(200).build());
+
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
@@ -658,6 +714,9 @@ class ElinksPeopleServiceImplTest {
 
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
@@ -705,6 +764,9 @@ class ElinksPeopleServiceImplTest {
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
@@ -740,6 +802,12 @@ class ElinksPeopleServiceImplTest {
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
             .thenReturn(Response.builder().request(mock(Request.class))
                 .body(body2, defaultCharset()).status(200).build());
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+                .thenReturn(Response.builder().request(mock(Request.class))
+                        .body(body2, defaultCharset()).status(200).build());
+
         when(emailConfiguration.getMailTypes()).thenReturn(Map.of("key", config));
 
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
@@ -782,6 +850,8 @@ class ElinksPeopleServiceImplTest {
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
         assertTrue(response.getStatusCode().is2xxSuccessful());
@@ -838,6 +908,9 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
@@ -860,6 +933,9 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                         .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
@@ -880,6 +956,10 @@ class ElinksPeopleServiceImplTest {
 
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
@@ -907,6 +987,9 @@ class ElinksPeopleServiceImplTest {
 
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         DataAccessException dataAccessException = mock(DataAccessException.class);
@@ -940,7 +1023,8 @@ class ElinksPeopleServiceImplTest {
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
-
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(4))
@@ -970,7 +1054,8 @@ class ElinksPeopleServiceImplTest {
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
-
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
@@ -1006,6 +1091,9 @@ class ElinksPeopleServiceImplTest {
         when(mailConfig.getSubject()).thenReturn("email subject");
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
@@ -1045,6 +1133,10 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
                 .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
@@ -1080,6 +1172,10 @@ class ElinksPeopleServiceImplTest {
         when(mailConfig.getSubject()).thenReturn("email subject");
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
@@ -1118,6 +1214,10 @@ class ElinksPeopleServiceImplTest {
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,times(6))
             .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
@@ -1146,6 +1246,9 @@ class ElinksPeopleServiceImplTest {
             Boolean.parseBoolean(any()))).thenReturn(Response.builder()
             .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
         ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         verify(elinkDataExceptionHelper,atLeastOnce()).auditException(any(),
             any(),any(),any(),any(),any(),any(),anyInt());
@@ -1160,6 +1263,12 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.BAD_REQUEST.value())
                 .build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.BAD_REQUEST.value())
+                .build());
+
 
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
@@ -1177,6 +1286,11 @@ class ElinksPeopleServiceImplTest {
 
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.UNAUTHORIZED.value())
+                .build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.UNAUTHORIZED.value())
                 .build());
 
@@ -1198,6 +1312,9 @@ class ElinksPeopleServiceImplTest {
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.FORBIDDEN.value()).build());
 
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.FORBIDDEN.value()).build());
+
         ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
             ResponseEntity<ElinkPeopleWrapperResponse> responseEntity = elinksPeopleServiceImpl.updatePeople();
         });
@@ -1214,6 +1331,9 @@ class ElinksPeopleServiceImplTest {
 
         when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.NOT_FOUND.value())
+                .build());
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.NOT_FOUND.value())
                 .build());
 

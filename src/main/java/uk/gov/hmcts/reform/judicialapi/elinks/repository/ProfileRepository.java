@@ -102,6 +102,11 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "where (per.objectId != '' and per.objectId is not null)")
     List<String> fetchObjectId();
 
+    @Query(value = "select per "
+        + "from judicialUserProfile per "
+        + "where (per.objectId != '' and per.objectId is not null)"
+        + "and (per.sidamId = '' or per.sidamId is null) and date(lastLoadedDate)=CURRENT_DATE ")
+    List<UserProfile> fetchObjectIdFromCurrentDate();
 
 
 }
