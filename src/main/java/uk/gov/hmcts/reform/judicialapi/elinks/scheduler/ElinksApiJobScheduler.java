@@ -37,6 +37,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELASTICSEARCH;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAMSEARCH;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
@@ -217,6 +218,25 @@ public class ElinksApiJobScheduler {
             }
         }
         try{
+            ResponseEntity<Object> idamResponce
+                = retrieveSidamids();
+        } catch(Exception ex) {
+            log.warn("ElinksApiJobScheduler.loadElinksData Job execution completed failure for idamSearch Response");
+            if (ex instanceof HttpClientErrorException)
+            {
+                HttpClientErrorException exception=(HttpClientErrorException)ex;
+                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                    .contains("jrd-elinks-idam-sso-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
+                {
+
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                        now(),
+                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),IDAMSEARCH);
+                }
+            }
+        }
+
+        try{
         ResponseEntity<SchedulerJobStatusResponse> schedulerResponse
             = retrieveAsbPublishDetails();
         } catch(Exception ex) {
@@ -308,6 +328,19 @@ public class ElinksApiJobScheduler {
 
     }
 
+    private ResponseEntity<Object> retrieveSidamids() {
+        String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
+            .concat("/idam/find");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_JSON);
+
+        HttpEntity<String> request =
+            new HttpEntity<>(headers);
+
+        return restTemplate.exchange(apiUrl,
+            HttpMethod.GET, request, Object.class);
+    }
 
     public ResponseEntity<Object> retrieveIdamElasticSearchDetails() {
 

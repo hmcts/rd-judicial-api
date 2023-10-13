@@ -163,6 +163,11 @@ elastic:
     query: (roles:judiciary) AND lastModified:>now-12h
     recordsPerPage: 500
 
+Idam:
+  find:
+    query: ${JRD_FIND_QUERY:ssoid:}
+    recordsPerPage: 500
+
 launchdarkly:
   sdk:
     key: ${LD_SDK_KEY:}

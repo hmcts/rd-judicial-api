@@ -17,10 +17,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkIdamWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
@@ -41,6 +43,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,6 +54,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.invokeMethod;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.SIDAM_IDS_UPDATED;
 
 @ExtendWith(MockitoExtension.class)
 @SuppressWarnings("unchecked")
@@ -100,6 +104,7 @@ class IdamElasticSearchServiceImplTest {
         idamElasticSearchServiceImpl.recordsPerPage = 1;
         idamElasticSearchServiceImpl.page = "1";
         idamElasticSearchServiceImpl.idamSearchQuery = "(roles:judiciary) AND lastModified:>now-%sh";
+        idamElasticSearchServiceImpl.idamFindQuery = "ssoid:";
     }
 
     @Test
@@ -153,6 +158,47 @@ class IdamElasticSearchServiceImplTest {
     }
 
     @Test
+    void testSidamUpdate() throws JsonProcessingException {
+        when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
+        when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
+
+        Set<IdamResponse> users = new HashSet<>();
+        IdamResponse idamResponseOne = createUser("some@some.com");
+        idamResponseOne.setSsoId("objectId1");
+        users.add(idamResponseOne);
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(users);
+
+        Map<String, Collection<String>> map = new HashMap<>();
+        Collection<String> list = new ArrayList<>();
+        list.add("5");
+        map.put("X-Total-Count", list);
+
+        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
+                Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
+            .status(200).build();
+        when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        when(userProfileRepository.fetchObjectIdFromCurrentDate()).thenReturn(createUserProfile());
+        when(userProfileRepository.fetchObjectId()).thenReturn(List.of("objectId1"));
+
+        ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamDetails();
+        assertThat(response).isNotNull();
+        ElinkIdamWrapperResponse  elinkIdamWrapperResponse = (ElinkIdamWrapperResponse) useResponses.getBody();
+        assertEquals(elinkIdamWrapperResponse.getMessage(),SIDAM_IDS_UPDATED);
+        verify(idamClientMock, times(2)).getUserFeed(anyString(), any());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
+    }
+
+    private List<UserProfile> createUserProfile() {
+        UserProfile userProfileOne = UserProfile.builder()
+            .personalCode("12222").objectId("objectId1").emailId("email@justice").build();
+        UserProfile userProfileTwo = UserProfile.builder()
+            .personalCode("12223").objectId("objectId12").emailId("email@justice").build();
+        return List.of(userProfileOne,userProfileTwo);
+    }
+
+    @Test
     void testSyncFeedResponseError() throws JsonProcessingException {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
@@ -167,6 +213,26 @@ class IdamElasticSearchServiceImplTest {
                 .status(500).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
         assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
+    }
+
+    @Test
+    void testIdamSearchResponseError() throws JsonProcessingException {
+        when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
+        when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
+
+        List<IdamResponse> users = new ArrayList<>();
+        users.add(createUser("some@some.com"));
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(users);
+
+        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
+                Request.Body.empty(), null)).body(body, Charset.defaultCharset())
+            .status(500).build();
+        when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        when(userProfileRepository.fetchObjectIdFromCurrentDate()).thenReturn(createUserProfile());
+        assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamDetails());
         verify(elinkDataIngestionSchedularAudit,times(2))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
     }

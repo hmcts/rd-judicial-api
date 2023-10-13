@@ -182,6 +182,11 @@ elastic:
     query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
     recordsPerPage: 500
 
+Idam:
+  find:
+    query: ${JRD_FIND_QUERY:ssoid:}
+    recordsPerPage: 500
+
 jrd:
   publisher:
     azure:

@@ -39,6 +39,8 @@ public class RefDataElinksConstants {
 
     public static final String PEOPLE_DATA_LOAD_SUCCESS = "People data loaded successfully";
 
+    public static final String SIDAM_IDS_UPDATED = "Sidam Id's Updated";
+
     public static final String THREAD_INVOCATION_EXCEPTION = "An error occurred while thread sleeping";
 
     public static final String AUDIT_DATA_ERROR = "An error occurred while getting data from Audit table";
@@ -81,7 +83,7 @@ public class RefDataElinksConstants {
 
     public static final String ROLENAME = "role_name";
 
-    public static final String IDAMSEARCH = "Idam Search";
+    public static final String IDAMSEARCH = "IdamCallByssoId";
 
     public static final String PUBLISHASB = "Publish to ASB";
 

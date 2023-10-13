@@ -101,7 +101,7 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(1, userprofile.size());
+        assertEquals(2, userprofile.size());
         assertEquals("4913085", userprofile.get(0).getPersonalCode());
         assertEquals("Rachel", userprofile.get(0).getKnownAs());
         assertEquals("Jones", userprofile.get(0).getSurname());
@@ -132,7 +132,7 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofile = profileRepository.findAll();
         List<Authorisation> authorisationList = authorisationsRepository.findAll();
 
-        assertEquals(2, authorisationList.size());
+        assertEquals(4, authorisationList.size());
         assertEquals(userprofile.get(0).getPersonalCode(), authorisationList.get(0).getPersonalCode());
         assertEquals("Family", authorisationList.get(0).getJurisdiction());
         assertEquals("Court of Protection", authorisationList.get(0).getLowerLevel());
