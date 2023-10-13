@@ -113,6 +113,7 @@ public class JrdApiProviderV2Test {
     @BeforeEach
     void before(PactVerificationContext context) {
         MockMvcTestTarget testTarget = new MockMvcTestTarget();
+        System.getProperties().setProperty("pact.verifier.publishResults", "true");
         testTarget.setControllers(jrdElinkController);
         if (nonNull(context)) {
             context.setTarget(testTarget);
@@ -289,6 +290,7 @@ public class JrdApiProviderV2Test {
         judicialRoleType.setStartDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         judicialRoleType.setEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         judicialRoleType.setJurisdictionRoleId("testJurisdictionRoleId");
+        judicialRoleType.setJurisdictionRoleNameId("testJurisdictionRoleNameId");
         userProfile.setJudicialRoleTypes(Collections.singletonList(judicialRoleType));
 
         var userProfiles = Collections.singletonList(userProfile);
