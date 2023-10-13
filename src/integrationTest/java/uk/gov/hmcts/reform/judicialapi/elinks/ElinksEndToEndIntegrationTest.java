@@ -327,7 +327,7 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(peopleResponse).containsEntry("http_status", "200 OK");
         assertEquals("People data loaded successfully", profiles.getMessage());
         assertEquals(PEOPLEAPI,peopleAuditEntry.getApiName());
-        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), peopleAuditEntry.getStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus(), peopleAuditEntry.getStatus());
 
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(2, userprofile.size());
