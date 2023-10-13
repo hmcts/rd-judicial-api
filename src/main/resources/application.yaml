@@ -146,6 +146,8 @@ elinksApiKey: ${judicial_api_elinks_api_key:}
 elinksUrl: ${ELINKS_URL:https:https://judiciary-middleware-futureehr.herokuapp.com/api/v5}
 
 elinks:
+  delJohProfilesYears: ${Del_Joh_Profiles_Years:7}
+  delJohProfiles: ${Del_Joh_Profiles:true}
   cleanElinksResponsesDays: ${Clean_Elinks_Responses_Days:30}
   people:
     lastUpdated: ${LAST_UPDATED:2015-01-01}
