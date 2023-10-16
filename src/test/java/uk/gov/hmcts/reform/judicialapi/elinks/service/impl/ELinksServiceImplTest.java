@@ -21,10 +21,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
@@ -84,12 +88,30 @@ class ELinksServiceImplTest {
     @Mock
     ElinkDataExceptionRepository elinkDataExceptionRepository;
 
+    @Mock
+    ProfileRepository profileRepository;
+
+    @Mock
+    AuthorisationsRepository authorisationRepository;
+
+    @Mock
+    AppointmentsRepository appointmentsRepository;
+
+    @Mock
+    JudicialRoleTypeRepository judicialRoleTypeRepository;
+
 
     @BeforeEach
     void setUP() {
 
         ReflectionTestUtils.setField(eLinksServiceImpl, "cleanElinksResponsesDays",
                 30L);
+
+        ReflectionTestUtils.setField(eLinksServiceImpl, "delJohProfiles",
+                true);
+
+        ReflectionTestUtils.setField(eLinksServiceImpl, "delJohProfilesYears",
+                7L);
 
     }
 
@@ -414,7 +436,7 @@ class ELinksServiceImplTest {
     }
 
     @Test
-    void elinksService_cleanUpData_should_return_sucess_msg_with_status_200() throws JsonProcessingException {
+    void elinksService_cleanUpData_should_return_success_msg_with_status_200() throws JsonProcessingException {
 
         eLinksServiceImpl.cleanUpElinksResponses();
         Mockito.verify(elinksResponsesRepository,Mockito.times(1))
@@ -433,6 +455,53 @@ class ELinksServiceImplTest {
                 .auditException(any(),any(),any(),any(),any(),any(),any(),any());
 
     }
+
+    @Test
+    void elinksService_deleteJohProfiles_should_return_success_msg_with_status_200() throws JsonProcessingException {
+
+        eLinksServiceImpl.deleteJohProfiles();
+        Mockito.verify(profileRepository,Mockito.times(1))
+                .findByDeletedOnBefore(any());
+
+        Mockito.verify(profileRepository,Mockito.times(1))
+                .deleteByDeletedOnBefore(any());
+
+        Mockito.verify(authorisationRepository,Mockito.times(1))
+                .deleteByPersonalCodeIn(any());
+
+        Mockito.verify(appointmentsRepository,Mockito.times(1))
+                .deleteByPersonalCodeIn(any());
+
+        Mockito.verify(judicialRoleTypeRepository,Mockito.times(1))
+                .deleteByPersonalCodeIn(any());
+
+    }
+
+
+    @Test
+    void elinksService_deleteJohProfiles_should_return_failure_msg() throws JsonProcessingException {
+
+        ReflectionTestUtils.setField(eLinksServiceImpl, "delJohProfiles",
+                false);
+
+        eLinksServiceImpl.deleteJohProfiles();
+        Mockito.verify(profileRepository,Mockito.times(0))
+                .findByDeletedOnBefore(any());
+
+        Mockito.verify(profileRepository,Mockito.times(0))
+                .deleteByDeletedOnBefore(any());
+
+        Mockito.verify(authorisationRepository,Mockito.times(0))
+                .deleteByPersonalCodeIn(any());
+
+        Mockito.verify(appointmentsRepository,Mockito.times(0))
+                .deleteByPersonalCodeIn(any());
+
+        Mockito.verify(judicialRoleTypeRepository,Mockito.times(0))
+                .deleteByPersonalCodeIn(any());
+
+    }
+
 
     private List<BaseLocationResponse> getBaseLocationResponseData() {
 

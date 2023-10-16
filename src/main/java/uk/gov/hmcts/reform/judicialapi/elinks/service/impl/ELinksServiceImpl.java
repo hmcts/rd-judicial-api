@@ -46,7 +46,6 @@ import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +71,9 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSSUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PERSONALCODE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.THREAD_INVOCATION_EXCEPTION;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USER_PROFILE;
 
 @Service
 @Slf4j
@@ -557,27 +558,40 @@ public class ELinksServiceImpl implements ELinksService {
     public void deleteJohProfiles() {
         try {
             if (delJohProfiles) {
+
+                LocalDateTime delDate = LocalDateTime.now().minusYears(delJohProfilesYears);
+
                 List<UserProfile> userProfiles = profileRepository
-                        .fetchUserProfilesByLastWorkingDate(LocalDate.now().minusYears(delJohProfilesYears));
+                        .findByDeletedOnBefore(delDate);
 
                 List<String> personalCodes = userProfiles.stream().map(a -> a.getPersonalCode()).toList();
 
-                authorisationsRepository.deleteAuthorisationRepository(personalCodes);
+                authorisationsRepository.deleteByPersonalCodeIn(personalCodes);
 
-                appointmentsRepository.deleteAppointmentRepository(personalCodes);
-                judicialRoleTypeRepository.deleteRoleTypeRepository(personalCodes);
+                appointmentsRepository.deleteByPersonalCodeIn(personalCodes);
+
+                judicialRoleTypeRepository.deleteByPersonalCodeIn(personalCodes);
 
                 profileRepository
-                        .deleteByLastWorkingDateBefore(LocalDate.now().minusYears(delJohProfilesYears));
+                        .deleteByDeletedOnBefore(delDate);
+
+                profileRepository.flush();
+
                 log.info("Deleted JOH UserProfiles Successfully");
-                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
-                        now(),
-                        null,
-                        "elinks_responses", "Error while deleting records from elinks_responses table",
-                        ELINKSRESPONSES,null,null);
+
+                for (String personalCode: personalCodes) {
+                    elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                            now(),
+                            personalCode,
+                            PERSONALCODE, "expired JOH profiles deleted from DataBase",
+                            USER_PROFILE,personalCode,null);
+                }
             }
+
         } catch (Exception exception) {
+
             log.warn("Deleting JOH User Profiles failed");
+
         }
     }
 }

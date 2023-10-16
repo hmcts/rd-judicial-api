@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -99,7 +99,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
 
 
 
-    void deleteByLastWorkingDateBefore(LocalDate lastWorkingDate);
+    void deleteByDeletedOnBefore(LocalDateTime deletedDateOn);
 
     @Query(value = "select distinct per "
             + "from judicialUserProfile per "
@@ -112,8 +112,6 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
         + "and (per.sidamId = '' or per.sidamId is null) and date(lastLoadedDate)=CURRENT_DATE ")
     List<UserProfile> fetchObjectIdFromCurrentDate();
 
-    @Query(value = "select distinct per "
-            + "from judicialUserProfile per "
-            + "where per.lastWorkingDate = :lastWorkingDate")
-    List<UserProfile> fetchUserProfilesByLastWorkingDate(LocalDate lastWorkingDate);
+
+    List<UserProfile> findByDeletedOnBefore(LocalDateTime deletedDateOn);
 }
