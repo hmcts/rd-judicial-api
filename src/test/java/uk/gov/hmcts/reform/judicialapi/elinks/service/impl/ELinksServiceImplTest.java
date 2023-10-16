@@ -483,6 +483,9 @@ class ELinksServiceImplTest {
         Mockito.verify(judicialRoleTypeRepository,Mockito.times(0))
                 .deleteByPersonalCodeIn(any());
 
+        Mockito.verify(elinkDataExceptionHelper,Mockito.times(0))
+                .auditException(any(),any());
+
     }
 
     // @Test
@@ -506,6 +509,9 @@ class ELinksServiceImplTest {
 
         Mockito.verify(judicialRoleTypeRepository,Mockito.times(0))
                 .deleteByPersonalCodeIn(any());
+
+        Mockito.verify(elinkDataExceptionHelper,Mockito.times(0))
+                .auditException(any(),any());
 
     }
 
@@ -537,6 +543,11 @@ class ELinksServiceImplTest {
 
         Mockito.verify(judicialRoleTypeRepository,Mockito.times(1))
                 .deleteByPersonalCodeIn(any());
+
+        Mockito.verify(elinkDataExceptionHelper,Mockito.times(1))
+                .auditException(any(),any());
+
+
 
     }
 
