@@ -71,9 +71,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSSUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PERSONALCODE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.THREAD_INVOCATION_EXCEPTION;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USER_PROFILE;
 
 @Service
 @Slf4j
@@ -106,11 +104,11 @@ public class ELinksServiceImpl implements ELinksService {
     @Value("${elinks.cleanElinksResponsesDays}")
     private Long cleanElinksResponsesDays;
 
-    @Value("${elinks.delJohProfilesYears}")
+    @Value("${elinks.delJohProfilesYears:7}")
     private Long delJohProfilesYears;
 
-    @Value("${elinks.delJohProfiles}")
-    private Boolean delJohProfiles;
+    @Value("${elinks.delJohProfiles:false}")
+    private boolean delJohProfiles;
 
     @Autowired
     ElinksFeignClient elinksFeignClient;
@@ -555,43 +553,27 @@ public class ELinksServiceImpl implements ELinksService {
 
 
     @Transactional("transactionManager")
-    public void deleteJohProfiles() {
+    public void deleteJohProfiles(LocalDateTime schedulerStartTime) {
         try {
             if (delJohProfiles) {
-
                 LocalDateTime delDate = LocalDateTime.now().minusYears(delJohProfilesYears);
+                List<UserProfile> userProfiles = profileRepository.findByDeletedOnBefore(delDate);
 
-                List<UserProfile> userProfiles = profileRepository
-                        .findByDeletedOnBefore(delDate);
+                List<String> personalCodes = userProfiles.stream().map(UserProfile::getPersonalCode).toList();
+                if (!personalCodes.isEmpty()) {
+                    authorisationsRepository.deleteByPersonalCodeIn(personalCodes);
+                    appointmentsRepository.deleteByPersonalCodeIn(personalCodes);
+                    judicialRoleTypeRepository.deleteByPersonalCodeIn(personalCodes);
+                    profileRepository.deleteByDeletedOnBefore(delDate);
 
-                List<String> personalCodes = userProfiles.stream().map(a -> a.getPersonalCode()).toList();
-
-                authorisationsRepository.deleteByPersonalCodeIn(personalCodes);
-
-                appointmentsRepository.deleteByPersonalCodeIn(personalCodes);
-
-                judicialRoleTypeRepository.deleteByPersonalCodeIn(personalCodes);
-
-                profileRepository
-                        .deleteByDeletedOnBefore(delDate);
-
-                profileRepository.flush();
-
-                log.info("Deleted JOH UserProfiles Successfully");
-
-                for (String personalCode: personalCodes) {
-                    elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
-                            now(),
-                            personalCode,
-                            PERSONALCODE, "expired JOH profiles deleted from DataBase",
-                            USER_PROFILE,personalCode,null);
+                    log.info("Deleted JOH UserProfiles Successfully");
+                    elinkDataExceptionHelper.auditException(personalCodes, schedulerStartTime);
                 }
             }
-
         } catch (Exception exception) {
-
             log.warn("Deleting JOH User Profiles failed");
-
         }
     }
+
+
 }

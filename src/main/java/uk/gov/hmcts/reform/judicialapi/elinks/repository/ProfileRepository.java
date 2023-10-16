@@ -98,10 +98,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
                                                      List<String> ticketCode, Pageable pageable);
 
 
-
-    void deleteByDeletedOnBefore(LocalDateTime deletedDateOn);
-
-    @Query(value = "select distinct per "
+    @Query(value = "select distinct per.objectId "
             + "from judicialUserProfile per "
             + "where (per.objectId != '' and per.objectId is not null)")
     List<String> fetchObjectId();
@@ -114,4 +111,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
 
 
     List<UserProfile> findByDeletedOnBefore(LocalDateTime deletedDateOn);
+
+    void deleteByDeletedOnBefore(LocalDateTime deletedDateOn);
+
 }

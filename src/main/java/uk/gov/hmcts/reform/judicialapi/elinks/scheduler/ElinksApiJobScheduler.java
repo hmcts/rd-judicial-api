@@ -127,6 +127,7 @@ public class ElinksApiJobScheduler {
     }
 
     public void loadElinksData() {
+        LocalDateTime schedulerStartTime = now();
 
         try{
             ResponseEntity<ElinkLocationWrapperResponse> locationResponse
@@ -257,7 +258,7 @@ public class ElinksApiJobScheduler {
             }
         }
         elinksServiceImpl.cleanUpElinksResponses();
-        elinksServiceImpl.deleteJohProfiles();
+        elinksServiceImpl.deleteJohProfiles(schedulerStartTime);
     }
 
     public ResponseEntity<ElinkLocationWrapperResponse> retrieveLocationDetails() {
