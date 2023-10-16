@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -309,6 +310,14 @@ class ElinksAuthorisationsIntegrationTest extends ElinksEnabledIntegrationTest {
         assertTrue(userprofile.get(1).getActiveFlag());
         assertNull(userprofile.get(1).getSidamId());
         assertEquals("NC",userprofile.get(1).getInitials());
+
+        //asserting Judiciary additonal roles data
+        List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
+        assertEquals(13, roleRequest.size());
+        assertEquals("Senior Judge in the Sovereign Base Areas Cyprus", roleRequest.get(12).getTitle());
+        assertEquals("4916897", roleRequest.get(12).getPersonalCode());
+        assertEquals("2787", roleRequest.get(12).getJurisdictionRoleId());
+        assertEquals("fee", roleRequest.get(12).getJurisdictionRoleNameId());
 
     }
 

@@ -80,7 +80,7 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
 
-        assertThat(elinksResponses.size()).isGreaterThan(0);
+        assertThat(elinksResponses).isNotEmpty();
         assertThat(elinksResponses.get(0).getCreatedDate()).isNotNull();
         assertThat(elinksResponses.get(0).getElinksData()).isNotNull();
     }
@@ -170,7 +170,7 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(2);
         assertEquals(PEOPLEAPI, auditEntry.getApiName());
-        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus(), auditEntry.getStatus());
         assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
