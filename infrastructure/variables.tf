@@ -2,6 +2,11 @@ variable "product" {
   type = string
 }
 
+variable "product-V15" {
+  type = string
+  default="rd-judicial-api"
+}
+
 variable "raw_product" {
   type    = string
   default = "rd" // jenkins-library overrides product for PRs and adds e.g. pr-123-ia
@@ -10,6 +15,12 @@ variable "raw_product" {
 variable "component" {
   type = string
 }
+
+variable "component-V15" {
+  type = string
+  default="postgres-db-v15"
+}
+
 
 variable "location" {
   type    = string
@@ -37,3 +48,4 @@ variable "postgresql_version" {
   type    = string
   default = "11"
 }
+
