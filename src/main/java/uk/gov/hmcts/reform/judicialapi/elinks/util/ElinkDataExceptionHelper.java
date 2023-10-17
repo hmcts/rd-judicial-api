@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepos
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.Date_of_Deletion;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATE_OF_DELETION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USER_PROFILE;
 
@@ -70,7 +70,7 @@ public class ElinkDataExceptionHelper {
         audit.setSchedulerName(JUDICIAL_REF_DATA_ELINKS);
         audit.setSchedulerStartTime(startTime);
         audit.setKey(perCode);
-        audit.setFieldInError(Date_of_Deletion);
+        audit.setFieldInError(DATE_OF_DELETION);
         audit.setErrorDescription("JOH profile is removed as it was deleted 7 years ago in Judicial Office");
         audit.setTableName(USER_PROFILE);
         audit.setUpdatedTimeStamp(LocalDateTime.now());
