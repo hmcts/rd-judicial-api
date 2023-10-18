@@ -21,7 +21,7 @@ java:
     SCHEDULER_ENABLED: false
     CRON_EXPRESSION: "* 40 15 * * *"
   postgresql:
-    enabled: false
+    enabled: true
     auth:
       username: dbjuddata
       password: dbjuddata
