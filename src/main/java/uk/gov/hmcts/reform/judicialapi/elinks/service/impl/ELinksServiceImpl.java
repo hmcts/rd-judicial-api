@@ -557,14 +557,15 @@ public class ELinksServiceImpl implements ELinksService {
         try {
             if (delJohProfiles) {
                 LocalDateTime delDate = LocalDateTime.now().minusYears(delJohProfilesYears);
-                List<UserProfile> userProfiles = profileRepository.findByDeletedOnBefore(delDate);
+                List<UserProfile> userProfiles = profileRepository
+                        .findByDeletedOnBeforeAndDeletedFlag(delDate,true);
 
                 List<String> personalCodes = userProfiles.stream().map(UserProfile::getPersonalCode).toList();
                 if (!personalCodes.isEmpty()) {
                     authorisationsRepository.deleteByPersonalCodeIn(personalCodes);
                     appointmentsRepository.deleteByPersonalCodeIn(personalCodes);
                     judicialRoleTypeRepository.deleteByPersonalCodeIn(personalCodes);
-                    profileRepository.deleteByDeletedOnBefore(delDate);
+                    profileRepository.deleteByDeletedOnBeforeAndDeletedFlag(delDate,true);
 
                     log.info("Deleted JOH UserProfiles Successfully");
                     elinkDataExceptionHelper.auditException(personalCodes, schedulerStartTime);
@@ -574,6 +575,4 @@ public class ELinksServiceImpl implements ELinksService {
             log.warn("Deleting JOH User Profiles failed");
         }
     }
-
-
 }

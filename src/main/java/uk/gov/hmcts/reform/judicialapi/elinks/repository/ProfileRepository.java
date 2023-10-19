@@ -110,8 +110,8 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
     List<UserProfile> fetchObjectIdFromCurrentDate();
 
 
-    List<UserProfile> findByDeletedOnBefore(LocalDateTime deletedDateOn);
+    List<UserProfile> findByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
 
-    void deleteByDeletedOnBefore(LocalDateTime deletedDateOn);
+    void deleteByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
 
 }
