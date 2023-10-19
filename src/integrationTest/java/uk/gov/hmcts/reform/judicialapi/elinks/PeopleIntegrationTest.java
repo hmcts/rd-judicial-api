@@ -230,6 +230,7 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
                 .initials("Mr")
                 .sidamId("3fa85f64-5717-4562-b3fc-2c963f66afa6")
                 .deletedOn(LocalDateTime.now().minusYears(7))
+                .deletedFlag(true)
                 .build();
     }
 
