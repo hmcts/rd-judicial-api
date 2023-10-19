@@ -469,10 +469,10 @@ class ELinksServiceImplTest {
 
         eLinksServiceImpl.deleteJohProfiles(LocalDateTime.now());
         Mockito.verify(profileRepository,Mockito.times(1))
-                .findByDeletedOnBefore(any());
+                .findByDeletedOnBeforeAndDeletedFlag(any(),any());
 
         Mockito.verify(profileRepository,Mockito.times(0))
-                .deleteByDeletedOnBefore(any());
+                .deleteByDeletedOnBeforeAndDeletedFlag(any(),any());
 
         Mockito.verify(authorisationRepository,Mockito.times(0))
                 .deleteByPersonalCodeIn(any());
@@ -496,10 +496,10 @@ class ELinksServiceImplTest {
 
         eLinksServiceImpl.deleteJohProfiles(LocalDateTime.now());
         Mockito.verify(profileRepository,Mockito.times(0))
-                .findByDeletedOnBefore(any());
+                .findByDeletedOnBeforeAndDeletedFlag(any(),any());
 
         Mockito.verify(profileRepository,Mockito.times(0))
-                .deleteByDeletedOnBefore(any());
+                .deleteByDeletedOnBeforeAndDeletedFlag(any(),any());
 
         Mockito.verify(authorisationRepository,Mockito.times(0))
                 .deleteByPersonalCodeIn(any());
@@ -522,7 +522,8 @@ class ELinksServiceImplTest {
         var userProfile = buildUserProfile();
 
 
-        when(profileRepository.findByDeletedOnBefore(any())).thenReturn(Collections.singletonList(userProfile));
+        when(profileRepository.findByDeletedOnBeforeAndDeletedFlag(any(),any()))
+                .thenReturn(Collections.singletonList(userProfile));
 
         eLinksServiceImpl.deleteJohProfiles(LocalDateTime.now());
 
@@ -530,10 +531,10 @@ class ELinksServiceImplTest {
 
 
         Mockito.verify(profileRepository,Mockito.times(1))
-                .findByDeletedOnBefore(any());
+                .findByDeletedOnBeforeAndDeletedFlag(any(),any());
 
         Mockito.verify(profileRepository,Mockito.times(1))
-                .deleteByDeletedOnBefore(any());
+                .deleteByDeletedOnBeforeAndDeletedFlag(any(),any());
 
         Mockito.verify(authorisationRepository,Mockito.times(1))
                 .deleteByPersonalCodeIn(any());
