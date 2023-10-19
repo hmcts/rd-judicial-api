@@ -2,7 +2,6 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.JOSEException;
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +15,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -240,7 +240,7 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
         //assserting scheduler data
         assertThat(jobDetails).isNotNull();
         assertThat(jobDetails.getPublishingStatus()).isNotNull();
-        Assert.assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),jobDetails.getPublishingStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),jobDetails.getPublishingStatus());
 
         // asserting location data
         List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
@@ -393,6 +393,15 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(0).getObjectId());
         assertNull(userprofile.get(0).getSidamId());
         assertEquals("RJ",userprofile.get(0).getInitials());
+
+        //asserting Judiciary additonal roles data
+        List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
+        assertEquals(2, roleRequest.size());
+        assertEquals("Course Director for COP (JC)", roleRequest.get(0).getTitle());
+        assertEquals("4913085", roleRequest.get(0).getPersonalCode());
+        assertEquals("427", roleRequest.get(0).getJurisdictionRoleId());
+        assertEquals("fee", roleRequest.get(0).getJurisdictionRoleNameId());
+
     }
 
     private void validateBaseLocation(List<ElinkDataSchedularAudit> elinksAudit) {

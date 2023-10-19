@@ -87,7 +87,7 @@ public class RefDataElinksConstants {
 
     public static final String PUBLISHASB = "Publish to ASB";
 
-    public static final String JUDICIALROLETYPE = "judicial_role_type";
+    public static final String JUDICIALROLETYPE = "judicial_additional_roles";
 
     public static final String USER_PROFILE = "judicial_user_profile";
 
@@ -139,6 +139,10 @@ public class RefDataElinksConstants {
 
     public static final String USERPROFILEFAILURE = "UserProfile  : "
         + FAIL_LOAD;
+
+    public static final String INVALIDROLETYPE = "Judiciary Role Name ID is invalid";
+
+    public static final String INVALIDROLEID = "jurisdiction_role_name_id";
 
     public static final String APPOINTMENTTYPENOTMATCHING = "Appointment type  : "
         + "not matching";

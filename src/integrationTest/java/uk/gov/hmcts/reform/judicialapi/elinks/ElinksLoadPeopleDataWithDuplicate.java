@@ -37,7 +37,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
-public class ElinksLoadPeopleDataWithDuplicate extends ElinksEnabledIntegrationTest {
+class ElinksLoadPeopleDataWithDuplicate extends ElinksEnabledIntegrationTest {
 
     @Autowired
     LocationRepository locationRepository;
@@ -152,8 +152,10 @@ public class ElinksLoadPeopleDataWithDuplicate extends ElinksEnabledIntegrationT
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
         assertEquals("Personal  Code : 4925319  is already loaded",
-            elinksException.get(1).getErrorDescription());
-        assertThat(elinksException.size()).isEqualTo(2);
+            elinksException.get(4).getErrorDescription());
+        assertEquals("Judiciary Role Name ID is invalid",
+            elinksException.get(0).getErrorDescription());
+        assertThat(elinksException).hasSize(5);
 
     }
 

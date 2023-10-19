@@ -181,12 +181,14 @@
         {
           "name": "District Tribunal Judge",
           "judiciary_role_id": 629,
+          "judiciary_role_name_id": "fee",
           "start_date": "2014-05-01T00:00:00.000Z",
           "end_date": "2041-04-11T00:00:00.000Z"
         },
         {
           "name": "IT Liaison Judge",
           "judiciary_role_id": 640,
+          "judiciary_role_name_id": "fee",
           "start_date": null,
           "end_date": null
         }
@@ -394,6 +396,7 @@
         {
           "name": "Civil Course Tutor (JC)",
           "judiciary_role_id": 1032,
+          "judiciary_role_name_id": "fee",
           "start_date": "2016-01-02T00:00:00.000Z",
           "end_date": "2019-12-31T00:00:00.000Z"
         }
@@ -597,24 +600,28 @@
         {
           "name": "Tribunals Committee Member (JC)",
           "judiciary_role_id": 2514,
+          "judiciary_role_name_id": "fee",
           "start_date": "2009-05-19T00:00:00.000Z",
           "end_date": "2010-04-30T00:00:00.000Z"
         },
         {
           "name": "Tribunals Committee Member (JC)",
           "judiciary_role_id": 2527,
+          "judiciary_role_name_id": "fee",
           "start_date": "2011-05-01T00:00:00.000Z",
           "end_date": "2014-04-30T00:00:00.000Z"
         },
         {
           "name": "Tribunals Committee Member (JC)",
           "judiciary_role_id": 2540,
+          "judiciary_role_name_id": "fee",
           "start_date": "2014-05-01T00:00:00.000Z",
           "end_date": "2015-05-31T00:00:00.000Z"
         },
         {
           "name": "Tribunals Committee Member (JC)",
           "judiciary_role_id": 2553,
+          "judiciary_role_name_id": "fee",
           "start_date": "2010-05-01T00:00:00.000Z",
           "end_date": "2011-04-30T00:00:00.000Z"
         }
@@ -719,6 +726,7 @@
         {
           "name": "Lord Chancellors Advisory Committee on JPs",
           "judiciary_role_id": 169,
+          "judiciary_role_name_id": "fee",
           "start_date": "2014-07-21T00:00:00.000Z",
           "end_date": "2023-07-20T00:00:00.000Z"
         }
@@ -813,12 +821,14 @@
         {
           "name": "Lord Chancellors Advisory Committee on JPs",
           "judiciary_role_id": 135,
+          "judiciary_role_name_id": "fee",
           "start_date": "2014-07-21T00:00:00.000Z",
           "end_date": "2023-07-20T00:00:00.000Z"
         },
         {
           "name": "Lord Chancellors Advisory Committee on JPs",
           "judiciary_role_id": 2941,
+          "judiciary_role_name_id": "fee",
           "start_date": "2014-07-21T00:00:00.000Z",
           "end_date": "2023-07-20T00:00:00.000Z"
         }
@@ -934,6 +944,7 @@
         {
           "name": "Lord Chancellors Advisory Committee on JPs",
           "judiciary_role_id": 33,
+          "judiciary_role_name_id": "fee",
           "start_date": "2014-07-21T00:00:00.000Z",
           "end_date": "2023-07-20T00:00:00.000Z"
         }
@@ -1545,12 +1556,14 @@
         {
           "name": "Family Course Tutor (JC)",
           "judiciary_role_id": 2772,
+          "judiciary_role_name_id": "fee",
           "start_date": "2010-05-10T00:00:00.000Z",
           "end_date": "2014-05-10T00:00:00.000Z"
         },
         {
           "name": "Senior Judge in the Sovereign Base Areas Cyprus",
           "judiciary_role_id": 2787,
+          "judiciary_role_name_id": "fee",
           "start_date": "2016-11-10T00:00:00.000Z",
           "end_date": "2021-11-09T00:00:00.000Z"
         }
