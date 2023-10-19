@@ -2,6 +2,7 @@ variable "product" {
   type = string
 }
 
+
 variable "raw_product" {
   type    = string
   default = "rd" // jenkins-library overrides product for PRs and adds e.g. pr-123-ia
@@ -37,6 +38,7 @@ variable "postgresql_version" {
   type    = string
   default = "11"
 }
+
 variable "product-V15" {
   type = string
   default="rd-judicial-ref-api"
@@ -73,3 +75,4 @@ variable "jenkins_AAD_objectId" {
   type        = string
   description = "(Required) The Azure AD object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies."
 }
+

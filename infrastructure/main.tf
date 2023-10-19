@@ -73,6 +73,7 @@ module "db-judicial-ref-data" {
   postgresql_version  = var.postgresql_version
 }
 
+
 # Create the database server V15
 # Name and resource group name will be defaults (<product>-<component>-<env> and <product>-<component>-data-<env> respectively)
 module "db-rd-judicial-ref-v15" {
@@ -126,3 +127,4 @@ resource "azurerm_key_vault_secret" "POSTGRES_DATABASE-V15" {
   value         = "rd-judicial-ref-api-db"
   key_vault_id  = data.azurerm_key_vault.rd_key_vault.id
 }
+
