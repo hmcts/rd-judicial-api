@@ -369,7 +369,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
 
         return   JudicialRoleTypeRefresh.builder()
                 .title(judicialRoleType.getTitle())
-                .jurisdictionRoleId(judicialRoleType.getJurisdictionRoleId())
+                .jurisdictionRoleId(judicialRoleType.getJurisdictionRoleNameId())
                 .startDate(null != judicialRoleType.getStartDate() ? String.valueOf(judicialRoleType.getStartDate())
                         : null)
                 .endDate(null != judicialRoleType.getEndDate() ? String.valueOf(judicialRoleType.getEndDate()) : null)

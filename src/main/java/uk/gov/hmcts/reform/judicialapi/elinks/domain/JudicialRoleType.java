@@ -54,6 +54,10 @@ public class JudicialRoleType {
     @Size(max = 64)
     private String jurisdictionRoleId;
 
+    @Column(name = "jurisdiction_role_name_id")
+    @Size(max = 64)
+    private String jurisdictionRoleNameId;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "personal_code", referencedColumnName = "personal_code",
             insertable = false, updatable = false, nullable = false)

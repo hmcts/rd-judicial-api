@@ -288,7 +288,7 @@ public class JrdApiProviderV2Test {
         judicialRoleType.setTitle("testTitle");
         judicialRoleType.setStartDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
         judicialRoleType.setEndDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-        judicialRoleType.setJurisdictionRoleId("testJurisdictionRoleId");
+        judicialRoleType.setJurisdictionRoleNameId("testJurisdictionRoleNameId");
         userProfile.setJudicialRoleTypes(Collections.singletonList(judicialRoleType));
 
         var userProfiles = Collections.singletonList(userProfile);

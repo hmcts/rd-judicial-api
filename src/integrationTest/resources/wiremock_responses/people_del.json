@@ -67,6 +67,7 @@
         {
           "name": "Course Director for COP (JC)",
           "judiciary_role_id": 427,
+          "judiciary_role_name_id": "fee",
           "start_date": "2016-04-30T00:00:00.000Z",
           "end_date": "2019-04-30T00:00:00.000Z"
         }
@@ -168,6 +169,7 @@
         {
           "name": "Course Director for COP (JC)",
           "judiciary_role_id": 428,
+          "judiciary_role_name_id": "fee",
           "start_date": "2016-04-30T00:00:00.000Z",
           "end_date": "2019-04-30T00:00:00.000Z"
         }

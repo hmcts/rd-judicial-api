@@ -19,6 +19,8 @@ public class RoleRequest {
 
     @JsonProperty("judiciary_role_id")
     private String judiciaryRoleId;
+    @JsonProperty("judiciary_role_name_id")
+    private String judiciaryRoleNameId;
     //TBC
     @JsonProperty("name")
     private String name;
