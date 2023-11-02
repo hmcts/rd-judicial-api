@@ -146,6 +146,7 @@ elinks:
   delJohProfiles: true
   people:
     lastUpdated: 2015-01-01
+    updatedSinceEnabled: true
     perPage: 50
     page: 1
     includePreviousAppointments : false

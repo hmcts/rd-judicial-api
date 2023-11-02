@@ -104,6 +104,8 @@ class ElinksDeletedServiceImplTest {
                 "Thu Jan 01 00:00:00 GMT 2015");
         ReflectionTestUtils.setField(elinksServiceImpl, "page",
                 "1");
+        ReflectionTestUtils.setField(elinksServiceImpl, "isCustomizeUpdatedSince",
+            false);
 
 
         pagination = PaginationRequest.builder()
@@ -140,6 +142,35 @@ class ElinksDeletedServiceImplTest {
         LocalDateTime dateTime = LocalDateTime.now();
 
         when(dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime()).thenReturn(dateTime);
+        Response r1 = Response.builder().request(mock(Request.class)).body(body, defaultCharset()).status(200).build();
+        Response r2 = Response.builder().request(mock(Request.class)).body(body2, defaultCharset()).status(200).build();
+        when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(r1).thenReturn(r2);
+
+        when(elinksResponsesHelper.saveElinksResponse(eq(DELETEDAPI),eq(r1))).thenReturn(r1);
+        when(elinksResponsesHelper.saveElinksResponse(eq(DELETEDAPI),eq(r2))).thenReturn(r2);
+        ResponseEntity<ElinkDeletedWrapperResponse> response = elinksServiceImpl.retrieveDeleted();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(DELETEDSUCCESS);
+
+        verify(elinksFeignClient, times(2)).getDeletedDetails(any(), any(), any());
+        org.assertj.core.api.Assertions.assertThat(elinksFeignClient.getDeletedDetails(any(),any(),any())).isNotNull();
+
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
+
+    }
+
+    @Test
+    void loadDeletedWhenAuditEntryPresentSuccess_withCustomizeUpdatedSince() throws JsonProcessingException {
+
+        ReflectionTestUtils.setField(elinksServiceImpl, "isCustomizeUpdatedSince",
+            true);
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
+        String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
+
+        LocalDateTime dateTime = LocalDateTime.now();
+
         Response r1 = Response.builder().request(mock(Request.class)).body(body, defaultCharset()).status(200).build();
         Response r2 = Response.builder().request(mock(Request.class)).body(body2, defaultCharset()).status(200).build();
         when(elinksFeignClient.getDeletedDetails(any(), any(), any())).thenReturn(r1).thenReturn(r2);
