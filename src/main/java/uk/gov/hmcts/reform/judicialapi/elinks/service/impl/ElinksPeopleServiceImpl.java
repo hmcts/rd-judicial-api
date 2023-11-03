@@ -191,6 +191,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         int pageValue = Integer.parseInt(page);
         int retryCount = 0;
         try {
+            log.info("calling elinks people service");
             do {
                 Response peopleApiResponse = getPeopleResponseFromElinks(pageValue++, schedulerStartTime);
                 peopleApiResponse = elinksResponsesHelper.saveElinksResponse(PEOPLEAPI, peopleApiResponse);
@@ -223,6 +224,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 pauseThread(Long.valueOf(threadPauseTime), schedulerStartTime);
             } while (isMorePagesAvailable);
         } catch (Exception ex) {
+            log.error("People service exception", ex);
             auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
             throw ex;
         }

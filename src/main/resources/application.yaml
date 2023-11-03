@@ -121,10 +121,7 @@ feign:
   allow:
     headers:
       - authorization
-  client:
-    config:
-      default:
-        loggerLevel: full
+
 
 defaultPageSize: ${DEFAULTPAGESIZE:10}
 

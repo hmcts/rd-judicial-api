@@ -160,6 +160,7 @@ public class ELinksServiceImpl implements ELinksService {
         HttpStatus httpStatus;
         ResponseEntity<ElinkBaseLocationWrapperResponse> result = null;
         try {
+            log.info("Calling Elinks location service");
             locationsResponse = elinksFeignClient.getLocationDetails();
             locationsResponse = elinksResponsesHelper.saveElinksResponse(LOCATION, locationsResponse);
 
@@ -203,12 +204,14 @@ public class ELinksServiceImpl implements ELinksService {
         } catch (FeignException ex) {
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         } catch (JSONException ex) {
+            log.error("json exception elinks location response",ex);
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     now(),
                     RefDataElinksConstants.JobStatus.FAILED.getStatus(), LOCATIONAPI);
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         } catch (Exception ex) {
+            log.error("Exception on elinks location",ex);
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     now(),
@@ -312,13 +315,12 @@ public class ELinksServiceImpl implements ELinksService {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
         LocalDateTime schedulerStartTime = now();
+        log.info("Calling Elinks Leavers service");
         ElinkLeaversWrapperResponse elinkLeaversWrapperResponse = new ElinkLeaversWrapperResponse();
-
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 null,
                 RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), LEAVERSAPI);
-
         int pageValue = Integer.parseInt(page);
         do {
             Response leaverApiResponse = getLeaversResponseFromElinks(pageValue++);
@@ -448,6 +450,7 @@ public class ELinksServiceImpl implements ELinksService {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
         LocalDateTime schedulerStartTime = now();
+        log.info("Calling Elinks Deleted service");
         ElinkDeletedWrapperResponse elinkDeletedWrapperResponse = new ElinkDeletedWrapperResponse();
 
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
