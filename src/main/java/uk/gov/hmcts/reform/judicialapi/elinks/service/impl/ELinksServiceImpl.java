@@ -305,7 +305,7 @@ public class ELinksServiceImpl implements ELinksService {
             }
         }
 
-        log.info("updatedSince : " + updatedSince);
+        log.info("Leavers Service updatedSince : " + updatedSince);
         return updatedSince;
     }
 
@@ -440,7 +440,7 @@ public class ELinksServiceImpl implements ELinksService {
             }
         }
 
-        log.info("updatedSince : " + updatedSince);
+        log.info("Deleted Service updatedSince : " + updatedSince);
         return updatedSince;
     }
 

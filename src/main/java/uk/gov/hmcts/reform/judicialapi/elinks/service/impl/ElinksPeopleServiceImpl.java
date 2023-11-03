@@ -293,7 +293,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 updatedSince = maxSchedulerEndTime.toString();
                 updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
             }
-            log.info("updatedSince : " + updatedSince);
+            log.info("People Service updatedSince : " + updatedSince);
         }
         return updatedSince;
     }
