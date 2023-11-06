@@ -28,6 +28,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.AppointmentRefreshResponse;
@@ -42,6 +43,7 @@ import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +70,9 @@ public class ElinkUserServiceImpl implements ElinkUserService {
 
     @Autowired
     private AppointmentsRepository appointmentsRepository;
+
+    @Autowired
+    private LocationMapppingRepository locationMapppingRepository;
 
     @Autowired
     @Qualifier("elinksServiceCodeMappingRepository")
@@ -400,8 +405,8 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 .isPrincipalAppointment(String.valueOf(appt.getIsPrincipleAppointment()))
                 .appointment(appt.getAppointmentMapping())
                 .appointmentType(appt.getAppointmentType())
-                .serviceCodes(appt.getLocationMappings().stream().map(LocationMapping::getServiceCode).distinct()
-                        .toList())
+                .serviceCodes(
+                    locationMapppingRepository.fetchServiceCodefromLocationId(appt.getBaseLocationId()))
                 .startDate(null != appt.getStartDate() ? String.valueOf(appt.getStartDate()) : null)
                 .endDate(null != appt.getEndDate() ? String.valueOf(appt.getEndDate()) : null)
                 .appointmentId(appt.getAppointmentId())

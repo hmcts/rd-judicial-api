@@ -120,9 +120,4 @@ public class Appointment implements Serializable {
             insertable = false, updatable = false, nullable = false)
     private RegionType regionType;
 
-    @OneToMany
-    @JoinColumn(name = "judicial_base_location_Id", referencedColumnName = "base_location_Id",
-            insertable = false, updatable = false, nullable = false)
-    private List<LocationMapping> locationMappings;
-
 }
