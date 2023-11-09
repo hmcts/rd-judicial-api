@@ -132,6 +132,12 @@ public class RefDataElinksConstants {
     public static final String CFTREGIONIDFAILURE = "Location  : "
         + " is not available in jrd_lrd_region_mapping table";
 
+    public static final String PARENTIDFAILURE = "ParentID  : "
+            + " is not available in location_type table";
+
+
+    public static final String TYPEIDFAILURE = "The Type field is null for the given Appointment.";
+
     public static final String INVALIDROLENAMES = "Role Name  : "
         + " is invalid";
 

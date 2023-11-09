@@ -78,11 +78,13 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISDUPLICATED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISPRESENT;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PARENTIDFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PERSONALCODE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ROLENAME;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.THREAD_INVOCATION_EXCEPTION;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.TYPEIDFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USERPROFILEEMAILID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USERPROFILEFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USERPROFILEISPRESENT;
@@ -566,8 +568,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode, LocalDateTime
         schedulerStartTime, int pageValue) {
 
-        if (StringUtils.isEmpty(appointmentsRequest.getBaseLocationId())
-            || StringUtils.isEmpty(fetchBaseLocationId(appointmentsRequest))) {
+        if (StringUtils.isEmpty(appointmentsRequest.getBaseLocationId())) {
             log.warn("Mapped Base location not found in base table " + appointmentsRequest.getBaseLocationId());
             partialSuccessFlag = true;
             String baseLocationId = appointmentsRequest.getBaseLocationId();
@@ -576,6 +577,25 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     schedulerStartTime,
                 appointmentsRequest.getAppointmentId(),
                 BASE_LOCATION_ID, errorDescription, APPOINTMENT_TABLE,personalCode,pageValue);
+            return false;
+        } else if (StringUtils.isBlank(appointmentsRequest.getType())) {
+            log.warn("The Type field is null for the given Appointment.");
+            partialSuccessFlag = true;
+            String errorDescription = TYPEIDFAILURE;
+            elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                    schedulerStartTime,
+                    appointmentsRequest.getAppointmentId(),
+                    BASE_LOCATION_ID, errorDescription, APPOINTMENT_TABLE,personalCode,pageValue);
+            return false;
+        }  else if (StringUtils.isBlank(fetchBaseLocationId(appointmentsRequest))) {
+            log.warn("Mapped parentId not found in locationType table " + appointmentsRequest.getBaseLocationId());
+            partialSuccessFlag = true;
+            String errorDescription = appendFieldWithErrorDescription(PARENTIDFAILURE,
+                    appointmentsRequest.getBaseLocationId());
+            elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                    schedulerStartTime,
+                    appointmentsRequest.getAppointmentId(),
+                    BASE_LOCATION_ID, errorDescription, APPOINTMENT_TABLE,personalCode,pageValue);
             return false;
         } else if (StringUtils.isEmpty(fetchRegionId(appointmentsRequest.getLocation()))) {
             log.warn("Mapped  location not found in jrd lrd mapping table " + appointmentsRequest.getLocation());

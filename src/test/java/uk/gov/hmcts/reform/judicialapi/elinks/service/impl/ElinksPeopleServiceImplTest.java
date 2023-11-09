@@ -565,6 +565,212 @@ class ElinksPeopleServiceImplTest {
     }
 
     @Test
+    void loadPeopleForTribunalsWithParentIdNull() throws JsonProcessingException {
+
+        ResultsRequest resultsRequest;
+        PeopleRequest peopleRequest;
+        LocalDateTime dateTime = LocalDateTime.now();
+        resultsRequest = ResultsRequest.builder().personalCode("12345").knownAs("knownas").fullName("fullName")
+                .surname("surname").postNominals("postNOmi").email("email").lastWorkingDate("2022-12-20")
+                .objectId("objectId2").initials("initials").appointmentsRequests(List.of(AppointmentsRequest.builder()
+                        .baseLocationId("baselocId").circuit("circuit").location("location")
+                        .isPrincipleAppointment(true).startDate("1991-12-19").endDate("2022-12-20")
+                        .roleName("appointment").contractType("type").type("Tribunals").build()))
+                .authorisationsRequests(List.of(AuthorisationsRequest.builder().jurisdiction("juristriction")
+                        .ticket("lowerlevel").startDate("1991-12-19")
+                        .endDate("2022-12-20").ticketCode("ticketId").build())).build();
+        PaginationRequest pagination = PaginationRequest.builder()
+                .results(1)
+                .pages(1).currentPage(1).resultsPerPage(1).morePages(false).build();
+        List<ResultsRequest> results3 = Arrays.asList(result4);
+
+        peopleRequest = PeopleRequest.builder().resultsRequests(List.of(resultsRequest)).pagination(pagination)
+                .build();
+        when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(dateTime);
+
+        LocationMapping locationMapping = LocationMapping.builder()
+                .serviceCode("BHA1")
+                .epimmsId("1234").build();
+        BaseLocation location = new BaseLocation();
+        location.setBaseLocationId("12345");
+        location.setName("ABC");
+        when(baseLocationRepository.fetchParentId(any())).thenReturn(null);
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(peopleRequest);
+
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
+                Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
+
+        verify(elinksFeignClient, times(1)).getPeopleDetails(any(), any(), any(),
+                Boolean.parseBoolean(any()));
+        verify(profileRepository, times(1)).save(any());
+        verify(baseLocationRepository, times(1)).fetchParentId(any());
+    }
+
+    @Test
+    void loadPeopleForTribunalsWithParentIdEmpty() throws JsonProcessingException {
+
+        ResultsRequest resultsRequest;
+        PeopleRequest peopleRequest;
+        LocalDateTime dateTime = LocalDateTime.now();
+        resultsRequest = ResultsRequest.builder().personalCode("12345").knownAs("knownas").fullName("fullName")
+                .surname("surname").postNominals("postNOmi").email("email").lastWorkingDate("2022-12-20")
+                .objectId("objectId2").initials("initials").appointmentsRequests(List.of(AppointmentsRequest.builder()
+                        .baseLocationId("baselocId").circuit("circuit").location("location")
+                        .isPrincipleAppointment(true).startDate("1991-12-19").endDate("2022-12-20")
+                        .roleName("appointment").contractType("type").type("Tribunals").build()))
+                .authorisationsRequests(List.of(AuthorisationsRequest.builder().jurisdiction("juristriction")
+                        .ticket("lowerlevel").startDate("1991-12-19")
+                        .endDate("2022-12-20").ticketCode("ticketId").build())).build();
+        PaginationRequest pagination = PaginationRequest.builder()
+                .results(1)
+                .pages(1).currentPage(1).resultsPerPage(1).morePages(false).build();
+        List<ResultsRequest> results3 = Arrays.asList(result4);
+
+        peopleRequest = PeopleRequest.builder().resultsRequests(List.of(resultsRequest)).pagination(pagination)
+                .build();
+        when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(dateTime);
+
+        LocationMapping locationMapping = LocationMapping.builder()
+                .serviceCode("BHA1")
+                .epimmsId("1234").build();
+        BaseLocation location = new BaseLocation();
+        location.setBaseLocationId("12345");
+        location.setName("ABC");
+        when(baseLocationRepository.fetchParentId(any())).thenReturn("");
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(peopleRequest);
+
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
+                Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
+
+        verify(elinksFeignClient, times(1)).getPeopleDetails(any(), any(), any(),
+                Boolean.parseBoolean(any()));
+        verify(profileRepository, times(1)).save(any());
+        verify(baseLocationRepository, times(1)).fetchParentId(any());
+    }
+
+    @Test
+    void loadPeopleForTribunalsWithParentIdEmptyWhiteSpaces() throws JsonProcessingException {
+
+        ResultsRequest resultsRequest;
+        PeopleRequest peopleRequest;
+        LocalDateTime dateTime = LocalDateTime.now();
+        resultsRequest = ResultsRequest.builder().personalCode("12345").knownAs("knownas").fullName("fullName")
+                .surname("surname").postNominals("postNOmi").email("email").lastWorkingDate("2022-12-20")
+                .objectId("objectId2").initials("initials").appointmentsRequests(List.of(AppointmentsRequest.builder()
+                        .baseLocationId("baselocId").circuit("circuit").location("location")
+                        .isPrincipleAppointment(true).startDate("1991-12-19").endDate("2022-12-20")
+                        .roleName("appointment").contractType("type").type("Tribunals").build()))
+                .authorisationsRequests(List.of(AuthorisationsRequest.builder().jurisdiction("juristriction")
+                        .ticket("lowerlevel").startDate("1991-12-19")
+                        .endDate("2022-12-20").ticketCode("ticketId").build())).build();
+        PaginationRequest pagination = PaginationRequest.builder()
+                .results(1)
+                .pages(1).currentPage(1).resultsPerPage(1).morePages(false).build();
+        List<ResultsRequest> results3 = Arrays.asList(result4);
+
+        peopleRequest = PeopleRequest.builder().resultsRequests(List.of(resultsRequest)).pagination(pagination)
+                .build();
+        when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(dateTime);
+
+        LocationMapping locationMapping = LocationMapping.builder()
+                .serviceCode("BHA1")
+                .epimmsId("1234").build();
+        BaseLocation location = new BaseLocation();
+        location.setBaseLocationId("12345");
+        location.setName("ABC");
+        when(baseLocationRepository.fetchParentId(any())).thenReturn("  ");
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(peopleRequest);
+
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
+                Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
+
+        verify(elinksFeignClient, times(1)).getPeopleDetails(any(), any(), any(),
+                Boolean.parseBoolean(any()));
+        verify(profileRepository, times(1)).save(any());
+        verify(baseLocationRepository, times(1)).fetchParentId(any());
+    }
+
+    @Test
+    void loadPeopleForTribunalsWithAppointmentTypeNull() throws JsonProcessingException {
+
+        ResultsRequest resultsRequest;
+        PeopleRequest peopleRequest;
+        LocalDateTime dateTime = LocalDateTime.now();
+        resultsRequest = ResultsRequest.builder().personalCode("12345").knownAs("knownas").fullName("fullName")
+                .surname("surname").postNominals("postNOmi").email("email").lastWorkingDate("2022-12-20")
+                .objectId("objectId2").initials("initials").appointmentsRequests(List.of(AppointmentsRequest.builder()
+                        .baseLocationId("baselocId").circuit("circuit").location("location")
+                        .isPrincipleAppointment(true).startDate("1991-12-19").endDate("2022-12-20")
+                        .roleName("appointment").contractType("type").type(null).build()))
+                .authorisationsRequests(List.of(AuthorisationsRequest.builder().jurisdiction("juristriction")
+                        .ticket("lowerlevel").startDate("1991-12-19")
+                        .endDate("2022-12-20").ticketCode("ticketId").build())).build();
+        PaginationRequest pagination = PaginationRequest.builder()
+                .results(1)
+                .pages(1).currentPage(1).resultsPerPage(1).morePages(false).build();
+        List<ResultsRequest> results3 = Arrays.asList(result4);
+
+        peopleRequest = PeopleRequest.builder().resultsRequests(List.of(resultsRequest)).pagination(pagination)
+                .build();
+        when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(dateTime);
+
+        LocationMapping locationMapping = LocationMapping.builder()
+                .serviceCode("BHA1")
+                .epimmsId("1234").build();
+        BaseLocation location = new BaseLocation();
+        location.setBaseLocationId("12345");
+        location.setName("ABC");
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(peopleRequest);
+
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
+                Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
+
+        ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
+
+        verify(elinksFeignClient, times(1)).getPeopleDetails(any(), any(), any(),
+                Boolean.parseBoolean(any()));
+        verify(profileRepository, times(1)).save(any());
+    }
+
+    @Test
     void loadPeopleWithEmailIdBlank() throws JsonProcessingException {
 
         LocalDateTime dateTime = LocalDateTime.now();
