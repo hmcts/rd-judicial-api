@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +18,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
@@ -119,10 +117,5 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "hmcts_region_id", referencedColumnName = "hmcts_region_id",
             insertable = false, updatable = false, nullable = false)
     private RegionType regionType;
-
-    @OneToMany
-    @JoinColumn(name = "judicial_base_location_Id", referencedColumnName = "base_location_Id",
-            insertable = false, updatable = false, nullable = false)
-    private List<LocationMapping> locationMappings;
 
 }

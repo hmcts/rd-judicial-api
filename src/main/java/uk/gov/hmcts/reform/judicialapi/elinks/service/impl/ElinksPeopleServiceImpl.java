@@ -324,6 +324,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .getObjectId(), resultsRequest.getAuthorisationsRequests(),schedulerStartTime,pageValue);
                 saveRoleDetails(resultsRequest.getPersonalCode(), resultsRequest.getJudiciaryRoles(),pageValue);
             } catch (Exception exception) {
+                log.error("saveUserProfile exception", exception.getMessage());
                 log.warn("saveUserProfile is failed  " + resultsRequest.getPersonalCode());
                 partialSuccessFlag = true;
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
@@ -353,6 +354,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .build());
 
             } catch (Exception e) {
+                log.error("Save Role Details exception", e.getMessage());
                 log.warn("Judicial additional role  not loaded for " + personalCode);
                 partialSuccessFlag = true;
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
@@ -398,6 +400,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 profileRepository.save(userProfile);
                 return true;
             }   catch (Exception e) {
+                log.error("saveUserProfile exception", e.getMessage());
                 log.warn("User Profile not loaded for " + resultsRequest.getPersonalCode());
                 partialSuccessFlag = true;
                 String personalCode = resultsRequest.getPersonalCode();
@@ -514,6 +517,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .build();
                 appointmentsRepository.save(appointment);
             } catch (Exception e) {
+                log.error("Save Appointment exception", e.getMessage());
                 log.warn("failed to load appointment details for " + appointmentsRequest.getAppointmentId());
                 partialSuccessFlag = true;
                 String errorDescription = appendFieldWithErrorDescription(LOCATIONIDFAILURE, baseLocationId);
@@ -547,6 +551,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                         .jurisdictionId(authorisationsRequest.getJurisdictionId())
                         .build());
             } catch (Exception e) {
+                log.error("Save Authorisation exception", e.getMessage());
                 log.warn("failed to load Authorisation details for " + authorisationsRequest.getAuthorisationId());
                 partialSuccessFlag = true;
                 String errorDescription;

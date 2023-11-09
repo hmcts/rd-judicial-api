@@ -30,7 +30,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
@@ -809,8 +808,6 @@ class ElinkUserServiceImplTest {
         appointment.setContractTypeId("test");
         appointment.setLocation("test");
         appointment.setJoBaseLocationId("test");
-        appointment.setLocationMappings(List.of(LocationMapping.builder().serviceCode("BBA3")
-                .judicialBaseLocationId("1").epimmsId("1").build()));
 
 
         var appointmentTwo = new Appointment();
@@ -834,8 +831,6 @@ class ElinkUserServiceImplTest {
         appointmentTwo.setContractTypeId("test");
         appointmentTwo.setLocation("test");
         appointmentTwo.setJoBaseLocationId("test");
-        appointmentTwo.setLocationMappings(List.of(LocationMapping.builder().serviceCode("BFA1")
-                .judicialBaseLocationId("2").epimmsId("2").build()));
 
         var appointmentThree = new Appointment();
         appointmentThree.setEpimmsId(null);
@@ -858,8 +853,6 @@ class ElinkUserServiceImplTest {
         appointmentThree.setContractTypeId("test");
         appointmentThree.setLocation("test");
         appointmentThree.setJoBaseLocationId("test");
-        appointmentThree.setLocationMappings(List.of(LocationMapping.builder().serviceCode("BFA1")
-                .judicialBaseLocationId("3").epimmsId("3").build()));
 
         var appointmentFour = new Appointment();
         appointmentFour.setEpimmsId("10");
@@ -882,8 +875,6 @@ class ElinkUserServiceImplTest {
         appointmentFour.setContractTypeId("test");
         appointmentFour.setLocation("test");
         appointmentFour.setJoBaseLocationId("test");
-        appointmentFour.setLocationMappings(List.of(LocationMapping.builder().serviceCode("BBA3")
-                .judicialBaseLocationId("4").epimmsId("4").build()));
 
         var authorisation = new Authorisation();
         authorisation.setOfficeAuthId(1L);
@@ -994,8 +985,6 @@ class ElinkUserServiceImplTest {
         appointment.setContractTypeId("test");
         appointment.setLocation("test");
         appointment.setJoBaseLocationId("test");
-        appointment.setLocationMappings(List.of(LocationMapping.builder().serviceCode("BBA3")
-                .judicialBaseLocationId("1").epimmsId("1").build()));
 
 
 
@@ -1082,8 +1071,6 @@ class ElinkUserServiceImplTest {
         appointmentOne.setContractTypeId("test");
         appointmentOne.setLocation("test");
         appointmentOne.setJoBaseLocationId("test");
-        appointmentOne.setLocationMappings(List.of(LocationMapping.builder().serviceCode("BBA3")
-                .judicialBaseLocationId("1").epimmsId("1").build()));
 
 
         var appointmentTwo = new Appointment();
@@ -1107,8 +1094,6 @@ class ElinkUserServiceImplTest {
         appointmentTwo.setContractTypeId("test");
         appointmentTwo.setLocation("test");
         appointmentTwo.setJoBaseLocationId("test");
-        appointmentTwo.setLocationMappings(List.of(LocationMapping.builder().serviceCode("BFA1")
-                .judicialBaseLocationId("2").epimmsId("2").build()));
 
 
         
