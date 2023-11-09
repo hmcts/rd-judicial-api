@@ -25,7 +25,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -169,7 +168,7 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
         assertThat(list).isNotEmpty();
         Assert.assertEquals("The Type field is null for the given Appointment.",
                 list.get(0).getErrorDescription());
-        Assert.assertEquals("ParentID  : 42   is not available in location_type table",
+        Assert.assertEquals(" The Parent ID is null/blanks for Tribunal Base Location ID  42 in the Location_Type table.",
                 list.get(1).getErrorDescription());
 
 

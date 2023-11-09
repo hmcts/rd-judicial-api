@@ -74,6 +74,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIALROLETYPE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONIDFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISDUPLICATED;
@@ -590,12 +591,12 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         }  else if (StringUtils.isBlank(fetchBaseLocationId(appointmentsRequest))) {
             log.warn("Mapped parentId not found in locationType table " + appointmentsRequest.getBaseLocationId());
             partialSuccessFlag = true;
-            String errorDescription = appendFieldWithErrorDescription(PARENTIDFAILURE,
-                    appointmentsRequest.getBaseLocationId());
+            String errorDescription = appendFieldWithErrorDescription(appointmentsRequest.getBaseLocationId(),
+                    PARENTIDFAILURE);
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     appointmentsRequest.getAppointmentId(),
-                    BASE_LOCATION_ID, errorDescription, APPOINTMENT_TABLE,personalCode,pageValue);
+                    BASE_LOCATION_ID, errorDescription+LOCATIONFAILURE, APPOINTMENT_TABLE,personalCode,pageValue);
             return false;
         } else if (StringUtils.isEmpty(fetchRegionId(appointmentsRequest.getLocation()))) {
             log.warn("Mapped  location not found in jrd lrd mapping table " + appointmentsRequest.getLocation());
