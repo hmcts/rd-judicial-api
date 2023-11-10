@@ -121,10 +121,7 @@ feign:
   allow:
     headers:
       - authorization
-  client:
-    config:
-      default:
-        loggerLevel: full
+
 
 defaultPageSize: ${DEFAULTPAGESIZE:10}
 
@@ -151,6 +148,7 @@ elinks:
   cleanElinksResponsesDays: ${Clean_Elinks_Responses_Days:30}
   people:
     lastUpdated: ${LAST_UPDATED:2015-01-01}
+    updatedSinceEnabled: ${CUSTOMIZE_UPDATEDSINCE:false}
     perPage: ${PER_PAGE:50}
     page: 1
     includePreviousAppointments : ${INCLUDE_PREVIOUS_APPOINTMENT:false}

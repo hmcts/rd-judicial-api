@@ -160,6 +160,9 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     @Value("${elinks.people.retriggerStatus}")
     private List<Integer> retriggerStatusCode;
 
+    @Value("${elinks.people.updatedSinceEnabled:false}")
+    private boolean isCustomizeUpdatedSince;
+
     @Value("${elinks.people.page}")
     private String page;
 
@@ -191,6 +194,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
         int pageValue = Integer.parseInt(page);
         int retryCount = 0;
         try {
+            log.info("calling elinks people service");
             do {
                 Response peopleApiResponse = getPeopleResponseFromElinks(pageValue++, schedulerStartTime);
                 peopleApiResponse = elinksResponsesHelper.saveElinksResponse(PEOPLEAPI, peopleApiResponse);
@@ -223,6 +227,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 pauseThread(Long.valueOf(threadPauseTime), schedulerStartTime);
             } while (isMorePagesAvailable);
         } catch (Exception ex) {
+            log.error("People service exception", ex);
             auditStatus(schedulerStartTime, RefDataElinksConstants.JobStatus.FAILED.getStatus());
             throw ex;
         }
@@ -277,18 +282,22 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private String getUpdateSince() {
         String updatedSince;
         LocalDateTime maxSchedulerEndTime;
-        try {
-            maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSchedularEndTime();
-        } catch (Exception ex) {
-            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
-        }
-        if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+        if (isCustomizeUpdatedSince) {
             updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
         } else {
-            updatedSince = maxSchedulerEndTime.toString();
-            updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            try {
+                maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSchedularEndTime();
+            } catch (Exception ex) {
+                throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
+            }
+            if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+                updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
+            } else {
+                updatedSince = maxSchedulerEndTime.toString();
+                updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            }
         }
-        log.info("updatedSince : " + updatedSince);
+        log.info("People Service updatedSince : " + updatedSince);
         return updatedSince;
     }
 
@@ -318,6 +327,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .getObjectId(), resultsRequest.getAuthorisationsRequests(),schedulerStartTime,pageValue);
                 saveRoleDetails(resultsRequest.getPersonalCode(), resultsRequest.getJudiciaryRoles(),pageValue);
             } catch (Exception exception) {
+                log.error("saveUserProfile exception", exception.getMessage());
                 log.warn("saveUserProfile is failed  " + resultsRequest.getPersonalCode());
                 partialSuccessFlag = true;
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
@@ -347,6 +357,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .build());
 
             } catch (Exception e) {
+                log.error("Save Role Details exception", e.getMessage());
                 log.warn("Judicial additional role  not loaded for " + personalCode);
                 partialSuccessFlag = true;
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
@@ -392,6 +403,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                 profileRepository.save(userProfile);
                 return true;
             }   catch (Exception e) {
+                log.error("saveUserProfile exception", e.getMessage());
                 log.warn("User Profile not loaded for " + resultsRequest.getPersonalCode());
                 partialSuccessFlag = true;
                 String personalCode = resultsRequest.getPersonalCode();
@@ -508,6 +520,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                     .build();
                 appointmentsRepository.save(appointment);
             } catch (Exception e) {
+                log.error("Save Appointment exception", e.getMessage());
                 log.warn("failed to load appointment details for " + appointmentsRequest.getAppointmentId());
                 partialSuccessFlag = true;
                 String errorDescription = appendFieldWithErrorDescription(LOCATIONIDFAILURE, baseLocationId);
@@ -541,6 +554,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
                         .jurisdictionId(authorisationsRequest.getJurisdictionId())
                         .build());
             } catch (Exception e) {
+                log.error("Save Authorisation exception", e.getMessage());
                 log.warn("failed to load Authorisation details for " + authorisationsRequest.getAuthorisationId());
                 partialSuccessFlag = true;
                 String errorDescription;

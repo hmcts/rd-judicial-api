@@ -110,6 +110,9 @@ public class ELinksServiceImpl implements ELinksService {
     @Value("${elinks.delJohProfiles:false}")
     private boolean delJohProfiles;
 
+    @Value("${elinks.people.updatedSinceEnabled:false}")
+    private boolean isCustomizeUpdatedSince;
+
     @Autowired
     ElinksFeignClient elinksFeignClient;
 
@@ -157,6 +160,7 @@ public class ELinksServiceImpl implements ELinksService {
         HttpStatus httpStatus;
         ResponseEntity<ElinkBaseLocationWrapperResponse> result = null;
         try {
+            log.info("Calling Elinks location service");
             locationsResponse = elinksFeignClient.getLocationDetails();
             locationsResponse = elinksResponsesHelper.saveElinksResponse(LOCATION, locationsResponse);
 
@@ -200,12 +204,14 @@ public class ELinksServiceImpl implements ELinksService {
         } catch (FeignException ex) {
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         } catch (JSONException ex) {
+            log.error("json exception elinks location response",ex);
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     now(),
                     RefDataElinksConstants.JobStatus.FAILED.getStatus(), LOCATIONAPI);
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         } catch (Exception ex) {
+            log.error("Exception on elinks location",ex);
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     now(),
@@ -282,18 +288,24 @@ public class ELinksServiceImpl implements ELinksService {
     private String getUpdateSince() {
         String updatedSince;
         LocalDateTime maxSchedulerEndTime;
-        try {
-            maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSchedularEndTimeForLeavers();
-        } catch (Exception ex) {
-            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
-        }
-        if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+
+        if (isCustomizeUpdatedSince) {
             updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
         } else {
-            updatedSince = maxSchedulerEndTime.toString();
-            updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            try {
+                maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSchedularEndTimeForLeavers();
+            } catch (Exception ex) {
+                throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
+            }
+            if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+                updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
+            } else {
+                updatedSince = maxSchedulerEndTime.toString();
+                updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            }
         }
-        log.info("updatedSince : " + updatedSince);
+
+        log.info("Leavers Service updatedSince : " + updatedSince);
         return updatedSince;
     }
 
@@ -303,13 +315,12 @@ public class ELinksServiceImpl implements ELinksService {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
         LocalDateTime schedulerStartTime = now();
+        log.info("Calling Elinks Leavers service");
         ElinkLeaversWrapperResponse elinkLeaversWrapperResponse = new ElinkLeaversWrapperResponse();
-
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 null,
                 RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), LEAVERSAPI);
-
         int pageValue = Integer.parseInt(page);
         do {
             Response leaverApiResponse = getLeaversResponseFromElinks(pageValue++);
@@ -413,18 +424,23 @@ public class ELinksServiceImpl implements ELinksService {
     private String getDeletedSince() {
         String updatedSince;
         LocalDateTime maxSchedulerEndTime;
-        try {
-            maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime();
-        } catch (Exception ex) {
-            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
-        }
-        if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+        if (isCustomizeUpdatedSince) {
             updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
         } else {
-            updatedSince = maxSchedulerEndTime.toString();
-            updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            try {
+                maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime();
+            } catch (Exception ex) {
+                throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
+            }
+            if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+                updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
+            } else {
+                updatedSince = maxSchedulerEndTime.toString();
+                updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            }
         }
-        log.info("updatedSince : " + updatedSince);
+
+        log.info("Deleted Service updatedSince : " + updatedSince);
         return updatedSince;
     }
 
@@ -434,6 +450,7 @@ public class ELinksServiceImpl implements ELinksService {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
         LocalDateTime schedulerStartTime = now();
+        log.info("Calling Elinks Deleted service");
         ElinkDeletedWrapperResponse elinkDeletedWrapperResponse = new ElinkDeletedWrapperResponse();
 
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,

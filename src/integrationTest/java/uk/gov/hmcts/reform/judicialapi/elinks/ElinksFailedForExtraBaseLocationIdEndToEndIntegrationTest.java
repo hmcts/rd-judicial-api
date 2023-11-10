@@ -230,7 +230,7 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
         assertThat(publishSidamIdsResponse.get("publishing_status")).isNotNull();
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
-        assertEquals(20,elinksException.size());
+        assertEquals(22,elinksException.size());
     }
 
     private void validateBaseLocationApi(List<ElinkDataSchedularAudit> elinksAudit) {
@@ -273,16 +273,16 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
 
         List<UserProfile> userprofile = profileRepository.findAll();
         assertEquals(2, userprofile.size());
-        assertEquals("410551", userprofile.get(1).getPersonalCode());
-        assertEquals("Leslie", userprofile.get(1).getKnownAs());
-        assertEquals("Jones", userprofile.get(1).getSurname());
-        assertEquals("His Honour Judge Leslie Jones", userprofile.get(1).getFullName());
-        assertEquals(null, userprofile.get(1).getPostNominals());
+        assertEquals("410551", userprofile.get(0).getPersonalCode());
+        assertEquals("Leslie", userprofile.get(0).getKnownAs());
+        assertEquals("Jones", userprofile.get(0).getSurname());
+        assertEquals("His Honour Judge Leslie Jones", userprofile.get(0).getFullName());
+        assertEquals(null, userprofile.get(0).getPostNominals());
         assertEquals("HHJ.Leslie.Jones@judiciarystagingtest999.onmicrosoft.com",
-            userprofile.get(1).getEmailId());
-        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(1).getObjectId());
-        assertNull(userprofile.get(1).getSidamId());
-        assertEquals("L.J",userprofile.get(1).getInitials());
+            userprofile.get(0).getEmailId());
+        assertEquals("c38f7bdc-e52b-4711-90e6-9d49a2bb38f2", userprofile.get(0).getObjectId());
+        assertNull(userprofile.get(0).getSidamId());
+        assertEquals("L.J",userprofile.get(0).getInitials());
 
         //asserting Judiciary additonal roles data
         List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();

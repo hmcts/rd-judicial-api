@@ -38,6 +38,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.RegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ServiceCodeMappingRepository;
@@ -78,6 +79,9 @@ public class JrdApiProviderV2Test {
 
     @MockBean
     ProfileRepository userProfileRepository;
+
+    @MockBean
+    LocationMapppingRepository locationMapppingRepository;
 
     @MockBean
     JudicialRoleTypeRepository judicialRoleTypeRepository;
@@ -179,6 +183,16 @@ public class JrdApiProviderV2Test {
         regionMapping.setJrdRegion("National");
         when(regionMappingRepository.findAllRegionMappingData()).thenReturn(List.of(regionMapping));
 
+        var locationMappings1 = new LocationMapping();
+        locationMappings1.setEpimmsId("1");
+        locationMappings1.setJudicialBaseLocationId("1");
+        locationMappings1.setServiceCode("service code");
+
+        List<LocationMapping> locationMappingList = new ArrayList<>();
+        locationMappingList.add(locationMappings1);
+
+        when(locationMapppingRepository.fetchServiceCodefromLocationId(any()))
+            .thenReturn(List.of("service code","service code1"));
         Page<UserProfile> pagedUserProfiles = getPageUserProfiles();
         when(userProfileRepository.fetchUserProfileByObjectIds(anyList(),any())).thenReturn(pagedUserProfiles);
         when(userProfileRepository.fetchUserProfileByServiceNames(anySet(),anyList(),any()))
@@ -240,8 +254,6 @@ public class JrdApiProviderV2Test {
         appointment.setJoBaseLocationId("testjobaselocationid");
         appointment.setBaseLocationId("testBaseLocID");
         appointment.setBaseLocationType(baseLocationType);
-        appointment.setLocationMappings(locationMappingList);
-
 
         var authorisation = new Authorisation();
         authorisation.setOfficeAuthId(1234L);

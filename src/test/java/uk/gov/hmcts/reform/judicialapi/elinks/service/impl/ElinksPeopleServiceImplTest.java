@@ -196,6 +196,8 @@ class ElinksPeopleServiceImplTest {
                 "Thu Jan 01 00:00:00 GMT 2015");
         ReflectionTestUtils.setField(elinksPeopleServiceImpl, "page",
                 "1");
+        ReflectionTestUtils.setField(elinksPeopleServiceImpl, "isCustomizeUpdatedSince",
+            false);
 
         pagination = PaginationRequest.builder()
                 .results(1)
@@ -439,6 +441,8 @@ class ElinksPeopleServiceImplTest {
     void loadPeopleWhenAuditEntryPresentSuccess() throws JsonProcessingException {
 
         LocalDateTime dateTime = LocalDateTime.now();
+        ReflectionTestUtils.setField(elinksPeopleServiceImpl, "isCustomizeUpdatedSince",
+            false);
         when(dataloadSchedularAuditRepository.findLatestSchedularEndTime()).thenReturn(dateTime);
 
         when(regionMappingRepository.fetchRegionIdfromRegion(any())).thenReturn("1");
@@ -472,6 +476,52 @@ class ElinksPeopleServiceImplTest {
 
         verify(elinksFeignClient, times(2)).getPeopleDetails(any(), any(), any(),
                 Boolean.parseBoolean(any()));
+        verify(profileRepository, times(2)).save(any());
+        verify(baseLocationRepository, times(4)).fetchParentId(any());
+        verify(appointmentsRepository, times(4)).save(any());
+        verify(judicialRoleTypeRepository, atLeastOnce()).save(any());
+        verify(authorisationsRepository, atLeastOnce()).save(any());
+        verify(elinkDataExceptionHelper,times(2))
+            .auditException(any(),any(),any(),any(),any(),any(),any(),anyInt());
+    }
+
+    @Test
+    void loadPeopleWhenAuditEntryPresentSuccess_WithCustomUpdatedSince() throws JsonProcessingException {
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        ReflectionTestUtils.setField(elinksPeopleServiceImpl, "isCustomizeUpdatedSince",
+            true);
+        when(regionMappingRepository.fetchRegionIdfromRegion(any())).thenReturn("1");
+        LocationMapping locationMapping = LocationMapping.builder()
+            .serviceCode("BHA1")
+            .epimmsId("1234").build();
+        BaseLocation location = new BaseLocation();
+        location.setBaseLocationId("12345");
+        location.setName("ABC");
+        when(locationMapppingRepository.fetchEpimmsIdfromLocationId(any())).thenReturn("2344");
+        when(baseLocationRepository.fetchParentId(any())).thenReturn("1234");
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
+        String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
+
+        when(elinksFeignClient.getPeopleDetails(any(), any(), any(),
+            Boolean.parseBoolean(any()))).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+            .thenReturn(Response.builder().request(mock(Request.class))
+                .body(body2, defaultCharset()).status(200).build());
+
+
+        when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+            .thenReturn(Response.builder().request(mock(Request.class))
+                .body(body2, defaultCharset()).status(200).build());
+
+        ResponseEntity<ElinkPeopleWrapperResponse> response = elinksPeopleServiceImpl.updatePeople();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(PEOPLE_DATA_LOAD_SUCCESS);
+
+        verify(elinksFeignClient, times(2)).getPeopleDetails(any(), any(), any(),
+            Boolean.parseBoolean(any()));
         verify(profileRepository, times(2)).save(any());
         verify(baseLocationRepository, times(4)).fetchParentId(any());
         verify(appointmentsRepository, times(4)).save(any());

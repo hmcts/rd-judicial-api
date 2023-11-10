@@ -101,6 +101,8 @@ class ElinksLeaversServiceImplTest {
 
         ReflectionTestUtils.setField(elinksServiceImpl, "threadPauseTime",
                 "2000");
+        ReflectionTestUtils.setField(elinksServiceImpl, "isCustomizeUpdatedSince",
+            false);
         ReflectionTestUtils.setField(elinksServiceImpl, "lastUpdated",
                 "Thu Jan 01 00:00:00 GMT 2015");
         ReflectionTestUtils.setField(elinksServiceImpl, "page",
@@ -146,6 +148,39 @@ class ElinksLeaversServiceImplTest {
                         .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
                 .thenReturn(Response.builder().request(mock(Request.class))
                         .body(body2, defaultCharset()).status(200).build());
+
+        Response r1 = Response.builder().request(mock(Request.class)).body(body, defaultCharset()).status(200).build();
+        Response r2 = Response.builder().request(mock(Request.class)).body(body2, defaultCharset()).status(200).build();
+        when(elinksFeignClient.getLeaversDetails(any(), any(), any())).thenReturn(r1).thenReturn(r2);
+
+        when(elinksResponsesHelper.saveElinksResponse(eq(LEAVERSAPI),eq(r1))).thenReturn(r1);
+        when(elinksResponsesHelper.saveElinksResponse(eq(LEAVERSAPI),eq(r2))).thenReturn(r2);
+
+
+        ResponseEntity<ElinkLeaversWrapperResponse> response = elinksServiceImpl.retrieveLeavers();
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertThat(response.getBody().getMessage()).isEqualTo(LEAVERSSUCCESS);
+
+        verify(elinksFeignClient, times(2)).getLeaversDetails(any(), any(), any());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+            .auditSchedulerStatus(any(),any(),any(),any(),any());
+    }
+
+    @Test
+    void loadLeaversWhenAuditEntryPresentSuccess_withCustomizeUpdatedSince() throws JsonProcessingException {
+
+        ReflectionTestUtils.setField(elinksServiceImpl, "isCustomizeUpdatedSince",
+            true);
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(elinksApiResponseFirstHit);
+        String body2 = mapper.writeValueAsString(elinksApiResponseSecondHit);
+
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        when(elinksFeignClient.getLeaversDetails(any(), any(), any())).thenReturn(Response.builder()
+                .request(mock(Request.class)).body(body, defaultCharset()).status(200).build())
+            .thenReturn(Response.builder().request(mock(Request.class))
+                .body(body2, defaultCharset()).status(200).build());
 
         Response r1 = Response.builder().request(mock(Request.class)).body(body, defaultCharset()).status(200).build();
         Response r2 = Response.builder().request(mock(Request.class)).body(body2, defaultCharset()).status(200).build();
