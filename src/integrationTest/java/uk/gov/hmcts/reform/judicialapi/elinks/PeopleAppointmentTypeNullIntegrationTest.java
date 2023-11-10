@@ -168,7 +168,8 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
         assertThat(list).isNotEmpty();
         Assert.assertEquals("The Type field is null for the given Appointment.",
                 list.get(0).getErrorDescription());
-        Assert.assertEquals(" The Parent ID is null/blanks for Tribunal Base Location ID  42 in the Location_Type table.",
+        Assert.assertEquals(" The Parent ID is null/blanks for Tribunal Base Location ID  42 in "
+                        + "the Location_Type table.",
                 list.get(1).getErrorDescription());
 
 

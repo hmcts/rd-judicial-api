@@ -596,7 +596,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     appointmentsRequest.getAppointmentId(),
-                    BASE_LOCATION_ID, errorDescription+LOCATIONFAILURE, APPOINTMENT_TABLE,personalCode,pageValue);
+                    BASE_LOCATION_ID, errorDescription + LOCATIONFAILURE, APPOINTMENT_TABLE,personalCode,pageValue);
             return false;
         } else if (StringUtils.isEmpty(fetchRegionId(appointmentsRequest.getLocation()))) {
             log.warn("Mapped  location not found in jrd lrd mapping table " + appointmentsRequest.getLocation());
