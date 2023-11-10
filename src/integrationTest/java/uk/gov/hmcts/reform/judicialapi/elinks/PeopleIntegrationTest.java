@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -197,6 +198,40 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
         assertThat(elinksResponsesAfterCleanUp).isEmpty();
 
+    }
+
+    @DisplayName("Elinks Responses cleanup status verification")
+    @Test
+    void validateDeleteJohProfiles() {
+
+        LocalDateTime schedularStartTime = LocalDateTime.now();
+        profileRepository.save(buildUserProfileDto());
+        assertThat(profileRepository.findAll()).isNotEmpty();
+        elinksServiceImpl.deleteJohProfiles(schedularStartTime);
+        //after deleting the entry from table whose deleted date on is before 7 years the repository is null
+        assertThat(profileRepository.findAll()).isEmpty();
+
+    }
+
+    private UserProfile buildUserProfileDto() {
+
+        return UserProfile.builder()
+                .personalCode("0049931063")
+                .knownAs("Tester")
+                .surname("TestAccount")
+                .fullName("Tribunal Judge Tester TestAccount 2")
+                .postNominals("ABC")
+                .emailId("Tester2@judiciarystaging.onmicrosoft.com")
+                .lastWorkingDate(LocalDate.now())
+                .activeFlag(true)
+                .createdDate(LocalDateTime.now())
+                .lastLoadedDate(LocalDateTime.now())
+                .objectId("552da697-4b3d-4aed-9c22-1e903b70aead")
+                .initials("Mr")
+                .sidamId("3fa85f64-5717-4562-b3fc-2c963f66afa6")
+                .deletedOn(LocalDateTime.now().minusYears(7))
+                .deletedFlag(true)
+                .build();
     }
 
     private void cleanupData() {

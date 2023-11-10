@@ -15,11 +15,12 @@ java:
     JRD_DATA_PER_MESSAGE: 50
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
+    CUSTOMIZE_UPDATEDSINCE: false
     JRD_SEARCH_SERVICE_CODE: bfa1,bba3
     ELINKS_URL: https://judiciary-middleware-futureehr.herokuapp.com/api/v5
     LAST_UPDATED: 2014-01-01
-    SCHEDULER_ENABLED: false
-    CRON_EXPRESSION: "* 40 15 * * *"
+    SCHEDULER_ENABLED: true
+    CRON_EXPRESSION: "* 00 12 * * *"
   postgresql:
     enabled: true
     auth:

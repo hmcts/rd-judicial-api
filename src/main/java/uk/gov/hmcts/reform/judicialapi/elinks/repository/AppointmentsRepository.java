@@ -19,4 +19,7 @@ public interface AppointmentsRepository extends JpaRepository<Appointment, Long>
             nativeQuery = true)
     List<String> fetchAppointmentBaseLocation();
 
+
+    void deleteByPersonalCodeIn(List<String> personalCode);
+
 }

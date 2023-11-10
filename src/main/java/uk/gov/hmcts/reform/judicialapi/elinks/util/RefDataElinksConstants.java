@@ -206,5 +206,6 @@ public class RefDataElinksConstants {
 
     public static final String CONTENT_TYPE_HTML = "text/html";
 
+    public static final String DATE_OF_DELETION = "date_of_deletion";
 
 }

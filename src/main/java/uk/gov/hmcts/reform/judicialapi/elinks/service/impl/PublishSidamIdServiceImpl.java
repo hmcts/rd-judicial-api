@@ -77,6 +77,9 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
     public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() {
 
         //Get the job details from dataload_schedular_job table
+
+        log.info("Calling Publish Sidam id Service");
+
         Pair<String, String> jobDetails;
         LocalDateTime schedulerStartTime = now();
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,

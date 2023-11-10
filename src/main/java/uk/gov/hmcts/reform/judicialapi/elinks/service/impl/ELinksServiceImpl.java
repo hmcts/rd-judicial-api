@@ -20,12 +20,17 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.LeaversResultsR
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.DeletedResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.response.ElinksDeleteApiResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.ElinksFeignClient;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
@@ -71,6 +76,10 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @Service
 @Slf4j
 public class ELinksServiceImpl implements ELinksService {
+
+    @Autowired
+    private ProfileRepository profileRepository;
+
     @Autowired
     private ElinksResponsesRepository elinksResponsesRepository;
 
@@ -95,6 +104,15 @@ public class ELinksServiceImpl implements ELinksService {
     @Value("${elinks.cleanElinksResponsesDays}")
     private Long cleanElinksResponsesDays;
 
+    @Value("${elinks.delJohProfilesYears:7}")
+    private Long delJohProfilesYears;
+
+    @Value("${elinks.delJohProfiles:false}")
+    private boolean delJohProfiles;
+
+    @Value("${elinks.people.updatedSinceEnabled:false}")
+    private boolean isCustomizeUpdatedSince;
+
     @Autowired
     ElinksFeignClient elinksFeignClient;
 
@@ -117,6 +135,15 @@ public class ELinksServiceImpl implements ELinksService {
     @Autowired
     ElinkDataExceptionHelper elinkDataExceptionHelper;
 
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
+
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
+
+    @Autowired
+    JudicialRoleTypeRepository judicialRoleTypeRepository;
+
     @Override
     public ResponseEntity<ElinkBaseLocationWrapperResponse> retrieveLocation() {
 
@@ -133,6 +160,7 @@ public class ELinksServiceImpl implements ELinksService {
         HttpStatus httpStatus;
         ResponseEntity<ElinkBaseLocationWrapperResponse> result = null;
         try {
+            log.info("Calling Elinks location service");
             locationsResponse = elinksFeignClient.getLocationDetails();
             locationsResponse = elinksResponsesHelper.saveElinksResponse(LOCATION, locationsResponse);
 
@@ -176,12 +204,14 @@ public class ELinksServiceImpl implements ELinksService {
         } catch (FeignException ex) {
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         } catch (JSONException ex) {
+            log.error("json exception elinks location response",ex);
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     now(),
                     RefDataElinksConstants.JobStatus.FAILED.getStatus(), LOCATIONAPI);
             throw new ElinksException(HttpStatus.FORBIDDEN, ELINKS_ACCESS_ERROR, ELINKS_ACCESS_ERROR);
         } catch (Exception ex) {
+            log.error("Exception on elinks location",ex);
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     now(),
@@ -258,18 +288,24 @@ public class ELinksServiceImpl implements ELinksService {
     private String getUpdateSince() {
         String updatedSince;
         LocalDateTime maxSchedulerEndTime;
-        try {
-            maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSchedularEndTimeForLeavers();
-        } catch (Exception ex) {
-            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
-        }
-        if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+
+        if (isCustomizeUpdatedSince) {
             updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
         } else {
-            updatedSince = maxSchedulerEndTime.toString();
-            updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            try {
+                maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSchedularEndTimeForLeavers();
+            } catch (Exception ex) {
+                throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
+            }
+            if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+                updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
+            } else {
+                updatedSince = maxSchedulerEndTime.toString();
+                updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            }
         }
-        log.info("updatedSince : " + updatedSince);
+
+        log.info("Leavers Service updatedSince : " + updatedSince);
         return updatedSince;
     }
 
@@ -279,13 +315,12 @@ public class ELinksServiceImpl implements ELinksService {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
         LocalDateTime schedulerStartTime = now();
+        log.info("Calling Elinks Leavers service");
         ElinkLeaversWrapperResponse elinkLeaversWrapperResponse = new ElinkLeaversWrapperResponse();
-
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 null,
                 RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), LEAVERSAPI);
-
         int pageValue = Integer.parseInt(page);
         do {
             Response leaverApiResponse = getLeaversResponseFromElinks(pageValue++);
@@ -389,18 +424,23 @@ public class ELinksServiceImpl implements ELinksService {
     private String getDeletedSince() {
         String updatedSince;
         LocalDateTime maxSchedulerEndTime;
-        try {
-            maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime();
-        } catch (Exception ex) {
-            throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
-        }
-        if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+        if (isCustomizeUpdatedSince) {
             updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
         } else {
-            updatedSince = maxSchedulerEndTime.toString();
-            updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            try {
+                maxSchedulerEndTime = dataloadSchedularAuditRepository.findLatestDeletedSchedularEndTime();
+            } catch (Exception ex) {
+                throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
+            }
+            if (Optional.ofNullable(maxSchedulerEndTime).isEmpty()) {
+                updatedSince = commonUtil.getUpdatedDateFormat(lastUpdated);
+            } else {
+                updatedSince = maxSchedulerEndTime.toString();
+                updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
+            }
         }
-        log.info("updatedSince : " + updatedSince);
+
+        log.info("Deleted Service updatedSince : " + updatedSince);
         return updatedSince;
     }
 
@@ -410,6 +450,7 @@ public class ELinksServiceImpl implements ELinksService {
         boolean isMorePagesAvailable = true;
         HttpStatus httpStatus = null;
         LocalDateTime schedulerStartTime = now();
+        log.info("Calling Elinks Deleted service");
         ElinkDeletedWrapperResponse elinkDeletedWrapperResponse = new ElinkDeletedWrapperResponse();
 
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
@@ -524,6 +565,31 @@ public class ELinksServiceImpl implements ELinksService {
                     null,
                     "elinks_responses", "Error while deleting records from elinks_responses table",
                     ELINKSRESPONSES,null,null);
+        }
+    }
+
+
+    @Transactional("transactionManager")
+    public void deleteJohProfiles(LocalDateTime schedulerStartTime) {
+        try {
+            if (delJohProfiles) {
+                LocalDateTime delDate = LocalDateTime.now().minusYears(delJohProfilesYears);
+                List<UserProfile> userProfiles = profileRepository
+                        .findByDeletedOnBeforeAndDeletedFlag(delDate,true);
+
+                List<String> personalCodes = userProfiles.stream().map(UserProfile::getPersonalCode).toList();
+                if (!personalCodes.isEmpty()) {
+                    authorisationsRepository.deleteByPersonalCodeIn(personalCodes);
+                    appointmentsRepository.deleteByPersonalCodeIn(personalCodes);
+                    judicialRoleTypeRepository.deleteByPersonalCodeIn(personalCodes);
+                    profileRepository.deleteByDeletedOnBeforeAndDeletedFlag(delDate,true);
+
+                    log.info("Deleted JOH UserProfiles Successfully");
+                    elinkDataExceptionHelper.auditException(personalCodes, schedulerStartTime);
+                }
+            }
+        } catch (Exception exception) {
+            log.warn("Deleting JOH User Profiles failed");
         }
     }
 }

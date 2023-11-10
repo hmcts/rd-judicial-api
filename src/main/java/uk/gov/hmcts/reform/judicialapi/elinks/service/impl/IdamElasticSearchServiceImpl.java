@@ -132,6 +132,9 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     @SuppressWarnings("unchecked")
     @Override
     public ResponseEntity<Object> getIdamElasticSearchSyncFeed() {
+
+        log.info("Calling idam elastic search");
+
         Map<String, String> params = new HashMap<>();
         params.put("size",String.valueOf(recordsPerPage));
         params.put("query",String.format(idamSearchQuery,idamElasticSearchQueryHours()));
@@ -148,6 +151,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             null,
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), ELASTICSEARCH);
 
+        log.info("Calling idam client");
         do {
             params.put("page", String.valueOf(count));
             try {
@@ -206,6 +210,9 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     @SuppressWarnings("unchecked")
     @Override
     public ResponseEntity<Object> getIdamDetails() {
+
+        log.info("Calling idam details");
+
         LocalDateTime schedulerStartTime = now();
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
             schedulerStartTime,

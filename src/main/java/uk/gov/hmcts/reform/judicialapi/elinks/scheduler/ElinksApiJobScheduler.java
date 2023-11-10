@@ -127,12 +127,13 @@ public class ElinksApiJobScheduler {
     }
 
     public void loadElinksData() {
+        LocalDateTime schedulerStartTime = now();
 
         try{
             ResponseEntity<ElinkLocationWrapperResponse> locationResponse
                 = retrieveLocationDetails();
         } catch(Exception ex) {
-            log.error("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Location Response");
+            log.error("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Location Response",ex);
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
@@ -150,6 +151,7 @@ public class ElinksApiJobScheduler {
         ResponseEntity<ElinkPeopleWrapperResponse> peopleResponse
                 = retrievePeopleDetails();
         } catch(Exception ex) {
+            log.error("Elinks people retrieval Job execution completed failure for people Response",ex);
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
@@ -167,7 +169,7 @@ public class ElinksApiJobScheduler {
         ResponseEntity<ElinkLeaversWrapperResponse> leaversResponse
                 = retrieveLeaversDetails();
         } catch(Exception ex) {
-            log.error("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Leavers Response");
+            log.error("Elinks leavers retrieval Job execution completed failure for leaver Response",ex);
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
@@ -185,7 +187,7 @@ public class ElinksApiJobScheduler {
             ResponseEntity<ElinkDeletedWrapperResponse> deletedResponse
                 = retrieveDeletedDetails();
         } catch(Exception ex) {
-            log.error("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Deleted Response");
+            log.error("Elinks deleted retrieval Job execution completed failure for deleted Response",ex);
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
@@ -203,7 +205,7 @@ public class ElinksApiJobScheduler {
         ResponseEntity<Object> idamSearchResponse
                 = retrieveIdamElasticSearchDetails();
         } catch(Exception ex) {
-            log.warn("ElinksApiJobScheduler.loadElinksData Job execution completed failure for idamSearch Response");
+            log.error("Elinks idam elastic search Job execution completed failure for elastic Response",ex);
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
@@ -221,7 +223,7 @@ public class ElinksApiJobScheduler {
             ResponseEntity<Object> idamResponce
                 = retrieveSidamids();
         } catch(Exception ex) {
-            log.warn("ElinksApiJobScheduler.loadElinksData Job execution completed failure for idamSearch Response");
+            log.error("Elinks idam retrieval Job execution completed failure for sidam Response",ex);
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
@@ -257,6 +259,7 @@ public class ElinksApiJobScheduler {
             }
         }
         elinksServiceImpl.cleanUpElinksResponses();
+        elinksServiceImpl.deleteJohProfiles(schedulerStartTime);
     }
 
     public ResponseEntity<ElinkLocationWrapperResponse> retrieveLocationDetails() {

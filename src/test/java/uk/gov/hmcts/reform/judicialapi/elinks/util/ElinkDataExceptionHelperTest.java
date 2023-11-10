@@ -9,6 +9,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,4 +54,41 @@ class ElinkDataExceptionHelperTest {
                 "ElinksApiJobScheduler",null,1));
 
     }
+
+
+    @Test
+    void auditExceptionListSuccess() {
+
+        ElinkDataExceptionRecords audit = spy(ElinkDataExceptionRecords.class);
+        String personalCode1 = "123";
+        String personalCode2 = "234";
+
+        List<String> personalCodes = new ArrayList<>();
+        personalCodes.add(personalCode1);
+        personalCodes.add(personalCode2);
+
+        elinkDataExceptionHelper.auditException(personalCodes, LocalDateTime.now());
+
+        verify(elinkDataExceptionRepository, times(1)).saveAll(any());
+
+    }
+
+
+    @Test
+    void auditExceptionListFailure() {
+        when(elinkDataExceptionRepository.saveAll(any())).thenThrow(new RuntimeException("Some Exception"));
+        String personalCode1 = "123";
+        String personalCode2 = "234";
+
+        List<String> personalCodes = new ArrayList<>();
+        personalCodes.add(personalCode1);
+        personalCodes.add(personalCode2);
+        assertThrows(Exception.class, () -> elinkDataExceptionHelper.auditException(personalCodes,
+                LocalDateTime.now()
+        ));
+
+    }
+
+
+
 }
