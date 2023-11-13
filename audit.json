@@ -1,4 +1,6 @@
-{
+
+{"10112_Session Management Response Identified_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET": "ignore",
+  "10049_Storable and Cacheable Content_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET":"ignore",
   "90033_Loosely Scoped Cookie_http://rd-judicial-api-aat.service.core-compute-aat.internal/_GET": "ignore",
   "90033_Loosely Scoped Cookie_http://rd-judicial-api-aat.service.core-compute-aat.internal/refdata/judicial/users/fetch?page_number=10&page_size=10_POST": "ignore",
   "90033_Loosely Scoped Cookie_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET": "ignore",

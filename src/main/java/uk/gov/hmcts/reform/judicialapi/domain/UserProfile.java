@@ -48,7 +48,7 @@ public class UserProfile implements Serializable {
     private String fullName;
 
     @Column(name = "post_nominals")
-    @Size(max = 32)
+    @Size(max = 256)
     private String postNominals;
 
     @Column(name = "work_pattern")

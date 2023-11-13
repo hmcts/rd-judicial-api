@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.util;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
+import uk.gov.hmcts.reform.judicialapi.elinks.exception.JudicialDataLoadException;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,6 +71,22 @@ public class JsonFeignResponseUtil {
 
         return new ResponseEntity<>(
                 payload.orElse("unknown"),
+                convertHeaders(response.headers()),
+                HttpStatus.valueOf(response.status()));
+    }
+
+    public static ResponseEntity<Object> toResponseEntity(Response response, TypeReference<?> reference) {
+        Optional<Object> payload;
+
+        try {
+            payload = Optional.of(json.readValue(response.body().asReader(Charset.defaultCharset()), reference));
+
+        } catch (IOException ex) {
+            throw new JudicialDataLoadException("Response parsing failed");
+        }
+
+        return new ResponseEntity<>(
+                payload.orElse(null),
                 convertHeaders(response.headers()),
                 HttpStatus.valueOf(response.status()));
     }

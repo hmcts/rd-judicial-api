@@ -43,6 +43,16 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
         launchDarklyMap.put("JrdUsersController.searchUsers", judApi);
         launchDarklyMap.put("TestingSupportController.createIdamUserProfiles", "rd-judicial-api-test-idam-users");
         launchDarklyMap.put("JrdUsersController.refreshUserProfile", judApi);
+        launchDarklyMap.put("ElinksController.loadLocation", "jrd-elinks-location");
+        launchDarklyMap.put("ElinksController.loadPeople", "jrd-elinks-load-people");
+        launchDarklyMap.put("ElinksController.idamElasticSearch", "jrd-elinks-idam-elastic-search");
+        launchDarklyMap.put("ElinksController.fetchIdamIds", "jrd-elinks-idam-sso-search");
+        launchDarklyMap.put("ElinksController.loadLeavers", "jrd-elinks-leavers");
+        launchDarklyMap.put("ElinksController.loadDeleted", "jrd-elinks-load-deleted");
+        launchDarklyMap.put("ElinksController.publishSidamIdToAsb", "jrd-elinks-publish-service-bus");
+        launchDarklyMap.put("JrdElinkController.retrieveUsers", "jrd-elinks-search-api");
+        launchDarklyMap.put("JrdElinkController.refreshUserProfile", "jrd-elinks-refresh-api");
+
     }
 
     @Override
