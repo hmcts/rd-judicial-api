@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResponse;
 
-public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledIntegrationTest {
+public class InvalidCategoryKeyNotFountInlocIntegrationTest extends ElinksEnabledIntegrationTest {
 
 
     @Autowired
@@ -78,8 +78,17 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
 
         cleanupData();
 
+        String locationResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/location.json");
         String peopleResponseValidationJson =
-                loadJson("src/integrationTest/resources/wiremock_responses/People_TypeNull.json");
+                loadJson("src/integrationTest/resources/wiremock_responses/InvalidBaseLocationId.json");
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(locationResponseValidationJson)));
 
         elinks.stubFor(get(urlPathMatching("/people"))
                 .willReturn(aResponse()
@@ -154,7 +163,7 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
         cleanupData();
     }
 
-    @DisplayName("Elinks People endpoint appointment Type Null verification")
+    @DisplayName("Elinks People endpoint when BaseLocation ID Invalid in location Type verification")
     @Test
     void getPeopleUserProfile() {
 
@@ -166,10 +175,10 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
         var list = elinkDataExceptionRepository.findAll();
 
         assertThat(list).isNotEmpty();
-        Assert.assertEquals("The Type field is null for the given Appointment.",
+        Assert.assertEquals("Appointment's Base Location ID : 768  is not available in location_type table",
                 list.get(0).getErrorDescription());
-
     }
+
 
 
 
@@ -182,7 +191,6 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
         profileRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
     }
-
 
 
 

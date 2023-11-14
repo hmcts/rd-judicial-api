@@ -583,7 +583,8 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private boolean validAppointments(AppointmentsRequest appointmentsRequest, String personalCode, LocalDateTime
         schedulerStartTime, int pageValue) {
 
-        if (StringUtils.isEmpty(appointmentsRequest.getBaseLocationId())) {
+        if (StringUtils.isEmpty(appointmentsRequest.getBaseLocationId()) || StringUtils
+                .isEmpty(baseLocationRepository.fetchBaseLocationId(appointmentsRequest.getBaseLocationId()))) {
             log.warn("Mapped Base location not found in base table " + appointmentsRequest.getBaseLocationId());
             partialSuccessFlag = true;
             String baseLocationId = appointmentsRequest.getBaseLocationId();

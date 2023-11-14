@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResponse;
 
-public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledIntegrationTest {
+public class PeopleTribunalsParentIdNullIntegrationTest extends ElinksEnabledIntegrationTest {
 
 
     @Autowired
@@ -78,8 +78,18 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
 
         cleanupData();
 
+        String locationResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/location_nullParentID.json");
         String peopleResponseValidationJson =
-                loadJson("src/integrationTest/resources/wiremock_responses/People_TypeNull.json");
+                loadJson("src/integrationTest/resources/wiremock_responses/People_ParentIDNull.json");
+
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(locationResponseValidationJson)));
 
         elinks.stubFor(get(urlPathMatching("/people"))
                 .willReturn(aResponse()
@@ -154,7 +164,7 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
         cleanupData();
     }
 
-    @DisplayName("Elinks People endpoint appointment Type Null verification")
+    @DisplayName("Elinks People endpoint Parent ID Null verification")
     @Test
     void getPeopleUserProfile() {
 
@@ -166,11 +176,26 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
         var list = elinkDataExceptionRepository.findAll();
 
         assertThat(list).isNotEmpty();
-        Assert.assertEquals("The Type field is null for the given Appointment.",
+        Assert.assertEquals(" The Parent ID is null/blanks for Tribunal Base Location ID  "
+                        + "2218 in the Location_Type table.",
                 list.get(0).getErrorDescription());
-
     }
 
+    @DisplayName("Elinks People endpoint Success")
+    @Test
+    void getPeopleUserProfileSuccess() {
+        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
+        assertThat(response).containsEntry("http_status", "200 OK");
+        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
+        assertEquals("People data loaded successfully", profiles.getMessage());
+
+        var list = elinkDataExceptionRepository.findAll();
+
+        assertThat(list).isNotEmpty();
+        Assert.assertEquals(" The Parent ID is null/blanks for Tribunal Base Location ID  "
+                        + "2218 in the Location_Type table.",
+                list.get(0).getErrorDescription());
+    }
 
 
     private void cleanupData() {

@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.reform.judicialapi.util.KeyGenUtil.getDynamicJwksResponse;
 
-public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledIntegrationTest {
+public class ElinksPeopleSuccessNoInvalidParentIdBaseLocIdIntegrationTest extends ElinksEnabledIntegrationTest {
 
 
     @Autowired
@@ -78,8 +77,11 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
 
         cleanupData();
 
+        String locationResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/location.json");
+
         String peopleResponseValidationJson =
-                loadJson("src/integrationTest/resources/wiremock_responses/People_TypeNull.json");
+                loadJson("src/integrationTest/resources/wiremock_responses/people.json");
 
         elinks.stubFor(get(urlPathMatching("/people"))
                 .willReturn(aResponse()
@@ -154,6 +156,7 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
         cleanupData();
     }
 
+
     @DisplayName("Elinks People endpoint appointment Type Null verification")
     @Test
     void getPeopleUserProfile() {
@@ -165,12 +168,11 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
 
         var list = elinkDataExceptionRepository.findAll();
 
-        assertThat(list).isNotEmpty();
-        Assert.assertEquals("The Type field is null for the given Appointment.",
-                list.get(0).getErrorDescription());
+
+        assertThat(response).isNotEmpty();
+
 
     }
-
 
 
     private void cleanupData() {
@@ -182,8 +184,4 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
         profileRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
     }
-
-
-
-
 }
