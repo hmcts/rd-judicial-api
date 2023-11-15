@@ -50,6 +50,7 @@ spring:
   flyway:
     enabled: true
     locations: ${JUDICIAL_DB:classpath:db/migration}
+    dbReaderUserName: ${DB_READER_USERNAME:postgres}
     schemas:
       - dbjuddata
 ### database configuration
