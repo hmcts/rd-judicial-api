@@ -6,6 +6,7 @@ java:
     POSTGRES_NAME: "{{ .Values.postgresql.auth.database}}"
     POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
+    DB_READER_USERNAME: "{{ .Values.postgresql.auth.username}}"
     JUDICIAL_DB: classpath:db/migration
     JRD_MQ_HOST: "rd-sb-preview.servicebus.windows.net"
     JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
