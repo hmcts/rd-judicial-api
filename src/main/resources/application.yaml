@@ -52,7 +52,8 @@ spring:
     locations: ${JUDICIAL_DB:classpath:db/migration}
     schemas:
       - dbjuddata
-    dbReaderUserName: ${DB_READER_USERNAME:postgres}
+    placeholders:
+      dbReaderUserName: ${DB_READER_USERNAME:postgres}
   ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
