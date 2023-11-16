@@ -50,10 +50,11 @@ spring:
   flyway:
     enabled: true
     locations: ${JUDICIAL_DB:classpath:db/migration}
-    dbReaderUserName: ${DB_READER_USERNAME:postgres}
     schemas:
       - dbjuddata
-### database configuration
+    placeholders:
+      dbReaderUserName: ${DB_READER_USERNAME:postgres}
+  ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}?currentSchema=dbjuddata
