@@ -49,6 +49,7 @@ spring:
   jackson.date-format: yyyy-MM-dd
   flyway:
     enabled: true
+    baselineOnMigrate: true
     locations: ${JUDICIAL_DB:classpath:db/migration}
     schemas:
       - dbjuddata
