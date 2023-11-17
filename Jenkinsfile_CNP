@@ -83,6 +83,10 @@ withPipeline(type, product, component) {
       env.TEST_URL = "http://rd-judicial-api-aat.aat.platform.hmcts.net"
     }
 
+    before('dbmigrate:aat') {
+        env.DB_READER_USERNAME = 'postgres'
+    }
+
     // Sync demo and perftest with master branch
     syncBranchesWithMaster(branchesToSync)
 
