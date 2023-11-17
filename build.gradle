@@ -142,13 +142,6 @@ task contract(type: Test) {
     include "uk/gov/hmcts/reform/judicialapi/**"
 }
 
-task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-    baselineOnMigrate = true
-    if (project.hasProperty("dburl")) {
-        url = "jdbc:postgresql://${dburl}"
-    }
-}
-
 
 task runProviderPactVerification(type: Test) {
     useJUnitPlatform()
