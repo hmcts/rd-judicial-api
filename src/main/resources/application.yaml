@@ -53,6 +53,7 @@ spring:
     locations: ${JUDICIAL_DB:classpath:db/migration}
     schemas:
       - dbjuddata
+      - dbjudicialdata
     placeholders:
       dbReaderUserName: ${DB_READER_USERNAME:postgres}
   ### database configuration
