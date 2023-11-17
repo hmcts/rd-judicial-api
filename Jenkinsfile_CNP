@@ -84,7 +84,7 @@ withPipeline(type, product, component) {
     }
 
     before('dbmigrate:aat') {
-        env.DB_READER_USERNAME = "postgres"
+        env.DB_READER_USERNAME = "DTS CFT DB Access Reader"
     }
 
     // Sync demo and perftest with master branch
