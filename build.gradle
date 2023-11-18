@@ -210,6 +210,7 @@ task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     if (project.hasProperty("dburl")) {
         url = "jdbc:postgresql://${dburl}"
     }
+    placeholders = ['dbReaderUserName' : 'DTS CFT DB Access Reader']
 }
 
 task fortifyScan(type: JavaExec)  {

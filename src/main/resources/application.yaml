@@ -50,6 +50,7 @@ spring:
   flyway:
     enabled: true
     baselineOnMigrate: true
+
     locations: ${JUDICIAL_DB:classpath:db/migration}
     schemas:
       - dbjuddata
@@ -180,7 +181,8 @@ logging:
         jdbc:
           core:
             JdbcTemplate: DEBUG
-
+      flywaydb:
+        core: DEBUG
 elastic:
   search:
     query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
