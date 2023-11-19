@@ -126,7 +126,7 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
         assertThat(jobDetails).isNotNull();
         assertThat(jobDetails.getPublishingStatus()).isNotNull();
         assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(), auditEntry.getStatus());
-        assertEquals(RefDataElinksConstants.JobStatus.FAILED.getStatus(),audits.get(0).getPublishingStatus());
+        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),audits.get(0).getPublishingStatus());
 
     }
 

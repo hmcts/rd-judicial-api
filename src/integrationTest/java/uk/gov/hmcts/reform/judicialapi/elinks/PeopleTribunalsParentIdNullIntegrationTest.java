@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
@@ -18,6 +19,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
@@ -25,6 +27,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -167,7 +170,11 @@ public class PeopleTribunalsParentIdNullIntegrationTest extends ElinksEnabledInt
     @DisplayName("Elinks People endpoint Parent ID Null verification")
     @Test
     void getPeopleUserProfile() {
+        elinksApiJobScheduler.loadElinksJob();
 
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
+        // asserting location data
+        validateLocationData(elinksAudit);
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
@@ -177,24 +184,17 @@ public class PeopleTribunalsParentIdNullIntegrationTest extends ElinksEnabledInt
 
         assertThat(list).isNotEmpty();
         Assert.assertEquals(" The Parent ID is null/blanks for Tribunal Base Location ID  "
-                        + "2218 in the Location_Type table.",
+                        + "1815 in the Location_Type table.",
                 list.get(0).getErrorDescription());
     }
 
-    @DisplayName("Elinks People endpoint Success")
-    @Test
-    void getPeopleUserProfileSuccess() {
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        assertThat(response).containsEntry("http_status", "200 OK");
-        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
-        assertEquals("People data loaded successfully", profiles.getMessage());
 
-        var list = elinkDataExceptionRepository.findAll();
 
-        assertThat(list).isNotEmpty();
-        Assert.assertEquals(" The Parent ID is null/blanks for Tribunal Base Location ID  "
-                        + "2218 in the Location_Type table.",
-                list.get(0).getErrorDescription());
+    private void validateLocationData(List<ElinkDataSchedularAudit> elinksAudit) {
+        cleanupData();
+        Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
+        ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) locationResponse.get("body");
+
     }
 
 

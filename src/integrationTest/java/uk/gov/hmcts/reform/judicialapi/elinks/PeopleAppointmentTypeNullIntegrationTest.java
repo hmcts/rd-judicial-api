@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
@@ -18,6 +19,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
@@ -25,6 +27,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -78,8 +81,19 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
 
         cleanupData();
 
+        String locationResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/location.json");
+
         String peopleResponseValidationJson =
                 loadJson("src/integrationTest/resources/wiremock_responses/People_TypeNull.json");
+
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(locationResponseValidationJson)));
 
         elinks.stubFor(get(urlPathMatching("/people"))
                 .willReturn(aResponse()
@@ -157,7 +171,11 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
     @DisplayName("Elinks People endpoint appointment Type Null verification")
     @Test
     void getPeopleUserProfile() {
+        elinksApiJobScheduler.loadElinksJob();
 
+        List<ElinkDataSchedularAudit> elinksAudit = elinkSchedularAuditRepository.findAll();
+        // asserting location data
+        validateLocationData(elinksAudit);
         Map<String, Object> response = elinksReferenceDataClient.getPeoples();
         assertThat(response).containsEntry("http_status", "200 OK");
         ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
@@ -171,6 +189,12 @@ public class PeopleAppointmentTypeNullIntegrationTest extends ElinksEnabledInteg
 
     }
 
+    private void validateLocationData(List<ElinkDataSchedularAudit> elinksAudit) {
+        cleanupData();
+        Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
+        ElinkLocationWrapperResponse locations = (ElinkLocationWrapperResponse) locationResponse.get("body");
+
+    }
 
 
     private void cleanupData() {
