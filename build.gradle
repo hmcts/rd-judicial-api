@@ -142,6 +142,7 @@ task contract(type: Test) {
     include "uk/gov/hmcts/reform/judicialapi/**"
 }
 
+
 task runProviderPactVerification(type: Test) {
     useJUnitPlatform()
     logger.lifecycle("Runs pact Tests")
@@ -209,6 +210,8 @@ task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     if (project.hasProperty("dburl")) {
         url = "jdbc:postgresql://${dburl}"
     }
+    placeholders = ['dbReaderUserName' : System.getenv("DB_READER_USERNAME")]
+
 }
 
 task fortifyScan(type: JavaExec)  {

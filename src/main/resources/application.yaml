@@ -49,10 +49,15 @@ spring:
   jackson.date-format: yyyy-MM-dd
   flyway:
     enabled: true
+    baselineOnMigrate: true
+
     locations: ${JUDICIAL_DB:classpath:db/migration}
     schemas:
       - dbjuddata
-### database configuration
+      - dbjudicialdata
+    placeholders:
+      dbReaderUserName: ${DB_READER_USERNAME:postgres}
+  ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}?currentSchema=dbjuddata
@@ -61,6 +66,8 @@ spring:
     min-idle: 1
     properties:
       charSet: UTF-8
+    hikari:
+      maximumPoolSize: ${HIKARI_MAX_POOL_SIZE:50}
     tomcat:
       max-active: 10
       max-idle: 10
@@ -174,7 +181,8 @@ logging:
         jdbc:
           core:
             JdbcTemplate: DEBUG
-
+      flywaydb:
+        core: DEBUG
 elastic:
   search:
     query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
