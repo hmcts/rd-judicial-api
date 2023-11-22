@@ -10,6 +10,6 @@ public interface LocationRepository extends JpaRepository<Location, String> {
 
     Location findByRegionDescEnIgnoreCase(String personalCode);
 
-    @Query(value = "select regionId from Location where regionDescEn =:location ")
+    @Query(value = "select distinct regionId from Location where regionDescEn =:location ")
     String fetchRegionIdfromCftRegionDescEn(String location);
 }
