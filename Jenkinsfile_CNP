@@ -83,6 +83,13 @@ withPipeline(type, product, component) {
       env.TEST_URL = "http://rd-judicial-api-aat.aat.platform.hmcts.net"
     }
 
+    before('dbmigrate:aat') {
+        env.DB_READER_USERNAME = "DTS CFT DB Access Reader"
+    }
+
+    before('dbmigrate:prod') {
+        env.DB_READER_USERNAME = "DTS JIT Access rd DB Reader SC"
+    }
 
     // Sync demo and perftest with master branch
     syncBranchesWithMaster(branchesToSync)
