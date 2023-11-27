@@ -48,8 +48,10 @@ variable "component-V15" {
   type = string
   default="postgres-db-v15"
 }
+
 variable "aks_subscription_id" {
 }
+
 variable "team_contact" {
   type        = string
   description = "The name of your Slack channel people can use to contact your team about your infrastructure"
