@@ -590,7 +590,9 @@ bootJar {
 configurations.all {
     resolutionStrategy.eachDependency { details ->
         if (details.requested.group == 'org.bouncycastle'
-                && details.requested.name == 'bcpkix-jdk18on' ){
+                && (details.requested.name == 'bcpkix-jdk18on'
+                    || details.requested.name == 'bcprov-jdk18on')
+        ){
             details.useVersion versions.bouncycastle
         }
     }
@@ -600,6 +602,9 @@ dependencies {
     modules {
         module("org.bouncycastle:bcpkix-jdk15on") {
             replacedBy("org.bouncycastle:bcpkix-jdk18on")
+        }
+        module("org.bouncycastle:bcprov-jdk15on") {
+            replacedBy("org.bouncycastle:bcprov-jdk18on")
         }
     }
 }
