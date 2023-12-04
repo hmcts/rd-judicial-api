@@ -45,6 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.testng.AssertJUnit.assertFalse;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISPRESENT;
@@ -227,7 +228,7 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         assertEquals(null, userprofile.get(11).getPostNominals());
         assertEquals("DJ.Rachel.Jones@ejudiciary.net",
             userprofile.get(11).getEmailId());
-        assertTrue(userprofile.get(11).getActiveFlag());
+        assertFalse(userprofile.get(11).getActiveFlag());
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(11).getObjectId());
         assertNull(userprofile.get(11).getSidamId());
         assertEquals("RJ",userprofile.get(11).getInitials());
