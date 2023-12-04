@@ -328,6 +328,7 @@ class ElinksEndToEndIntegrationPartialTest extends ElinksEnabledIntegrationTest 
         assertEquals(2, deletedUserProfile.size());
         assertEquals("4913085", deletedUserProfile.get(0).getPersonalCode());
         assertEquals(true, deletedUserProfile.get(0).getDeletedFlag());
+        assertEquals(false, deletedUserProfile.get(0).getActiveFlag());
         assertEquals("2023-07-13",deletedUserProfile.get(0).getDeletedOn().toLocalDate().toString());
         assertNotNull(deletedUserProfile.get(0).getLastLoadedDate());
 

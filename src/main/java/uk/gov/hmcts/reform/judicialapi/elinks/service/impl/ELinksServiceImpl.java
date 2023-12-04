@@ -532,7 +532,7 @@ public class ELinksServiceImpl implements ELinksService {
         List<Triple<String, String, String>> deletedId = new ArrayList<>();
 
         String updateDeletedId = "UPDATE dbjudicialdata.judicial_user_profile SET date_of_deletion = Date(?) , "
-                + "deleted_flag = ? WHERE personal_code = ?";
+                + "deleted_flag = ?,active_flag=false WHERE personal_code = ?";
 
         deletedResponse.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
                 deletedId.add(Triple.of(s.getPersonalCode(), s.getDeleted(), s.getDeletedOn())));
