@@ -40,7 +40,8 @@ def versions = [
         springVersion      : '5.3.27',
         logback            : '1.2.11',
         bytebuddy          : '1.12.7',
-        testContainer_postgresql: '1.17.6'
+        testContainer_postgresql: '1.17.6',
+        bouncycastle       : '1.77'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
@@ -583,6 +584,23 @@ bootJar {
     archiveFileName = jarName
     manifest {
         attributes('Implementation-Version': project.version.toString())
+    }
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.bouncycastle'
+                && details.requested.name == 'bcpkix-jdk18on' ){
+            details.useVersion versions.bouncycastle
+        }
+    }
+}
+
+dependencies {
+    modules {
+        module("org.bouncycastle:bcpkix-jdk15on") {
+            replacedBy("org.bouncycastle:bcpkix-jdk18on")
+        }
     }
 }
 
