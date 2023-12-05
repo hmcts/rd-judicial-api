@@ -181,8 +181,7 @@ logging:
         jdbc:
           core:
             JdbcTemplate: DEBUG
-      flywaydb:
-        core: DEBUG
+
 elastic:
   search:
     query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
