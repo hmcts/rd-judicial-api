@@ -531,7 +531,7 @@ dependencyManagement {
             entry 'commons-fileupload'
         }
         //CVE-2022-40152
-        dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.0') {
+        dependencySet(group: 'com.fasterxml.woodstox', version: '6.5.1') {
             entry 'woodstox-core'
         }
 
