@@ -121,7 +121,7 @@ public class ElinksApiJobScheduler {
 
             log.info("ElinksApiJobScheduler.loadElinksData Job execution in progress");
             loadElinksData();
-            log.info("ElinksApiJobScheduler.loadElinksData Job execution completed successful");
+            log.info("ElinksApiJobScheduler: loadElinksData Job status - Job execution completed successfully");
         }
 
     }

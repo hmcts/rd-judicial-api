@@ -10,8 +10,11 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 
 public interface BaseLocationRepository extends JpaRepository<BaseLocation, String> {
 
-        @Query(value ="select parentId from BaseLocation where baseLocationId =:base_location_id ")
+        @Query(value ="select distinct parentId from BaseLocation where baseLocationId =:base_location_id ")
         String fetchParentId(String base_location_id);
+
+        @Query(value ="select baseLocationId from BaseLocation where baseLocationId =:base_location_id ")
+        String fetchBaseLocationId(String base_location_id);
 
 
 }

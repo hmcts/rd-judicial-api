@@ -463,7 +463,7 @@ class ELinksServiceImplTest {
 
     }
 
-    //  @Test
+    @Test
     void elinksService_deleteJohProfiles_should_return_success_with_zero_profiles() throws JsonProcessingException {
 
         eLinksServiceImpl.deleteJohProfiles(LocalDateTime.now());
@@ -487,7 +487,7 @@ class ELinksServiceImplTest {
 
     }
 
-    // @Test
+    @Test
     void elinksService_deleteJohProfiles_should_return_failure_msg() throws JsonProcessingException {
 
         ReflectionTestUtils.setField(eLinksServiceImpl, "delJohProfiles",

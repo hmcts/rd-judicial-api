@@ -38,7 +38,7 @@ public class UserProfile implements Serializable {
     private String personalCode;
 
     @Column(name = "known_as")
-    @Size(max = 64)
+    @Size(max = 256)
     private String knownAs;
 
     @Column(name = "surname")
@@ -78,11 +78,11 @@ public class UserProfile implements Serializable {
     private String sidamId;
 
     @Column(name = "initials")
-    @Size(max = 64)
+    @Size(max = 256)
     private String initials;
 
     @Column(name = "title")
-    @Size(max = 64)
+    @Size(max = 256)
     private String title;
 
     @Column(name = "retirement_date")

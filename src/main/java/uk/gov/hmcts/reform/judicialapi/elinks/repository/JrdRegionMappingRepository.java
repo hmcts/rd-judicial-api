@@ -8,6 +8,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.JrdRegionMapping;
 @Repository
 public interface JrdRegionMappingRepository extends JpaRepository<JrdRegionMapping, String> {
 
-    @Query(value = "select regionId from jrdlrdregionmapping where jrdRegion =:location ")
+    @Query(value = "select distinct regionId from jrdlrdregionmapping where jrdRegion =:location ")
     String fetchRegionIdfromRegion(String location);
 }
