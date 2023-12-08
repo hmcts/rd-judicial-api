@@ -23,6 +23,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISPRESENT;
 
 @ExtendWith(MockitoExtension.class)
 public class SendEmailTest {
@@ -95,7 +96,7 @@ public class SendEmailTest {
         exceptionRecords2.setKey("key1");
         exceptionRecords2.setRowId("rowId1");
         exceptionRecords2.setSchedulerName("schedularName1");
-        exceptionRecords2.setErrorDescription("errorDescr1");
+        exceptionRecords2.setErrorDescription(OBJECTIDISPRESENT);
         exceptionRecords2.setTableName("tableName1");
         exceptionRecords2.setFieldInError(RefDataElinksConstants.OBJECT_ID);
         exceptionRecords2.setSchedulerStartTime(LocalDateTime.now());
@@ -103,15 +104,15 @@ public class SendEmailTest {
         List<ElinkDataExceptionRecords> exceptionRecords = Arrays.asList(exceptionRecords1,exceptionRecords2);
 
         when(elinkDataExceptionRepository.findBySchedulerStartTime(any())).thenReturn(exceptionRecords);
-        when(emailConfiguration.getMailTypes()).thenReturn(Map.of("objectid", config));
+        when(emailConfiguration.getMailTypes()).thenReturn(Map.of("objectid", config,
+                "objectidduplicate", config));
         when(config.isEnabled()).thenReturn(true);
         when(config.getBody()).thenReturn("email sample body");
         when(config.getSubject()).thenReturn("email sample subject");
         when(config.getTemplate()).thenReturn("email sample template");
 
         sendEmail.sendEmail(LocalDateTime.now());
-
-        verify(emailService, atLeastOnce()).sendEmail(any());
+        verify(emailService, times(2)).sendEmail(any());
     }
 
     @Test
