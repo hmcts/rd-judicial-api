@@ -39,17 +39,19 @@ variable "postgresql_version" {
   default = "11"
 }
 
-variable "product-V15" {
+variable "product-v16" {
   type = string
   default="rd-judicial-ref-api"
 }
 
-variable "component-V15" {
+variable "component-v16" {
   type = string
-  default="postgres-db-v15"
+  default="postgres-db-v16"
 }
+
 variable "aks_subscription_id" {
 }
+
 variable "team_contact" {
   type        = string
   description = "The name of your Slack channel people can use to contact your team about your infrastructure"
