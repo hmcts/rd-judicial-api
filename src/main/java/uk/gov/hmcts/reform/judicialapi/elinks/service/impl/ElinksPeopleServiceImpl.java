@@ -76,9 +76,9 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONIDFAILURE;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISDUPLICATED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISPRESENT;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECT_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PARENTIDFAILURE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
@@ -450,7 +450,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 resultsRequest.getObjectId(),
-                OBJECTID,OBJECTIDISDUPLICATED, USER_PROFILE,personalCode,pageValue);
+                OBJECT_ID,OBJECTIDISDUPLICATED, USER_PROFILE,personalCode,pageValue);
             return false;
         } else if (!isNull(resultsRequest.getObjectId())
             && !resultsRequest.getObjectId().isEmpty() && objectIdisPresentInDb(resultsRequest)) {
@@ -460,7 +460,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
             elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 resultsRequest.getPersonalCode(),
-                OBJECTID,OBJECTIDISPRESENT, USER_PROFILE,personalCode,pageValue);
+                    OBJECT_ID,OBJECTIDISPRESENT, USER_PROFILE,personalCode,pageValue);
             return false;
         }
         return true;

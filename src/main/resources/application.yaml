@@ -255,6 +255,14 @@ email:
         - DLRefDataSupport@hmcts.net
       subject: "Official Sensitive: JRD - Object ID is not present in Judicial Reference Data - %s"
       template: simple-template-objectId.ftl
+    objectidduplicate:
+      enabled: true
+      from: ${MAIL_FROM}
+      to:
+        - DLRefDataSupport@hmcts.net
+      subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations in Elinks - %s"
+      template: simple-template-objectIdDuplicate.ftl
+
 
 sendgrid:
   key: ${RD_SENDGRID_API_KEY}
