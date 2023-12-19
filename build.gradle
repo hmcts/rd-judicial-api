@@ -17,7 +17,6 @@ plugins {
     id "io.freefair.lombok" version "5.3.3.3"
     id 'uk.gov.hmcts.java' version '0.12.39'
     id 'au.com.dius.pact' version '4.1.7'
-    id 'org.owasp.dependencycheck' version '8.0.2'
 }
 
 apply plugin: 'java'
@@ -536,7 +535,7 @@ dependencyManagement {
         }
 
         //        Resolves CVE-2023-4586
-        dependencySet(group: 'io.netty', version: '4.1.101.Final') {
+        dependencySet(group: 'io.netty', version: '4.1.104.Final') {
             entry 'netty-buffer'
             entry 'netty-codec'
             entry 'netty-codec-dns'
