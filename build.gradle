@@ -359,7 +359,7 @@ dependencies {
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
     implementation 'com.sendgrid:sendgrid-java:4.7.2'
     implementation group: 'com.azure', name: 'azure-core', version: '1.45.1'
-    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.1.0'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.14.7'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
 
