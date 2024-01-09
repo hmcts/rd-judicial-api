@@ -1,18 +1,23 @@
 provider "azurerm" {
   features {}
 }
-
+provider "azurerm" {
+  features {}
+  skip_provider_registration = true
+  alias                      = "postgres_network"
+  subscription_id            = var.aks_subscription_id
+}
 terraform {
   backend "azurerm" {}
 
   required_providers {
     azurerm = {
       source = "hashicorp/azurerm"
-      version = "~> 3.85.0"
+      version = "~> 3.83.0"
     }
     azuread = {
       source  = "hashicorp/azuread"
-      version = "2.47.0"
+      version = "2.33.0"
     }
   }
 }
