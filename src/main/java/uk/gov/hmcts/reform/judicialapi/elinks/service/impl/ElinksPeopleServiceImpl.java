@@ -422,7 +422,7 @@ public class ElinksPeopleServiceImpl implements ElinksPeopleService {
     private boolean validateUserProfile(ResultsRequest resultsRequest,LocalDateTime schedulerStartTime, int pageValue) {
 
         if (StringUtils.isEmpty(resultsRequest.getEmail())) {
-            log.warn("Mapped Base location not found in base table " + resultsRequest.getPersonalCode());
+            log.warn("Email is empty or null for the personal code : " + resultsRequest.getPersonalCode());
             partialSuccessFlag = true;
             String errorField = resultsRequest.getPersonalCode();
             String errorDescription = appendFieldWithErrorDescription(USERPROFILEEMAILID, errorField);
