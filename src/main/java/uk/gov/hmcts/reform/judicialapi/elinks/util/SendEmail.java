@@ -73,7 +73,7 @@ public class SendEmail {
                     LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
         }
         if (map.containsKey(OBJECT_ID)) {
-            Map<Boolean, List<ElinkDataExceptionRecords>> errorDescMap = list.stream()
+            Map<Boolean, List<ElinkDataExceptionRecords>> errorDescMap = map.get(OBJECT_ID).stream()
                     .collect(Collectors.partitioningBy(a -> OBJECTIDISPRESENT.equals(a.getErrorDescription())));
             if (!errorDescMap.get(true).isEmpty()) {
                 sendEmail(new HashSet<>(errorDescMap.get(true)), "objectidduplicate",
