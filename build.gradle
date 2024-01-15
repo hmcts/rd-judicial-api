@@ -17,7 +17,6 @@ plugins {
     id "io.freefair.lombok" version "5.3.3.3"
     id 'uk.gov.hmcts.java' version '0.12.39'
     id 'au.com.dius.pact' version '4.1.7'
-    id 'org.owasp.dependencycheck' version '8.0.2'
 }
 
 apply plugin: 'java'
@@ -37,7 +36,7 @@ def versions = [
         launchDarklySdk    : '5.10.9',
         pact_version       : '4.1.7',
         log4j              : '2.18.0',
-        springVersion      : '5.3.27',
+        springVersion      : '5.3.31',
         logback            : '1.2.13',
         bytebuddy          : '1.12.7',
         testContainer_postgresql: '1.17.6',
@@ -339,7 +338,7 @@ dependencies {
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
 
-    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.0.5'
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.1.8'
 
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
@@ -350,7 +349,7 @@ dependencies {
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
-    implementation 'com.github.hmcts:idam-java-client:2.0.1'
+    implementation 'com.github.hmcts:idam-java-client:2.1.1'
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
@@ -360,7 +359,7 @@ dependencies {
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
     implementation 'com.sendgrid:sendgrid-java:4.7.2'
     implementation group: 'com.azure', name: 'azure-core', version: '1.45.1'
-    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.1.0'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.14.7'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker', version: versions.springBoot
 
@@ -514,7 +513,7 @@ dependencyManagement {
     dependencies {
         // CVE-2021-42340
         // CVE-2023-28709
-        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.83') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.85') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
@@ -536,7 +535,7 @@ dependencyManagement {
         }
 
         //        Resolves CVE-2023-4586
-        dependencySet(group: 'io.netty', version: '4.1.100.Final') {
+        dependencySet(group: 'io.netty', version: '4.1.104.Final') {
             entry 'netty-buffer'
             entry 'netty-codec'
             entry 'netty-codec-dns'
