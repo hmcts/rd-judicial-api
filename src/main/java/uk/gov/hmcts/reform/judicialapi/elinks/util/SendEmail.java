@@ -25,6 +25,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CONTENT_TYPE_HTML;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATE_PATTERN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISPRESENT;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECT_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USER_PROFILE;
 
@@ -52,8 +53,7 @@ public class SendEmail {
         List<ElinkDataExceptionRecords> list = elinkDataExceptionRepository
                 .findBySchedulerStartTime(schedulerStartTime);
 
-        Map<String, List<ElinkDataExceptionRecords>> map = list
-                .stream()
+        Map<String, List<ElinkDataExceptionRecords>> map = list.stream()
                 .collect(Collectors.groupingBy(ElinkDataExceptionRecords::getFieldInError));
 
         if (map.containsKey(BASE_LOCATION_ID)) {
@@ -73,8 +73,16 @@ public class SendEmail {
                     LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
         }
         if (map.containsKey(OBJECT_ID)) {
-            sendEmail(new HashSet<>(map.get(OBJECT_ID)), "objectid",
-                    LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
+            Map<Boolean, List<ElinkDataExceptionRecords>> errorDescMap = map.get(OBJECT_ID).stream()
+                    .collect(Collectors.partitioningBy(a -> OBJECTIDISPRESENT.equals(a.getErrorDescription())));
+            if (!errorDescMap.get(true).isEmpty()) {
+                sendEmail(new HashSet<>(errorDescMap.get(true)), "objectidduplicate",
+                        LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
+            }
+            if (!errorDescMap.get(false).isEmpty()) {
+                sendEmail(new HashSet<>(errorDescMap.get(false)), "objectid",
+                        LocalDate.now().format(DateTimeFormatter.ofPattern(DATE_PATTERN)));
+            }
         }
     }
 

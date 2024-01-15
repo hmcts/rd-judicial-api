@@ -142,8 +142,6 @@ public class RefDataElinksConstants {
     public static final String INVALIDROLENAMES = "Role Name  : "
         + " is invalid";
 
-    public static final String OBJECTID = "Object_id";
-
     public static final String USERPROFILEFAILURE = "UserProfile  : "
         + FAIL_LOAD;
 

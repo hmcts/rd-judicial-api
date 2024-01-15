@@ -3,7 +3,7 @@ Judicial reference data service (JRD)
 
 ## Purpose
 
-Provides Judicial data to Judicial Office, implemented as a Java/SpringBoot application.
+Provides Judicial data to Judicial Office, implemented as a Java/SpringBoot application. 
 
 Judicial Reference Data stores information such as Judicial Office Holder profiles, their authorisation, appointments and roles.
 JRD also consists of a set of REST endpoints that are used to get and search a specific set of user profiles which can be used by other reform components to assign a case to a judge.
