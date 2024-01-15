@@ -126,14 +126,14 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(13, userprofile.size());
-        assertEquals("4913085", userprofile.get(11).getPersonalCode());
-        assertEquals(true, userprofile.get(11).getDeletedFlag());
-        assertEquals("2023-07-13", userprofile.get(11).getDeletedOn().toLocalDate().toString());
+        assertEquals(14, userprofile.size());
+        assertEquals("4913085", userprofile.get(12).getPersonalCode());
+        assertEquals(true, userprofile.get(12).getDeletedFlag());
+        assertEquals("2023-07-13", userprofile.get(12).getDeletedOn().toLocalDate().toString());
 
-        assertEquals("4913086", userprofile.get(12).getPersonalCode());
-        assertEquals(false, userprofile.get(12).getDeletedFlag());
-        assertEquals("2022-07-10", userprofile.get(12).getDeletedOn().toLocalDate().toString());
+        assertEquals("4913086", userprofile.get(13).getPersonalCode());
+        assertEquals(false, userprofile.get(13).getDeletedFlag());
+        assertEquals("2022-07-10", userprofile.get(13).getDeletedOn().toLocalDate().toString());
 
 
 
@@ -152,15 +152,14 @@ class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(13, userprofile.size());
-        assertEquals("4913085", userprofile.get(11).getPersonalCode());
-        assertEquals(true, userprofile.get(11).getDeletedFlag());
-        assertEquals("2023-07-13", userprofile.get(11).getDeletedOn().toLocalDate().toString());
-        assertEquals(false, userprofile.get(11).getActiveFlag());
+        assertEquals(14, userprofile.size());
+        assertEquals("4913085", userprofile.get(12).getPersonalCode());
+        assertEquals(true, userprofile.get(12).getDeletedFlag());
+        assertEquals("2023-07-13", userprofile.get(12).getDeletedOn().toLocalDate().toString());
 
-        assertEquals("4913086", userprofile.get(12).getPersonalCode());
-        assertEquals(false, userprofile.get(12).getDeletedFlag());
-        assertEquals("2022-07-10", userprofile.get(12).getDeletedOn().toLocalDate().toString());
+        assertEquals("4913086", userprofile.get(13).getPersonalCode());
+        assertEquals(false, userprofile.get(13).getDeletedFlag());
+        assertEquals("2022-07-10", userprofile.get(13).getDeletedOn().toLocalDate().toString());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 

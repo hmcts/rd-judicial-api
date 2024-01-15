@@ -88,7 +88,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(13, userprofile.size());
+        assertEquals(14, userprofile.size());
         assertEquals("28", userprofile.get(1).getPersonalCode());
         assertEquals(true, userprofile.get(1).getActiveFlag());
         assertEquals("1.11112E+12", userprofile.get(1).getObjectId());
@@ -107,7 +107,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(13, userprofile.size());
+        assertEquals(14, userprofile.size());
         assertEquals("28", userprofile.get(1).getPersonalCode());
         assertEquals(true, userprofile.get(1).getActiveFlag());
         assertEquals("1.11112E+12", userprofile.get(1).getObjectId());
