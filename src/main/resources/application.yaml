@@ -211,6 +211,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
+        - dts-refdata-team@HMCTS.NET
       subject: "%s :: Publishing of JRD messages to ASB failed"
       body: "Publishing of JRD messages to ASB failed for Job Id %s"
     report:
@@ -218,6 +219,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
+        - dts-refdata-team@HMCTS.NET
       subject: "%s :: JRD - Execution Failed"
       body: "Execution Failed for files - %s"
     userprofile:
@@ -225,6 +227,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
+        - dts-refdata-team@HMCTS.NET
       subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations - %s"
       template: simple-template-userProfile.ftl
     appointment:
@@ -232,6 +235,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
+        - dts-refdata-team@HMCTS.NET
       subject: "Official Sensitive: JRD - New AppointmentID in Authorisation file - %s"
       template: simple-template-appointmentId.ftl
     baselocation:
@@ -239,6 +243,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
+        - dts-refdata-team@HMCTS.NET
       subject: "Official Sensitive: JRD - New Location in Appointment file - %s"
       template: simple-template-baseLocationId.ftl
     location:
@@ -246,6 +251,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
+        - dts-refdata-team@HMCTS.NET
       subject: "Official Sensitive: JRD - New Location in Appointment file - %s"
       template: simple-template-locationId.ftl
     objectid:
@@ -253,6 +259,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
+        - dts-refdata-team@HMCTS.NET
       subject: "Official Sensitive: JRD - Object ID is not present in Judicial Reference Data - %s"
       template: simple-template-objectId.ftl
     objectidduplicate:
@@ -260,6 +267,7 @@ email:
       from: ${MAIL_FROM}
       to:
         - DLRefDataSupport@hmcts.net
+        - dts-refdata-team@HMCTS.NET
       subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations in Elinks - %s"
       template: simple-template-objectIdDuplicate.ftl
 
