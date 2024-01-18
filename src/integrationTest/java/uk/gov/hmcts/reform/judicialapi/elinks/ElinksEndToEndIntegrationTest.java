@@ -466,6 +466,7 @@ class ElinksEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals(2, deletedUserProfile.size());
         assertEquals("4913085", deletedUserProfile.get(1).getPersonalCode());
         assertEquals(true, deletedUserProfile.get(1).getDeletedFlag());
+        assertEquals(false, deletedUserProfile.get(1).getActiveFlag());
         assertEquals("2023-07-13",deletedUserProfile.get(1).getDeletedOn().toLocalDate().toString());
 
         ElinkDataSchedularAudit auditEntry = elinksAudit.get(3);

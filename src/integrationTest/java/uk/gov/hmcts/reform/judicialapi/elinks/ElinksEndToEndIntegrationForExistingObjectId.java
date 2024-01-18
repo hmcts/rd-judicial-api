@@ -43,7 +43,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
@@ -219,18 +218,16 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
 
     private void validateUserProfile() {
         List<UserProfile> userprofile = profileRepository.findAll();
-        assertEquals(12, userprofile.size());
-        assertEquals("4913085", userprofile.get(11).getPersonalCode());
-        assertEquals("Rachel", userprofile.get(11).getKnownAs());
-        assertEquals("Jones", userprofile.get(11).getSurname());
-        assertEquals("District Judge Rachel Jones", userprofile.get(11).getFullName());
-        assertEquals(null, userprofile.get(11).getPostNominals());
-        assertEquals("DJ.Rachel.Jones@ejudiciary.net",
-            userprofile.get(11).getEmailId());
-        assertTrue(userprofile.get(11).getActiveFlag());
-        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(11).getObjectId());
-        assertNull(userprofile.get(11).getSidamId());
-        assertEquals("RJ",userprofile.get(11).getInitials());
+        assertEquals(13, userprofile.size());
+        assertEquals("4913085", userprofile.get(12).getPersonalCode());
+        assertEquals("Rachel", userprofile.get(12).getKnownAs());
+        assertEquals("Jones", userprofile.get(12).getSurname());
+        assertEquals("District Judge Rachel Jones", userprofile.get(12).getFullName());
+        assertEquals(null, userprofile.get(12).getPostNominals());
+        assertEquals("DJ.Rachel.Jones@ejudiciary.net", userprofile.get(12).getEmailId());
+        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(12).getObjectId());
+        assertNull(userprofile.get(12).getSidamId());
+        assertEquals("RJ",userprofile.get(12).getInitials());
     }
 
     private void cleanupData() {

@@ -196,18 +196,18 @@ class ElinksEndToEndIntegrationForSidamIdisPresent extends ElinksEnabledIntegrat
 
     private void validateUserProfile() {
         List<UserProfile> userprofile = profileRepository.findAll();
-        assertEquals(11, userprofile.size());
-        assertEquals("123454", userprofile.get(10).getPersonalCode());
-        assertEquals("Rachel", userprofile.get(10).getKnownAs());
-        assertEquals("Jones", userprofile.get(10).getSurname());
-        assertEquals("District Judge Rachel Jones", userprofile.get(10).getFullName());
-        assertEquals(null, userprofile.get(10).getPostNominals());
+        assertEquals(12, userprofile.size());
+        assertEquals("123454", userprofile.get(11).getPersonalCode());
+        assertEquals("Rachel", userprofile.get(11).getKnownAs());
+        assertEquals("Jones", userprofile.get(11).getSurname());
+        assertEquals("District Judge Rachel Jones", userprofile.get(11).getFullName());
+        assertEquals(null, userprofile.get(11).getPostNominals());
         assertEquals("DJ.Rachel.Jones@ejudiciary.net",
-            userprofile.get(10).getEmailId());
-        assertTrue(userprofile.get(10).getActiveFlag());
-        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(10).getObjectId());
-        assertEquals("3333333",userprofile.get(10).getSidamId());
-        assertEquals("RJ",userprofile.get(10).getInitials());
+            userprofile.get(11).getEmailId());
+        assertTrue(userprofile.get(11).getActiveFlag());
+        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(11).getObjectId());
+        assertEquals("3333333",userprofile.get(11).getSidamId());
+        assertEquals("RJ",userprofile.get(11).getInitials());
     }
 
     private void cleanupData() {
