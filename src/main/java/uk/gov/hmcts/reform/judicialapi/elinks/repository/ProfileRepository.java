@@ -93,7 +93,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "LEFT JOIN FETCH judicialLocationMapping jlm "
             + "ON appt.baseLocationId = jlm.judicialBaseLocationId "
             + "where (per.objectId != '' and per.objectId is not null) "
-            + "and (jlm.serviceCode IN :ccdServiceCode or auth.ticketCode IN :ticketCode )")
+            + "and (jlm.serviceCode IN :ccdServiceCode and auth.ticketCode IN :ticketCode )")
     Page<UserProfile> fetchUserProfileByServiceNames(Set<String> ccdServiceCode,
                                                      List<String> ticketCode, Pageable pageable);
 
