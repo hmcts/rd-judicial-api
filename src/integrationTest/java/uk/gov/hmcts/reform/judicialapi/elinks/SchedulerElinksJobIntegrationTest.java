@@ -13,15 +13,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigPrope
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
@@ -37,39 +28,11 @@ import static org.junit.Assert.assertEquals;
 
 class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
-
-    @Autowired
-    LocationRepository locationRepository;
-    @Autowired
-    ProfileRepository profileRepository;
-
-    @Autowired
-    AppointmentsRepository appointmentsRepository;
-
-    @Autowired
-    AuthorisationsRepository authorisationsRepository;
-    @Autowired
-    BaseLocationRepository baseLocationRepository;
-
-
-    @Autowired
-    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
-
-    @Autowired
-    private ElinksApiJobScheduler elinksApiJobScheduler;
-
-    @Autowired
-    private DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
-
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
 
     @Autowired
     private DataloadSchedulerJobAudit dataloadSchedulerJobAudit;
-
-    @Autowired
-    private ElinkDataExceptionRepository elinkDataExceptionRepository;
-
 
     @BeforeEach
     void setUp() {
@@ -101,7 +64,6 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
     }
 
-
     @DisplayName("Elinks load eLinks scheduler status verification failure case")
     @Test
     @Order(2)
@@ -130,7 +92,6 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
     }
 
-
     @DisplayName("Elinks load eLinks scheduler status verification failure case  for job ran already")
     @Test
     @Order(3)
@@ -157,8 +118,6 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
 
     }
 
-
-
     private void locationApi4xxResponse(int statusCode, String body) {
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
                 .atPriority(1)
@@ -168,12 +127,5 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
                         .withHeader("Connection", "close")
                         .withBody(body)
                 ));
-    }
-
-    private void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-        elinkDataExceptionRepository.deleteAll();
-        dataloadSchedulerJobRepository.deleteAll();
-        authorisationsRepository.deleteAll();
     }
 }

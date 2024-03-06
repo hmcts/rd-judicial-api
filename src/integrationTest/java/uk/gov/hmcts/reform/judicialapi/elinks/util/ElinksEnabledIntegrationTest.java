@@ -22,6 +22,17 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.judicialapi.configuration.RestTemplateConfiguration;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.service.impl.FeatureToggleServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.util.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
@@ -86,6 +97,42 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
     @Autowired
     Flyway flyway;
 
+    @Autowired
+    protected ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+    @Autowired
+    protected DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
+
+    @Autowired
+    protected ElinksResponsesHelper elinksResponsesHelper;
+
+    @Autowired
+    protected ElinksResponsesRepository elinksResponsesRepository;
+
+    @Autowired
+    protected AuthorisationsRepository authorisationsRepository;
+
+    @Autowired
+    protected AppointmentsRepository appointmentsRepository;
+
+    @Autowired
+    protected JudicialRoleTypeRepository judicialRoleTypeRepository;
+
+    @Autowired
+    protected BaseLocationRepository baseLocationRepository;
+
+    @Autowired
+    protected ProfileRepository profileRepository;
+
+    @Autowired
+    protected LocationRepository locationRepository;
+
+    @Autowired
+    protected ElinkDataExceptionRepository elinkDataExceptionRepository;
+
+    @Autowired
+    protected ElinksApiJobScheduler elinksApiJobScheduler;
+
     @BeforeAll
     public void setUpClient() {
         ElinksReferenceDataClient.setBearerToken("");
@@ -93,6 +140,83 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
         when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(true);
         flyway.clean();
         flyway.migrate();
+    }
+
+    @BeforeAll
+    protected void loadElinksResponse() throws Exception {
+
+        String locationResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/location.json");
+        String peopleResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/InvalidBaseLocationId.json");
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(locationResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/people"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", V2.MediaType.SERVICE)
+                        .withHeader("Connection", "close")
+                        .withBody(peopleResponseValidationJson)));
+
+        String idamResponseValidationJson =
+                loadJson("src/integrationTest/resources/wiremock_responses/idamresponse.json");
+
+        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(idamResponseValidationJson)
+                ));
+
+        sidamService.stubFor(post(urlPathMatching("/o/token"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("{"
+                                + "        \"access_token\": \"12345\""
+                                + "    }")
+                ));
+
+        s2sService.stubFor(get(urlEqualTo("/details"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("rd_judicial_api")));
+
+        sidamService.stubFor(get(urlPathMatching("/o/userinfo"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody("{"
+                                + "  \"id\": \"%s\","
+                                + "  \"uid\": \"%s\","
+                                + "  \"forename\": \"Super\","
+                                + "  \"surname\": \"User\","
+                                + "  \"email\": \"super.user@hmcts.net\","
+                                + "  \"accountStatus\": \"active\","
+                                + "  \"roles\": ["
+                                + "  \"%s\""
+                                + "  ]"
+                                + "}")
+                        .withTransformers("user-token-response")));
+
+        mockHttpServerForOidc.stubFor(get(urlPathMatching("/jwks"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(getDynamicJwksResponse())));
+
     }
 
     public static String loadJson(String jsonFilePath) throws IOException {
@@ -236,6 +360,16 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
         public boolean applyGlobally() {
             return false;
         }
+    }
+
+    protected void cleanupData() {
+        elinkSchedularAuditRepository.deleteAll();
+        authorisationsRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        judicialRoleTypeRepository.deleteAll();
+        baseLocationRepository.deleteAll();
+        profileRepository.deleteAll();
+        dataloadSchedulerJobRepository.deleteAll();
     }
 }
 

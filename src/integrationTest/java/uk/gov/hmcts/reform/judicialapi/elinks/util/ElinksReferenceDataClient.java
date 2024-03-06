@@ -44,9 +44,11 @@ public class ElinksReferenceDataClient {
     private final String baseUrl;
     private final String issuer;
     private final long expiration;
+    private final int port;
 
     public ElinksReferenceDataClient(int port, String issuer, Long tokenExpirationInterval, String serviceName) {
         this.baseUrl = "http://localhost:" + port + APP_BASE_PATH;
+        this.port = port;
         this.issuer = issuer;
         this.expiration = tokenExpirationInterval;
         this.serviceName = serviceName;
@@ -355,24 +357,19 @@ public class ElinksReferenceDataClient {
                                                   Integer pageNumber, String sortDirection, String sortColumn,
                                                   String role, boolean invalidTokens) {
 
-        var stringBuilder = new StringBuilder();
-
         ResponseEntity<Object> responseEntity;
         HttpEntity<?> request =
                 new HttpEntity<Object>(refreshRoleRequest,
                         invalidTokens ? getInvalidAuthHeaders(
-                                MediaType.valueOf(V2.MediaType.SERVICE),role, null) :
+                                MediaType.valueOf(V2.MediaType.SERVICE), role, null) :
                                 getMultipleAuthHeadersForRefreshUserProfile(role, null,
                                         pageSize, pageNumber,
                                         sortDirection, sortColumn));
 
         try {
 
-            responseEntity = restTemplate.exchange(
-                    baseUrl + "/users" + stringBuilder,
-                    HttpMethod.POST, request,
-                    Object.class
-            );
+            String url =  "http://localhost:" + port + "/refdata/judicial/users";
+            responseEntity = restTemplate.exchange(url, HttpMethod.POST, request, Object.class);
 
         } catch (RestClientResponseException ex) {
             var statusAndBody = new HashMap<String, Object>(2);

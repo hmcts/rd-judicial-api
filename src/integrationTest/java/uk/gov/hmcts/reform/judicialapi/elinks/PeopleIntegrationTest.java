@@ -10,12 +10,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
@@ -36,25 +30,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private AppointmentsRepository appointmentsRepository;
-
-    @Autowired
-    private JudicialRoleTypeRepository judicialRoleTypeRepository;
-
-    @Autowired
-    private AuthorisationsRepository authorisationsRepository;
-
-    @Autowired
-    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
-
-    @Autowired
     ELinksServiceImpl elinksServiceImpl;
-
-    @Autowired
-    private ElinksResponsesRepository elinksResponsesRepository;
 
     @Value("${elinks.cleanElinksResponsesDays}")
     private Long cleanElinksResponsesDays;
@@ -232,15 +208,6 @@ class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
                 .deletedOn(LocalDateTime.now().minusYears(7))
                 .deletedFlag(true)
                 .build();
-    }
-
-    private void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-        authorisationsRepository.deleteAll();
-        judicialRoleTypeRepository.deleteAll();
-        appointmentsRepository.deleteAll();
-        profileRepository.deleteAll();
-        elinksResponsesRepository.deleteAll();
     }
 
 }

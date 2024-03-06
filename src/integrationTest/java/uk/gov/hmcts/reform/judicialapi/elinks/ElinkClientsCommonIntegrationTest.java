@@ -9,12 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
@@ -41,24 +35,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 
 class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
-
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private BaseLocationRepository baseLocationRepository;
-
-    @Autowired
-    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
-
-    @Autowired
-    private ElinkDataExceptionRepository elinkDataExceptionRepository;
-
-    @Autowired
-    private AppointmentsRepository appointmentsRepository;
-
-    @Autowired
-    private AuthorisationsRepository authorisationsRepository;
 
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
@@ -753,14 +729,4 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
         tokenConfigProperties.setUrl(url);
 
     }
-
-    private void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-        authorisationsRepository.deleteAll();
-        appointmentsRepository.deleteAll();
-        baseLocationRepository.deleteAll();
-        appointmentsRepository.deleteAll();
-        baseLocationRepository.deleteAll();
-    }
-
 }

@@ -3,14 +3,12 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.JOSEException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.util.ReflectionTestUtils;
-import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
@@ -18,29 +16,16 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
-import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -52,79 +37,13 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrationTest {
 
     @Autowired
-    LocationRepository locationRepository;
-    @Autowired
-    ProfileRepository profileRepository;
-    @Autowired
-    JudicialRoleTypeRepository judicialRoleTypeRepository;
-    @Autowired
-    BaseLocationRepository baseLocationRepository;
-    @Autowired
-    AuthorisationsRepository authorisationsRepository;
-    @Autowired
-    AppointmentsRepository appointmentsRepository;
-    @Autowired
-    IdamTokenConfigProperties tokenConfigProperties;
-
-
-    @Autowired
-    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
-
-    @Autowired
     private ElinksApiJobScheduler elinksApiJobScheduler;
-
-    @Autowired
-    private DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
 
     @Autowired
     PublishSidamIdService publishSidamIdService;
 
     @MockBean
     ElinkTopicPublisher elinkTopicPublisher;
-
-    @Autowired
-    ElinkDataExceptionRepository elinkDataExceptionRepository;
-
-
-
-    @BeforeAll
-    void loadElinksResponse() throws Exception {
-
-        cleanupData();
-
-        String locationResponseValidationJson =
-            loadJson("src/integrationTest/resources/wiremock_responses/location.json");
-        String baselocationResponseValidationJson =
-            loadJson("src/integrationTest/resources/wiremock_responses/base_location.json");
-        String peopleResponseValidationJson =
-            loadJson("src/integrationTest/resources/wiremock_responses/people_duplicateobject.json");
-        String leaversResponseValidationJson =
-            loadJson("src/integrationTest/resources/wiremock_responses/leavers.json");
-        String deletedResponseValidationJson =
-            loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
-
-        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
-            .willReturn(aResponse()
-                .withStatus(200)
-                .withHeader("Content-Type", V2.MediaType.SERVICE)
-                .withHeader("Connection", "close")
-                .withBody(locationResponseValidationJson)));
-
-        elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
-            .willReturn(aResponse()
-                .withStatus(200)
-                .withHeader("Content-Type", V2.MediaType.SERVICE)
-                .withHeader("Connection", "close")
-                .withBody(baselocationResponseValidationJson)
-                .withTransformers("user-token-response")));
-
-        elinks.stubFor(get(urlPathMatching("/people"))
-            .willReturn(aResponse()
-                .withStatus(200)
-                .withHeader("Content-Type", V2.MediaType.SERVICE)
-                .withHeader("Connection", "close")
-                .withBody(peopleResponseValidationJson)));
-    }
 
     @BeforeEach
     void before() {
@@ -228,10 +147,5 @@ class ElinksEndToEndIntegrationForExistingObjectId extends ElinksEnabledIntegrat
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(12).getObjectId());
         assertNull(userprofile.get(12).getSidamId());
         assertEquals("RJ",userprofile.get(12).getInitials());
-    }
-
-    private void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-        dataloadSchedulerJobRepository.deleteAll();
     }
 }

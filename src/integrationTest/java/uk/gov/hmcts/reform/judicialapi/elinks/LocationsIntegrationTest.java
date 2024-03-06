@@ -4,13 +4,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
@@ -26,16 +22,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 
 class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
-
-
-    @Autowired
-    LocationRepository locationRepository;
-
-    @Autowired
-    private ElinksResponsesRepository elinksResponsesRepository;
-
-    @Autowired
-    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
 
     @BeforeEach
     void setUp() {
@@ -106,9 +92,4 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
-
-    private void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-    }
-
 }
