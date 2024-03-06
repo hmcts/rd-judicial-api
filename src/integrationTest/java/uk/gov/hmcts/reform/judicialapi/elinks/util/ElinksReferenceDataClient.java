@@ -25,6 +25,7 @@ import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -364,7 +365,7 @@ public class ElinksReferenceDataClient {
                                 MediaType.valueOf(V2.MediaType.SERVICE), role, null) :
                                 getMultipleAuthHeadersForRefreshUserProfile(role, null,
                                         pageSize, pageNumber,
-                                        sortDirection, sortColumn));
+                                        sortDirection, sortColumn, MediaType.valueOf(V2.MediaType.SERVICE)));
 
         try {
 
@@ -384,11 +385,12 @@ public class ElinksReferenceDataClient {
     @NotNull
     private HttpHeaders getMultipleAuthHeadersForRefreshUserProfile(String role, String userId,
                                                                     Integer pageSize, Integer pageNumber,
-                                                                    String sortDirection, String sortColumn) {
-        var headers = new HttpHeaders();
-        headers.setContentType(APPLICATION_JSON);
+                                                                    String sortDirection, String sortColumn,
+                                                                    MediaType mediaType) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(mediaType);
+        headers.setAccept(List.of(mediaType));
         if (StringUtils.isBlank(JWT_TOKEN)) {
-
             JWT_TOKEN = generateS2SToken(serviceName);
         }
 

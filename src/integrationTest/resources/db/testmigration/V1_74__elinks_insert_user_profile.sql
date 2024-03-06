@@ -7,7 +7,8 @@ VALUES ('34','Three2Kb','Three2Sb','Three2Fb','Mr','Three532@test.net','TRUE','2
 ('35','Four2Kb','Four2Sb','Four2Fb','Mr','Four534@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-311d737f0ytt','1.11112E+12','F.K'),
 ('36','Five2Kb','Five2Sb','Five2Fb','Mr','Five535@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-rttd737f0ytt','1.11112E+12','F.K'),
 ('37','SIX2Kb','Six2Sb','Six2Fb','Mr','Six536@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','F.K'),
-('38','Seven2Kb','Seven2Sb','Seven2Fb','Mr','Seven537@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8msdba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','S.K');
+('38','Seven2Kb','Seven2Sb','Seven2Fb','Mr','Seven537@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8msdba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','S.K'),
+('39','Seven3Kb','Seven3Sb','Seven3Fb','Mr','Seven538@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8msdba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','S.K');
 
 INSERT INTO dbjudicialdata.location_type (base_location_id,"name",type_id,parent_id,jurisdiction_id,start_date,end_date,created_at,updated_at) values  ('1032','Social Entitlement Chamber','42','1503','27',NULL,NULL,'2023-05-02 11:43:53','2023-05-02 11:43:53');
 
@@ -31,7 +32,8 @@ INSERT INTO dbjudicialdata.judicial_office_appointment (personal_code,base_locat
  ('37','1032','1',true,'1995-03-27', '2022-03-27','2023-08-03 13:28:10.188406','2023-08-03 13:28:10.188432',NULL,'Magistrate','Voluntary','205','1','LJA','2','South East','1032'),
  ('37','1030','1',true,'1995-03-27', NULL,'2023-08-03 13:28:10.188406','2023-08-03 13:28:10.188432',NULL,'Magistrate','Voluntary','206','1','LJA','2','South East','1030'),
  ('38','1036','1',true,'1995-03-27', NULL,'2023-08-03 13:28:10.188406','2023-08-03 13:28:10.188432',NULL,'Magistrate','Voluntary','207','1','LJA','2','South East','1036'),
- ('38','1037','1',true,'1995-03-27', NULL,'2023-08-03 13:28:10.188406','2023-08-03 13:28:10.188432',NULL,'Magistrate','Voluntary','208','1','LJA','2','South East','1037');
+ ('38','1037','1',true,'1995-03-27', NULL,'2023-08-03 13:28:10.188406','2023-08-03 13:28:10.188432',NULL,'Magistrate','Voluntary','208','1','LJA','2','South East','1037'),
+ ('39','1032','1',true,'1995-03-27', NULL,'2023-08-03 13:28:10.188406','2023-08-03 13:28:10.188432',NULL,'Magistrate','Voluntary','209','1','LJA','2','South East','1032');
 
 
  INSERT INTO dbjudicialdata.judicial_office_authorisation
@@ -64,4 +66,6 @@ INSERT INTO dbjudicialdata.judicial_office_appointment (personal_code,base_locat
  (1035, 'Authorisation Magistrate', '2002-09-09 00:00:00.000',  '2021-09-09 00:00:00.000',
  '2021-08-11 09:14:30.054', '2021-08-11 09:14:30.054', 'Family Court', '38', '279',8,2,'207'),
  (1036, 'Authorisation Magistrate', '2002-09-09 00:00:00.000',  NULL,
- '2021-08-11 09:14:30.054', '2021-08-11 09:14:30.054', 'Family Court', '38', '379',8,2,'208');
+ '2021-08-11 09:14:30.054', '2021-08-11 09:14:30.054', 'Family Court', '38', '379',8,2,'208'),
+ (1037, 'Authorisation Magistrate', '2002-09-09 00:00:00.000',  NULL,
+ '2021-08-11 09:14:30.054', '2021-08-11 09:14:30.054', 'Family Court', '39', '328',8,2,'209');
