@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +14,15 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -55,6 +60,35 @@ class IdamElasticSearchIntegrationForSidamTest extends ElinksEnabledIntegrationT
         tokenConfigProperties.setUrl(url);
 
         cleanupData();
+    }
+
+
+    @BeforeAll
+    void loadElinksResponse() throws Exception {
+
+        cleanupData();
+
+
+        String peopleResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/people_part.json");
+
+        elinks.stubFor(get(urlPathMatching("/people"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(peopleResponseValidationJson)));
+
+        String idamResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/sidamid_update_for_matched_objectid.json");
+
+        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody(idamResponseValidationJson)
+            ));
     }
 
     @AfterEach

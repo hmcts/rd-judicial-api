@@ -1,20 +1,29 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 import java.util.List;
 import java.util.Map;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,6 +32,61 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 
 
 class DeletedIntegrationTest extends ElinksEnabledIntegrationTest {
+
+    @Autowired
+    private ProfileRepository profileRepository;
+
+
+    @Autowired
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+
+    @Autowired
+    private ElinksResponsesRepository elinksResponsesRepository;
+
+    @BeforeAll
+    void loadElinksResponse() throws Exception {
+
+        cleanupData();
+
+        String locationResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/location.json");
+        String baselocationResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/base_location.json");
+        String peopleResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/people_part.json");
+        String deletedResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/deleted.json");
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(locationResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(baselocationResponseValidationJson)
+                .withTransformers("user-token-response")));
+
+        elinks.stubFor(get(urlPathMatching("/people"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(peopleResponseValidationJson)));
+
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(deletedResponseValidationJson)));
+    }
 
     @BeforeEach
     void setUp() {

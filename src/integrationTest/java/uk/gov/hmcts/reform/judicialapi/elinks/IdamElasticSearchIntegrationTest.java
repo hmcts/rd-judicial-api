@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 
@@ -20,8 +24,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SuppressWarnings("unchecked")
 class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
 
+
+    @Autowired
+    private ProfileRepository profileRepository;
+
     @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
+
+    @Autowired
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
 
     @BeforeEach
     void setUp() {

@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nimbusds.jose.JOSEException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,9 +18,19 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
@@ -30,6 +41,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -43,6 +57,33 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
+    LocationRepository locationRepository;
+
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
+
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
+
+    @Autowired
+    ProfileRepository profileRepository;
+
+    @Autowired
+    BaseLocationRepository baseLocationRepository;
+
+    @Autowired
+    JudicialRoleTypeRepository judicialRoleTypeRepository;
+
+    @Autowired
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+    @Autowired
+    private ElinksApiJobScheduler elinksApiJobScheduler;
+
+    @Autowired
+    private DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
+
+    @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
 
     @MockBean
@@ -50,6 +91,9 @@ class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabl
 
     @Autowired
     PublishSidamIdService publishSidamIdService;
+
+    @Autowired
+    ElinkDataExceptionRepository elinkDataExceptionRepository;
 
     @BeforeEach
     void setUp() {
@@ -150,6 +194,61 @@ class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabl
 
         List<ElinkDataExceptionRecords> elinksException = elinkDataExceptionRepository.findAll();
         assertThat(elinksException.size()).isZero();
+
+    }
+
+    @BeforeAll
+    public void setupIdamStubs() {
+
+        String body = null;
+        int statusCode = 400;
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+                .willReturn(aResponse()
+                        .withStatus(statusCode)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close").withBody(body)));
+
+
+        elinks.stubFor(get(urlPathMatching("/reference_data/base_location"))
+                .willReturn(aResponse()
+                        .withStatus(statusCode)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(body)
+                ));
+
+
+        elinks.stubFor(get(urlPathMatching("/people"))
+                .willReturn(aResponse()
+                        .withStatus(statusCode)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(body)
+                ));
+
+        elinks.stubFor(get(urlPathMatching("/leavers"))
+                .willReturn(aResponse()
+                        .withStatus(statusCode)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(body)
+                ));
+        elinks.stubFor(get(urlPathMatching("/deleted"))
+            .willReturn(aResponse()
+                .withStatus(statusCode)
+                .withHeader("Content-Type", "application/json")
+                .withHeader("Connection", "close")
+                .withBody(body)
+            ));
+
+        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+                .willReturn(aResponse()
+                        .withStatus(statusCode)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(body)
+                ));
 
     }
 

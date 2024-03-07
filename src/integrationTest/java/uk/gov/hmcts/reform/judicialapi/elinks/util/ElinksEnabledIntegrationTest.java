@@ -135,7 +135,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
 
     @BeforeAll
     public void setUpClient() {
-        ElinksReferenceDataClient.setBearerToken("");
+        cleanupTestData();
         elinksReferenceDataClient = new ElinksReferenceDataClient(port, issuer, expiration, serviceName);
         when(featureToggleServiceImpl.isFlagEnabled(anyString())).thenReturn(true);
         flyway.clean();
@@ -148,7 +148,7 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
 
     @BeforeAll
     public void setupIdamStubs() throws Exception {
-
+        cleanupData();
         String locationResponseValidationJson =
                 loadJson("src/integrationTest/resources/wiremock_responses/location.json");
         String baselocationResponseValidationJson =

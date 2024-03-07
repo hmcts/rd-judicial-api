@@ -1,7 +1,10 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.nimbusds.jose.JOSEException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,22 +19,37 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,13 +67,38 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
+    LocationRepository locationRepository;
+    @Autowired
+    ProfileRepository profileRepository;
+    @Autowired
+    BaseLocationRepository baseLocationRepository;
+    @Autowired
+    AuthorisationsRepository authorisationsRepository;
+    @Autowired
+    AppointmentsRepository appointmentsRepository;
+    @Autowired
     IdamTokenConfigProperties tokenConfigProperties;
+
+    @Autowired
+    JudicialRoleTypeRepository judicialRoleTypeRepository;
+
+    @Autowired
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+    @Autowired
+    private ElinksApiJobScheduler elinksApiJobScheduler;
+
+    @Autowired
+    private DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
 
     @Autowired
     PublishSidamIdService publishSidamIdService;
 
     @MockBean
     ElinkTopicPublisher elinkTopicPublisher;
+
+    @Autowired
+    ElinkDataExceptionRepository elinkDataExceptionRepository;
 
     @BeforeEach
     void setUp() {
@@ -69,7 +112,8 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
 
     @DisplayName("Elinks end to end success scenario")
     @Test
-    void test_elinks_end_to_end_partial_success_scenario() {
+    void test_elinks_end_to_end_partial_success_scenario()
+            throws JOSEException, JsonProcessingException,IOException {
 
         ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled", true);
         ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
@@ -264,6 +308,28 @@ class ElinksFailedForExtraBaseLocationIdEndToEndIntegrationTest extends ElinksEn
             userprofileAfterSidamresponse.get(1).getSidamId());
 
         assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), audits.get(0).getPublishingStatus());
+    }
+
+    @BeforeAll
+    private void setUpPeopleResponse() throws IOException {
+
+        String peopleResponseValidationJson =
+                loadJson("src/integrationTest/resources"
+                        + "/wiremock_responses/extrabaselocation-id-for-failure-people.json");
+        String locationResponseValidationJson =
+            loadJson("src/integrationTest/resources/wiremock_responses/test_loc.json");
+        elinks.stubFor(get(urlPathMatching("/reference_data/location"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", V2.MediaType.SERVICE)
+                .withHeader("Connection", "close")
+                .withBody(locationResponseValidationJson)));
+        elinks.stubFor(get(urlPathMatching("/people"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "close")
+                        .withBody(peopleResponseValidationJson)));
     }
 
     private void idamSetUp() {

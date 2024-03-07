@@ -4,10 +4,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
 import java.util.List;
@@ -21,6 +26,18 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATION;
 
 class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
+
+    @Autowired
+    BaseLocationRepository baseLocationRepository;
+
+    @Autowired
+    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
+
+    @Autowired
+    private ElinksResponsesHelper elinksResponsesHelper;
+
+    @Autowired
+    private ElinksResponsesRepository elinksResponsesRepository;
 
     @BeforeEach
     void setUp() {
@@ -53,10 +70,10 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(12, baseLocationList.size());
-        assertEquals("Aberconwy",baseLocationList.get(4).getName());
-        assertEquals("1",baseLocationList.get(4).getBaseLocationId());
-        assertEquals("46",baseLocationList.get(4).getTypeId());
+        assertEquals(8, baseLocationList.size());
+        assertEquals("Aberconwy",baseLocationList.get(1).getName());
+        assertEquals("1",baseLocationList.get(1).getBaseLocationId());
+        assertEquals("46",baseLocationList.get(1).getTypeId());
     }
 
     @DisplayName("Elinks Base Location to JRD Audit Functionality verification")
@@ -70,11 +87,11 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(12, baseLocationList.size());
+        assertEquals(8, baseLocationList.size());
 
-        assertEquals("Arundelsss",baseLocationList.get(10).getName());
-        assertEquals("768",baseLocationList.get(10).getBaseLocationId());
-        assertEquals("46",baseLocationList.get(10).getTypeId());
+        assertEquals("Arundelsss",baseLocationList.get(6).getName());
+        assertEquals("768",baseLocationList.get(6).getBaseLocationId());
+        assertEquals("46",baseLocationList.get(6).getTypeId());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 
@@ -88,5 +105,4 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
-
 }
