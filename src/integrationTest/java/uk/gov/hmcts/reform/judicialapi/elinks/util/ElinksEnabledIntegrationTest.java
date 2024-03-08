@@ -31,6 +31,7 @@ import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -243,18 +244,13 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
     }
 
     protected void initialize() {
-        final String clientId = "234342332";
-        final String redirectUri = "http://idam-api.aat.platform.hmcts.net";
-        //The authorization and clientAuth is the dummy value which we can evaluate using BASE64 encoder.
-        final String authorization = "test.refdata@gmail.com:TestPass123";
-        final String clientAuth = "cmQteHl6LWFwaTp4eXo=";
-        final String url = "http://127.0.0.1:5000";
-        tokenConfigProperties.setClientId(clientId);
-        tokenConfigProperties.setClientAuthorization(clientAuth);
-        tokenConfigProperties.setAuthorization(authorization);
-        tokenConfigProperties.setRedirectUri(redirectUri);
-        tokenConfigProperties.setUrl(url);
-
+        byte[] base64UserDetails = Base64.getDecoder().decode("ZHVtbXl2YWx1ZUBobWN0cy5uZXQ6SE1DVFMxMjM0");
+        byte[] clientAuth = Base64.getDecoder().decode("cmQteHl6LWFwaTp4eXo");
+        tokenConfigProperties.setClientId("234342332");
+        tokenConfigProperties.setClientAuthorization(new String(clientAuth));
+        tokenConfigProperties.setAuthorization(new String(base64UserDetails));
+        tokenConfigProperties.setRedirectUri("http://idam-api.aat.platform.hmcts.net");
+        tokenConfigProperties.setUrl("http://127.0.0.1:5000");
     }
 }
 

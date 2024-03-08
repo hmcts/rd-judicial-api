@@ -218,50 +218,51 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), IDAMSEARCH);
         Set<IdamResponse> judicialUsers = new HashSet<>();
         List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdFromCurrentDate();
-        String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
-        userProfiles.forEach(userProfile -> {
-            Map<String, String> params = new HashMap<>();
-            params.put("query", idamFindQuery.concat(userProfile.getObjectId()));
-            log.debug("{}:: search elk query {}", loggingComponentName, params.get("query"));
-            int count = 0;
-            int totalCount = 0;
-            ResponseEntity<Object> responseEntity = null;
-            Response response = null;
-            try {
-                response = idamFeignClient.getUserFeed(bearerToken, params);
-                logIdamResponses(response);
-                responseEntity = JsonFeignResponseUtil.toResponseEntity(response,
-                    new TypeReference<Set<IdamResponse>>() {
-                    });
-                if (response.status() == 200) {
+        if (userProfiles.size() > 0) {
+            String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
+            userProfiles.forEach(userProfile -> {
+                Map<String, String> params = new HashMap<>();
+                params.put("query", idamFindQuery.concat(userProfile.getObjectId()));
+                log.debug("{}:: search elk query {}", loggingComponentName, params.get("query"));
+                int totalCount = 0;
+                ResponseEntity<Object> responseEntity = null;
+                Response response = null;
+                try {
+                    response = idamFeignClient.getUserFeed(bearerToken, params);
+                    logIdamResponses(response);
+                    responseEntity = JsonFeignResponseUtil.toResponseEntity(response,
+                            new TypeReference<Set<IdamResponse>>() {
+                            });
+                    if (response.status() == 200) {
 
-                    Set<IdamResponse> users = (Set<IdamResponse>) responseEntity.getBody();
-                    judicialUsers.addAll(users);
+                        Set<IdamResponse> users = (Set<IdamResponse>) responseEntity.getBody();
+                        judicialUsers.addAll(users);
 
-                    List<String> headerCount = responseEntity.getHeaders().get("X-Total-Count");
-                    if (headerCount != null && !headerCount.isEmpty()
-                        && !headerCount.get(0).isEmpty()) {
+                        List<String> headerCount = responseEntity.getHeaders().get("X-Total-Count");
+                        if (headerCount != null && !headerCount.isEmpty()
+                                && !headerCount.get(0).isEmpty()) {
 
-                        totalCount = Integer.parseInt(headerCount.get(0));
-                        log.debug("{}:: Header Records count from Idam :: " + totalCount, loggingComponentName);
+                            totalCount = Integer.parseInt(headerCount.get(0));
+                            log.debug("{}:: Header Records count from Idam :: " + totalCount, loggingComponentName);
+                        }
+
+                    } else {
+                        log.error("{}:: Idam Search Service Failed :: ", loggingComponentName);
+                        throw new ElinksException(responseEntity.getStatusCode(), IDAM_ERROR_MESSAGE,
+                                IDAM_ERROR_MESSAGE);
                     }
-
-                } else {
-                    log.error("{}:: Idam Search Service Failed :: ", loggingComponentName);
-                    throw new ElinksException(responseEntity.getStatusCode(), IDAM_ERROR_MESSAGE,
-                        IDAM_ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    //There is No header.
+                    log.error("{}:: X-Total-Count header not return Idam Search Service::{}", loggingComponentName, ex);
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                            schedulerStartTime,
+                            now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), IDAMSEARCH);
+                    throw new ElinksException(HttpStatus.valueOf(response.status()), ex.getMessage(),
+                            IDAM_ERROR_MESSAGE);
                 }
-            } catch (Exception ex) {
-                //There is No header.
-                log.error("{}:: X-Total-Count header not return Idam Search Service::{}", loggingComponentName, ex);
-                elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                    schedulerStartTime,
-                    now(),
-                    RefDataElinksConstants.JobStatus.FAILED.getStatus(), IDAMSEARCH);
-                throw new ElinksException(HttpStatus.valueOf(response.status()), ex.getMessage(),
-                    IDAM_ERROR_MESSAGE);
-            }
-        });
+            });
+        }
 
         validateObjectIds(judicialUsers,schedulerStartTime);
 
