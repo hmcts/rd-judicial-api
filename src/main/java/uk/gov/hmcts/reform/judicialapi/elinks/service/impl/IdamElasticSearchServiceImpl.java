@@ -35,7 +35,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -99,17 +98,16 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         IdamOpenIdTokenResponse idamOpenIdTokenResponse = null;
         try {
 
-            byte[] base64UserDetails = Base64.getDecoder().decode(props.getAuthorization());
+            String authorisation = props.getAuthorization();
             Map<String, String> formParams = new HashMap<>();
             formParams.put("grant_type", "password");
-            String[] userDetails = new String(base64UserDetails).split(":");
+            formParams.put("grant_type", "password");
+            String[] userDetails = authorisation.split(":");
             formParams.put("username", userDetails[0].trim());
             formParams.put("password", userDetails[1].trim());
             formParams.put("client_id", props.getClientId());
-            byte[] base64ClientAuth = Base64.getDecoder().decode(props.getClientAuthorization());
-            String[] clientAuth = new String(base64ClientAuth).split(":");
             formParams.put("redirect_uri", props.getRedirectUri());
-            formParams.put("client_secret", clientAuth[1]);
+            formParams.put("client_secret", props.getClientAuthorization());
             formParams.put("scope", "openid profile roles manage-user create-user search-user");
 
             idamOpenIdTokenResponse = idamFeignClient.getOpenIdToken(formParams);
@@ -152,10 +150,10 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), ELASTICSEARCH);
 
         log.info("Calling idam client");
+        String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
         do {
             params.put("page", String.valueOf(count));
             try {
-                String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
                 response = idamFeignClient.getUserFeed(bearerToken, params);
                 logIdamResponses(response);
                 responseEntity = JsonFeignResponseUtil.toResponseEntity(response,
@@ -220,6 +218,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), IDAMSEARCH);
         Set<IdamResponse> judicialUsers = new HashSet<>();
         List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdFromCurrentDate();
+        String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
         userProfiles.forEach(userProfile -> {
             Map<String, String> params = new HashMap<>();
             params.put("query", idamFindQuery.concat(userProfile.getObjectId()));
@@ -229,7 +228,6 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             ResponseEntity<Object> responseEntity = null;
             Response response = null;
             try {
-                String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
                 response = idamFeignClient.getUserFeed(bearerToken, params);
                 logIdamResponses(response);
                 responseEntity = JsonFeignResponseUtil.toResponseEntity(response,

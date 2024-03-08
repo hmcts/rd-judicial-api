@@ -16,14 +16,18 @@ def secrets = [
           secret('OAUTH2-CLIENT-SECRET', 'OAUTH2_CLIENT_SECRET'),
           secret('OAUTH2-CLIENT-AUTH', 'OAUTH2_CLIENT_AUTH'),
           secret('OAUTH2-CLIENT-ID', 'OAUTH2_CLIENT_ID'),
-          secret('LD-SDK-KEY', 'LD_SDK_KEY')
+          secret('LD-SDK-KEY', 'LD_SDK_KEY'),
+          secret('idam-rd-system-user-username', 'RD_SYSTEM_USER_USERNAME'),
+          secret('idam-rd-system-user-password', 'RD_SYSTEM_USER_PASSWORD')
   ],
   (appVault): [
           secret('judicial-api-POSTGRES-HOST', 'DATABASE_HOST'),
           secret('judicial-api-POSTGRES-PORT', 'DATABASE_PORT'),
           secret('judicial-api-POSTGRES-DATABASE', 'DATABASE_NAME'),
           secret('judicial-api-POSTGRES-USER', 'DATABASE_USER'),
-          secret('judicial-api-POSTGRES-PASS', 'DATABASE_PASS')
+          secret('judicial-api-POSTGRES-PASS', 'DATABASE_PASS'),
+          secret('idam-rd-system-user-username', 'RD_SYSTEM_USER_USERNAME'),
+          secret('idam-rd-system-user-password', 'RD_SYSTEM_USER_PASSWORD')
   ]
 ]
 
