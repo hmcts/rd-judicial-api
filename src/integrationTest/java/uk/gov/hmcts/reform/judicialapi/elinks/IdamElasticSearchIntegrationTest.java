@@ -87,4 +87,11 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(1).getObjectId());
 
     }
+
+    protected void cleanupData() {
+        authorisationsRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        profileRepository.deleteAll();
+        elinkSchedularAuditRepository.deleteAll();
+    }
 }

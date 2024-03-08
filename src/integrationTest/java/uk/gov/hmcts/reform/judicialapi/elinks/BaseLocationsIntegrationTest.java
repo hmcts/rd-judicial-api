@@ -70,10 +70,10 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(8, baseLocationList.size());
-        assertEquals("Aberconwy",baseLocationList.get(1).getName());
-        assertEquals("1",baseLocationList.get(1).getBaseLocationId());
-        assertEquals("46",baseLocationList.get(1).getTypeId());
+        assertEquals(12, baseLocationList.size());
+        assertEquals("Aberconwy",baseLocationList.get(4).getName());
+        assertEquals("1",baseLocationList.get(4).getBaseLocationId());
+        assertEquals("46",baseLocationList.get(4).getTypeId());
     }
 
     @DisplayName("Elinks Base Location to JRD Audit Functionality verification")
@@ -87,11 +87,11 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<BaseLocation> baseLocationList = baseLocationRepository.findAll();
 
-        assertEquals(8, baseLocationList.size());
+        assertEquals(12, baseLocationList.size());
 
-        assertEquals("Arundelsss",baseLocationList.get(6).getName());
-        assertEquals("768",baseLocationList.get(6).getBaseLocationId());
-        assertEquals("46",baseLocationList.get(6).getTypeId());
+        assertEquals("Arundelsss",baseLocationList.get(10).getName());
+        assertEquals("768",baseLocationList.get(10).getBaseLocationId());
+        assertEquals("46",baseLocationList.get(10).getTypeId());
 
         List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
 
@@ -105,4 +105,9 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
+
+    protected void cleanupData() {
+        elinkSchedularAuditRepository.deleteAll();
+    }
+
 }

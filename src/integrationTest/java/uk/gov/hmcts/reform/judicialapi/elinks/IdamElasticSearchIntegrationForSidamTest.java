@@ -172,4 +172,11 @@ class IdamElasticSearchIntegrationForSidamTest extends ElinksEnabledIntegrationT
 
 
     }
+
+    protected void cleanupData() {
+        authorisationsRepository.deleteAll();
+        appointmentsRepository.deleteAll();
+        profileRepository.deleteAll();
+        elinkSchedularAuditRepository.deleteAll();
+    }
 }
