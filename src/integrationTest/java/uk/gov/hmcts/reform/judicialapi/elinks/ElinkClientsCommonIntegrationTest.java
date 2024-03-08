@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataExceptionRecords;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -59,9 +58,6 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
 
     @Autowired
     private AuthorisationsRepository authorisationsRepository;
-
-    @Autowired
-    IdamTokenConfigProperties tokenConfigProperties;
 
     @BeforeEach
     void setUp() {
@@ -737,21 +733,6 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
                         .withHeader("Content-Type", "application/json")
                         .withHeader("Connection", "close")
                         .withBody(body)));
-    }
-
-    private void initialize() {
-        final String clientId = "234342332";
-        final String redirectUri = "http://idam-api.aat.platform.hmcts.net";
-        //The authorization and clientAuth is the dummy value which we can evaluate using BASE64 encoder.
-        final String authorization = "ZHVtbXl2YWx1ZUBobWN0cy5uZXQ6SE1DVFMxMjM0";
-        final String clientAuth = "cmQteHl6LWFwaTp4eXo=";
-        final String url = "http://127.0.0.1:5000";
-        tokenConfigProperties.setClientId(clientId);
-        tokenConfigProperties.setClientAuthorization(clientAuth);
-        tokenConfigProperties.setAuthorization(authorization);
-        tokenConfigProperties.setRedirectUri(redirectUri);
-        tokenConfigProperties.setUrl(url);
-
     }
 
     private void cleanupData() {

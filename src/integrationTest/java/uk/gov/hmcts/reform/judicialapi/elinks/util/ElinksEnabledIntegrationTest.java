@@ -22,6 +22,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.judicialapi.configuration.RestTemplateConfiguration;
+import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.service.impl.FeatureToggleServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.util.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
@@ -81,6 +82,9 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
 
     @RegisterExtension
     protected final WireMockExtension elinks = new WireMockExtension(8000);
+
+    @Autowired
+    protected IdamTokenConfigProperties tokenConfigProperties;
 
 
     @Autowired
@@ -236,6 +240,21 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
         public boolean applyGlobally() {
             return false;
         }
+    }
+
+    protected void initialize() {
+        final String clientId = "234342332";
+        final String redirectUri = "http://idam-api.aat.platform.hmcts.net";
+        //The authorization and clientAuth is the dummy value which we can evaluate using BASE64 encoder.
+        final String authorization = "test.refdata@gmail.com:TestPass123";
+        final String clientAuth = "cmQteHl6LWFwaTp4eXo=";
+        final String url = "http://127.0.0.1:5000";
+        tokenConfigProperties.setClientId(clientId);
+        tokenConfigProperties.setClientAuthorization(clientAuth);
+        tokenConfigProperties.setAuthorization(authorization);
+        tokenConfigProperties.setRedirectUri(redirectUri);
+        tokenConfigProperties.setUrl(url);
+
     }
 }
 
