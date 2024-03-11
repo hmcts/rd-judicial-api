@@ -101,7 +101,6 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             String authorisation = props.getAuthorization();
             Map<String, String> formParams = new HashMap<>();
             formParams.put("grant_type", "password");
-            formParams.put("grant_type", "password");
             String[] userDetails = authorisation.split(":");
             formParams.put("username", userDetails[0].trim());
             formParams.put("password", userDetails[1].trim());
@@ -150,15 +149,14 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), ELASTICSEARCH);
 
         log.info("Calling idam client");
-        String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
-        do {
-            params.put("page", String.valueOf(count));
-            try {
+        try {
+            String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
+            do {
+                params.put("page", String.valueOf(count));
                 response = idamFeignClient.getUserFeed(bearerToken, params);
                 logIdamResponses(response);
                 responseEntity = JsonFeignResponseUtil.toResponseEntity(response,
-                    new TypeReference<Set<IdamResponse>>() {
-                    });
+                        new TypeReference<Set<IdamResponse>>() {});
                 if (response.status() == 200) {
 
                     Set<IdamResponse> users = (Set<IdamResponse>) responseEntity.getBody();
@@ -175,21 +173,21 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 } else {
                     log.error("{}:: Idam Search Service Failed :: ", loggingComponentName);
                     throw new ElinksException(responseEntity.getStatusCode(), IDAM_ERROR_MESSAGE,
-                        IDAM_ERROR_MESSAGE);
+                            IDAM_ERROR_MESSAGE);
                 }
-            } catch (Exception ex) {
-                //There is No header.
-                log.error("{}:: X-Total-Count header not return Idam Search Service::{}", loggingComponentName, ex);
-                elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                count++;
+                log.debug("{}:: batch count :: ", count);
+            } while (totalCount > 0 && recordsPerPage * count < totalCount);
+        } catch (Exception ex) {
+            //There is No header.
+            log.error("{}:: X-Total-Count header not return Idam Search Service::{}", loggingComponentName, ex);
+            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     now(),
                     RefDataElinksConstants.JobStatus.FAILED.getStatus(), ELASTICSEARCH);
-                throw new ElinksException(HttpStatus.valueOf(response.status()), ex.getMessage(),
-                        IDAM_ERROR_MESSAGE);
-            }
-            count++;
-            log.debug("{}:: batch count :: ", count);
-        } while (totalCount > 0 && recordsPerPage * count < totalCount);
+            throw new ElinksException(HttpStatus.valueOf(response.status()), ex.getMessage(),
+                    IDAM_ERROR_MESSAGE);
+        }
 
         validateObjectIds(judicialUsers,schedulerStartTime);
         sendEmail.sendEmail(schedulerStartTime);

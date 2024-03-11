@@ -245,9 +245,10 @@ public abstract class ElinksEnabledIntegrationTest extends SpringBootIntegration
 
     protected void initialize() {
         byte[] base64UserDetails = Base64.getDecoder().decode("ZHVtbXl2YWx1ZUBobWN0cy5uZXQ6SE1DVFMxMjM0");
-        byte[] clientAuth = Base64.getDecoder().decode("cmQteHl6LWFwaTp4eXo");
+        byte[] base64ClientAuth = Base64.getDecoder().decode("cmQteHl6LWFwaTp4eXo");
+        String[] clientAuth = new String(base64ClientAuth).split(":");
         tokenConfigProperties.setClientId("234342332");
-        tokenConfigProperties.setClientAuthorization(new String(clientAuth));
+        tokenConfigProperties.setClientAuthorization(clientAuth[1]);
         tokenConfigProperties.setAuthorization(new String(base64UserDetails));
         tokenConfigProperties.setRedirectUri("http://idam-api.aat.platform.hmcts.net");
         tokenConfigProperties.setUrl("http://127.0.0.1:5000");
