@@ -164,18 +164,18 @@ class ElinksSsoidEndIntegrationTest extends ElinksEnabledIntegrationTest {
         assertEquals("People data loaded successfully", profiles.getMessage());
 
         List<UserProfile> userprofile = profileRepository.findAll();
-        assertEquals(12, userprofile.size());
-        assertEquals("12345477", userprofile.get(11).getPersonalCode());
-        assertEquals("Rachel", userprofile.get(11).getKnownAs());
-        assertEquals("Jones", userprofile.get(11).getSurname());
-        assertEquals("District Judge Rachel Jones", userprofile.get(11).getFullName());
-        assertEquals(null, userprofile.get(11).getPostNominals());
-        assertEquals("DJ.Rachel.Jones@ejudiciary.net",
-                userprofile.get(11).getEmailId());
-        assertTrue(userprofile.get(11).getActiveFlag());
-        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cbe", userprofile.get(11).getObjectId());
-        assertEquals("33333344",userprofile.get(11).getSidamId());
-        assertEquals("RJ",userprofile.get(11).getInitials());
+        assertEquals(13, userprofile.size());
+        UserProfile userProfileObj = userprofile.get(12);
+        assertEquals("12345477", userProfileObj.getPersonalCode());
+        assertEquals("Rachel", userProfileObj.getKnownAs());
+        assertEquals("Jones", userProfileObj.getSurname());
+        assertEquals("District Judge Rachel Jones", userProfileObj.getFullName());
+        assertEquals(null, userProfileObj.getPostNominals());
+        assertEquals("DJ.Rachel.Jones@ejudiciary.net", userProfileObj.getEmailId());
+        assertTrue(userProfileObj.getActiveFlag());
+        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cbe", userProfileObj.getObjectId());
+        assertEquals("33333344", userProfileObj.getSidamId());
+        assertEquals("RJ", userProfileObj.getInitials());
 
         //asserting Judiciary additonal roles data
         List<JudicialRoleType> roleRequest = judicialRoleTypeRepository.findAll();
@@ -254,11 +254,11 @@ class ElinksSsoidEndIntegrationTest extends ElinksEnabledIntegrationTest {
         List<UserProfile> userprofileAfterSidamresponse = profileRepository.findAll();
         UserProfile sidamID = userprofileAfterSidamresponse.get(0);
 
-        assertEquals(12, userprofileAfterSidamresponse.size());
+        assertEquals(13, userprofileAfterSidamresponse.size());
         assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cbe",
-            userprofileAfterSidamresponse.get(11).getObjectId());
+            userprofileAfterSidamresponse.get(12).getObjectId());
         assertEquals("f523ab5d-0a87-44c0-8c3b-28ff89878afd",
-            userprofileAfterSidamresponse.get(11).getSidamId());
+            userprofileAfterSidamresponse.get(12).getSidamId());
     }
 
     private void validateDeleted(List<ElinkDataSchedularAudit> elinksAudit) {
