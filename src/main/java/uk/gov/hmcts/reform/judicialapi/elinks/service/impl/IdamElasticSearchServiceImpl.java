@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.idam.client.models.TokenRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
@@ -57,6 +58,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @Component
 public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
 
+    public static final String SCOPE = "openid profile roles manage-user create-user search-user";
+
     @Value("${logging-component-name}")
     String loggingComponentName;
 
@@ -99,17 +102,16 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         try {
 
             String authorisation = props.getAuthorization();
-            Map<String, String> formParams = new HashMap<>();
-            formParams.put("grant_type", "password");
             String[] userDetails = authorisation.split(":");
-            formParams.put("username", userDetails[0].trim());
-            formParams.put("password", userDetails[1].trim());
-            formParams.put("client_id", props.getClientId());
-            formParams.put("redirect_uri", props.getRedirectUri());
-            formParams.put("client_secret", props.getClientAuthorization());
-            formParams.put("scope", "openid profile roles manage-user create-user search-user");
+            TokenRequest tokenRequest = new TokenRequest(props.getClientId(),
+                    props.getClientAuthorization(),
+                    "password",
+                    props.getRedirectUri(),
+                    userDetails[0].trim(),
+                    userDetails[1].trim(),
+                    SCOPE, "", "");
 
-            idamOpenIdTokenResponse = idamFeignClient.getOpenIdToken(formParams);
+            idamOpenIdTokenResponse = idamFeignClient.getOpenIdToken(tokenRequest);
 
             if (idamOpenIdTokenResponse == null) {
                 throw new ElinksException(HttpStatus.FORBIDDEN, IDAM_TOKEN_ERROR_MESSAGE,
@@ -216,7 +218,9 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), IDAMSEARCH);
         Set<IdamResponse> judicialUsers = new HashSet<>();
         List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdFromCurrentDate();
-        String bearerToken = userProfiles.size() > 0 ? "Bearer ".concat(getIdamBearerToken(schedulerStartTime)) : "";
+        int userProfileSize = userProfiles.size();
+        String bearerToken = userProfileSize > 0 ? "Bearer ".concat(getIdamBearerToken(schedulerStartTime)) : "";
+        log.debug("{}:: Number of User profiles from JRD :: " + userProfileSize, loggingComponentName);
         userProfiles.forEach(userProfile -> {
             Map<String, String> params = new HashMap<>();
             params.put("query", idamFindQuery.concat(userProfile.getObjectId()));
