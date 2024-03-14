@@ -170,7 +170,7 @@ class SchedulerElinksJobIntegrationTest extends ElinksEnabledIntegrationTest {
                 ));
     }
 
-    private void cleanupData() {
+    protected void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
         elinkDataExceptionRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();

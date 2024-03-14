@@ -106,9 +106,4 @@ class LocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerStartTime());
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
-
-    private void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-    }
-
 }

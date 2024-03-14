@@ -93,9 +93,23 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "LEFT JOIN FETCH judicialLocationMapping jlm "
             + "ON appt.baseLocationId = jlm.judicialBaseLocationId "
             + "where (per.objectId != '' and per.objectId is not null) "
-            + "and (jlm.serviceCode IN :ccdServiceCode and auth.ticketCode IN :ticketCode )")
+            + "and (jlm.serviceCode IN :ccdServiceCode or auth.ticketCode IN :ticketCode )")
     Page<UserProfile> fetchUserProfileByServiceNames(Set<String> ccdServiceCode,
                                                      List<String> ticketCode, Pageable pageable);
+
+    @Query(value = "select distinct per "
+            + "from judicialUserProfile per "
+            + "LEFT JOIN FETCH judicialOfficeAppointment appt "
+            + "on per.personalCode = appt.personalCode "
+            + "LEFT JOIN FETCH judicialOfficeAuthorisation auth "
+            + "on appt.appointmentId = auth.appointmentId "
+            + "LEFT JOIN FETCH judicial_additional_roles jrt "
+            + "ON per.personalCode = jrt.personalCode "
+            + "LEFT JOIN FETCH judicialLocationMapping jlm "
+            + "ON appt.baseLocationId = jlm.judicialBaseLocationId "
+            + "where (per.objectId != '' and per.objectId is not null) "
+            + "and (auth.ticketCode IN :ticketCode )")
+    Page<UserProfile> fetchUserProfileByTicketCodes(List<String> ticketCode, Pageable pageable);
 
 
     @Query(value = "select distinct per.objectId "

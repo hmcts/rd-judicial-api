@@ -106,7 +106,7 @@ class BaseLocationsIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
 
-    private void cleanupData() {
+    protected void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
     }
 

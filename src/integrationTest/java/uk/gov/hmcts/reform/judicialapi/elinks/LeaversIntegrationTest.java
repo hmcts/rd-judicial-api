@@ -5,17 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
@@ -31,23 +23,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 
 
 class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
-
-    @Autowired
-    JudicialRoleTypeRepository judicialRoleTypeRepository;
-    @Autowired
-    BaseLocationRepository baseLocationRepository;
-    @Autowired
-    AuthorisationsRepository authorisationsRepository;
-    @Autowired
-    AppointmentsRepository appointmentsRepository;
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private ElinksResponsesRepository elinksResponsesRepository;
-
-    @Autowired
-    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
 
     @BeforeEach
     void setUp() {
@@ -88,7 +63,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(14, userprofile.size());
+        assertEquals(15, userprofile.size());
         assertEquals("28", userprofile.get(1).getPersonalCode());
         assertEquals(true, userprofile.get(1).getActiveFlag());
         assertEquals("1.11112E+12", userprofile.get(1).getObjectId());
@@ -107,7 +82,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
 
         List<UserProfile> userprofile = profileRepository.findAll();
 
-        assertEquals(14, userprofile.size());
+        assertEquals(15, userprofile.size());
         assertEquals("28", userprofile.get(1).getPersonalCode());
         assertEquals(true, userprofile.get(1).getActiveFlag());
         assertEquals("1.11112E+12", userprofile.get(1).getObjectId());
@@ -125,7 +100,7 @@ class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
         assertNotNull(auditEntry.getSchedulerEndTime());
     }
 
-    private void cleanupData() {
+    protected void cleanupData() {
         elinkSchedularAuditRepository.deleteAll();
         authorisationsRepository.deleteAll();
         appointmentsRepository.deleteAll();

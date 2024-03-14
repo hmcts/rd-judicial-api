@@ -62,6 +62,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -772,6 +773,34 @@ class ElinkUserServiceImplTest {
         Assertions.assertThrows(InvalidRequestException.class, () -> elinkUserService
                 .refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId"));
+    }
+
+    @Test
+    void test_elinksRefreshUserProfile_BasedOnCcdServiceName_St_Cic_200() throws JsonProcessingException {
+        var lrdOrgInfoServiceResponse = new LrdOrgInfoServiceResponse();
+        lrdOrgInfoServiceResponse.setServiceCode("BBA2");
+        lrdOrgInfoServiceResponse.setCcdServiceName("ST_CIC");
+        var body = mapper.writeValueAsString(List.of(lrdOrgInfoServiceResponse));
+
+        when(locationReferenceDataFeignClient.getLocationRefServiceMapping("ST_CIC"))
+                .thenReturn(Response.builder()
+                        .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
+
+        var userProfile = buildUserProfile();
+
+        var pageRequest = getElinksPageRequest();
+
+        var page = new PageImpl<>(Collections.singletonList(userProfile));
+
+        when(serviceCodeMappingRepository.fetchTicketCodeFromServiceCode(Set.of("BBA2"))).thenReturn(List.of("328"));
+        when(profileRepository.fetchUserProfileByTicketCodes(List.of("328"), pageRequest)).thenReturn(page);
+        var refreshRoleRequest = new RefreshRoleRequest("ST_CIC", null, null,null);
+
+        var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,0, "ASC", "objectId");
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        verify(serviceCodeMappingRepository, times(1)).fetchTicketCodeFromServiceCode(anySet());
+        verify(profileRepository, times(1)).fetchUserProfileByTicketCodes(anyList(), any());
     }
 
 

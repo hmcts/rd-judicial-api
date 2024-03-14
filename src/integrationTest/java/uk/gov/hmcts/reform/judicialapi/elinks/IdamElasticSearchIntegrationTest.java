@@ -76,7 +76,7 @@ class IdamElasticSearchIntegrationTest extends ElinksEnabledIntegrationTest {
 
     }
 
-    private void cleanupData() {
+    protected void cleanupData() {
         authorisationsRepository.deleteAll();
         appointmentsRepository.deleteAll();
         profileRepository.deleteAll();

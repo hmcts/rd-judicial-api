@@ -177,10 +177,7 @@ public class ElinkUserServiceImpl implements ElinkUserService {
                 log.info("ccdServiceNameToCodeMapping keySet {}", ccdServiceNameToCodeMapping.keySet());
 
                 var ticketCode = fetchTicketCodeFromServiceCode(ccdServiceNameToCodeMapping.keySet());
-                log.info("ticketCode {}", ticketCode);
-
-                var userProfilePage = userProfileRepository.fetchUserProfileByServiceNames(
-                        ccdServiceNameToCodeMapping.keySet(), ticketCode, pageRequest);
+                var userProfilePage = fetchUserProfiles(pageRequest, ccdServiceNameToCodeMapping, ticketCode);
 
                 if (userProfilePage == null || userProfilePage.isEmpty()) {
                     log.error("{}:: No data found in JRD for the ccdServiceNames {}",
@@ -205,6 +202,23 @@ public class ElinkUserServiceImpl implements ElinkUserService {
         } else {
             throw new UserProfileException(httpStatus, LRD_ERROR, LRD_ERROR);
         }
+    }
+
+    private Page<UserProfile> fetchUserProfiles(PageRequest pageRequest,
+                                                Map<String, String> ccdServiceNameToCodeMapping,
+                                                List<String> ticketCode) {
+        Page<UserProfile> userProfilePage;
+        if (hasSpecialTribunalCic(ccdServiceNameToCodeMapping.keySet())) {
+            userProfilePage = userProfileRepository.fetchUserProfileByTicketCodes(ticketCode, pageRequest);
+        } else {
+            userProfilePage = userProfileRepository.fetchUserProfileByServiceNames(
+                    ccdServiceNameToCodeMapping.keySet(), ticketCode, pageRequest);
+        }
+        return userProfilePage;
+    }
+
+    private boolean hasSpecialTribunalCic(Set<String> serviceCodes) {
+        return serviceCodes.stream().anyMatch(serviceCode -> "BBA2".equalsIgnoreCase(serviceCode));
     }
 
 

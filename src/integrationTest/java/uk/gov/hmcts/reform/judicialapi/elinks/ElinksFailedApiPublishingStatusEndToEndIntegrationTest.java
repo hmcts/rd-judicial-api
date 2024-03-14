@@ -17,19 +17,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Location;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
@@ -55,41 +45,11 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 
 class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabledIntegrationTest {
 
-    @Autowired
-    LocationRepository locationRepository;
-
-    @Autowired
-    AppointmentsRepository appointmentsRepository;
-
-    @Autowired
-    AuthorisationsRepository authorisationsRepository;
-
-    @Autowired
-    ProfileRepository profileRepository;
-
-    @Autowired
-    BaseLocationRepository baseLocationRepository;
-
-    @Autowired
-    JudicialRoleTypeRepository judicialRoleTypeRepository;
-
-    @Autowired
-    private ElinkSchedularAuditRepository elinkSchedularAuditRepository;
-
-    @Autowired
-    private ElinksApiJobScheduler elinksApiJobScheduler;
-
-    @Autowired
-    private DataloadSchedulerJobRepository dataloadSchedulerJobRepository;
-
     @MockBean
     ElinkTopicPublisher elinkTopicPublisher;
 
     @Autowired
     PublishSidamIdService publishSidamIdService;
-
-    @Autowired
-    ElinkDataExceptionRepository elinkDataExceptionRepository;
 
     @BeforeEach
     void setUp() {
@@ -245,20 +205,6 @@ class ElinksFailedApiPublishingStatusEndToEndIntegrationTest extends ElinksEnabl
                         .withHeader("Connection", "close")
                         .withBody(body)
                 ));
-
-    }
-
-    private void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-        elinkDataExceptionRepository.deleteAll();
-        dataloadSchedulerJobRepository.deleteAll();
-        authorisationsRepository.deleteAll();
-        appointmentsRepository.deleteAll();
-        baseLocationRepository.deleteAll();
-        authorisationsRepository.deleteAll();
-        profileRepository.deleteAll();
-        judicialRoleTypeRepository.deleteAll();
-
     }
 
     @BeforeEach

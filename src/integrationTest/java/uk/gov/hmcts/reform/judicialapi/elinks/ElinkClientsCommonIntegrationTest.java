@@ -735,13 +735,18 @@ class ElinkClientsCommonIntegrationTest extends ElinksEnabledIntegrationTest {
                         .withBody(body)));
     }
 
-    private void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-        authorisationsRepository.deleteAll();
-        appointmentsRepository.deleteAll();
-        baseLocationRepository.deleteAll();
-        appointmentsRepository.deleteAll();
-        baseLocationRepository.deleteAll();
-    }
+    private void initialize() {
+        final String clientId = "234342332";
+        final String redirectUri = "http://idam-api.aat.platform.hmcts.net";
+        //The authorization and clientAuth is the dummy value which we can evaluate using BASE64 encoder.
+        final String authorization = "ZHVtbXl2YWx1ZUBobWN0cy5uZXQ6SE1DVFMxMjM0";
+        final String clientAuth = "cmQteHl6LWFwaTp4eXo=";
+        final String url = "http://127.0.0.1:5000";
+        tokenConfigProperties.setClientId(clientId);
+        tokenConfigProperties.setClientAuthorization(clientAuth);
+        tokenConfigProperties.setAuthorization(authorization);
+        tokenConfigProperties.setRedirectUri(redirectUri);
+        tokenConfigProperties.setUrl(url);
 
+    }
 }
