@@ -18,6 +18,3 @@ END;
 END IF;
 END
 $do$;
-
-GRANT USAGE ON SCHEMA dbjudicialdata TO "${dbReaderUserName}";
-GRANT SELECT ON ALL TABLES IN SCHEMA dbjudicialdata TO "${dbReaderUserName}";
