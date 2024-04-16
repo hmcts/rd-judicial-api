@@ -101,3 +101,23 @@ variable "kv_subscription" {
   type        = string
   description = "Update this with the name of the subscription where the single server key vault is. Defaults to DCD-CNP-DEV."
 }
+
+variable "pgsql_server_configuration" {
+  description = "Postgres server configuration"
+  type        = list(object({ name : string, value : string }))
+  default = [
+    {
+      name  = "azure.extensions"
+      value = "PLPGSQL,PG_STAT_STATEMENTS,PG_BUFFERCACHE"
+    },
+    {
+      name  = "backslash_quote"
+      value = "ON"
+    },
+    {
+      name  = "azure.enable_temp_tablespaces_on_local_ssd"
+      value = "OFF"
+    }
+  ]
+}
+
