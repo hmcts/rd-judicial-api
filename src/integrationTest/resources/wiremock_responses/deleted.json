@@ -1,23 +1,21 @@
-  {
-    "pagination": {
-      "results": 2,
-      "pages": 1,
-      "current_page": 1,
-      "results_per_page": 50,
-      "more_pages": false
+{
+  "pagination": {
+    "results": 2,
+    "pages": 1,
+    "current_page": 1,
+    "results_per_page": 50,
+    "more_pages": false
+  },
+  "results": [
+    {
+      "deleted": false,
+      "deleted_on": "2023-07-13",
+      "personal_code": "4913086"
     },
-    "results": [
-
-      {
-        "deleted": true,
-        "deleted_on": "2023-07-13",
-        "personal_code": "4913085"
-      },
-      {
-        "deleted": false,
-        "deleted_on": "2022-07-10",
-        "personal_code": "4913086"
-      }
-
-    ]
-  }
+    {
+      "deleted": true,
+      "deleted_on": "2022-07-10",
+      "personal_code": "4913089"
+    }
+  ]
+}

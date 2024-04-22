@@ -1,19 +1,18 @@
-  {
-    "pagination": {
-      "results": 2,
-      "pages": 1,
-      "current_page": 1,
-      "results_per_page": 50,
-      "more_pages": false
-    },
-    "results": [
-
-      {
-        "id": "c38f7bdc-e52b-4711-90e6-9d49a2bb38f2",
-        "per_id": 40962,
-        "personal_code": "410551",
-        "leaver": true,
-        "left_on": "2023-03-01"
-      }
-    ]
-  }
+{
+  "pagination": {
+    "results": 2,
+    "pages": 1,
+    "current_page": 1,
+    "results_per_page": 50,
+    "more_pages": false
+  },
+  "results": [
+    {
+      "id": "c38f7bdc-e52b-4711-90e6-9d49a2bb38f2",
+      "per_id": 40962,
+      "personal_code": "4913089",
+      "leaver": true,
+      "left_on": "2023-03-01"
+    }
+  ]
+}

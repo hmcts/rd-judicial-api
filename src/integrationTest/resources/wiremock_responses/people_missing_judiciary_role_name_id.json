@@ -11,7 +11,7 @@
       "id": "5f8b26ba-0c8b-4192-b5c7-311d737f0cae",
       "per_id": 37992,
       "personal_code": "4913085",
-      "title": "District Judge",
+      "title": "District Judge District Judge Rachel Jones Court of Protection District Judge",
       "known_as": "Rachel",
       "surname": "Jones",
       "fullname": "District Judge Rachel Jones",
@@ -28,7 +28,7 @@
           "appointment_id": 25502,
           "role_name": "District Judge",
           "role_name_id": 45,
-          "type": null,
+          "type": "Courts",
           "court_name": "Court of Protection",
           "court_type": null,
           "circuit": "London",
@@ -55,7 +55,7 @@
           "advisory_committee_area": null,
           "location": "Unassigned",
           "base_location": "Social Entitlement Chamber - Unassigned",
-          "base_location_id":5555,
+          "base_location_id": 2218,
           "is_principal": false,
           "start_date": "2007-05-11",
           "end_date": "2014-06-20",
@@ -157,7 +157,7 @@
           "advisory_committee_area": null,
           "location": "Unassigned",
           "base_location": "Social Entitlement Chamber - Unassigned",
-          "base_location_id": 1030,
+          "base_location_id": 2218,
           "is_principal": false,
           "start_date": "2007-05-11",
           "end_date": "2014-06-20",
@@ -168,9 +168,9 @@
       "judiciary_roles": [
         {
           "name": "Course Director for COP (JC)",
-          "judiciary_role_id": 427,
-          "start_date": "2016-04-30T00:00:00.000Z",
-          "end_date": "2019-04-30T00:00:00.000Z"
+          "judiciary_role_id": 428,
+          "start_date": "2017-03-10T00:00:00.000Z",
+          "end_date": "2019-03-10T00:00:00.000Z"
         }
       ],
       "authorisations": [

@@ -15,8 +15,8 @@ import static java.util.Objects.isNull;
 
 public class KeyGenUtil {
 
-    private static RSAKey rsaJwk;
     private static final String KEY_ID = "23456789";
+    private static RSAKey rsaJwk;
 
     private KeyGenUtil() {
     }

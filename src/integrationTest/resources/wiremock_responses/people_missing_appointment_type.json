@@ -8,9 +8,9 @@
   },
   "results": [
     {
-      "id": "5f8b26ba-0c8b-4192-b5c7-311d737f0cbe",
+      "id": "5f8b26ba-0c8b-4192-b5c7-311d737f0cae",
       "per_id": 37992,
-      "personal_code": "12345477",
+      "personal_code": "4913085",
       "title": "District Judge District Judge Rachel Jones Court of Protection District Judge",
       "known_as": "Rachel",
       "surname": "Jones",
@@ -100,6 +100,107 @@
         {
           "authorisation_id": 14752,
           "appointment_id": 25503,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "Criminal Injuries Compensations",
+          "ticket_id": 328,
+          "start_date": "2007-05-11",
+          "end_date": "2014-06-20"
+        }
+      ]
+    },
+    {
+      "id": "8eft26ba-0c8b-4192-b5c7-311d737f0cae",
+      "per_id": 37993,
+      "personal_code": "4913089",
+      "title": "District Judge",
+      "known_as": "Mathew",
+      "surname": "gomes",
+      "fullname": "District Judge Mathew gomes",
+      "initials": "PJ",
+      "post_nominals": null,
+      "email": "DJ.Mathew.Gomes@ejudiciary.net",
+      "sex": "Male",
+      "work_phone": "07965 544399",
+      "disability": false,
+      "retirement_date": "2028-07-23",
+      "leaving_on": "2028-07-23",
+      "appointments": [
+        {
+          "appointment_id": 25512,
+          "role_name": "District Judge",
+          "role_name_id": 45,
+          "type": "Courts",
+          "court_name": "Court of Protection",
+          "court_type": null,
+          "circuit": "London",
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "London",
+          "base_location": "Court of Protection",
+          "base_location_id": 768,
+          "is_principal": true,
+          "start_date": "2010-03-23",
+          "end_date": "2026-07-23",
+          "contract_type": "SPTW-50%",
+          "contract_type_id": 5
+        },
+        {
+          "appointment_id": 25513,
+          "role_name": "Tribunal Judge",
+          "role_name_id": 84,
+          "court_name": "Unassigned",
+          "court_type": "First Tier Tribunal",
+          "circuit": null,
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "Unassigned",
+          "base_location": "Social Entitlement Chamber - Unassigned",
+          "base_location_id": 2218,
+          "is_principal": false,
+          "start_date": "2007-05-11",
+          "end_date": "2014-06-20",
+          "contract_type": "Fee-paid",
+          "contract_type_id": 1
+        }
+      ],
+      "judiciary_roles": [
+        {
+          "name": "Course Director for COP (JC)",
+          "judiciary_role_id": 428,
+          "judiciary_role_name_id": "fee",
+          "start_date": "2017-03-10T00:00:00.000Z",
+          "end_date": "2019-03-10T00:00:00.000Z"
+        }
+      ],
+      "authorisations": [
+        {
+          "jurisdiction": "Family",
+          "tickets": [
+            "Court of Protection"
+          ]
+        },
+        {
+          "jurisdiction": "Tribunals",
+          "tickets": [
+            "Criminal Injuries Compensations"
+          ]
+        }
+      ],
+      "authorisations_with_dates": [
+        {
+          "authorisation_id": 9920,
+          "appointment_id": 25512,
+          "jurisdiction": "Family",
+          "jurisdiction_id": 26,
+          "ticket": "Court of Protection",
+          "ticket_id": 313,
+          "start_date": "2017-03-24",
+          "end_date": "2022-07-23"
+        },
+        {
+          "authorisation_id": 14722,
+          "appointment_id": 25513,
           "jurisdiction": "Tribunals",
           "jurisdiction_id": 27,
           "ticket": "Criminal Injuries Compensations",

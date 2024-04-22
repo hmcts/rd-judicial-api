@@ -35,10 +35,10 @@ import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.generateToken;
 public class JudicialReferenceDataClient {
 
     private static final String APP_BASE_PATH = "/refdata/judicial";
+    static String bearerToken;
     private static String JWT_TOKEN = null;
     private final RestTemplate restTemplate = new RestTemplate();
-    static String bearerToken;
-    private final String  serviceName;
+    private final String serviceName;
     private final String baseUrl;
     private final String issuer;
     private final long expiration;
@@ -48,6 +48,18 @@ public class JudicialReferenceDataClient {
         this.issuer = issuer;
         this.expiration = tokenExpirationInterval;
         this.serviceName = serviceName;
+    }
+
+    public static String generateS2SToken(String serviceName) {
+        return Jwts.builder()
+                .setSubject(serviceName)
+                .setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode("AA"))
+                .compact();
+    }
+
+    public static void setBearerToken(String bearerToken) {
+        JudicialReferenceDataClient.bearerToken = bearerToken;
     }
 
     public Map<String, Object> fetchJudicialProfilesById(Integer pageSize, Integer pageNumber,
@@ -68,15 +80,15 @@ public class JudicialReferenceDataClient {
         ResponseEntity<Object> responseEntity;
         HttpEntity<?> request =
                 new HttpEntity<Object>(userRequest, invalidTokens
-                    ? getInvalidAuthHeaders(MediaType.valueOf(V1.MediaType.SERVICE),role,
-                    null,MediaType.valueOf(V1.MediaType.SERVICE)) :
+                        ? getInvalidAuthHeaders(MediaType.valueOf(V1.MediaType.SERVICE), role,
+                        null, MediaType.valueOf(V1.MediaType.SERVICE)) :
                         getMultipleAuthHeaders(MediaType.valueOf(V1.MediaType.SERVICE), role,
-                            null,MediaType.valueOf(V1.MediaType.SERVICE)));
+                                null, MediaType.valueOf(V1.MediaType.SERVICE)));
 
         try {
 
             responseEntity = restTemplate.exchange(
-                    baseUrl + "/users" + stringBuilder.toString(),
+                    baseUrl + "/users" + stringBuilder,
                     HttpMethod.POST, request,
                     Object.class
             );
@@ -118,7 +130,7 @@ public class JudicialReferenceDataClient {
     }
 
     @NotNull
-    private HttpHeaders getMultipleAuthHeaders(MediaType value,String role, String userId,MediaType accept) {
+    private HttpHeaders getMultipleAuthHeaders(MediaType value, String role, String userId, MediaType accept) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(value);
         headers.setAccept(List.of(accept));
@@ -135,7 +147,7 @@ public class JudicialReferenceDataClient {
     }
 
     @NotNull
-    private HttpHeaders getInvalidAuthHeaders(MediaType value,String role, String userId,MediaType accept) {
+    private HttpHeaders getInvalidAuthHeaders(MediaType value, String role, String userId, MediaType accept) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(value);
         headers.setAccept(List.of(accept));
@@ -155,20 +167,8 @@ public class JudicialReferenceDataClient {
         return headers;
     }
 
-    public static String generateS2SToken(String serviceName) {
-        return Jwts.builder()
-                .setSubject(serviceName)
-                .setIssuedAt(new Date())
-                .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode("AA"))
-                .compact();
-    }
-
     private String getBearerToken(String userId, String role) {
         return generateToken(issuer, expiration, userId, role);
-    }
-
-    public static void setBearerToken(String bearerToken) {
-        JudicialReferenceDataClient.bearerToken = bearerToken;
     }
 
     public Map<String, Object> searchUsers(UserSearchRequest userSearchRequest, String role,
