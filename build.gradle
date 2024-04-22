@@ -330,7 +330,7 @@ dependencies {
 
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
 
-    implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '1.0.0'
+    implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '1.2.0'
 
 
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.7'
