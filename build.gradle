@@ -357,7 +357,7 @@ dependencies {
     implementation group: 'com.sun.xml.bind', name: 'jaxb-osgi', version: '3.0.2'
 
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.8'
-    implementation 'com.sendgrid:sendgrid-java:4.7.2'
+    implementation 'com.sendgrid:sendgrid-java:4.10.2'
     implementation group: 'com.azure', name: 'azure-core', version: '1.48.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.15.2'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
