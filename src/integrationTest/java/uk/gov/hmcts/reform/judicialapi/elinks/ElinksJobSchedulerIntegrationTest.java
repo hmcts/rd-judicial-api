@@ -183,7 +183,7 @@ public class ElinksJobSchedulerIntegrationTest extends ElinksDataLoadBaseTest {
                         .expectedUserProfiles(2)
                         .expectedActiveFlag(false)
                         .expectedDeletedFlag(true)
-                        .expectedDeletedOnDate("2022-07-10T01:00")
+                        .expectedDeletedOnDate("2022-07-10")
                         .expectedLastWorkingDate("2023-03-01")
                         .expectedJobStatus(SUCCESS)
                         .isAfterIdamElasticSearch(true)
