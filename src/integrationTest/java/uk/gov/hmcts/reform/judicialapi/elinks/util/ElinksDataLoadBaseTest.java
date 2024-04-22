@@ -473,7 +473,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedUserProfiles(2)
                         .expectedActiveFlag(false)
                         .expectedDeletedFlag(true)
-                        .expectedDeletedOnDate("2022-07-10T01:00")
+                        .expectedDeletedOnDate("2022-07-10")
                         .expectedLastWorkingDate("2028-07-23")
                         .expectedJobStatus(SUCCESS)
                         .build();
@@ -550,7 +550,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         assertThat(secondUser.getActiveFlag()).isEqualTo(testDataArguments.expectedActiveFlag());
         assertThat(secondUser.getCreatedDate()).isNotNull();
         if (nonNull(testDataArguments.expectedDeletedOnDate())) {
-            assertThat(secondUser.getDeletedOn()).isEqualTo(testDataArguments.expectedDeletedOnDate());
+            assertThat(secondUser.getDeletedOn().toLocalDate().toString()).isEqualTo(testDataArguments.expectedDeletedOnDate());
             assertThat(secondUser.getDeletedFlag()).isEqualTo(testDataArguments.expectedDeletedFlag());
         } else {
             assertThat(secondUser.getDeletedOn()).isNull();
