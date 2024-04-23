@@ -165,30 +165,6 @@ withPipeline(type, product, component) {
         ]
     }
 
-    afterSuccess('integrationTest:aat') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
-        publishHTML target: [
-            allowMissing         : true,
-            alwaysLinkToLastBuild: true,
-            keepAll              : true,
-            reportDir            : "target/site/serenity/",
-            reportFiles          : "index.html",
-            reportName           : "IntegrationTest Tests Serenity Report"
-        ]
-    }
-
-    afterSuccess('integrationTest:preview') {
-        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
-        publishHTML target: [
-            allowMissing         : true,
-            alwaysLinkToLastBuild: true,
-            keepAll              : true,
-            reportDir            : "target/site/serenity/",
-            reportFiles          : "index.html",
-            reportName           : "IntegrationTest Tests Serenity Report"
-        ]
-    }
-
     afterSuccess('pact-provider-verification') {
         publishHTML target: [
              allowMissing         : true,
