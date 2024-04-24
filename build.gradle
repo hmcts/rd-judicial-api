@@ -398,7 +398,7 @@ dependencies {
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.0.1'
     implementation group: 'com.google.guava', name: 'guava', version: '32.1.3-jre'
     //Fix for CVE-2021-29425
-    implementation 'commons-io:commons-io:2.8.0'
+    implementation 'commons-io:commons-io:2.16.1'
 
     //Added below dependencies for shedlock
     implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '5.2.0'
