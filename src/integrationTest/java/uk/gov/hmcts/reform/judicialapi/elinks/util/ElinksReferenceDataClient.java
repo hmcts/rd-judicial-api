@@ -172,18 +172,15 @@ public class ElinksReferenceDataClient {
     }
 
     public String getAndReturnBearerToken(String userId, String role) {
-        setAndReturnJwtToken();
+        if (StringUtils.isBlank(s2sToken)) {
+            s2sToken = generateS2SToken("rd_judicial_api");
+        }
+
         if (StringUtils.isBlank(bearerToken)) {
             bearerToken = "Bearer ".concat(getBearerToken(Objects.isNull(userId) ? UUID.randomUUID().toString()
                     : userId, role));
         }
         return bearerToken;
-    }
-
-    public void setAndReturnJwtToken() {
-        if (StringUtils.isBlank(s2sToken)) {
-            s2sToken = generateS2SToken("rd_judicial_api");
-        }
     }
 
     public Map<String, Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,
