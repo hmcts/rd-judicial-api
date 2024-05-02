@@ -3,144 +3,123 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.util.ReflectionTestUtils;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELASTICSEARCH;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAMSEARCH;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
 
-class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
+class PublishSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
 
     @BeforeEach
-    void setUp() {
+    void beforeSetup() {
         deleteData();
+
+        DataloadSchedulerJob dataloadSchedulerJob = new DataloadSchedulerJob();
+        dataloadSchedulerJob.setJobStartTime(now());
+        dataloadSchedulerJob.setPublishingStatus(JobStatus.IN_PROGRESS.getStatus());
+        dataloadSchedulerJobRepository.save(dataloadSchedulerJob);
+
+        ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
+        given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
     }
 
-    @DisplayName("Should update sidam id for matched object id")
+    @DisplayName("Should publish SidamId to topic")
     @Test
-    void shouldUpdateSidamIdForMatchedObjectId() throws IOException {
+    void shouldPublishSidamIdToTopic() throws IOException {
 
-        given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
+        willDoNothing().given(elinkTopicPublisher).sendMessage(anyList(), anyString());
 
         final String peopleApiResponseJson = readJsonAsString(PEOPLE_API_RESPONSE_JSON);
-        final String idamElasticSearchResponse = readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON);
+        final String idamIdsSearchResponse = readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON);
         final String locationApiResponseJson = readJsonAsString(LOCATION_API_RESPONSE_JSON);
 
         stubLocationApiResponse(locationApiResponseJson, OK);
         stubPeopleApiResponse(peopleApiResponseJson, OK);
-        stubIdamResponse(idamElasticSearchResponse, OK);
+        stubIdamResponse(idamIdsSearchResponse, OK);
         stubIdamTokenResponse(OK);
 
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
-        verifyUserSidamIdIsNull();
+        findSidamIdsByObjectIds(OK);
+        publishSidamIds(OK);
 
-        elasticSearchLoadSidamIdsByObjectIds(OK);
+        verifyAudit(SUCCESS);
 
-        verifyUpdatedUserSidamId();
-
-        verifySchedulerAudit(SUCCESS);
+        verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
     }
 
-    @DisplayName("Should audit failed idam elastic search")
+    @DisplayName("Should fail to publish SidamId to topic")
     @Test
-    void shouldAuditFailedIdamElasticSearch() throws IOException {
+    void shouldFailToPublishSidamIdToTopic() throws IOException {
 
-        given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
+        willThrow(RuntimeException.class).given(elinkTopicPublisher).sendMessage(anyList(), anyString());
 
         final String peopleApiResponseJson = readJsonAsString(PEOPLE_API_RESPONSE_JSON);
-        final String idamElasticSearchResponse = readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON);
+        final String idamIdsSearchResponse = readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON);
         final String locationApiResponseJson = readJsonAsString(LOCATION_API_RESPONSE_JSON);
 
         stubLocationApiResponse(locationApiResponseJson, OK);
         stubPeopleApiResponse(peopleApiResponseJson, OK);
-        stubIdamResponse(idamElasticSearchResponse, INTERNAL_SERVER_ERROR);
+        stubIdamResponse(idamIdsSearchResponse, OK);
         stubIdamTokenResponse(OK);
 
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
-        verifyUserSidamIdIsNull();
+        findSidamIdsByObjectIds(OK);
+        publishSidamIds(INTERNAL_SERVER_ERROR);
 
-        elasticSearchLoadSidamIdsByObjectIds(INTERNAL_SERVER_ERROR);
+        verifyAudit(FAILED);
 
-        verifyUserSidamIdIsNull();
-
-        verifySchedulerAudit(FAILED);
+        verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
     }
 
-    private void verifyUpdatedUserSidamId() {
-
-        final List<UserProfile> userprofile =
-                profileRepository.findAll().stream()
-                        .sorted(Comparator.comparing(UserProfile::getPersonalCode))
-                        .toList();
-
-        assertThat(userprofile).isNotNull().hasSize(2);
-
-        final UserProfile firstUser = userprofile.get(0);
-        final UserProfile secondUser = userprofile.get(1);
-
-        assertThat(firstUser.getObjectId()).isNotNull().isEqualTo("5f8b26ba-0c8b-4192-b5c7-311d737f0cae");
-        assertThat(firstUser.getSidamId()).isNotNull().isEqualTo("6455c84c-e77d-4c4f-9759-bf4a93a8e972");
-
-        assertThat(secondUser.getObjectId()).isNotNull().isEqualTo("8eft26ba-0c8b-4192-b5c7-311d737f0cae");
-        assertThat(secondUser.getSidamId()).isNull();
-    }
-
-    private void verifyUserSidamIdIsNull() {
-        final List<UserProfile> userprofile =
-                profileRepository.findAll().stream()
-                        .sorted(Comparator.comparing(UserProfile::getPersonalCode))
-                        .toList();
-        assertThat(userprofile).isNotNull().hasSize(2);
-
-        final UserProfile firstUser = userprofile.get(0);
-        final UserProfile secondUser = userprofile.get(1);
-
-        assertThat(firstUser.getObjectId()).isNotNull().isEqualTo("5f8b26ba-0c8b-4192-b5c7-311d737f0cae");
-        assertThat(firstUser.getSidamId()).isNull();
-
-        assertThat(secondUser.getObjectId()).isNotNull().isEqualTo("8eft26ba-0c8b-4192-b5c7-311d737f0cae");
-        assertThat(secondUser.getSidamId()).isNull();
-    }
-
-    private void verifySchedulerAudit(JobStatus idamElasticSerachJobStatus) {
+    private void verifyAudit(final JobStatus publishAuditStatus) {
 
         final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
                 elinkSchedularAuditRepository.findAll()
                         .stream()
                         .sorted(comparing(ElinkDataSchedularAudit::getApiName))
                         .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(3);
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(4);
 
         final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
         final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
         final ElinkDataSchedularAudit auditEntry3 = eLinksDataSchedulerAudits.get(2);
+        final ElinkDataSchedularAudit auditEntry4 = eLinksDataSchedulerAudits.get(3);
 
         assertThat(auditEntry1).isNotNull();
         assertThat(auditEntry2).isNotNull();
         assertThat(auditEntry3).isNotNull();
+        assertThat(auditEntry4).isNotNull();
 
-        assertThat(auditEntry1.getApiName()).isNotNull().isEqualTo(ELASTICSEARCH);
-        assertThat(auditEntry1.getStatus()).isNotNull().isEqualTo(idamElasticSerachJobStatus.getStatus());
+        assertThat(auditEntry1.getApiName()).isNotNull().isEqualTo(IDAMSEARCH);
+        assertThat(auditEntry1.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
         assertThat(auditEntry1.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
         assertThat(auditEntry1.getSchedulerStartTime()).isNotNull();
         assertThat(auditEntry1.getSchedulerEndTime()).isNotNull();
@@ -156,7 +135,12 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
         assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
         assertThat(auditEntry3.getSchedulerEndTime()).isNotNull();
-    }
 
+        assertThat(auditEntry4.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
+        assertThat(auditEntry4.getStatus()).isNotNull().isEqualTo(publishAuditStatus.getStatus());
+        assertThat(auditEntry4.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry4.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry4.getSchedulerEndTime()).isNotNull();
+    }
 
 }

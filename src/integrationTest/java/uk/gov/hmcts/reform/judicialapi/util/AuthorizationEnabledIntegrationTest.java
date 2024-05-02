@@ -54,17 +54,23 @@ import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRole
 @DirtiesContext
 public abstract class AuthorizationEnabledIntegrationTest extends SpringBootIntegrationTest {
 
-    @MockBean
-    protected FeatureToggleServiceImpl featureToggleServiceImpl;
-
-    @MockBean
-    LDClient ldClient;
-
-    protected JudicialReferenceDataClient judicialReferenceDataClient;
-
     public static final String JRD_SYSTEM_USER = "jrd-system-user";
     public static final String INVALID_TEST_USER = "test-user-role";
-
+    @RegisterExtension
+    protected static final WireMockExtension s2sService = new WireMockExtension(8990);
+    @RegisterExtension
+    protected static final WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
+    @RegisterExtension
+    protected static final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
+    @MockBean
+    protected FeatureToggleServiceImpl featureToggleServiceImpl;
+    protected JudicialReferenceDataClient judicialReferenceDataClient;
+    @MockBean
+    protected JwtDecoder jwtDecoder;
+    @MockBean
+    LDClient ldClient;
+    @Autowired
+    Flyway flyway;
     @Value("${oidc.expiration}")
     private long expiration;
     @Value("${oidc.issuer}")
@@ -72,20 +78,15 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     @Value("${idam.s2s-authorised.services}")
     private String serviceName;
 
-    @RegisterExtension
-    protected final WireMockExtension s2sService = new WireMockExtension(8990);
-
-    @RegisterExtension
-    protected final WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
-
-    @RegisterExtension
-    protected final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
-
-    @Autowired
-    Flyway flyway;
-
-    @MockBean
-    protected JwtDecoder jwtDecoder;
+    public static String getDynamicJwksResponse() throws JOSEException, JsonProcessingException {
+        RSAKey rsaKey = KeyGenUtil.getRsaJwk();
+        Map<String, List<Map<String, Object>>> body = new LinkedHashMap<>();
+        List<Map<String, Object>> keyList = new ArrayList<>();
+        keyList.add(rsaKey.toJSONObject());
+        body.put("keys", keyList);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(body);
+    }
 
     @BeforeEach
     public void setUpClient() {
@@ -106,18 +107,18 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
                         .withBody("rd_judicial_api")));
 
 
-        LinkedHashMap<String,Object> data = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> data = new LinkedHashMap<>();
 
         ArrayList<String> roles = new ArrayList<>();
         roles.add("%s");
 
-        data.put("id","%s");
-        data.put("uid","%s");
-        data.put("forename","Super");
-        data.put("surname","User");
-        data.put("email","super.user@hmcts.net");
-        data.put("accountStatus","active");
-        data.put("roles",roles);
+        data.put("id", "%s");
+        data.put("uid", "%s");
+        data.put("forename", "Super");
+        data.put("surname", "User");
+        data.put("email", "super.user@hmcts.net");
+        data.put("accountStatus", "active");
+        data.put("roles", roles);
 
 
         sidamService.stubFor(get(urlPathMatching("/o/userinfo"))
@@ -125,7 +126,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
                         .withHeader("Connection", "close")
-                                .withBody(WireMockUtil.getObjectMapper().writeValueAsString(data))
+                        .withBody(WireMockUtil.getObjectMapper().writeValueAsString(data))
                         .withTransformers("user-token-response")));
 
         mockHttpServerForOidc.stubFor(get(urlPathMatching("/jwks"))
@@ -155,17 +156,6 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
                 .header("alg", "RS256")
                 .build();
     }
-
-    public static String getDynamicJwksResponse() throws JOSEException, JsonProcessingException {
-        RSAKey rsaKey = KeyGenUtil.getRsaJwk();
-        Map<String, List<Map<String, Object>>> body = new LinkedHashMap<>();
-        List<Map<String, Object>> keyList = new ArrayList<>();
-        keyList.add(rsaKey.toJSONObject());
-        body.put("keys", keyList);
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(body);
-    }
-
 
     public static class JudicialTransformer extends ResponseTransformer {
         @Override

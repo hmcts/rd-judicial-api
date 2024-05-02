@@ -1,222 +1,156 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.TestDataArguments;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
+import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 
-class PeopleIntegrationTest extends ElinksEnabledIntegrationTest {
-
-    @Autowired
-    ELinksServiceImpl elinksServiceImpl;
-
-    @Value("${elinks.cleanElinksResponsesDays}")
-    private Long cleanElinksResponsesDays;
+class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
     @BeforeEach
     void setUp() {
-        cleanupData();
+        deleteData();
     }
 
-    @AfterEach
-    void cleanUp() {
-        cleanupData();
+    @DisplayName("Success - ELinks People Api Data Load Success Scenarios")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideDataForPeopleApi")
+    void shouldLoadPeopleApiData(TestDataArguments testDataArguments) throws Exception {
+
+        final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
+        final String locationApiResponseJson = readJsonAsString(testDataArguments.eLinksLocationApiResponseJson());
+
+        stubLocationApiResponse(locationApiResponseJson, OK);
+        stubPeopleApiResponse(peopleApiResponseJson, OK);
+
+        loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
+        loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
+
+        verifySavedOriginalELinksResponses();
+
+        verifyUserProfileData(testDataArguments);
+
+        verifyUserAppointmentsData(testDataArguments);
+
+        verifyUserAuthorisationsData(testDataArguments);
+
+        verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
+
+        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus());
+
+        verifyExceptions(testDataArguments);
     }
 
+    @DisplayName("Negative - ELinks People Api Data Load Failure Scenarios")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideDataLoadFailStatusCodes")
+    void shouldFailToLoadPeopleApiDataWhenELinksApiResponseNot200(TestDataArguments testDataArguments)
+            throws IOException {
+        final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
+        final String locationApiResponseJson = readJsonAsString(testDataArguments.eLinksLocationApiResponseJson());
 
-    @DisplayName("Elinks People endpoint status verification")
-    @Test
-    void getPeopleUserProfile() {
+        stubLocationApiResponse(locationApiResponseJson, OK);
+        stubPeopleApiResponse(peopleApiResponseJson, testDataArguments.httpStatus());
 
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        assertThat(response).containsEntry("http_status", "200 OK");
-        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
-        assertEquals("People data loaded successfully", profiles.getMessage());
+        final HttpStatus expectedHttpStatus = testDataArguments.httpStatus() == SERVICE_UNAVAILABLE ? FORBIDDEN :
+                testDataArguments.httpStatus();
 
-        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
+        loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
+        loadPeopleData(expectedHttpStatus, RESPONSE_BODY_ERROR_MSG, testDataArguments.expectedErrorMessage());
 
-        assertThat(elinksResponses).isNotEmpty();
-        assertThat(elinksResponses.get(0).getCreatedDate()).isNotNull();
-        assertThat(elinksResponses.get(0).getElinksData()).isNotNull();
+        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus());
     }
 
-    @DisplayName("Elinks People to JRD user profile verification")
-    @Test
-    void verifyPeopleJrdUserProfile() {
+    private void verifyExceptions(TestDataArguments testDataArguments) {
+        final var exceptionRecords = elinkDataExceptionRepository.findAll();
 
-        Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
-        Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
-        ElinkBaseLocationWrapperResponse baseLocations =
-            (ElinkBaseLocationWrapperResponse) baseLocationResponse.get("body");
+        final int expectedExceptionSize = testDataArguments.exceptionSize();
 
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        assertThat(response).containsEntry("http_status", "200 OK");
-        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
-        assertEquals("People data loaded successfully", profiles.getMessage());
-
-        List<UserProfile> userprofile = profileRepository.findAll();
-
-        assertEquals(2, userprofile.size());
-        assertEquals("4913085", userprofile.get(0).getPersonalCode());
-        assertEquals("Rachel", userprofile.get(0).getKnownAs());
-        assertEquals("Jones", userprofile.get(0).getSurname());
-        assertEquals("District Judge Rachel Jones", userprofile.get(0).getFullName());
-        assertEquals(null, userprofile.get(0).getPostNominals());
-        assertEquals("DJ.Rachel.Jones@ejudiciary.net",
-                userprofile.get(0).getEmailId());
-        assertEquals("5f8b26ba-0c8b-4192-b5c7-311d737f0cae", userprofile.get(0).getObjectId());
-        assertEquals("RJ",userprofile.get(0).getInitials());
-
-
+        if (expectedExceptionSize != 0) {
+            assertThat(exceptionRecords).isNotNull().hasSize(expectedExceptionSize);
+            assertThat(exceptionRecords.get(0).getErrorDescription())
+                    .isNotNull()
+                    .isEqualTo(testDataArguments.errorMsg1());
+            if (expectedExceptionSize == 2) {
+                assertThat(exceptionRecords.get(1).getErrorDescription())
+                        .isNotNull().isEqualTo(testDataArguments.errorMsg2());
+            }
+        } else {
+            assertThat(exceptionRecords).isEmpty();
+        }
     }
 
-    @DisplayName("Elinks People to Authorisation verification")
-    @Test
-    void verifyPeopleJrdAuthorisation() {
+    private void verifySavedOriginalELinksResponses() {
 
-        Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
-        Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
-        ElinkBaseLocationWrapperResponse baseLocations =
-            (ElinkBaseLocationWrapperResponse) baseLocationResponse.get("body");
+        final List<ElinksResponses> eLinksResponses =
+                elinksResponsesRepository.findAll()
+                        .stream()
+                        .sorted(comparing(ElinksResponses::getApiName))
+                        .toList();
+        assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(2);
 
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        assertThat(response).containsEntry("http_status", "200 OK");
-        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
-        assertEquals("People data loaded successfully", profiles.getMessage());
+        ElinksResponses locationElinksResponses = eLinksResponses.get(0);
+        ElinksResponses peopleElinksResponses = eLinksResponses.get(1);
 
-        List<UserProfile> userprofile = profileRepository.findAll();
-        List<Authorisation> authorisationList = authorisationsRepository.findAll();
+        assertThat(locationElinksResponses).isNotNull();
+        assertThat(peopleElinksResponses).isNotNull();
 
-        assertEquals(4, authorisationList.size());
-        assertEquals(userprofile.get(0).getPersonalCode(), authorisationList.get(0).getPersonalCode());
-        assertEquals("Family", authorisationList.get(0).getJurisdiction());
-        assertEquals("Court of Protection", authorisationList.get(0).getLowerLevel());
-        assertEquals("313",authorisationList.get(0).getTicketCode());
-        assertNotNull(authorisationList.get(0).getStartDate());
-        assertNotNull(authorisationList.get(0).getCreatedDate());
-        assertNotNull(authorisationList.get(0).getLastUpdated());
+        assertThat(locationElinksResponses.getApiName()).isNotNull().isNotNull().isEqualTo(LOCATIONAPI);
+        assertThat(locationElinksResponses.getCreatedDate()).isNotNull();
+        assertThat(locationElinksResponses.getElinksData()).isNotNull();
 
-        assertEquals(userprofile.get(0).getPersonalCode(), authorisationList.get(1).getPersonalCode());
-        assertEquals("Tribunals", authorisationList.get(1).getJurisdiction());
-        assertEquals("Criminal Injuries Compensations", authorisationList.get(1).getLowerLevel());
-        assertEquals("328",authorisationList.get(1).getTicketCode());
-        assertNotNull(authorisationList.get(1).getStartDate());
-        assertNotNull(authorisationList.get(1).getEndDate());
-        assertNotNull(authorisationList.get(1).getCreatedDate());
-        assertNotNull(authorisationList.get(1).getLastUpdated());
-
+        assertThat(peopleElinksResponses.getApiName()).isNotNull().isNotNull().isEqualTo(PEOPLEAPI);
+        assertThat(peopleElinksResponses.getCreatedDate()).isNotNull();
+        assertThat(peopleElinksResponses.getElinksData()).isNotNull();
     }
 
+    private void verifyPeopleDataLoadAudit(JobStatus peopleLoadJobStatus) {
 
-    @DisplayName("Elinks People to Audit verification")
-    @Test
-    void verifyPeopleJrdAuditFunctionality() {
+        final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
+                elinkSchedularAuditRepository.findAll()
+                        .stream()
+                        .sorted(comparing(ElinkDataSchedularAudit::getApiName))
+                        .toList();
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(2);
 
-        Map<String, Object> locationResponse = elinksReferenceDataClient.getLocations();
-        Map<String, Object> baseLocationResponse = elinksReferenceDataClient.getBaseLocations();
-        ElinkBaseLocationWrapperResponse baseLocations =
-            (ElinkBaseLocationWrapperResponse) baseLocationResponse.get("body");
+        final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
+        final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
 
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        assertThat(response).containsEntry("http_status", "200 OK");
-        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
-        assertEquals("People data loaded successfully", profiles.getMessage());
+        assertThat(auditEntry1).isNotNull();
+        assertThat(auditEntry2).isNotNull();
 
-        List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
-        ElinkDataSchedularAudit auditEntry = elinksAudit.get(2);
-        assertEquals(PEOPLEAPI, auditEntry.getApiName());
-        assertEquals(RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus(), auditEntry.getStatus());
-        assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
-        assertNotNull(auditEntry.getSchedulerStartTime());
-        assertNotNull(auditEntry.getSchedulerEndTime());
+        assertThat(auditEntry1.getApiName()).isNotNull().isEqualTo(LOCATIONAPI);
+        assertThat(auditEntry1.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry1.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry1.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry1.getSchedulerEndTime()).isNotNull();
+
+        assertThat(auditEntry2.getApiName()).isNotNull().isEqualTo(PEOPLEAPI);
+        assertThat(auditEntry2.getStatus()).isNotNull().isEqualTo(peopleLoadJobStatus.getStatus());
+        assertThat(auditEntry2.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry2.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry2.getSchedulerEndTime()).isNotNull();
     }
 
-    @DisplayName("Elinks Responses cleanup status verification")
-    @Test
-    void testCleanElinksResponses() {
-
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        assertThat(response).containsEntry("http_status", "200 OK");
-        ElinkPeopleWrapperResponse profiles = (ElinkPeopleWrapperResponse)response.get("body");
-        assertEquals("People data loaded successfully", profiles.getMessage());
-
-        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
-
-        elinksResponses.get(0).setCreatedDate(LocalDateTime.now().minusDays(cleanElinksResponsesDays));
-
-        elinksResponsesRepository.saveAll(elinksResponses);
-
-        elinksServiceImpl.cleanUpElinksResponses();
-
-        List<ElinksResponses> elinksResponsesAfterCleanUp = elinksResponsesRepository.findAll();
-
-        assertThat(elinksResponsesAfterCleanUp).isEmpty();
-
-    }
-
-    @DisplayName("Elinks Responses cleanup status verification")
-    @Test
-    void validateDeleteJohProfiles() {
-
-        LocalDateTime schedularStartTime = LocalDateTime.now();
-        profileRepository.save(buildUserProfileDto());
-        assertThat(profileRepository.findAll()).isNotEmpty();
-        elinksServiceImpl.deleteJohProfiles(schedularStartTime);
-        //after deleting the entry from table whose deleted date on is before 7 years the repository is null
-        assertThat(profileRepository.findAll()).isEmpty();
-
-    }
-
-    private UserProfile buildUserProfileDto() {
-
-        return UserProfile.builder()
-                .personalCode("0049931063")
-                .knownAs("Tester")
-                .surname("TestAccount")
-                .fullName("Tribunal Judge Tester TestAccount 2")
-                .postNominals("ABC")
-                .emailId("Tester2@judiciarystaging.onmicrosoft.com")
-                .lastWorkingDate(LocalDate.now())
-                .activeFlag(true)
-                .createdDate(LocalDateTime.now())
-                .lastLoadedDate(LocalDateTime.now())
-                .objectId("552da697-4b3d-4aed-9c22-1e903b70aead")
-                .initials("Mr")
-                .sidamId("3fa85f64-5717-4562-b3fc-2c963f66afa6")
-                .deletedOn(LocalDateTime.now().minusYears(7))
-                .deletedFlag(true)
-                .build();
-    }
-
-    protected void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-        authorisationsRepository.deleteAll();
-        judicialRoleTypeRepository.deleteAll();
-        appointmentsRepository.deleteAll();
-        profileRepository.deleteAll();
-        elinksResponsesRepository.deleteAll();
-    }
 
 }

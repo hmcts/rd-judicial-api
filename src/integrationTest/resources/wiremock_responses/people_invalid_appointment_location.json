@@ -11,7 +11,7 @@
       "id": "5f8b26ba-0c8b-4192-b5c7-311d737f0cae",
       "per_id": 37992,
       "personal_code": "4913085",
-      "title": "District Judge",
+      "title": "District Judge District Judge Rachel Jones Court of Protection District Judge",
       "known_as": "Rachel",
       "surname": "Jones",
       "fullname": "District Judge Rachel Jones",
@@ -36,12 +36,31 @@
           "advisory_committee_area": null,
           "location": "London",
           "base_location": "Court of Protection",
-          "base_location_id": null,
+          "base_location_id": 768,
           "is_principal": true,
           "start_date": "2010-03-23",
           "end_date": "2026-07-23",
           "contract_type": "SPTW-50%",
           "contract_type_id": 5
+        },
+        {
+          "appointment_id": 25503,
+          "role_name": "Tribunal Judge",
+          "role_name_id": 84,
+          "type": "Tribunals",
+          "court_name": "Unassigned",
+          "court_type": "First Tier Tribunal",
+          "circuit": null,
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "Unassigned",
+          "base_location": "Social Entitlement Chamber - Unassigned",
+          "base_location_id": 2218,
+          "is_principal": false,
+          "start_date": "2007-05-11",
+          "end_date": "2014-06-20",
+          "contract_type": "Fee-paid",
+          "contract_type_id": 1
         }
       ],
       "judiciary_roles": [
@@ -119,20 +138,40 @@
           "advisory_committee_area": null,
           "location": "London",
           "base_location": "Court of Protection",
-          "base_location_id": null,
+          "base_location_id": 768,
           "is_principal": true,
           "start_date": "2010-03-23",
           "end_date": "2026-07-23",
           "contract_type": "SPTW-50%",
           "contract_type_id": 5
+        },
+        {
+          "appointment_id": 25513,
+          "role_name": "Tribunal Judge",
+          "role_name_id": 84,
+          "type": "Tribunals",
+          "court_name": "Unassigned",
+          "court_type": "First Tier Tribunal",
+          "circuit": null,
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "North London",
+          "base_location": "Social Entitlement Chamber - Unassigned",
+          "base_location_id": 2218,
+          "is_principal": false,
+          "start_date": "2007-05-11",
+          "end_date": "2014-06-20",
+          "contract_type": "Fee-paid",
+          "contract_type_id": 1
         }
       ],
       "judiciary_roles": [
         {
           "name": "Course Director for COP (JC)",
-          "judiciary_role_id": 427,
-          "start_date": "2016-04-30T00:00:00.000Z",
-          "end_date": "2019-04-30T00:00:00.000Z"
+          "judiciary_role_id": 428,
+          "judiciary_role_name_id": "fee",
+          "start_date": "2017-03-10T00:00:00.000Z",
+          "end_date": "2019-03-10T00:00:00.000Z"
         }
       ],
       "authorisations": [

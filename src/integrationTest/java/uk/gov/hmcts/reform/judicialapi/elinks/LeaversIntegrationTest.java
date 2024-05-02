@@ -1,111 +1,161 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksEnabledIntegrationTest;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus;
+import uk.gov.hmcts.reform.judicialapi.elinks.util.TestDataArguments;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
+import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSSUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 
 
-class LeaversIntegrationTest extends ElinksEnabledIntegrationTest {
+class LeaversIntegrationTest extends ElinksDataLoadBaseTest {
 
     @BeforeEach
     void setUp() {
-        cleanupData();
+        deleteData();
     }
 
-    @AfterEach
-    void cleanUp() {
-        cleanupData();
+    @DisplayName("Success - ELinks Leavers Api Data Load Success Scenario")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideDataForLeaversApi")
+    void shouldLoadLeaverApiData(TestDataArguments testDataArguments) throws Exception {
+
+        final String locationApiResponseJson = readJsonAsString(testDataArguments.eLinksLocationApiResponseJson());
+        final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
+        final String leaversApiResponseJson = readJsonAsString(testDataArguments.eLinksLeaversApiResponseJson());
+
+        stubLocationApiResponse(locationApiResponseJson, OK);
+        stubPeopleApiResponse(peopleApiResponseJson, OK);
+        stubLeaversApiResponse(leaversApiResponseJson, OK);
+
+        loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
+
+        loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
+
+        loadLeaversData(OK, RESPONSE_BODY_MSG_KEY, LEAVERSSUCCESS);
+
+        verifySavedOriginalELinksResponse();
+
+        verifyUserProfileData(testDataArguments);
+
+        verifyUserAppointmentsData(testDataArguments);
+
+        verifyUserAuthorisationsData(testDataArguments);
+
+        verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
+
+        verifyLeaversDataLoadAudit(testDataArguments.expectedJobStatus());
     }
 
-    @DisplayName("Elinks Leavers endpoint status verification")
-    @Test
-    @Order(1)
-    void getLeaversUserProfile() {
+    @DisplayName("Negative - ELinks Leavers Api Data Load Failure Scenarios")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideDataLoadFailStatusCodes")
+    void shouldFailToLoadLeaversApiDataWhenELinksApiResponseNot200(TestDataArguments testDataArguments)
+            throws IOException {
+        final String locationApiResponseJson = readJsonAsString(testDataArguments.eLinksLocationApiResponseJson());
+        final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
 
-        Map<String, Object> response = elinksReferenceDataClient.getLeavers();
-        assertThat(response).containsEntry("http_status", "200 OK");
-        ElinkLeaversWrapperResponse profiles = (ElinkLeaversWrapperResponse)response.get("body");
-        assertEquals("Leavers Data Loaded Successfully", profiles.getMessage());
+        stubLocationApiResponse(locationApiResponseJson, OK);
+        stubPeopleApiResponse(peopleApiResponseJson, OK);
+        stubLeaversApiResponse(null, testDataArguments.httpStatus());
 
-        List<ElinksResponses> elinksResponses = elinksResponsesRepository.findAll();
+        final HttpStatus expectedHttpStatus = testDataArguments.httpStatus() == SERVICE_UNAVAILABLE ? FORBIDDEN :
+                testDataArguments.httpStatus();
 
-        assertThat(elinksResponses.size()).isGreaterThan(0);
-        assertThat(elinksResponses.get(0).getCreatedDate()).isNotNull();
-        assertThat(elinksResponses.get(0).getElinksData()).isNotNull();
+        loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
+
+        loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
+
+        loadLeaversData(expectedHttpStatus, RESPONSE_BODY_ERROR_MSG, testDataArguments.expectedErrorMessage());
+
+        verifyLeaversDataLoadAudit(testDataArguments.expectedJobStatus());
     }
 
-    @DisplayName("Elinks Leavers to JRD user profile verification")
-    @Test
-    @Order(2)
-    void verifyLeaversJrdUserProfile() {
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
-        assertThat(leaversResponse).containsEntry("http_status", "200 OK");
-        ElinkLeaversWrapperResponse profiles = (ElinkLeaversWrapperResponse)leaversResponse.get("body");
-        assertEquals("Leavers Data Loaded Successfully", profiles.getMessage());
+    private void verifySavedOriginalELinksResponse() {
 
-        List<UserProfile> userprofile = profileRepository.findAll();
+        final List<ElinksResponses> eLinksResponses =
+                elinksResponsesRepository.findAll()
+                        .stream()
+                        .sorted(comparing(ElinksResponses::getApiName))
+                        .toList();
 
-        assertEquals(15, userprofile.size());
-        assertEquals("28", userprofile.get(1).getPersonalCode());
-        assertEquals(true, userprofile.get(1).getActiveFlag());
-        assertEquals("1.11112E+12", userprofile.get(1).getObjectId());
+        assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(3);
 
+
+        ElinksResponses leaversElinksResponses = eLinksResponses.get(0);
+        ElinksResponses locationElinksResponses = eLinksResponses.get(1);
+        ElinksResponses peopleElinksResponses = eLinksResponses.get(2);
+
+        assertThat(leaversElinksResponses).isNotNull();
+        assertThat(locationElinksResponses).isNotNull();
+        assertThat(peopleElinksResponses).isNotNull();
+
+        assertThat(leaversElinksResponses.getApiName()).isNotNull().isEqualTo(LEAVERSAPI);
+        assertThat(leaversElinksResponses.getCreatedDate()).isNotNull();
+        assertThat(leaversElinksResponses.getElinksData()).isNotNull();
+
+        assertThat(locationElinksResponses.getApiName()).isNotNull().isEqualTo(LOCATIONAPI);
+        assertThat(locationElinksResponses.getCreatedDate()).isNotNull();
+        assertThat(locationElinksResponses.getElinksData()).isNotNull();
+
+        assertThat(peopleElinksResponses.getApiName()).isNotNull().isEqualTo(PEOPLEAPI);
+        assertThat(peopleElinksResponses.getCreatedDate()).isNotNull();
+        assertThat(peopleElinksResponses.getElinksData()).isNotNull();
     }
 
-    @DisplayName("Elinks Leavers to JRD Audit Success Functionality verification")
-    @Test
-    @Order(3)
-    void verifyLeaversJrdAuditFunctionality() {
-        Map<String, Object> response = elinksReferenceDataClient.getPeoples();
-        Map<String, Object> leaversResponse = elinksReferenceDataClient.getLeavers();
-        assertThat(leaversResponse).containsEntry("http_status", "200 OK");
-        ElinkLeaversWrapperResponse profiles = (ElinkLeaversWrapperResponse)leaversResponse.get("body");
-        assertEquals("Leavers Data Loaded Successfully", profiles.getMessage());
+    private void verifyLeaversDataLoadAudit(JobStatus expectedLeaversLoadJobStatus) {
 
-        List<UserProfile> userprofile = profileRepository.findAll();
+        final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
+                elinkSchedularAuditRepository.findAll()
+                        .stream()
+                        .sorted(comparing(ElinkDataSchedularAudit::getApiName))
+                        .toList();
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(3);
 
-        assertEquals(15, userprofile.size());
-        assertEquals("28", userprofile.get(1).getPersonalCode());
-        assertEquals(true, userprofile.get(1).getActiveFlag());
-        assertEquals("1.11112E+12", userprofile.get(1).getObjectId());
+        final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
+        final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
+        final ElinkDataSchedularAudit auditEntry3 = eLinksDataSchedulerAudits.get(2);
 
-        List<ElinkDataSchedularAudit>  elinksAudit = elinkSchedularAuditRepository.findAll();
+        assertThat(auditEntry1).isNotNull();
+        assertThat(auditEntry2).isNotNull();
 
-        ElinkDataSchedularAudit auditEntry = elinksAudit.get(1);
+        assertThat(auditEntry1.getApiName()).isNotNull().isEqualTo(LEAVERSAPI);
+        assertThat(auditEntry1.getStatus()).isNotNull().isEqualTo(expectedLeaversLoadJobStatus.getStatus());
+        assertThat(auditEntry1.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry1.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry1.getSchedulerEndTime()).isNotNull();
 
-        assertThat(auditEntry.getId()).isPositive();
+        assertThat(auditEntry2.getApiName()).isNotNull().isEqualTo(LOCATIONAPI);
+        assertThat(auditEntry2.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry2.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry2.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry2.getSchedulerEndTime()).isNotNull();
 
-        assertEquals(LEAVERSAPI, auditEntry.getApiName());
-        assertEquals(RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), auditEntry.getStatus());
-        assertEquals(JUDICIAL_REF_DATA_ELINKS, auditEntry.getSchedulerName());
-        assertNotNull(auditEntry.getSchedulerStartTime());
-        assertNotNull(auditEntry.getSchedulerEndTime());
-    }
-
-    protected void cleanupData() {
-        elinkSchedularAuditRepository.deleteAll();
-        authorisationsRepository.deleteAll();
-        appointmentsRepository.deleteAll();
-        judicialRoleTypeRepository.deleteAll();
-        baseLocationRepository.deleteAll();
+        assertThat(auditEntry3.getApiName()).isNotNull().isEqualTo(PEOPLEAPI);
+        assertThat(auditEntry3.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry3.getSchedulerEndTime()).isNotNull();
     }
 
 }

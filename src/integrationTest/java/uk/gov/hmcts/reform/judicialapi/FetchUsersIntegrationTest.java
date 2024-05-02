@@ -41,11 +41,11 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
     @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void retrieveJudicialProfileBasedOnId(String role) {
         mockJwtToken(role);
-        userRequest = new UserRequest(Arrays.asList("44862987-4b00-e2e7-4ff8-281b87f16bf9"));
+        userRequest = new UserRequest(List.of("44862987-4b00-e2e7-4ff8-281b87f16bf9"));
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
-        var profiles = (List<Map<String, String>>)response.get("body");
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(1, profiles.size());
     }
 
@@ -57,48 +57,48 @@ class FetchUsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
-        var profiles = (List<Map<String, String>>)response.get("body");
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(2, profiles.size());
     }
 
 
     @DisplayName("Scenario: Full list of Judicial user details is retrieved based on the page_number")
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn_200_ValidParameters_ccdPageNumber(String role) {
         mockJwtToken(role);
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(1, 1,
                 userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
 
-        var profiles = (List<Map<String, String>>)response.get("body");
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(1, profiles.size());
 
     }
 
     @DisplayName("Scenario: Full list of Judicial user details is retrieved based on the pageSize")
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn_200_ValidParameters_PageSize(String role) {
         mockJwtToken(role);
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(2, 0,
                 userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
 
-        var profiles = (List<Map<String, String>>)response.get("body");
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(2, profiles.size());
 
     }
 
     @DisplayName("Scenario-Response header  total_records scenario")
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-admin"})
+    @ValueSource(strings = {"jrd-admin"})
     void shouldReturn_200_ValidParameters_ResponseHeader(String role) {
         mockJwtToken(role);
         Map<String, Object> response = judicialReferenceDataClient.fetchJudicialProfilesById(10, 0,
                 userRequest, role, false);
         assertThat(response).containsEntry("http_status", "200 OK");
-        var profiles = (List<Map<String, String>>)response.get("body");
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(2, profiles.size());
         String headers = (String) response.get("headers");
 

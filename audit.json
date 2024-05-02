@@ -1,5 +1,11 @@
 
-{"10112_Session Management Response Identified_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET": "ignore",
+{"100001_Unexpected Content-Type was returned_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET": "ignore",
+  "100000_A Server Error response code was returned by the server_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET" : "ignore",
+  "10038_Content Security Policy (CSP) Header Not Set_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET" : "ignore",
+  "10063_Permissions Policy Header Not Set_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET" : "ignore",
+  "10036_Server Leaks Version Information via \"Server\" HTTP Response Header Field_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET" : "ignore",
+  "10049_Non-Storable Content_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET" : "ignore",
+  "10112_Session Management Response Identified_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET": "ignore",
   "10049_Storable and Cacheable Content_http://rd-judicial-api-aat.service.core-compute-aat.internal/v2/api-docs_GET":"ignore",
   "90033_Loosely Scoped Cookie_http://rd-judicial-api-aat.service.core-compute-aat.internal/_GET": "ignore",
   "90033_Loosely Scoped Cookie_http://rd-judicial-api-aat.service.core-compute-aat.internal/refdata/judicial/users/fetch?page_number=10&page_size=10_POST": "ignore",

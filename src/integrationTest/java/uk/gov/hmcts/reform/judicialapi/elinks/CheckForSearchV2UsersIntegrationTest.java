@@ -47,7 +47,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchString(String role) {
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
@@ -55,8 +55,8 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
+                MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(3, profiles.size());
         assertEquals("test530@test.net", profiles.get(0).get("emailId"));
         assertEquals("Ms", profiles.get(0).get("postNominals"));
@@ -68,19 +68,19 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-        "jrd-admin,BBA3",
-        "jrd-system-user,BFA1",
-        "jrd-admin,BFA1",})
-    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringForsscsAndIac(String role,String serviceCode) {
+            "jrd-admin,BBA3",
+            "jrd-system-user,BFA1",
+            "jrd-admin,BFA1",})
+    void shouldReturn200WhenUserProfileRequestedForGivenSearchStringForsscsAndIac(String role, String serviceCode) {
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("one")
-            .serviceCode(serviceCode)
-            .build();
+                .searchString("one")
+                .serviceCode(serviceCode)
+                .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
+                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
+                MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(1, profiles.size());
         assertEquals("One531@test.net", profiles.get(0).get("emailId"));
         assertEquals("Mr", profiles.get(0).get("postNominals"));
@@ -91,77 +91,77 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-        "jrd-admin,BBA3",
-        "jrd-system-user,BFA1",
-        "jrd-admin,BFA1",})
-    void shouldReturn200WhenUserProfileRequestedForSscsAndIacExpired(String role,String serviceCode) {
+            "jrd-admin,BBA3",
+            "jrd-system-user,BFA1",
+            "jrd-admin,BFA1",})
+    void shouldReturn200WhenUserProfileRequestedForSscsAndIacExpired(String role, String serviceCode) {
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("two")
-            .serviceCode(serviceCode)
-            .build();
+                .searchString("two")
+                .serviceCode(serviceCode)
+                .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
+                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
+                MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(0, profiles.size());
     }
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-        "jrd-admin,BBA3",
-        "jrd-system-user,BFA1",
-        "jrd-admin,BFA1",})
+            "jrd-admin,BBA3",
+            "jrd-system-user,BFA1",
+            "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedForSscsAndIacAppointmentActiveAuthExpired(String role,
                                                                                           String serviceCode) {
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("three")
-            .serviceCode(serviceCode)
-            .build();
+                .searchString("three")
+                .serviceCode(serviceCode)
+                .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
+                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
+                MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(0, profiles.size());
     }
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-        "jrd-admin,BBA3",
-        "jrd-system-user,BFA1",
-        "jrd-admin,BFA1",})
+            "jrd-admin,BBA3",
+            "jrd-system-user,BFA1",
+            "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedForSscsAndIacAppointmentExpiredAuthActive(String role,
                                                                                           String serviceCode) {
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("four")
-            .serviceCode(serviceCode)
-            .build();
+                .searchString("four")
+                .serviceCode(serviceCode)
+                .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
+                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
+                MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(0, profiles.size());
     }
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-        "jrd-admin,BBA3",
-        "jrd-system-user,BFA1",
-        "jrd-admin,BFA1",})
+            "jrd-admin,BBA3",
+            "jrd-system-user,BFA1",
+            "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedForSscsAndIacAppointmentActiveSscsAuthActive(String role,
                                                                                              String serviceCode) {
 
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("five")
-            .serviceCode(serviceCode)
-            .build();
+                .searchString("five")
+                .serviceCode(serviceCode)
+                .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
+                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
+                MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
         if (("BBA3").equals(serviceCode)) {
             assertEquals(1, profiles.size());
         } else if (("BFA1").equals(serviceCode)) {
@@ -172,21 +172,21 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-        "jrd-admin,BBA3",
-        "jrd-system-user,BFA1",
-        "jrd-admin,BFA1",})
+            "jrd-admin,BBA3",
+            "jrd-system-user,BFA1",
+            "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedSscsAppointmentExpiredIacSscsAuthActive(String role,
-                                                                                             String serviceCode) {
+                                                                                        String serviceCode) {
 
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("six")
-            .serviceCode(serviceCode)
-            .build();
+                .searchString("six")
+                .serviceCode(serviceCode)
+                .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
+                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
+                MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
         if (("BBA3").equals(serviceCode)) {
             assertEquals(0, profiles.size());
         } else if (("BFA1").equals(serviceCode)) {
@@ -197,25 +197,25 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BHA1",
-        "jrd-admin,BHA1"})
+            "jrd-admin,BHA1"})
     void shouldReturn200WhenUserProfileRequestedFamilyAppointmentActiveAuthExpires(String role,
-                                                                                        String serviceCode) {
+                                                                                   String serviceCode) {
 
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("seven")
-            .serviceCode(serviceCode)
-            .build();
+                .searchString("seven")
+                .serviceCode(serviceCode)
+                .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
+                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
+                MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(1, profiles.size());
 
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn401ForInvalidTokens(String role) {
         judicialReferenceDataClient.clearTokens();
         JudicialReferenceDataClient.setBearerToken(EMPTY);
@@ -226,12 +226,12 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, true, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
+                MediaType.valueOf(V2.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "401");
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn400WhenSearchStringIsEmpty(String role) {
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
@@ -241,14 +241,14 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
+                MediaType.valueOf(V2.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("cannot be empty"));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn400WhenSearchStringDoesNotContainRequiredLength(String role) {
 
         mockJwtToken(role);
@@ -259,7 +259,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
+                MediaType.valueOf(V2.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
@@ -267,7 +267,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn200WhenSearchStringContainsOtherThanLetters(String role) {
 
         mockJwtToken(role);
@@ -278,47 +278,47 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
+                MediaType.valueOf(V2.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn400WhenSearchStringContainsOtherThanAccentedCharacters(String role) {
 
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("àèÙ{}{}")
-            .location("location")
-            .serviceCode("BFA1")
-            .build();
+                .searchString("àèÙ{}{}")
+                .location("location")
+                .serviceCode("BFA1")
+                .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
+                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
+                MediaType.valueOf(V2.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "400");
         var responseBody = (String) response.get("response_body");
         assertTrue(responseBody.contains("searchString must be at least 3 characters including letters, "
-            + "apostrophe, hyphen"));
+                + "apostrophe, hyphen"));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn200WhenSearchStringContainsAccentedCharacters(String role) {
 
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-            .searchString("àèÙ")
-            .location("location")
-            .serviceCode("BFA1")
-            .build();
+                .searchString("àèÙ")
+                .location("location")
+                .serviceCode("BFA1")
+                .build();
         var response = judicialReferenceDataClient.searchUsers(
-            userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
+                userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
+                MediaType.valueOf(V2.MediaType.SERVICE));
         assertThat(response).containsEntry("http_status", "200 OK");
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "jrd-system-user","jrd-admin"})
+    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchStringWithEmptyAdditionalBoolean(String role) {
 
         mockJwtToken(role);
@@ -327,8 +327,8 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 .build();
         var response = judicialReferenceDataClient.searchUsers(
                 userSearchRequest, role, false, MediaType.valueOf(V1.MediaType.SERVICE),
-            MediaType.valueOf(V2.MediaType.SERVICE));
-        var profiles = (List<Map<String, String>>)response.get("body");
+                MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
         assertEquals(3, profiles.size());
         assertEquals("test530@test.net", profiles.get(0).get("emailId"));
         assertEquals("test528@test.net", profiles.get(1).get("emailId"));
