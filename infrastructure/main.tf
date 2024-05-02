@@ -107,7 +107,7 @@ module "db-rd-judicial-ref-v16" {
 
   subnet_suffix        = "expanded"
   pgsql_version        = "16"
-  product              = var.product-v16
+  product              = "rd"
   name               = join("-", [var.product-v16, var.component-v16])
 
   pgsql_server_configuration = var.pgsql_server_configuration
