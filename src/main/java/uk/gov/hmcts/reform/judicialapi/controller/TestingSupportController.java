@@ -25,6 +25,7 @@ import uk.gov.hmcts.reform.judicialapi.service.IdamUserProfileService;
 @AllArgsConstructor
 @RequestMapping(path = "/refdata/judicial/users")
 @ConditionalOnExpression("${testing.support.enabled:false}")
+@SuppressWarnings("checkstyle:Indentation")
 public class TestingSupportController {
 
     @Autowired

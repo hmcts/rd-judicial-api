@@ -43,6 +43,7 @@ import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.UNAUTHORIZED
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("checkstyle:Indentation")
 public class JrdUsersController {
 
 

@@ -2,8 +2,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
 public class SqlContants {
 
-    private SqlContants(){
-
+    private SqlContants() {
     }
 
     public static final String INSERT_AUDIT_JOB = "INSERT INTO dbjudicialdata.dataload_schedular_job(job_start_time, "
