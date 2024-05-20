@@ -463,26 +463,6 @@ dependencies {
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
     testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
 
-    testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
-
-    testImplementation(group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity) {
-        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-        exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
-    testImplementation(group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity) {
-        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-        exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
-    testImplementation(group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity) {
-        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-        exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
-
-    testImplementation(group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity) {
-        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
-        exclude group: 'javax.websocket', module: 'javax.websocket-api'
-    }
-
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
