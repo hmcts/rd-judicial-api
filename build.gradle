@@ -10,10 +10,10 @@ plugins {
     id 'pmd'
     id 'com.github.ben-manes.versions' version '0.42.0'
     id "info.solidsoft.pitest" version '1.15.0'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id 'org.sonarqube' version '5.0.0.4638'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.sonarqube' version '3.3'
     id 'org.springframework.boot' version '2.7.18'
-    id "org.flywaydb.flyway" version '10.13.0'
+    id "org.flywaydb.flyway" version '9.22.3'
     id "io.freefair.lombok" version "5.3.3.3"
     id 'uk.gov.hmcts.java' version '0.12.39'
     id 'au.com.dius.pact' version '4.1.7'
@@ -370,9 +370,7 @@ dependencies {
 
     implementation 'com.github.hmcts:service-auth-provider-java-client:4.1.2'
 
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '10.13.0'
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '10.13.0'
-    runtimeOnly group: 'org.flywaydb', name: 'flyway-database-postgresql', version: '10.13.0'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.22.3'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
     implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
@@ -462,6 +460,26 @@ dependencies {
     testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
     testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
+
+    testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
+
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
 
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
