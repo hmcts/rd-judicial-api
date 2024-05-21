@@ -15,19 +15,19 @@ public interface ElinksFeignClient {
     @GetMapping(value = "/reference_data/base_location")
     @RequestLine("GET /reference_data/base_location")
     @Headers({"Authorization: {authorization}",
-            "Content-Type: application/json"})
+        "Content-Type: application/json"})
     Response getBaseLocationDetails();
 
     @GetMapping(value = "/reference_data/location")
     @RequestLine("GET /reference_data/location")
     @Headers({"Authorization: {authorization}",
-            "Content-Type: application/json"})
+        "Content-Type: application/json"})
     Response getLocationDetails();
 
     @GetMapping(value = "/people")
     @RequestLine("GET /people")
     @Headers({"Authorization: {authorization}",
-            "Content-Type: application/json"})
+        "Content-Type: application/json"})
     Response getPeopleDetails(@RequestParam("updated_since") String updatedSince,
                               @RequestParam("per_page") String perPage, @RequestParam("page") String page,
                               @RequestParam("include_previous_appointments") boolean includePreviousAppointments);
@@ -35,7 +35,7 @@ public interface ElinksFeignClient {
     @GetMapping(value = "/leavers")
     @RequestLine("GET /leavers")
     @Headers({"Authorization: {authorization}",
-            "Content-Type: application/json"})
+        "Content-Type: application/json"})
 
     Response getLeaversDetails(@RequestParam("left_since") String updatedSince,
                               @RequestParam("per_page") String perPage, @RequestParam("page") String page);

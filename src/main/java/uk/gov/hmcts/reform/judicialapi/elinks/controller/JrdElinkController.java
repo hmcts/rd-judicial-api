@@ -47,8 +47,8 @@ public class JrdElinkController {
                     + "the required result.",
             description = "**Valid IDAM role is required to access this endpoint**",
             security = {
-                    @SecurityRequirement(name = "Authorization"),
-                    @SecurityRequirement(name = "ServiceAuthorization")
+                @SecurityRequirement(name = "Authorization"),
+                @SecurityRequirement(name = "ServiceAuthorization")
             }
     )
 
@@ -92,8 +92,8 @@ public class JrdElinkController {
                     + "the required result.",
             description = "**IDAM Roles to access API** :\n jrd-system-user,\n jrd-admin",
             security = {
-                    @SecurityRequirement(name = "Authorization"),
-                    @SecurityRequirement(name = "ServiceAuthorization")
+                @SecurityRequirement(name = "Authorization"),
+                @SecurityRequirement(name = "ServiceAuthorization")
             }
     )
 

@@ -53,8 +53,8 @@ public class JrdUsersController {
             summary = "This API returns judicial user profiles with their appointments and authorisations",
             description = "**IDAM Roles to access API** :\n jrd-system-user,\n jrd-admin",
             security = {
-                    @SecurityRequirement(name = "Authorization"),
-                    @SecurityRequirement(name = "ServiceAuthorization")
+                @SecurityRequirement(name = "Authorization"),
+                @SecurityRequirement(name = "ServiceAuthorization")
             }
     )
 
@@ -112,8 +112,8 @@ public class JrdUsersController {
                     + "the required result.",
             description = "**Valid IDAM role is required to access this endpoint**",
             security = {
-                    @SecurityRequirement(name = "Authorization"),
-                    @SecurityRequirement(name = "ServiceAuthorization")
+                @SecurityRequirement(name = "Authorization"),
+                @SecurityRequirement(name = "ServiceAuthorization")
             }
     )
 
@@ -158,8 +158,8 @@ public class JrdUsersController {
                     + "and authorisations for the given request CCD Service Name or Objectid or SIDAMID",
             description = "**IDAM Roles to access API** :\n jrd-system-user,\n jrd-admin",
             security = {
-                    @SecurityRequirement(name = "Authorization"),
-                    @SecurityRequirement(name = "ServiceAuthorization")
+                @SecurityRequirement(name = "Authorization"),
+                @SecurityRequirement(name = "ServiceAuthorization")
             }
     )
 

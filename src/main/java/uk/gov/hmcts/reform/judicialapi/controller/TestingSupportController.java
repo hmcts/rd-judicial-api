@@ -34,40 +34,40 @@ public class TestingSupportController {
             description = "This API create idam user profile for all the judicial user profiles.",
 
             security = {
-                    @SecurityRequirement(name = "ServiceAuthorization"),
-                    @SecurityRequirement(name = "Authorization")
+                @SecurityRequirement(name = "ServiceAuthorization"),
+                @SecurityRequirement(name = "Authorization")
             }
     )
     @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Create list of  idam user profiles for judicial user profiles",
-                    content = @Content(schema = @Schema(implementation = IdamUserProfileResponse.class))
+        @ApiResponse(
+            responseCode = "200",
+            description = "Create list of  idam user profiles for judicial user profiles",
+            content = @Content(schema = @Schema(implementation = IdamUserProfileResponse.class))
             ),
-            @ApiResponse(
-                    responseCode = "400",
-                    description = "Bad Request",
-                    content = @Content
+        @ApiResponse(
+            responseCode = "400",
+            description = "Bad Request",
+            content = @Content
             ),
-            @ApiResponse(
-                    responseCode = "401",
-                    description = "User Authentication Failed",
-                    content = @Content
+        @ApiResponse(
+            responseCode = "401",
+            description = "User Authentication Failed",
+            content = @Content
             ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Unauthorized",
-                    content = @Content
+        @ApiResponse(
+            responseCode = "403",
+            description = "Unauthorized",
+            content = @Content
             ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "No Users Found",
-                    content = @Content
+        @ApiResponse(
+            responseCode = "404",
+            description = "No Users Found",
+            content = @Content
             ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content
+        @ApiResponse(
+            responseCode = "500",
+            description = "Internal Server Error",
+            content = @Content
             )
     })
     @GetMapping(path = "/testing-support/sidam/actions/create-users",

@@ -34,7 +34,7 @@ import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.UNKNOWN_E
 
 @Slf4j
 @ControllerAdvice(basePackages = {"uk.gov.hmcts.reform.judicialapi.controller",
-        "uk.gov.hmcts.reform.judicialapi.elinks"})
+    "uk.gov.hmcts.reform.judicialapi.elinks"})
 @RequestMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 public class ExceptionMapper {
 
