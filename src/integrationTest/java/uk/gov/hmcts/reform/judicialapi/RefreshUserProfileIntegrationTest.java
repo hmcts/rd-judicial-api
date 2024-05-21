@@ -113,9 +113,9 @@ class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationT
     @DisplayName("AC6 - Scenario: Full list of Judicial user details is sorted based on the sort_column")
     @ParameterizedTest
     @CsvSource({
-            "jrd-system-user,ASC",
-            "jrd-admin,ASC",
-            "jrd-admin,DESC"
+        "jrd-system-user,ASC",
+        "jrd-admin,ASC",
+        "jrd-admin,DESC"
     })
     void shouldReturn_200_ValidParameters_sorted(String role, String sortDirection) {
         mockJwtToken(role);

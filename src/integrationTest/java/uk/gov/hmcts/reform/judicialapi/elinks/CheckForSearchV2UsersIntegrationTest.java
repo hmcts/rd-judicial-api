@@ -68,9 +68,9 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-            "jrd-admin,BBA3",
-            "jrd-system-user,BFA1",
-            "jrd-admin,BFA1",})
+                "jrd-admin,BBA3",
+                "jrd-system-user,BFA1",
+                "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedForGivenSearchStringForsscsAndIac(String role, String serviceCode) {
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
@@ -91,9 +91,9 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-            "jrd-admin,BBA3",
-            "jrd-system-user,BFA1",
-            "jrd-admin,BFA1",})
+                "jrd-admin,BBA3",
+                "jrd-system-user,BFA1",
+                "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedForSscsAndIacExpired(String role, String serviceCode) {
         mockJwtToken(role);
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
@@ -109,9 +109,9 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-            "jrd-admin,BBA3",
-            "jrd-system-user,BFA1",
-            "jrd-admin,BFA1",})
+                "jrd-admin,BBA3",
+                "jrd-system-user,BFA1",
+                "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedForSscsAndIacAppointmentActiveAuthExpired(String role,
                                                                                           String serviceCode) {
         mockJwtToken(role);
@@ -128,9 +128,9 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-            "jrd-admin,BBA3",
-            "jrd-system-user,BFA1",
-            "jrd-admin,BFA1",})
+                "jrd-admin,BBA3",
+                "jrd-system-user,BFA1",
+                "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedForSscsAndIacAppointmentExpiredAuthActive(String role,
                                                                                           String serviceCode) {
         mockJwtToken(role);
@@ -147,9 +147,9 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-            "jrd-admin,BBA3",
-            "jrd-system-user,BFA1",
-            "jrd-admin,BFA1",})
+                "jrd-admin,BBA3",
+                "jrd-system-user,BFA1",
+                "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedForSscsAndIacAppointmentActiveSscsAuthActive(String role,
                                                                                              String serviceCode) {
 
@@ -172,9 +172,9 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BBA3",
-            "jrd-admin,BBA3",
-            "jrd-system-user,BFA1",
-            "jrd-admin,BFA1",})
+                "jrd-admin,BBA3",
+                "jrd-system-user,BFA1",
+                "jrd-admin,BFA1",})
     void shouldReturn200WhenUserProfileRequestedSscsAppointmentExpiredIacSscsAuthActive(String role,
                                                                                         String serviceCode) {
 
@@ -197,7 +197,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
 
     @ParameterizedTest
     @CsvSource({"jrd-system-user,BHA1",
-            "jrd-admin,BHA1"})
+                "jrd-admin,BHA1"})
     void shouldReturn200WhenUserProfileRequestedFamilyAppointmentActiveAuthExpires(String role,
                                                                                    String serviceCode) {
 

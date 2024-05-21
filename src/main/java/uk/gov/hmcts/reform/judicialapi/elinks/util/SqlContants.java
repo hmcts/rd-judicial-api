@@ -2,7 +2,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
 public class SqlContants {
 
-    private SqlContants(){
+    private SqlContants() {
 
     }
 
