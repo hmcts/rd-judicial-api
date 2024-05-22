@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath("net.serenity-bdd:serenity-gradle-plugin:2.4.34")
+        classpath("net.serenity-bdd:serenity-gradle-plugin:3.2.0")
     }
 }
 
@@ -28,7 +28,7 @@ def versions = [
         lombok             : '1.18.32',
         pitest             : '1.16.0',
         reformLogging      : '6.0.1',
-        serenity           : '2.0.76',
+        serenity           : '3.2.0',
         springBoot         : '2.7.18',
         springfoxSwagger   : '2.9.2',
         restAssured        : '4.3.3',
@@ -597,6 +597,13 @@ configurations.all {
                     || details.requested.name == 'bcprov-jdk18on')
         ){
             details.useVersion versions.bouncycastle
+        }
+
+        // guice 5.x stopped shipping no_aop jar
+        if (details.requested.group == 'com.google.inject' && details.requested.name == "guice") {
+            details.artifactSelection {
+                it.selectArtifact(DependencyArtifact.DEFAULT_TYPE, null, null)
+            }
         }
     }
 }
