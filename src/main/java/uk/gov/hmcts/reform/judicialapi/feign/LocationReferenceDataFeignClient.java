@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.judicialapi.configuration.FeignInterceptorConfigurati
 
 @FeignClient(name = "LocationReferenceDataFeignClient", url = "${locationRefDataUrl}",
         configuration = FeignInterceptorConfiguration.class)
+@SuppressWarnings("checkstyle:Indentation")
 public interface LocationReferenceDataFeignClient {
 
     @GetMapping(value = "/refdata/location/orgServices")

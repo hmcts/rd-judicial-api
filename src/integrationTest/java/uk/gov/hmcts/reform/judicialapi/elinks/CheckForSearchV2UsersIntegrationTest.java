@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@SuppressWarnings("checkstyle:Indentation")
 class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
     @Autowired

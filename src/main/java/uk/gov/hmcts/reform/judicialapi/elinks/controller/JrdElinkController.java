@@ -36,6 +36,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.BAD_R
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("checkstyle:Indentation")
 public class JrdElinkController {
 
     @Autowired

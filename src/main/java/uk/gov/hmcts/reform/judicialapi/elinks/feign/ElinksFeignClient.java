@@ -10,6 +10,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinksFeignIntercept
 
 @FeignClient(name = "ElinksFeignClient", url = "${elinksUrl}",
         configuration = ElinksFeignInterceptorConfiguration.class)
+@SuppressWarnings("checkstyle:Indentation")
 public interface ElinksFeignClient {
 
     @GetMapping(value = "/reference_data/base_location")

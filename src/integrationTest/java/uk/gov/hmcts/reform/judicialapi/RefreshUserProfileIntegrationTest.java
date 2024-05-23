@@ -25,6 +25,7 @@ import static uk.gov.hmcts.reform.judicialapi.util.FeatureConditionEvaluation.FO
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ATLEAST_ONE_PARAMETER_REQUIRED;
 import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.COMMA_SEPARATED_AND_ALL_NOT_ALLOWED;
 
+@SuppressWarnings("checkstyle:Indentation")
 class RefreshUserProfileIntegrationTest extends AuthorizationEnabledIntegrationTest {
 
     private static RefreshRoleRequest refreshRoleRequest;

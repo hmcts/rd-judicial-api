@@ -36,6 +36,7 @@ import static uk.gov.hmcts.reform.judicialapi.constants.ErrorConstants.UNKNOWN_E
 @ControllerAdvice(basePackages = {"uk.gov.hmcts.reform.judicialapi.controller",
     "uk.gov.hmcts.reform.judicialapi.elinks"})
 @RequestMapping(produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
+@SuppressWarnings("checkstyle:Indentation")
 public class ExceptionMapper {
 
     @Value("${loggingComponentName}")

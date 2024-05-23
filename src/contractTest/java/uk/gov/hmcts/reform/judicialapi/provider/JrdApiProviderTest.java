@@ -64,6 +64,7 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {JrdUsersController.class, JudicialUserServiceImpl.class})
 @TestPropertySource(properties = {"defaultPageSize=10", "refresh.pageSize=10", "refresh.sortColumn=objectId"})
 @IgnoreNoPactsToVerify
+@SuppressWarnings("checkstyle:Indentation")
 public class JrdApiProviderTest {
 
     @Autowired
