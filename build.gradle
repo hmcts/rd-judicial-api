@@ -512,6 +512,9 @@ dependencies {
         exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
     }
 
+    testImplementation group: 'org.apache.groovy', name: 'groovy-json', version: '4.0.21'
+    testImplementation group: 'org.apache.groovy', name: 'groovy-xml', version: '4.0.21'
+
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
@@ -646,6 +649,16 @@ dependencies {
         }
         module("org.bouncycastle:bcprov-jdk15on") {
             replacedBy("org.bouncycastle:bcprov-jdk18on")
+        }
+
+        module("org.codehaus.groovy:groovy") {
+            replacedBy("org.apache.groovy:groovy")
+        }
+        module("org.codehaus.groovy:groovy-json") {
+            replacedBy("org.apache.groovy:groovy-json")
+        }
+        module("org.codehaus.groovy:groovy-xml") {
+            replacedBy("org.apache.groovy:groovy-xml")
         }
     }
 }
