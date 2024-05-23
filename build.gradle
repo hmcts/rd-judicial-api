@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath("net.serenity-bdd:serenity-gradle-plugin:3.2.0")
+        classpath("net.serenity-bdd:serenity-gradle-plugin:4.1.13")
     }
 }
 
@@ -16,11 +16,11 @@ plugins {
     id "org.flywaydb.flyway" version '9.22.3'
     id "io.freefair.lombok" version "5.3.3.3"
     id 'uk.gov.hmcts.java' version '0.12.61'
-    id 'au.com.dius.pact' version '4.1.7'
+    id 'au.com.dius.pact' version '4.6.9'
 }
 
 apply plugin: 'java'
-apply plugin: 'net.serenity-bdd.aggregator'
+//apply plugin: 'net.serenity-bdd.aggregator'
 apply plugin: 'project-report'
 apply plugin: 'idea'
 
@@ -28,7 +28,7 @@ def versions = [
         lombok             : '1.18.32',
         pitest             : '1.16.0',
         reformLogging      : '6.0.1',
-        serenity           : '3.2.0',
+        serenity           : '4.1.13',
         springBoot         : '2.7.18',
         springfoxSwagger   : '2.9.2',
         restAssured        : '4.3.3',
@@ -189,7 +189,7 @@ pmd {
 task integration(type: Test, description: 'Runs the integration tests.', group: 'Verification') {
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
-    finalizedBy aggregate
+//    finalizedBy aggregate
 }
 
 task functional(type: Test, description: 'Runs the functional tests.', group: 'Verification') {
@@ -198,7 +198,7 @@ task functional(type: Test, description: 'Runs the functional tests.', group: 'V
 
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
-    finalizedBy aggregate
+//    finalizedBy aggregate
 }
 
 task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verification') {
@@ -421,6 +421,8 @@ dependencies {
     }
 
 
+//    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0'
+
     testImplementation("org.hamcrest:hamcrest-junit:2.0.0.0") {
         exclude group: "org.hamcrest", module: "hamcrest-core"
         exclude group: "org.hamcrest", module: "hamcrest-library"
@@ -466,8 +468,43 @@ dependencies {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
         exclude group: "org.apache.sling"
     }
+    testImplementation (group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity)
+
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-core', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-junit', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+    }
+    testImplementation(group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity) {
+        exclude group: 'com.vladsch.flexmark', module: 'flexmark-all'
+        exclude group: 'javax.websocket', module: 'javax.websocket-api'
+    }
+
+    implementation(group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0') {
+        exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
+        exclude group: "org.apache.sling"
+    }
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.0.0'
     testImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: '4.5.1'
+    testImplementation(group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+    }
+
+    testImplementation(group: 'io.rest-assured', name: 'xml-path', version: '4.5.1') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-json'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+    }
+
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.33'
@@ -592,10 +629,6 @@ configurations.all {
                 it.selectArtifact(DependencyArtifact.DEFAULT_TYPE, null, null)
             }
         }
-    }
-
-    resolutionStrategy.dependencySubstitution {
-        substitute module('com.google.inject:guice') using module('com.google.inject:guice:5.0.1') withoutClassifier()
     }
 }
 
