@@ -2,9 +2,9 @@ package uk.gov.hmcts.reform.judicialapi;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.annotations.WithTags;
+import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
