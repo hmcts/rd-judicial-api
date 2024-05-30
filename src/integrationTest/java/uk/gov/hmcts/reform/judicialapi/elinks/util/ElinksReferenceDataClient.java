@@ -1,8 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.TextCodec;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import lombok.extern.slf4j.Slf4j;
@@ -63,9 +61,9 @@ public class ElinksReferenceDataClient {
 
     public static String generateS2SToken(String serviceName) {
         return Jwts.builder()
-                .setSubject(serviceName)
-                .setIssuedAt(new Date())
-                .signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode("AA"))
+                .subject(serviceName)
+                .issuedAt(new Date())
+                .signWith(Jwts.SIG.HS256.key().build())
                 .compact();
     }
 

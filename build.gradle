@@ -41,7 +41,8 @@ def versions = [
         logback            : '1.2.13',
         bytebuddy          : '1.12.7',
         testContainer_postgresql: '1.17.6',
-        bouncycastle       : '1.77'
+        bouncycastle       : '1.77',
+        jwtVersion         : '0.12.5'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
@@ -379,7 +380,9 @@ dependencies {
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
     implementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
-    implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.12.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: versions.jwtVersion
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: versions.jwtVersion
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: versions.jwtVersion
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.37.3'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
