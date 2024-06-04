@@ -473,7 +473,7 @@ dependencies {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
         exclude group: "org.apache.sling"
     }
-    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.0.0'
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.5.1'
     testImplementation group: 'io.rest-assured', name: 'rest-assured-common', version: '4.5.1'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: versions.springBoot
 
