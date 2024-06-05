@@ -314,7 +314,7 @@ repositories {
 
 dependencies {
 
-    implementation 'org.testng:testng:7.1.0'
+    implementation 'org.testng:testng:7.10.2'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
     compileOnly group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
