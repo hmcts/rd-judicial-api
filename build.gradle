@@ -37,11 +37,12 @@ def versions = [
         launchDarklySdk    : '5.10.9',
         pact_version       : '4.1.7',
         log4j              : '2.18.0',
-        springVersion      : '5.3.34',
+        springVersion      : '5.3.36',
         logback            : '1.2.13',
         bytebuddy          : '1.12.7',
         testContainer_postgresql: '1.17.6',
-        bouncycastle       : '1.77'
+        bouncycastle       : '1.78.1',
+        jwtVersion         : '0.12.5'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
@@ -466,7 +467,7 @@ dependencies {
     }
     testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
-    testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
+    testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.16'
 
 //    implementation(group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0') {
 //        exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
@@ -643,6 +644,10 @@ configurations.all {
                 it.selectArtifact(DependencyArtifact.DEFAULT_TYPE, null, null)
             }
         }
+    }
+
+    resolutionStrategy.dependencySubstitution {
+        substitute module('com.google.inject:guice') using module('com.google.inject:guice:5.1.0') withoutClassifier()
     }
 }
 
