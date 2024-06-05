@@ -467,7 +467,7 @@ dependencies {
     }
     testImplementation group: 'org.pitest', name: 'pitest', version: versions.pitest
     testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.15.0'
-    testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.15'
+    testImplementation group: 'org.pitest', name: 'pitest-junit5-plugin', version: '0.16'
 
     implementation(group: 'io.rest-assured', name: 'rest-assured', version: '3.3.0') {
         exclude group: "com.sun.xml.bind", module: "jaxb-osgi"
