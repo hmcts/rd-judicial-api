@@ -16,7 +16,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.18'
     id "org.flywaydb.flyway" version '10.13.0'
     id "io.freefair.lombok" version "5.3.3.3"
-    id 'uk.gov.hmcts.java' version '0.12.61'
+    id 'uk.gov.hmcts.java' version '0.12.63'
     id 'au.com.dius.pact' version '4.6.9'
 }
 
