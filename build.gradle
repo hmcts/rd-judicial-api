@@ -36,7 +36,7 @@ def versions = [
         jackson            : '2.14.0-rc1',
         launchDarklySdk    : '5.10.9',
         pact_version       : '4.1.7',
-        log4j              : '2.18.0',
+        log4j              : '2.23.1',
         springVersion      : '5.3.36',
         logback            : '1.2.13',
         bytebuddy          : '1.12.7',
