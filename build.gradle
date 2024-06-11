@@ -31,7 +31,7 @@ def versions = [
         reformLogging      : '6.0.1',
         serenity           : '2.0.76',
         springBoot         : '2.7.18',
-        springfoxSwagger   : '2.9.2',
+        springfoxSwagger   : '2.10.5',
         restAssured        : '4.3.3',
         jackson            : '2.14.0-rc1',
         launchDarklySdk    : '5.10.9',
