@@ -5,6 +5,7 @@ buildscript {
     }
 }
 
+
 plugins {
     id 'application'
     id 'jacoco'
