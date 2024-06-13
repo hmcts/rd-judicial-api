@@ -25,6 +25,7 @@ import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -65,6 +66,8 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     protected static final String LEAVERS_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/leavers.json";
     protected static final String DELETED_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/deleted.json";
     protected static final String PEOPLE_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/people.json";
+    protected static final String PEOPLE_API_NULL_APPOINTMENT_ID_RESPONSE_JSON =
+            WIREMOCK_RESPONSES_FOLDER + "/people_null_appointment_id_for_authorisation.json";
 
     protected static final String PEOPLE_API_DUPLICATE_OBJECT_ID_RESPONSE_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/people_duplicate_object_Id.json";
@@ -659,17 +662,21 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     }
 
     protected void verifyUserAuthorisationsData(TestDataArguments testDataArguments) {
+        verifyUserAuthorisationsData(testDataArguments, false);
+    }
+
+    protected void verifyUserAuthorisationsData(TestDataArguments testDataArguments, boolean isAppointmentIdNull) {
         final List<Authorisation> authorisations = authorisationsRepository.findAll();
 
         assertThat(authorisations).isNotNull().isNotEmpty().hasSize(testDataArguments.expectedAuthorisationSize());
 
-        verifyFirstUserAuthorisationsData(authorisations);
+        verifyFirstUserAuthorisationsData(authorisations, isAppointmentIdNull);
         if (!testDataArguments.isDuplicateUserProfile()) {
             verifySecondUserAuthorisationsData(authorisations, testDataArguments.expectedAuthorisationSize());
         }
     }
 
-    private void verifyFirstUserAuthorisationsData(List<Authorisation> authorisations) {
+    private void verifyFirstUserAuthorisationsData(List<Authorisation> authorisations, boolean isAppointmentIdNull) {
         final Authorisation firstUserAuthorisation1 = authorisations.get(0);
         final Authorisation firstUserAuthorisation2 = authorisations.get(1);
 
@@ -697,7 +704,11 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         assertThat(firstUserAuthorisation2.getTicketCode()).isEqualTo("328");
         assertThat(firstUserAuthorisation2.getLowerLevel())
                 .isEqualTo("Criminal Injuries Compensations");
-        assertThat(firstUserAuthorisation2.getAppointmentId()).isEqualTo("25503");
+        if (isAppointmentIdNull) {
+            assertNull(firstUserAuthorisation2.getAppointmentId());
+        } else {
+            assertThat(firstUserAuthorisation2.getAppointmentId()).isEqualTo("25503");
+        }
         assertThat(firstUserAuthorisation2.getAuthorisationId()).isEqualTo("14752");
         assertThat(firstUserAuthorisation2.getJurisdictionId()).isEqualTo("27");
     }

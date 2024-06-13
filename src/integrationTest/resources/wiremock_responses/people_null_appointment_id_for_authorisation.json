@@ -99,7 +99,7 @@
         },
         {
           "authorisation_id": 14752,
-          "appointment_id": 25503,
+          "appointment_id": null,
           "jurisdiction": "Tribunals",
           "jurisdiction_id": 27,
           "ticket": "Criminal Injuries Compensations",
