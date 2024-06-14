@@ -6,12 +6,16 @@ import org.springframework.http.HttpStatus;
 @Builder
 public record TestDataArguments(
         String eLinksPeopleApiResponseJson,
+        String eLinksPeopleApiUpdateResponseJson,
         String eLinksLocationApiResponseJson,
         String eLinksLeaversApiResponseJson,
         String eLinksDeletedApiResponseJson,
         int expectedAppointmentsSize,
         int expectedAuthorisationSize,
         int expectedRoleSize,
+        int expectedAppointmentsSizeUpdate,
+        int expectedAuthorisationSizeUpdate,
+        int expectedRoleSizeUpdate,
         boolean expectedActiveFlag,
         boolean expectedDeletedFlag,
         String expectedLastWorkingDate,

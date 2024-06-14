@@ -61,6 +61,45 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         verifyExceptions(testDataArguments);
     }
 
+    @DisplayName("Success - ELinks People Api Data Load Success Scenarios")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideDataForPeopleApiUpdate")
+    void shouldLoadPeopleApiDataUpdate(TestDataArguments testDataArguments) throws Exception {
+
+        final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
+        final String locationApiResponseJson = readJsonAsString(testDataArguments.eLinksLocationApiResponseJson());
+
+        stubLocationApiResponse(locationApiResponseJson, OK);
+        stubPeopleApiResponse(peopleApiResponseJson, OK);
+
+        loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
+        loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
+
+        verifySavedOriginalELinksResponses();
+
+        verifyUserProfileData(testDataArguments);
+
+        verifyUserAppointmentsData(testDataArguments);
+
+        verifyUserAuthorisationsData(testDataArguments);
+
+        verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
+
+        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus());
+
+        verifyExceptions(testDataArguments);
+
+        final String peopleApiUpdateResponseJson = readJsonAsString(testDataArguments
+                .eLinksPeopleApiUpdateResponseJson());
+
+        stubPeopleApiResponse(peopleApiUpdateResponseJson, OK);
+        loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
+
+        verifyUserProfileData(testDataArguments);
+
+        verifyUserAppointmentsData(testDataArguments, true);
+    }
+
     @DisplayName("Negative - ELinks People Api Data Load Failure Scenarios")
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideDataLoadFailStatusCodes")

@@ -65,6 +65,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     protected static final String LEAVERS_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/leavers.json";
     protected static final String DELETED_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/deleted.json";
     protected static final String PEOPLE_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/people.json";
+    protected static final String PEOPLE_API_UPDATE_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/people_update.json";
 
     protected static final String PEOPLE_API_DUPLICATE_OBJECT_ID_RESPONSE_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/people_duplicate_object_Id.json";
@@ -89,6 +90,32 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     protected static final String PEOPLE_INVALID_APPOINTMENT_ROLE_NAME_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/people_invalid_appointment_role_name.json";
     private static final String YYYY_MM_DD_T_HH_MM_SS_SSS_Z = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+    public static Stream<Arguments> provideDataForPeopleApiUpdate() {
+
+        final TestDataArguments successLoadTestDataArguments =
+                TestDataArguments
+                        .builder()
+                        .eLinksPeopleApiResponseJson(PEOPLE_API_RESPONSE_JSON)
+                        .eLinksPeopleApiUpdateResponseJson(PEOPLE_API_UPDATE_RESPONSE_JSON)
+                        .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
+                        .expectedAppointmentsSize(4)
+                        .expectedAuthorisationSize(4)
+                        .expectedRoleSize(2)
+                        .expectedAppointmentsSizeUpdate(5)
+                        .expectedAuthorisationSizeUpdate(4)
+                        .expectedRoleSizeUpdate(2)
+                        .expectedUserProfiles(2)
+                        .expectedJobStatus(SUCCESS)
+                        .expectedActiveFlag(true)
+                        .expectedLastWorkingDate("2028-07-23")
+                        .build();
+
+        return Stream.of(
+                arguments(
+                        named("Should load people data with success status", successLoadTestDataArguments))
+        );
+    }
 
     public static Stream<Arguments> provideDataForPeopleApi() {
 
@@ -563,18 +590,34 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     }
 
     protected void verifyUserAppointmentsData(TestDataArguments testDataArguments) {
+        verifyUserAppointmentsData(testDataArguments, false);
+    }
+
+    protected void verifyUserAppointmentsData(TestDataArguments testDataArguments, boolean update) {
         final List<Appointment> appointments = appointmentsRepository.findAll();
 
-        assertThat(appointments).isNotNull().isNotEmpty().hasSize(testDataArguments.expectedAppointmentsSize());
 
-        verifyFirstUserAppointmentsData(appointments);
+        if (update) {
+            assertThat(appointments).isNotNull().isNotEmpty().hasSize(testDataArguments
+                    .expectedAppointmentsSizeUpdate());
+            verifyFirstUserAppointmentsDataUpdate(appointments);
+        } else {
+            assertThat(appointments).isNotNull().isNotEmpty().hasSize(testDataArguments.expectedAppointmentsSize());
+            verifyFirstUserAppointmentsData(appointments);
+        }
 
-        if (!testDataArguments.isDuplicateUserProfile()) {
+        if (!testDataArguments.isDuplicateUserProfile() && !update) {
             verifySecondUserAppointmentsData(appointments, testDataArguments.expectedAppointmentsSize());
         }
     }
 
     private void verifyFirstUserAppointmentsData(List<Appointment> appointments) {
+        verifyFirstUserAppointmentsData(appointments, "District Judge", "Tribunal Judge");
+    }
+
+    private void verifyFirstUserAppointmentsData(List<Appointment> appointments,
+                                                 String mappingName1,
+                                                 String mappingName2) {
         Appointment firstUserAppointments1 = appointments.get(0);
         Appointment firstUserAppointments2 = appointments.get(1);
 
@@ -591,7 +634,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         assertThat(firstUserAppointments1.getStartDate()).isEqualTo("2010-03-23");
         assertThat(firstUserAppointments1.getEndDate()).isEqualTo("2026-07-23");
         assertThat(firstUserAppointments1.getContractTypeId()).isEqualTo("5");
-        assertThat(firstUserAppointments1.getAppointmentMapping()).isEqualTo("District Judge");
+        assertThat(firstUserAppointments1.getAppointmentMapping()).isEqualTo(mappingName1);
         assertThat(firstUserAppointments1.getAppointmentType()).isEqualTo("SPTW-50%");
         assertThat(firstUserAppointments1.getCreatedDate()).isNotNull();
         assertThat(firstUserAppointments1.getLastLoadedDate()).isNotNull();
@@ -608,7 +651,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         assertThat(firstUserAppointments2.getStartDate()).isEqualTo("2007-05-11");
         assertThat(firstUserAppointments2.getEndDate()).isEqualTo("2014-06-20");
         assertThat(firstUserAppointments2.getContractTypeId()).isEqualTo("1");
-        assertThat(firstUserAppointments2.getAppointmentMapping()).isEqualTo("Tribunal Judge");
+        assertThat(firstUserAppointments2.getAppointmentMapping()).isEqualTo(mappingName2);
         assertThat(firstUserAppointments2.getAppointmentType()).isEqualTo("Fee-paid");
         assertThat(firstUserAppointments2.getCreatedDate()).isNotNull();
         assertThat(firstUserAppointments2.getLastLoadedDate()).isNotNull();
@@ -656,6 +699,29 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
             assertThat(secondUserAppointments2.getLocation()).isEqualTo("Unassigned");
             assertThat(secondUserAppointments2.getJoBaseLocationId()).isEqualTo("2218");
         }
+    }
+
+    private void verifyFirstUserAppointmentsDataUpdate(List<Appointment> appointments) {
+        verifyFirstUserAppointmentsData(appointments, "District Judge Update", "Tribunal Judge Update");
+        Appointment firstUserAppointments3 = appointments.get(2);
+        assertThat(firstUserAppointments3).isNotNull();
+
+        assertThat(firstUserAppointments3.getPersonalCode()).isEqualTo("4913085");
+        assertThat(firstUserAppointments3.getAppointmentId()).isEqualTo("25504");
+        assertThat(firstUserAppointments3.getRoleNameId()).isEqualTo("84");
+        assertThat(firstUserAppointments3.getType()).isEqualTo("Tribunals");
+        assertThat(firstUserAppointments3.getBaseLocationId()).isEqualTo("1815");
+        assertThat(firstUserAppointments3.getEpimmsId()).isEqualTo("1123");
+        assertThat(firstUserAppointments3.getIsPrincipleAppointment()).isFalse();
+        assertThat(firstUserAppointments3.getStartDate()).isEqualTo("2007-05-11");
+        assertThat(firstUserAppointments3.getEndDate()).isEqualTo("2014-06-20");
+        assertThat(firstUserAppointments3.getContractTypeId()).isEqualTo("1");
+        assertThat(firstUserAppointments3.getAppointmentMapping()).isEqualTo("Tribunal Judge Update2");
+        assertThat(firstUserAppointments3.getAppointmentType()).isEqualTo("Fee-paid");
+        assertThat(firstUserAppointments3.getCreatedDate()).isNotNull();
+        assertThat(firstUserAppointments3.getLastLoadedDate()).isNotNull();
+        assertThat(firstUserAppointments3.getLocation()).isEqualTo("Unassigned");
+        assertThat(firstUserAppointments3.getJoBaseLocationId()).isEqualTo("2218");
     }
 
     protected void verifyUserAuthorisationsData(TestDataArguments testDataArguments) {
