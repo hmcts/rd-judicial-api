@@ -128,4 +128,6 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
 
     void deleteByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
 
+    List<UserProfile> deleteByPersonalCodeIn(List<String> personalCodes);
+
 }

@@ -48,9 +48,11 @@ import static java.util.Objects.nonNull;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELASTICSEARCH;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAMSEARCH;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_ERROR_MESSAGE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_ID_KEY;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAM_TOKEN_ERROR_MESSAGE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECT_ID;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECT_ID_KEY;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.SIDAM_IDS_UPDATED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.USER_PROFILE;
 
@@ -121,7 +123,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 now(),
-                RefDataElinksConstants.JobStatus.FAILED.getStatus(),ELASTICSEARCH);
+                RefDataElinksConstants.JobStatus.FAILED.getStatus(),ELASTICSEARCH, e.getMessage());
             throw new ElinksException(HttpStatus.FORBIDDEN, IDAM_TOKEN_ERROR_MESSAGE,
                     IDAM_TOKEN_ERROR_MESSAGE);
         }
@@ -186,7 +188,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                     schedulerStartTime,
                     now(),
-                    RefDataElinksConstants.JobStatus.FAILED.getStatus(), ELASTICSEARCH);
+                    RefDataElinksConstants.JobStatus.FAILED.getStatus(), ELASTICSEARCH, ex.getMessage());
             throw new ElinksException(HttpStatus.valueOf(response.status()), ex.getMessage(),
                     IDAM_ERROR_MESSAGE);
         }
@@ -258,7 +260,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                         schedulerStartTime,
                         now(),
-                        RefDataElinksConstants.JobStatus.FAILED.getStatus(), IDAMSEARCH);
+                        RefDataElinksConstants.JobStatus.FAILED.getStatus(), IDAMSEARCH, ex.getMessage());
                 throw new ElinksException(HttpStatus.valueOf(response.status()), ex.getMessage(),
                         IDAM_ERROR_MESSAGE);
             }
@@ -301,9 +303,9 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         if (!filteredObjectIds.isEmpty()) {
             for (var entry : filteredObjectIds.entrySet()) {
                 elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
-                        schedulerStartTime,
-                        entry.getKey(),
-                        OBJECT_ID, errorDescription, USER_PROFILE, entry.getValue(),pageValue);
+                        schedulerStartTime, OBJECT_ID_KEY + entry.getKey(),
+                        OBJECT_ID, errorDescription, USER_PROFILE,
+                        IDAM_ID_KEY + entry.getValue(), pageValue);
             }
         }
     }

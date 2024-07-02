@@ -32,6 +32,10 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.audit.AppointmentsRepositoryAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.audit.AuthorisationsRepositoryAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.audit.JudicialRoleTypeRepositoryAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.audit.ProfileRepositoryAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
@@ -105,6 +109,14 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     protected DataloadSchedulerJobAudit dataloadSchedulerJobAudit;
     @Autowired
     protected ELinksServiceImpl elinksServiceImpl;
+    @Autowired
+    protected JudicialRoleTypeRepositoryAudit judicialRoleTypeRepositoryAudit;
+    @Autowired
+    protected AuthorisationsRepositoryAudit authorisationsRepositoryAudit;
+    @Autowired
+    protected AppointmentsRepositoryAudit appointmentsRepositoryAudit;
+    @Autowired
+    protected ProfileRepositoryAudit profileRepositoryAudit;
     @MockBean
     protected ElinkTopicPublisher elinkTopicPublisher;
     @MockBean

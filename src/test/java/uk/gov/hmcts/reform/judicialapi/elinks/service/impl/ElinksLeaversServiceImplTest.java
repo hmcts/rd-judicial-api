@@ -28,6 +28,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditR
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleDeleteService;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleLeaverService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
@@ -70,6 +72,11 @@ class ElinksLeaversServiceImplTest {
     @Spy
     private ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
 
+    @Spy
+    private ElinksPeopleLeaverService elLinksPeopleLeaverService;
+
+    @Spy
+    private ElinksPeopleDeleteService elinksPeopleDeleteService;
 
     @InjectMocks
     private ELinksServiceImpl elinksServiceImpl;

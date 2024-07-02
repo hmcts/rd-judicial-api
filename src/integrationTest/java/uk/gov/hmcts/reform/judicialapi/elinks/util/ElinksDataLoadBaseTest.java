@@ -25,6 +25,7 @@ import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -47,24 +48,28 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
 
     protected static final String APPOINTMENT_BASE_LOCATION_MISSING_ERROR_MSG =
-            "Appointment's Base Location ID : null  is not available in location_type table";
+            "Appointment's Base Location ID : null is not available in location_type table";
     protected static final String APPOINTMENT_TYPE_MISSING_ERROR_MSG =
             "The Type field is null for the given Appointment.";
     protected static final String APPOINTMENT_ID_UNAVAILABLE_ERROR_MSG =
-            "Appointment  ID : 25513  is not available in Appointment Table";
-    protected static final String JUDICIARY_ROLE_NAME_MISSING_ERROR_MSG = "Judiciary Role Name ID is invalid";
+            "Appointment ID : 25513 is not available in Appointment Table";
+    protected static final String INVALID_JUDICIARY_ROLE = "Invalid Judiciary Role";
     protected static final String INVALID_BASE_LOCATION_ID_ERROR_MSG =
-            "Appointment's Base Location ID : 5577  is not available in location_type table";
+            "Appointment's Base Location ID : 5577 is not available in location_type table";
     protected static final String INVALID_APPOINTMENT_LOCATION_ERROR_MSG =
-            "Location  : North London   is not available in jrd_lrd_region_mapping table";
-    protected static final String INVALID_APPOINTMENT_ROLE_NAME_ERROR_MSG = "Role Name  : Unknown   is invalid";
+            "Location : North London  is not available in jrd_lrd_region_mapping table";
+    protected static final String INVALID_APPOINTMENT_ROLE_NAME_ERROR_MSG = "Role Name : Unknown is invalid";
     protected static final String BASE_LOCATION_PARENT_ID_NULL_ERROR_MSG =
-            " The Parent ID is null/blanks for Tribunal Base Location ID  1122 in the Location_Type table.";
+            "The Parent ID is null/blanks for Tribunal Base Location ID 1122 in the Location_Type table.";
     private static final String WIREMOCK_RESPONSES_FOLDER = "/wiremock_responses";
     protected static final String LOCATION_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/location.json";
     protected static final String LEAVERS_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/leavers.json";
     protected static final String DELETED_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/deleted.json";
     protected static final String PEOPLE_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/people.json";
+    protected static final String PEOPLE_LOAD_DELETE_API_RESPONSE_JSON =
+            WIREMOCK_RESPONSES_FOLDER + "/people_load_delete.json";
+    protected static final String PEOPLE_API_NULL_APPOINTMENT_ID_RESPONSE_JSON =
+            WIREMOCK_RESPONSES_FOLDER + "/people_null_appointment_id_for_authorisation.json";
 
     protected static final String PEOPLE_API_DUPLICATE_OBJECT_ID_RESPONSE_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/people_duplicate_object_Id.json";
@@ -106,6 +111,20 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedLastWorkingDate("2028-07-23")
                         .build();
 
+        final TestDataArguments successLoadAndDeleteTestDataArguments =
+                TestDataArguments
+                        .builder()
+                        .eLinksPeopleApiResponseJson(PEOPLE_LOAD_DELETE_API_RESPONSE_JSON)
+                        .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
+                        .expectedAppointmentsSize(2)
+                        .expectedAuthorisationSize(2)
+                        .expectedRoleSize(1)
+                        .expectedUserProfiles(1)
+                        .expectedJobStatus(SUCCESS)
+                        .expectedActiveFlag(true)
+                        .expectedLastWorkingDate("2028-07-23")
+                        .build();
+
         final TestDataArguments roleMissingTestDataArguments =
                 TestDataArguments
                         .builder()
@@ -119,7 +138,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .exceptionSize(1)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
-                        .errorMsg1(JUDICIARY_ROLE_NAME_MISSING_ERROR_MSG)
+                        .errorMsg1(INVALID_JUDICIARY_ROLE)
                         .build();
 
         final TestDataArguments baseLocationMissingTestDataArguments =
@@ -238,7 +257,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .exceptionSize(1)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
-                        .errorMsg1(OBJECTIDISDUPLICATED)
+                        .errorMsg1(String.format(OBJECTIDISDUPLICATED, "5f8b26ba-0c8b-4192-b5c7-311d737f0cae"))
                         .build();
 
         final TestDataArguments duplicatePersonalCodeTestDataArguments =
@@ -255,12 +274,14 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .exceptionSize(1)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
-                        .errorMsg1("Personal  Code : 4913085  is already loaded")
+                        .errorMsg1("Personal Code : 4913085 is already loaded")
                         .build();
 
         return Stream.of(
                 arguments(
                         named("Should load people data with success status", successLoadTestDataArguments)),
+                arguments(
+                        named("Should Load and Delete Success Scenarios", successLoadAndDeleteTestDataArguments)),
                 arguments(
                         named(
                                 "Should load people data with partial success status when judiciary role name "
@@ -298,6 +319,28 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                                 + "is present", duplicatePersonalCodeTestDataArguments))
 
 
+        );
+    }
+
+    public static Stream<Arguments> provideDataForPeopleLoadAndDeleteApi() {
+
+        final TestDataArguments successLoadAndDeleteTestDataArguments =
+                TestDataArguments
+                        .builder()
+                        .eLinksPeopleApiResponseJson(PEOPLE_LOAD_DELETE_API_RESPONSE_JSON)
+                        .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
+                        .expectedAppointmentsSize(2)
+                        .expectedAuthorisationSize(2)
+                        .expectedRoleSize(1)
+                        .expectedUserProfiles(1)
+                        .expectedJobStatus(SUCCESS)
+                        .expectedActiveFlag(true)
+                        .expectedLastWorkingDate("2028-07-23")
+                        .build();
+
+        return Stream.of(
+                arguments(
+                        named("Should Load and Delete Success Scenarios", successLoadAndDeleteTestDataArguments))
         );
     }
 
@@ -467,10 +510,10 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .eLinksPeopleApiResponseJson(PEOPLE_API_RESPONSE_JSON)
                         .eLinksDeletedApiResponseJson(DELETED_API_RESPONSE_JSON)
-                        .expectedAppointmentsSize(4)
-                        .expectedAuthorisationSize(4)
-                        .expectedRoleSize(2)
-                        .expectedUserProfiles(2)
+                        .expectedAppointmentsSize(2)
+                        .expectedAuthorisationSize(2)
+                        .expectedRoleSize(1)
+                        .expectedUserProfiles(1)
                         .expectedActiveFlag(false)
                         .expectedDeletedFlag(true)
                         .expectedDeletedOnDate("2022-07-10")
@@ -569,7 +612,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
 
         verifyFirstUserAppointmentsData(appointments);
 
-        if (!testDataArguments.isDuplicateUserProfile()) {
+        if (!testDataArguments.isDuplicateUserProfile() && testDataArguments.expectedUserProfiles() > 1) {
             verifySecondUserAppointmentsData(appointments, testDataArguments.expectedAppointmentsSize());
         }
     }
@@ -659,17 +702,21 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     }
 
     protected void verifyUserAuthorisationsData(TestDataArguments testDataArguments) {
+        verifyUserAuthorisationsData(testDataArguments, false);
+    }
+
+    protected void verifyUserAuthorisationsData(TestDataArguments testDataArguments, boolean isAppointmentIdNull) {
         final List<Authorisation> authorisations = authorisationsRepository.findAll();
 
         assertThat(authorisations).isNotNull().isNotEmpty().hasSize(testDataArguments.expectedAuthorisationSize());
 
-        verifyFirstUserAuthorisationsData(authorisations);
-        if (!testDataArguments.isDuplicateUserProfile()) {
+        verifyFirstUserAuthorisationsData(authorisations, isAppointmentIdNull);
+        if (!testDataArguments.isDuplicateUserProfile() && testDataArguments.expectedUserProfiles() > 1) {
             verifySecondUserAuthorisationsData(authorisations, testDataArguments.expectedAuthorisationSize());
         }
     }
 
-    private void verifyFirstUserAuthorisationsData(List<Authorisation> authorisations) {
+    private void verifyFirstUserAuthorisationsData(List<Authorisation> authorisations, boolean isAppointmentIdNull) {
         final Authorisation firstUserAuthorisation1 = authorisations.get(0);
         final Authorisation firstUserAuthorisation2 = authorisations.get(1);
 
@@ -697,7 +744,11 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         assertThat(firstUserAuthorisation2.getTicketCode()).isEqualTo("328");
         assertThat(firstUserAuthorisation2.getLowerLevel())
                 .isEqualTo("Criminal Injuries Compensations");
-        assertThat(firstUserAuthorisation2.getAppointmentId()).isEqualTo("25503");
+        if (isAppointmentIdNull) {
+            assertNull(firstUserAuthorisation2.getAppointmentId());
+        } else {
+            assertThat(firstUserAuthorisation2.getAppointmentId()).isEqualTo("25503");
+        }
         assertThat(firstUserAuthorisation2.getAuthorisationId()).isEqualTo("14752");
         assertThat(firstUserAuthorisation2.getJurisdictionId()).isEqualTo("27");
     }
@@ -893,5 +944,9 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         profileRepository.deleteAll();
         baseLocationRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
+        authorisationsRepositoryAudit.deleteAll();
+        judicialRoleTypeRepositoryAudit.deleteAll();
+        appointmentsRepositoryAudit.deleteAll();
+        profileRepositoryAudit.deleteAll();
     }
 }

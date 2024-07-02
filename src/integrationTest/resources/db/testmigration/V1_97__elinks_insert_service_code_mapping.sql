@@ -5,5 +5,3 @@ INSERT INTO dbjudicialdata.judicial_service_code_mapping (service_id,ticket_code
     ('128','405','ABA5','Family Private Law');
 
 COMMIT;
-
-COMMIT;

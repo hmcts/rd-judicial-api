@@ -99,6 +99,39 @@ public class ElinksJobSchedulerIntegrationTest extends ElinksDataLoadBaseTest {
 
     }
 
+    @DisplayName("Should run scheduler job and load elinks api's data when appointment id null for authorisations")
+    @Test
+    void shouldRunSchedulerJobAndLoadAllElinksApiDataWhenAppointmentIdNull() throws IOException {
+        ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
+        given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
+        willDoNothing().given(elinkTopicPublisher).sendMessage(anyList(), anyString());
+
+        stubLocationApiResponse(readJsonAsString(LOCATION_API_RESPONSE_JSON), OK);
+        stubPeopleApiResponse(readJsonAsString(PEOPLE_API_NULL_APPOINTMENT_ID_RESPONSE_JSON), OK);
+        stubLeaversApiResponse(readJsonAsString(LEAVERS_API_RESPONSE_JSON), OK);
+        stubDeletedApiResponse(readJsonAsString(DELETED_API_RESPONSE_JSON), OK);
+        stubIdamResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON), OK);
+        stubIdamTokenResponse(OK);
+
+        runElinksDataLoadJob();
+
+        final TestDataArguments testDataArguments = getTestDataArguments();
+
+        verifyLocationData();
+
+        verifyUserProfileData(testDataArguments);
+
+        verifyUserAppointmentsData(testDataArguments);
+
+        verifyUserAuthorisationsData(testDataArguments, true);
+
+        verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
+
+        verifyAudit();
+
+        verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+    }
+
     private void verifyAudit() {
 
         final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
@@ -177,10 +210,10 @@ public class ElinksJobSchedulerIntegrationTest extends ElinksDataLoadBaseTest {
     private TestDataArguments getTestDataArguments() {
         return
                 TestDataArguments.builder()
-                        .expectedAppointmentsSize(4)
-                        .expectedAuthorisationSize(4)
-                        .expectedRoleSize(2)
-                        .expectedUserProfiles(2)
+                        .expectedAppointmentsSize(2)
+                        .expectedAuthorisationSize(2)
+                        .expectedRoleSize(1)
+                        .expectedUserProfiles(1)
                         .expectedActiveFlag(false)
                         .expectedDeletedFlag(true)
                         .expectedDeletedOnDate("2022-07-10")

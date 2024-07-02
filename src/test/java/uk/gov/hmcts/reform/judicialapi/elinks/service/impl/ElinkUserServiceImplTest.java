@@ -33,9 +33,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JrdRegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.RegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
@@ -83,9 +83,9 @@ class ElinkUserServiceImplTest {
 
 
     @Mock
-    RegionMappingRepository regionMappingRepository;
+    JrdRegionMappingRepository regionMappingRepository;
 
-    @Mock
+    @Spy
     private LocationReferenceDataFeignClient locationReferenceDataFeignClient;
 
     @Spy

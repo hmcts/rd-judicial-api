@@ -120,7 +120,7 @@ class IdamElasticSearchServiceImplTest {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         assertThrows(ElinksException.class, () -> idamElasticSearchServiceImpl.getIdamBearerToken(LocalDateTime.now()));
         verify(elinkDataIngestionSchedularAudit,times(1))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+            .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
     }
 
     @Test
@@ -211,8 +211,10 @@ class IdamElasticSearchServiceImplTest {
                 .status(500).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
         assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed());
-        verify(elinkDataIngestionSchedularAudit,times(2))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+        verify(elinkDataIngestionSchedularAudit,times(1))
+                .auditSchedulerStatus(any(),any(),any(),any(),any());
+        verify(elinkDataIngestionSchedularAudit,times(1))
+            .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
     }
 
     @Test
@@ -231,8 +233,10 @@ class IdamElasticSearchServiceImplTest {
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
         when(userProfileRepository.fetchObjectIdFromCurrentDate()).thenReturn(createUserProfile());
         assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamDetails());
-        verify(elinkDataIngestionSchedularAudit,times(2))
+        verify(elinkDataIngestionSchedularAudit,times(1))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
+        verify(elinkDataIngestionSchedularAudit,times(1))
+                .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
     }
 
 

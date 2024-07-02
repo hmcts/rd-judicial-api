@@ -30,26 +30,33 @@ public class ElinkDataExceptionHelper {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void auditException(String schedulerName, LocalDateTime schedulerStartTime,
                                String key, String fieldInError, String errorDescription,
-                               String tableName,String personalCode,Integer pageValue) {
+                               String tableName, String personalCode, Integer pageValue) {
+        auditExceptionMessage(schedulerName,
+                schedulerStartTime,
+                key,
+                fieldInError,
+                errorDescription,
+                tableName,
+                personalCode,
+                pageValue,
+                "");
+    }
 
-        ElinkDataExceptionRecords audit = new ElinkDataExceptionRecords();
-        try {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void auditException(String schedulerName, LocalDateTime schedulerStartTime,
+                               String key, String fieldInError, String errorDescription,
+                               String tableName, String personalCode,
+                               Integer pageValue, String errorMessage) {
 
-            audit.setSchedulerName(schedulerName);
-            audit.setSchedulerStartTime(schedulerStartTime);
-            audit.setKey(key);
-            audit.setFieldInError(fieldInError);
-            audit.setErrorDescription(errorDescription);
-            audit.setTableName(tableName);
-            audit.setUpdatedTimeStamp(LocalDateTime.now());
-            audit.setRowId(personalCode);
-            audit.setPageId(pageValue);
-            elinkDataExceptionRepository.save(audit);
-        } catch (Exception e) {
-            log.error("{}:: Failure error Message {} in auditSchedulerStatus {}  ",
-                    loggingComponentName, e.getMessage(), schedulerName);
-            throw e;
-        }
+        auditExceptionMessage(schedulerName,
+                schedulerStartTime,
+                key,
+                fieldInError,
+                errorDescription,
+                tableName,
+                personalCode,
+                pageValue,
+                errorMessage);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -65,7 +72,38 @@ public class ElinkDataExceptionHelper {
         }
     }
 
-    ElinkDataExceptionRecords auditEntity(String perCode, LocalDateTime startTime) {
+    private void auditExceptionMessage(String schedulerName,
+                                       LocalDateTime schedulerStartTime,
+                                       String key,
+                                       String fieldInError,
+                                       String errorDescription,
+                                       String tableName,
+                                       String personalCode,
+                                       Integer pageValue,
+                                       String errorMessage) {
+        ElinkDataExceptionRecords audit = new ElinkDataExceptionRecords();
+        try {
+
+            audit.setSchedulerName(schedulerName);
+            audit.setSchedulerStartTime(schedulerStartTime);
+            audit.setKey(key);
+            audit.setFieldInError(fieldInError);
+            audit.setErrorDescription(errorDescription);
+            audit.setTableName(tableName);
+            audit.setUpdatedTimeStamp(LocalDateTime.now());
+            audit.setRowId(personalCode);
+            audit.setPageId(pageValue);
+            audit.setErrorMessage(errorMessage != null && errorMessage.length() > 500
+                    ? errorMessage.substring(0, 500) : errorMessage);
+            elinkDataExceptionRepository.save(audit);
+        } catch (Exception e) {
+            log.error("{}:: Failure error Message {} in auditSchedulerStatus {}  ",
+                    loggingComponentName, e.getMessage(), schedulerName);
+            throw e;
+        }
+    }
+
+    private ElinkDataExceptionRecords auditEntity(String perCode, LocalDateTime startTime) {
         ElinkDataExceptionRecords audit = new ElinkDataExceptionRecords();
         audit.setSchedulerName(JUDICIAL_REF_DATA_ELINKS);
         audit.setSchedulerStartTime(startTime);
