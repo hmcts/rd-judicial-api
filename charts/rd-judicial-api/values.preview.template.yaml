@@ -12,15 +12,16 @@ java:
     JRD_MQ_TOPIC_NAME: "{{ .Release.Name }}-servicebus-jrdapi-topic"
     JRD_MQ_USERNAME: SendAndListenSharedAccessKey
     JRD_MQ_TRUST_ALL_CERTS: false
-    JRD_DATA_PER_MESSAGE: 50
+    JRD_DATA_PER_MESSAGE: 200
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
-    CUSTOMIZE_UPDATEDSINCE: false
+    CUSTOMIZE_UPDATEDSINCE: true
+    INCLUDE_PREVIOUS_APPOINTMENT: true
     JRD_SEARCH_SERVICE_CODE: bfa1,bba3
-    ELINKS_URL: https://judiciary-middleware-futureehr.herokuapp.com/api/v5
+    ELINKS_URL: https://gateway.staging.elinks.judiciary.uk/elinks/api/v5
     LAST_UPDATED: 2014-01-01
-    SCHEDULER_ENABLED: false
-    CRON_EXPRESSION: "0 0 0 25 03 ?"
+    SCHEDULER_ENABLED: true
+    CRON_EXPRESSION: "0 55 13 04 07 ?"
     DB_READER_USERNAME: "{{ .Values.postgresql.auth.username}}"
   postgresql:
     enabled: true
