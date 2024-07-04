@@ -36,6 +36,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
     @BeforeEach
     void setUp() {
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled", true);
         deleteData();
     }
 
