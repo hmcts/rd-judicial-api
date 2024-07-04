@@ -2,16 +2,14 @@ package uk.gov.hmcts.reform.judicialapi.util;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+@Testcontainers
 public class JudicialApiPostgresqlContainer extends PostgreSQLContainer<JudicialApiPostgresqlContainer> {
-
-    private static final DockerImageName hmctsPostgresDockerImage = DockerImageName
-            .parse("hmctspublic.azurecr.io/imported/postgres:11.1")
-            .asCompatibleSubstituteFor("postgres");
+    private static final String IMAGE_VERSION = "postgres:11.1";
 
     private JudicialApiPostgresqlContainer() {
-        super(hmctsPostgresDockerImage);
+        super(IMAGE_VERSION);
     }
 
     @Container
