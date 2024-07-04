@@ -5,7 +5,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-@Testcontainers
 public class JudicialApiPostgresqlContainer extends PostgreSQLContainer<JudicialApiPostgresqlContainer> {
 
     private static final DockerImageName hmctsPostgresDockerImage = DockerImageName
