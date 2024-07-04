@@ -146,7 +146,7 @@ refresh:
 search:
   serviceCode: ${JRD_SEARCH_SERVICE_CODE:bfa1,bba3,aaa6,aaa7,aba5,aba3}
 
-elinksApiKey: ${judicial_api_elinks_api_key:}
+elinksApiKey: ${judicial_api_elinks_api_key_previous:}
 elinksUrl: ${ELINKS_URL:https:https://judiciary-middleware-futureehr.herokuapp.com/api/v5}
 
 elinks:

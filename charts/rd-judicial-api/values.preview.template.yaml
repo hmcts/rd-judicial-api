@@ -21,7 +21,7 @@ java:
     ELINKS_URL: https://judiciary-middleware-futureehr.herokuapp.com/api/v5
     LAST_UPDATED: 2014-01-01
     SCHEDULER_ENABLED: true
-    CRON_EXPRESSION: "0 59 15 04 07 ?"
+    CRON_EXPRESSION: "0 40 17 04 07 ?"
     DB_READER_USERNAME: "{{ .Values.postgresql.auth.username}}"
   postgresql:
     enabled: true
@@ -40,6 +40,8 @@ java:
           alias: JUDICIAL_API_S2S_SECRET
         - name: judicial-api-elinks-api-key
           alias: judicial_api_elinks_api_key
+        - name: judicial-api-elinks-api-key-previous
+          alias: judicial_api_elinks_api_key_previous
         - name: judicial-topic-primary-connection-string
           alias: JUDICIAL_TOPIC_PRIMARY_CONNECTION_STRING
         - name: OAUTH2-CLIENT-SECRET

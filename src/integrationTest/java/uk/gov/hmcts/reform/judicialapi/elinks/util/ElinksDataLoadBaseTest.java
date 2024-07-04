@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 
@@ -20,11 +22,13 @@ import java.util.stream.Stream;
 import static java.lang.Integer.parseInt;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.readString;
+import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingInt;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -34,16 +38,23 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 import static org.springframework.http.HttpStatus.TOO_MANY_REQUESTS;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DELETEDAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELASTICSEARCH;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ACCESS_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_BAD_REQUEST;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_FORBIDDEN;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_NOT_FOUND;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELINKS_ERROR_RESPONSE_UNAUTHORIZED;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAMSEARCH;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LEAVERSAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.OBJECTIDISDUPLICATED;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
 
 public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
 
@@ -904,5 +915,97 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         profileRepository.deleteAll();
         baseLocationRepository.deleteAll();
         dataloadSchedulerJobRepository.deleteAll();
+    }
+
+    protected void runElinksDataLoadJob() {
+        elinksApiJobScheduler.loadElinksJob();
+        List<DataloadSchedulerJob> audits = dataloadSchedulerJobRepository.findAll();
+        DataloadSchedulerJob jobDetails = audits.get(0);
+
+        assertThat(jobDetails).isNotNull();
+        assertThat(jobDetails.getPublishingStatus()).isNotNull();
+        assertEquals(SUCCESS.getStatus(), jobDetails.getPublishingStatus());
+    }
+
+    protected TestDataArguments getTestDataArguments() {
+        return
+                TestDataArguments.builder()
+                        .expectedAppointmentsSize(4)
+                        .expectedAuthorisationSize(4)
+                        .expectedRoleSize(2)
+                        .expectedUserProfiles(2)
+                        .expectedActiveFlag(false)
+                        .expectedDeletedFlag(true)
+                        .expectedDeletedOnDate("2022-07-10")
+                        .expectedLastWorkingDate("2023-03-01")
+                        .expectedJobStatus(SUCCESS)
+                        .isAfterIdamElasticSearch(true)
+                        .elasticSearchSidamId("6455c84c-e77d-4c4f-9759-bf4a93a8e972")
+                        .build();
+    }
+
+    protected void verifyAudit() {
+
+        final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
+                elinkSchedularAuditRepository.findAll()
+                        .stream()
+                        .sorted(comparing(ElinkDataSchedularAudit::getApiName))
+                        .toList();
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(7);
+
+        final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
+        final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
+        final ElinkDataSchedularAudit auditEntry3 = eLinksDataSchedulerAudits.get(2);
+        final ElinkDataSchedularAudit auditEntry4 = eLinksDataSchedulerAudits.get(3);
+        final ElinkDataSchedularAudit auditEntry5 = eLinksDataSchedulerAudits.get(4);
+        final ElinkDataSchedularAudit auditEntry6 = eLinksDataSchedulerAudits.get(5);
+        final ElinkDataSchedularAudit auditEntry7 = eLinksDataSchedulerAudits.get(6);
+
+        assertThat(auditEntry1).isNotNull();
+        assertThat(auditEntry2).isNotNull();
+        assertThat(auditEntry3).isNotNull();
+        assertThat(auditEntry4).isNotNull();
+
+        assertThat(auditEntry1.getApiName()).isNotNull().isEqualTo(DELETEDAPI);
+        assertThat(auditEntry1.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry1.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry1.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry1.getSchedulerEndTime()).isNotNull();
+
+        assertThat(auditEntry2.getApiName()).isNotNull().isEqualTo(ELASTICSEARCH);
+        assertThat(auditEntry2.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry2.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry2.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry2.getSchedulerEndTime()).isNotNull();
+
+        assertThat(auditEntry3.getApiName()).isNotNull().isEqualTo(IDAMSEARCH);
+        assertThat(auditEntry3.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry3.getSchedulerEndTime()).isNotNull();
+
+        assertThat(auditEntry4.getApiName()).isNotNull().isEqualTo(LEAVERSAPI);
+        assertThat(auditEntry4.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry4.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry4.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry4.getSchedulerEndTime()).isNotNull();
+
+        assertThat(auditEntry5.getApiName()).isNotNull().isEqualTo(LOCATIONAPI);
+        assertThat(auditEntry5.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry5.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry5.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry5.getSchedulerEndTime()).isNotNull();
+
+        assertThat(auditEntry6.getApiName()).isNotNull().isEqualTo(PEOPLEAPI);
+        assertThat(auditEntry6.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry6.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry6.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry6.getSchedulerEndTime()).isNotNull();
+
+        assertThat(auditEntry7.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
+        assertThat(auditEntry7.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry7.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry7.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry7.getSchedulerEndTime()).isNotNull();
     }
 }
