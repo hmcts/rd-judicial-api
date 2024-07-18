@@ -42,7 +42,7 @@ def versions = [
         bytebuddy          : '1.14.18',
         testContainer_postgresql: '1.19.8',
         bouncycastle       : '1.78.1',
-        jwtVersion         : '0.12.5'
+        jwtVersion         : '0.12.6'
 ]
 
 mainClassName = 'uk.gov.hmcts.reform.judicialapi.JudicialApplication'
