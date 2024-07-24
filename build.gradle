@@ -409,8 +409,8 @@ dependencies {
     implementation 'commons-io:commons-io:2.16.1'
 
     //Added below dependencies for shedlock
-    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '5.13.0'
-    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '5.13.0'
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '5.14.0'
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '5.14.0'
 
     implementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     implementation group: 'io.github.openfeign.form', name: 'feign-form-spring', version: '3.8.0'
