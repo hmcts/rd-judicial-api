@@ -38,6 +38,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleDeleteService;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleLeaverService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
@@ -108,6 +110,12 @@ class ELinksServiceImplTest {
 
     @Spy
     JudicialRoleTypeRepository judicialRoleTypeRepository;
+
+    @Spy
+    ElinksPeopleLeaverService elinksPeopleLeaverService;
+
+    @Spy
+    ElinksPeopleDeleteService elinksPeopleDeleteService;
 
 
     @BeforeEach
@@ -459,7 +467,7 @@ class ELinksServiceImplTest {
         eLinksServiceImpl.cleanUpElinksResponses();
 
         Mockito.verify(elinkDataExceptionHelper,Mockito.times(1))
-                .auditException(any(),any(),any(),any(),any(),any(),any(),any());
+                .auditException(any(),any(),any(),any(),any(),any(),any(),any(), any());
 
     }
 

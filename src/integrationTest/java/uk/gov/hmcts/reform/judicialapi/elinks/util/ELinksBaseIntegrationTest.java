@@ -32,6 +32,10 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepo
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinksResponsesRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.audit.AppointmentsRepositoryAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.audit.AuthorisationsRepositoryAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.audit.JudicialRoleTypeRepositoryAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.audit.ProfileRepositoryAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
@@ -45,6 +49,7 @@ import uk.gov.hmcts.reform.lib.util.serenity5.SerenityTest;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
 import static java.lang.String.format;
@@ -105,6 +110,14 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     protected DataloadSchedulerJobAudit dataloadSchedulerJobAudit;
     @Autowired
     protected ELinksServiceImpl elinksServiceImpl;
+    @Autowired
+    protected JudicialRoleTypeRepositoryAudit judicialRoleTypeRepositoryAudit;
+    @Autowired
+    protected AuthorisationsRepositoryAudit authorisationsRepositoryAudit;
+    @Autowired
+    protected AppointmentsRepositoryAudit appointmentsRepositoryAudit;
+    @Autowired
+    protected ProfileRepositoryAudit profileRepositoryAudit;
     @MockBean
     protected ElinkTopicPublisher elinkTopicPublisher;
     @MockBean
@@ -173,13 +186,22 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
 
     protected void stubIdamResponse(final String idamResponseValidationJson,
                                     final HttpStatus httpStatus) {
-        sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
-                .willReturn(aResponse()
-                        .withStatus(httpStatus.value())
-                        .withHeader("Content-Type", "application/json")
-                        .withHeader("Connection", "close")
-                        .withBody(idamResponseValidationJson)
-                ));
+        if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
+            sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+                    .willReturn(serverError()
+                            .withStatus(httpStatus.value())
+                            .withHeader("Content-Type", "application/json")
+                            .withBody("Internal server error")
+                    ));
+        } else {
+            sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+                    .willReturn(aResponse()
+                            .withStatus(httpStatus.value())
+                            .withHeader("Content-Type", "application/json")
+                            .withHeader("Connection", "close")
+                            .withBody(idamResponseValidationJson)
+                    ));
+        }
     }
 
     protected void stubIdamTokenResponse(final HttpStatus httpStatus) {

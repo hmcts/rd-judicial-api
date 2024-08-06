@@ -123,9 +123,17 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
         + "and date(lastLoadedDate)=CURRENT_DATE ")
     List<UserProfile> fetchObjectIdFromCurrentDate();
 
+    @Query(value = "select per "
+            + "from judicialUserProfile per "
+            + "where (per.objectId != '' and per.objectId is not null) "
+            + "and (per.objectId IN :objectIds)")
+    List<UserProfile> fetchUserProfiles(List<String> objectIds);
+
 
     List<UserProfile> findByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
 
     void deleteByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
+
+    List<UserProfile> deleteByPersonalCodeIn(List<String> personalCodes);
 
 }

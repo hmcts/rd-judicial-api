@@ -123,8 +123,11 @@ class ELinksBaseLocationServiceImplTest {
             ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
         });
 
-        verify(elinkDataIngestionSchedularAudit,times(3))
+        verify(elinkDataIngestionSchedularAudit,times(2))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
+
+        verify(elinkDataIngestionSchedularAudit,times(1))
+                .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
 
     }
 
@@ -289,8 +292,11 @@ class ELinksBaseLocationServiceImplTest {
 
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ERROR_RESPONSE_NOT_FOUND);
-        verify(elinkDataIngestionSchedularAudit,times(3))
+        verify(elinkDataIngestionSchedularAudit,times(2))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
+
+        verify(elinkDataIngestionSchedularAudit,times(1))
+                .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
 
     }
 

@@ -29,18 +29,18 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.JrdElinkController;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Appointment;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.Authorisation;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JrdRegionMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.LocationMapping;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.RegionType;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ServiceCodeMapping;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JrdRegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.LocationMapppingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
-import uk.gov.hmcts.reform.judicialapi.elinks.repository.RegionMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ServiceCodeMappingRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ElinkUserServiceImpl;
@@ -101,7 +101,7 @@ public class JrdApiProviderV2Test {
     ServiceCodeMappingRepository serviceCodeMappingRepository;
 
     @MockBean
-    RegionMappingRepository regionMappingRepository;
+    JrdRegionMappingRepository regionMappingRepository;
 
 
     @MockBean
@@ -177,12 +177,12 @@ public class JrdApiProviderV2Test {
         serviceCodeMapping.setServiceDescription("Social Security and Child Support");
 
         when(serviceCodeMappingRepository.findAllServiceCodeMapping()).thenReturn(List.of(serviceCodeMapping));
-        var regionMapping = new RegionMapping();
+        var regionMapping = new JrdRegionMapping();
         regionMapping.setJrdRegionId("1");
         regionMapping.setRegionId("1");
         regionMapping.setRegion("National");
         regionMapping.setJrdRegion("National");
-        when(regionMappingRepository.findAllRegionMappingData()).thenReturn(List.of(regionMapping));
+        when(regionMappingRepository.findAll()).thenReturn(List.of(regionMapping));
 
         var locationMappings1 = new LocationMapping();
         locationMappings1.setEpimmsId("1");

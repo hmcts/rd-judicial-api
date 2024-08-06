@@ -12,10 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
-import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
-import uk.gov.hmcts.reform.judicialapi.versions.V1;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.UserSearchRequest;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +21,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import static java.util.Objects.nonNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.generateToken;
 
@@ -58,47 +54,6 @@ public class JudicialReferenceDataClient {
 
     public static void setBearerToken(String bearerToken) {
         JudicialReferenceDataClient.bearerToken = bearerToken;
-    }
-
-    public Map<String, Object> fetchJudicialProfilesById(Integer pageSize, Integer pageNumber,
-                                                         UserRequest userRequest, String role, boolean invalidTokens) {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("/fetch");
-
-        if (nonNull(pageSize)) {
-            stringBuilder.append("?page_size=");
-            stringBuilder.append(pageSize);
-        }
-        if (nonNull(pageNumber)) {
-            stringBuilder.append("&page_number=");
-            stringBuilder.append(pageNumber);
-        }
-
-        ResponseEntity<Object> responseEntity;
-        HttpEntity<?> request =
-                new HttpEntity<Object>(userRequest, invalidTokens
-                        ? getInvalidAuthHeaders(MediaType.valueOf(V1.MediaType.SERVICE), role,
-                        null, MediaType.valueOf(V1.MediaType.SERVICE)) :
-                        getMultipleAuthHeaders(MediaType.valueOf(V1.MediaType.SERVICE), role,
-                                null, MediaType.valueOf(V1.MediaType.SERVICE)));
-
-        try {
-
-            responseEntity = restTemplate.exchange(
-                    baseUrl + "/users" + stringBuilder,
-                    HttpMethod.POST, request,
-                    Object.class
-            );
-
-        } catch (RestClientResponseException ex) {
-            HashMap<String, Object> statusAndBody = new HashMap<>(2);
-            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
-            statusAndBody.put("response_body", ex.getResponseBodyAsString());
-            return statusAndBody;
-        }
-
-        return getResponse(responseEntity);
     }
 
     private Map<String, Object> getResponse(ResponseEntity<Object> responseEntity) {
@@ -170,7 +125,7 @@ public class JudicialReferenceDataClient {
     }
 
     public Map<String, Object> searchUsers(UserSearchRequest userSearchRequest, String role,
-                                           boolean invalidTokens,MediaType mediaType,MediaType accept) {
+                                           boolean invalidTokens, MediaType mediaType, MediaType accept) {
         ResponseEntity<Object> responseEntity;
         var request =
                 new HttpEntity<Object>(userSearchRequest, invalidTokens ? getInvalidAuthHeaders(
@@ -179,40 +134,6 @@ public class JudicialReferenceDataClient {
 
         try {
             responseEntity = restTemplate.exchange(baseUrl + "/users/search", HttpMethod.POST, request, Object.class
-            );
-
-        } catch (RestClientResponseException ex) {
-            var statusAndBody = new HashMap<String, Object>(2);
-            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
-            statusAndBody.put("response_body", ex.getResponseBodyAsString());
-            return statusAndBody;
-        }
-
-        return getResponse(responseEntity);
-    }
-
-    public Map<String, Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,
-                                                  Integer pageNumber, String sortDirection, String sortColumn,
-                                                  String role, boolean invalidTokens) {
-
-        var stringBuilder = new StringBuilder();
-
-        ResponseEntity<Object> responseEntity;
-        HttpEntity<?> request =
-                new HttpEntity<Object>(refreshRoleRequest,
-                        invalidTokens ? getInvalidAuthHeaders(
-                            MediaType.valueOf(V1.MediaType.SERVICE),role,
-                            null,MediaType.valueOf(V1.MediaType.SERVICE)) :
-                                getMultipleAuthHeadersForRefreshUserProfile(role, null,
-                                        pageSize, pageNumber,
-                                        sortDirection, sortColumn));
-
-        try {
-
-            responseEntity = restTemplate.exchange(
-                    baseUrl + "/users" + stringBuilder,
-                    HttpMethod.POST, request,
-                    Object.class
             );
 
         } catch (RestClientResponseException ex) {

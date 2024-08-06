@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAMSEARCH;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.FAILED;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
@@ -79,11 +79,11 @@ class FindIdamIdsIntegrationTest extends ElinksDataLoadBaseTest {
 
         verifyUserSidamIdIsNull();
 
-        findSidamIdsByObjectIds(INTERNAL_SERVER_ERROR);
+        findSidamIdsByObjectIds(OK);
 
         verifyUserSidamIdIsNull();
 
-        verifySchedulerAudit(FAILED);
+        verifySchedulerAudit(PARTIAL_SUCCESS);
     }
 
     private void verifyUpdatedUserSidamId() {

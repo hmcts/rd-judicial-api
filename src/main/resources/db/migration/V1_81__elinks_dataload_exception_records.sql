@@ -1,1 +1,0 @@
-ALTER TABLE dbjudicialdata.dataload_exception_records ADD COLUMN page_id int8;

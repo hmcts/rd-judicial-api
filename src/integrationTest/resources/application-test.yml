@@ -13,8 +13,12 @@ management:
       show-details: "always"
 
 spring:
-  flyway.locations: classpath:db/testmigration
-  flyway.enabled: true
+  flyway:
+    out-of-order: true
+    enabled: true
+    locations: classpath:db/testmigration
+    schemas:
+      - dbjudicialdata
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
@@ -22,6 +26,7 @@ spring:
       hibernate:
         order_updates: true
         order_inserts: true
+        default_schema: dbjudicialdata
         jdbc:
           lob:
             non_contextual_creation: true
@@ -33,7 +38,7 @@ spring:
     name: RD Judicial Ref API
   datasource:
     driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: ${DB_URL:jdbc:tc:postgresql:11.1:///dbjuddata}
+    url: ${DB_URL:jdbc:tc:postgresql:11.1:///dbjudicialdata}
     username: ${DB_USERNAME:dbjuddata}
     password: ${DB_PASSWORD:dbjuddata}
     min-idle: 1

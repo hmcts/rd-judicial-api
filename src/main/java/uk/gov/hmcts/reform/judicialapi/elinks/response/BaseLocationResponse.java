@@ -9,10 +9,13 @@ import lombok.Setter;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.BaseLocation;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.DateUtil.convertToLocalDate;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.DateUtil.convertToLocalDateTime;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.CREATED_AT;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.END_DATE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.START_DATE;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.UPDATED_AT;
 
 @Getter
 @Setter
@@ -43,6 +46,8 @@ public class BaseLocationResponse implements Serializable {
     @JsonProperty("updated_at")
     private String updatedAt;
 
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
     public static BaseLocation toBaseLocationEntity(BaseLocationResponse baseLocationResponse) {
         BaseLocation baseLocation = new BaseLocation();
         baseLocation.setBaseLocationId(baseLocationResponse.getId());
@@ -50,27 +55,14 @@ public class BaseLocationResponse implements Serializable {
         baseLocation.setTypeId(baseLocationResponse.getTypeId());
         baseLocation.setParentId(baseLocationResponse.getParentId());
         baseLocation.setJurisdictionId(baseLocationResponse.getJurisdictionId());
-        baseLocation.setStartDate(convertToLocalDate(baseLocationResponse.getStartDate()));
-        baseLocation.setEndDate(convertToLocalDate(baseLocationResponse.getEndDate()));
-        baseLocation.setCreatedAt(convertToLocalDateTime(baseLocationResponse.getCreatedAt()));
-        baseLocation.setUpdatedAt(convertToLocalDateTime(baseLocationResponse.getUpdatedAt()));
+        baseLocation.setStartDate(convertToLocalDate(START_DATE, baseLocationResponse.getStartDate()));
+        baseLocation.setEndDate(convertToLocalDate(END_DATE, baseLocationResponse.getEndDate()));
+        baseLocation.setCreatedAt(convertToLocalDateTime(CREATED_AT,
+                DATE_TIME_FORMAT,
+                baseLocationResponse.getCreatedAt()));
+        baseLocation.setUpdatedAt(convertToLocalDateTime(UPDATED_AT,
+                DATE_TIME_FORMAT,
+                baseLocationResponse.getUpdatedAt()));
         return baseLocation;
     }
-
-    private static LocalDate convertToLocalDate(String date) {
-        if (Optional.ofNullable(date).isPresent()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            return LocalDate.parse(date, formatter);
-        }
-        return null;
-    }
-
-    private static LocalDateTime convertToLocalDateTime(String date) {
-        if (Optional.ofNullable(date).isPresent()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            return LocalDateTime.parse(date, formatter);
-        }
-        return null;
-    }
-
 }

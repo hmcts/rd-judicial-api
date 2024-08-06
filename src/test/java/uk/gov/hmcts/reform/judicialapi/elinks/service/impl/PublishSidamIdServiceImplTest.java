@@ -173,7 +173,7 @@ class PublishSidamIdServiceImplTest {
         verify(elinkTopicPublisher, times(1)).sendMessage(any(), anyString());
         verify(jdbcTemplate, times(1)).update(anyString(), any(), anyInt());
         verify(elinkDataIngestionSchedularAudit,times(1))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+            .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
     }
 
     @SneakyThrows
@@ -231,7 +231,7 @@ class PublishSidamIdServiceImplTest {
 
         verify(elinkTopicPublisher).sendMessage(sidamIds,"2");
         verify(elinkDataIngestionSchedularAudit,times(2))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+            .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
     }
 
 }
