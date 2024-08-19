@@ -43,7 +43,7 @@ java:
         - name: judicial-api-s2s-secret
           alias: JUDICIAL_API_S2S_SECRET
         - name: judicial-api-elinks-api-key
-          alias: judicial_api_elinks_api_key
+          alias: judicial_api_elinks_api_key_new
         - name: judicial-topic-primary-connection-string
           alias: JUDICIAL_TOPIC_PRIMARY_CONNECTION_STRING
         - name: OAUTH2-CLIENT-SECRET
