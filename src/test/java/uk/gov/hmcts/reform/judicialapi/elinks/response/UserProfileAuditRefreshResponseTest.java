@@ -57,6 +57,7 @@ public class UserProfileAuditRefreshResponseTest {
         userProfileRefreshResponse.setAppointments(appointmentRefreshResponseList);
 
         userProfileRefreshResponse.setActiveFlag("true");
+        userProfileRefreshResponse.setDeletedFlag("false");
         userProfileRefreshResponse.setKnownAs("knownAs");
         userProfileRefreshResponse.setFullName("fullName");
         userProfileRefreshResponse.setKnownAs("knownAs");
@@ -71,6 +72,7 @@ public class UserProfileAuditRefreshResponseTest {
         userProfileRefreshResponse.setSurname("surName");
 
         assertThat(userProfileRefreshResponse.getActiveFlag()).isEqualTo("true");
+        assertThat(userProfileRefreshResponse.getDeletedFlag()).isEqualTo("false");
         assertThat(userProfileRefreshResponse.getEmailId()).isEqualTo("emailId");
         assertThat(userProfileRefreshResponse.getKnownAs()).isEqualTo("knownAs");
         assertThat(userProfileRefreshResponse.getFullName()).isEqualTo("fullName");
