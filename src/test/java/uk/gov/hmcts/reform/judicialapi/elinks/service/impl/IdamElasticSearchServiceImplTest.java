@@ -176,8 +176,7 @@ class IdamElasticSearchServiceImplTest {
                 Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
             .status(200).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
-        when(userProfileRepository.fetchObjectIdFromCurrentDate()).thenReturn(createUserProfile());
-        when(userProfileRepository.fetchObjectId()).thenReturn(List.of("objectId1"));
+        when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamDetails();
         assertThat(response).isNotNull();
@@ -229,7 +228,7 @@ class IdamElasticSearchServiceImplTest {
                 Request.Body.empty(), null)).body(body, Charset.defaultCharset())
             .status(500).build();
         when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
-        when(userProfileRepository.fetchObjectIdFromCurrentDate()).thenReturn(createUserProfile());
+        when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
         assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamDetails());
         verify(elinkDataIngestionSchedularAudit,times(2))
             .auditSchedulerStatus(any(),any(),any(),any(),any());

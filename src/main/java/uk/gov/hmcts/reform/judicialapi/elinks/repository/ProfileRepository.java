@@ -123,6 +123,12 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
         + "and date(lastLoadedDate)=CURRENT_DATE ")
     List<UserProfile> fetchObjectIdFromCurrentDate();
 
+    @Query(value = "select per "
+            + "from judicialUserProfile per "
+            + "where (per.objectId != '' and per.objectId is not null)"
+            + "and per.sidamId is null ")
+    List<UserProfile> fetchObjectIdMissingSidamId();
+
 
     List<UserProfile> findByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
 

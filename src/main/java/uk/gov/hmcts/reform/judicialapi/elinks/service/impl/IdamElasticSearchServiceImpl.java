@@ -217,7 +217,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             null,
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), IDAMSEARCH);
         Set<IdamResponse> judicialUsers = new HashSet<>();
-        List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdFromCurrentDate();
+        List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdMissingSidamId();
         int userProfileSize = userProfiles.size();
         String bearerToken = userProfileSize > 0 ? "Bearer ".concat(getIdamBearerToken(schedulerStartTime)) : "";
         log.debug("{}:: Number of User profiles from JRD :: " + userProfileSize, loggingComponentName);
