@@ -191,7 +191,9 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), IDAMSEARCH);
         Set<IdamResponse> judicialUsers = new HashSet<>();
         List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdMissingSidamId();
-        String bearerToken =  "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
+        int userProfileSize = userProfiles.size();
+        String bearerToken = userProfileSize > 0 ? "Bearer ".concat(getIdamBearerToken(schedulerStartTime)) : "";
+        log.debug("{}:: Number of User profiles from JRD :: " + userProfileSize, loggingComponentName);
         AtomicReference<Boolean> isPartialSuccess = new AtomicReference<>(false);
         userProfiles.forEach(userProfile -> {
             Map<String, String> params = new HashMap<>();
