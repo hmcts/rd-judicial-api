@@ -10,6 +10,7 @@ public interface PublishSidamIdService {
 
     ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() throws JudicialDataLoadException;
 
-    ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb(List<String> sidamIds) throws JudicialDataLoadException;
+    ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb(List<String> sidamIds)
+            throws JudicialDataLoadException;
 
 }
