@@ -11,12 +11,15 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AppointmentsReq
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AuthorisationsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RoleRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleDeleteAuditService;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,6 +48,8 @@ class ElinksPeopleDeleteServiceImplTest {
     @InjectMocks
     private ElinksPeopleDeleteServiceImpl elinksPeopleDeleteServiceimpl;
 
+    @Spy
+    private PublishSidamIdService publishSidamIdService;
 
     private ResultsRequest result1;
 
@@ -94,12 +99,19 @@ class ElinksPeopleDeleteServiceImplTest {
 
     @Test
     void testdeletePeople() {
+        List<UserProfile> userProfiles = new ArrayList<>();
+        userProfiles.add(UserProfile.builder()
+                .personalCode("1234")
+                .surname("surname")
+                .fullName("full name").build());
+        Mockito.when(profileRepository.deleteByPersonalCodeIn(anyList())).thenReturn(userProfiles);
+
         elinksPeopleDeleteServiceimpl.deletePeople(result1.getPersonalCode());
-        Mockito.verify(profileRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(authorisationsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(appointmentsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(judicialRoleTypeRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(profileRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
+        Mockito.verify(publishSidamIdService,Mockito.times(1)).publishSidamIdToAsb(anyList());
 
     }
 
