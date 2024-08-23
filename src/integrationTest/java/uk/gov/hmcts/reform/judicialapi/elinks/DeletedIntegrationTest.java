@@ -68,7 +68,7 @@ class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
 
         verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
 
-        verifyDeletedDataLoadAudit(testDataArguments.expectedJobStatus());
+        verifyDeletedDataLoadAudit(testDataArguments.expectedJobStatus(), 4);
 
         verifyDeletedPeopleAudit(testDataArguments);
     }
@@ -128,13 +128,18 @@ class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
     }
 
     private void verifyDeletedDataLoadAudit(RefDataElinksConstants.JobStatus expectedDeletedLoadJobStatus) {
+        verifyDeletedDataLoadAudit(expectedDeletedLoadJobStatus, 2);
+    }
+
+    private void verifyDeletedDataLoadAudit(RefDataElinksConstants.JobStatus expectedDeletedLoadJobStatus,
+                                            int expectedCount) {
 
         final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
                 elinkSchedularAuditRepository.findAll()
                         .stream()
                         .sorted(comparing(ElinkDataSchedularAudit::getApiName))
                         .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(3);
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(expectedCount);
 
         final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
         final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
