@@ -92,7 +92,7 @@ class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
         loadDeletedData(expectedHttpStatus, RESPONSE_BODY_ERROR_MSG, testDataArguments.expectedErrorMessage());
 
-        verifyDeletedDataLoadAudit(testDataArguments.expectedJobStatus());
+        verifyDeletedDataLoadAudit(testDataArguments.expectedJobStatus(), 3);
     }
 
     private void verifySavedOriginalELinksResponse() {

@@ -64,7 +64,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
         verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
 
-        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus());
+        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus(), 2);
 
         verifyExceptions(testDataArguments);
     }
@@ -115,7 +115,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(expectedHttpStatus, RESPONSE_BODY_ERROR_MSG, testDataArguments.expectedErrorMessage());
 
-        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus());
+        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus(), 2);
     }
 
     @DisplayName("Should run scheduler job and load elinks api's data when appointment id null for authorisations")
@@ -193,15 +193,19 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(peopleElinksResponses.getCreatedDate()).isNotNull();
         assertThat(peopleElinksResponses.getElinksData()).isNotNull();
     }
-
     private void verifyPeopleDataLoadAudit(JobStatus peopleLoadJobStatus) {
+        verifyPeopleDataLoadAudit(peopleLoadJobStatus, 3);
+    }
+
+    private void verifyPeopleDataLoadAudit(JobStatus peopleLoadJobStatus,
+                                           int expectedSize) {
 
         final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
                 elinkSchedularAuditRepository.findAll()
                         .stream()
                         .sorted(comparing(ElinkDataSchedularAudit::getApiName))
                         .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(3);
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(expectedSize);
 
         final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
         final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
