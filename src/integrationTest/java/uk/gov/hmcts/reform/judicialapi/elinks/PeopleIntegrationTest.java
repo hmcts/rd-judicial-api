@@ -193,6 +193,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(peopleElinksResponses.getCreatedDate()).isNotNull();
         assertThat(peopleElinksResponses.getElinksData()).isNotNull();
     }
+
     private void verifyPeopleDataLoadAudit(JobStatus peopleLoadJobStatus) {
         verifyPeopleDataLoadAudit(peopleLoadJobStatus, 3);
     }
