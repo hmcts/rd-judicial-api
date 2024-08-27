@@ -31,6 +31,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
 
 class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
@@ -228,7 +229,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         if (expectedSize > 2) {
             final ElinkDataSchedularAudit auditEntry3 = eLinksDataSchedulerAudits.get(2);
             assertThat(auditEntry3).isNotNull();
-            assertThat(auditEntry3.getApiName()).isNotNull().isEqualTo(PEOPLEAPI);
+            assertThat(auditEntry3.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
             assertThat(auditEntry3.getStatus()).isNotNull().isEqualTo(peopleLoadJobStatus.getStatus());
             assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
             assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
