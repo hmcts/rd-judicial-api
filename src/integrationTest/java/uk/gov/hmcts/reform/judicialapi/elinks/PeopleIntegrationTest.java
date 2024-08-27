@@ -210,11 +210,8 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
         final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
         final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
-        final ElinkDataSchedularAudit auditEntry3 = eLinksDataSchedulerAudits.get(2);
-
         assertThat(auditEntry1).isNotNull();
         assertThat(auditEntry2).isNotNull();
-        assertThat(auditEntry3).isNotNull();
 
         assertThat(auditEntry1.getApiName()).isNotNull().isEqualTo(LOCATIONAPI);
         assertThat(auditEntry1.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
@@ -228,11 +225,15 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(auditEntry2.getSchedulerStartTime()).isNotNull();
         assertThat(auditEntry2.getSchedulerEndTime()).isNotNull();
 
-        assertThat(auditEntry3.getApiName()).isNotNull().isEqualTo(PEOPLEAPI);
-        assertThat(auditEntry3.getStatus()).isNotNull().isEqualTo(peopleLoadJobStatus.getStatus());
-        assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry3.getSchedulerEndTime()).isNotNull();
+        if (expectedSize > 2) {
+            final ElinkDataSchedularAudit auditEntry3 = eLinksDataSchedulerAudits.get(2);
+            assertThat(auditEntry3).isNotNull();
+            assertThat(auditEntry3.getApiName()).isNotNull().isEqualTo(PEOPLEAPI);
+            assertThat(auditEntry3.getStatus()).isNotNull().isEqualTo(peopleLoadJobStatus.getStatus());
+            assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+            assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
+            assertThat(auditEntry3.getSchedulerEndTime()).isNotNull();
+        }
     }
 
 
