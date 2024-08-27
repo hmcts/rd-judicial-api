@@ -64,7 +64,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
         verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
 
-        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus(), 2);
+        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus());
 
         verifyExceptions(testDataArguments);
     }
