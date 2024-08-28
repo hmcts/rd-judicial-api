@@ -441,6 +441,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(BAD_REQUEST)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_BAD_REQUEST)
                         .build();
 
@@ -451,6 +452,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(UNAUTHORIZED)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_UNAUTHORIZED)
                         .build();
 
@@ -461,6 +463,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(FORBIDDEN)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_FORBIDDEN)
                         .build();
 
@@ -471,6 +474,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(NOT_FOUND)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_NOT_FOUND)
                         .build();
 
@@ -481,6 +485,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(TOO_MANY_REQUESTS)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS)
                         .build();
 
@@ -491,6 +496,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(SERVICE_UNAVAILABLE)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ACCESS_ERROR)
                         .build();
 
@@ -536,6 +542,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(2)
                         .expectedRoleSize(1)
                         .expectedUserProfiles(1)
+                        .expectedAuditRecords(4)
                         .expectedActiveFlag(false)
                         .expectedDeletedFlag(true)
                         .expectedDeletedOnDate("2022-07-10")
