@@ -19,9 +19,11 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeReposit
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleDeleteAuditService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleDeleteService;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -44,6 +46,9 @@ public class ElinksPeopleDeleteServiceImpl implements ElinksPeopleDeleteService 
 
     @Autowired
     private ElinksPeopleDeleteAuditService elinksPeopleDeleteAuditService;
+
+    @Autowired
+    private PublishSidamIdService publishSidamIdService;
 
 
     @Override
@@ -97,6 +102,12 @@ public class ElinksPeopleDeleteServiceImpl implements ElinksPeopleDeleteService 
         List<UserProfile> userProfiles = new ArrayList<>();
         if (deleteUserProfile) {
             userProfiles = profileRepository.deleteByPersonalCodeIn(personalCodes);
+        }
+
+        if (!userProfiles.isEmpty()) {
+            List<String> sidamIds = userProfiles.stream().map(userProfile -> userProfile.getSidamId())
+                    .collect(Collectors.toList());
+            publishSidamIdService.publishSidamIdToAsb(sidamIds);
         }
         log.info("AuditAndDelete No of authorisations {} , No of Appointments {},"
                         + " No of JudicialRoleTypes {}, No of User Profiles {} ",

@@ -119,6 +119,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedUserProfiles(2)
                         .expectedJobStatus(SUCCESS)
                         .expectedActiveFlag(true)
+                        .expectedAuditRecords(2)
                         .expectedLastWorkingDate("2028-07-23")
                         .build();
 
@@ -131,6 +132,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(2)
                         .expectedRoleSize(1)
                         .expectedUserProfiles(1)
+                        .expectedAuditRecords(3)
                         .expectedJobStatus(SUCCESS)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
@@ -145,6 +147,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(4)
                         .expectedRoleSize(1)
                         .expectedUserProfiles(2)
+                        .expectedAuditRecords(2)
                         .expectedJobStatus(PARTIAL_SUCCESS)
                         .exceptionSize(1)
                         .expectedActiveFlag(true)
@@ -161,6 +164,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(3)
                         .expectedRoleSize(2)
                         .expectedUserProfiles(2)
+                        .expectedAuditRecords(2)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
                         .expectedJobStatus(PARTIAL_SUCCESS)
@@ -178,6 +182,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(3)
                         .expectedRoleSize(2)
                         .expectedUserProfiles(2)
+                        .expectedAuditRecords(2)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
                         .expectedJobStatus(PARTIAL_SUCCESS)
@@ -195,6 +200,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(3)
                         .expectedRoleSize(2)
                         .expectedUserProfiles(2)
+                        .expectedAuditRecords(2)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
                         .expectedJobStatus(PARTIAL_SUCCESS)
@@ -212,6 +218,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(3)
                         .expectedRoleSize(2)
                         .expectedUserProfiles(2)
+                        .expectedAuditRecords(2)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
                         .expectedJobStatus(PARTIAL_SUCCESS)
@@ -229,6 +236,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(3)
                         .expectedRoleSize(2)
                         .expectedUserProfiles(2)
+                        .expectedAuditRecords(2)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
                         .expectedJobStatus(PARTIAL_SUCCESS)
@@ -246,6 +254,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(3)
                         .expectedRoleSize(2)
                         .expectedUserProfiles(2)
+                        .expectedAuditRecords(2)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
                         .expectedJobStatus(PARTIAL_SUCCESS)
@@ -264,6 +273,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(2)
                         .expectedRoleSize(1)
                         .expectedUserProfiles(1)
+                        .expectedAuditRecords(2)
                         .expectedJobStatus(PARTIAL_SUCCESS)
                         .exceptionSize(1)
                         .expectedActiveFlag(true)
@@ -281,6 +291,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(2)
                         .expectedRoleSize(1)
                         .expectedUserProfiles(1)
+                        .expectedAuditRecords(2)
                         .expectedJobStatus(PARTIAL_SUCCESS)
                         .exceptionSize(1)
                         .expectedActiveFlag(true)
@@ -430,6 +441,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(BAD_REQUEST)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_BAD_REQUEST)
                         .build();
 
@@ -440,6 +452,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(UNAUTHORIZED)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_UNAUTHORIZED)
                         .build();
 
@@ -450,6 +463,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(FORBIDDEN)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_FORBIDDEN)
                         .build();
 
@@ -460,6 +474,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(NOT_FOUND)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_NOT_FOUND)
                         .build();
 
@@ -470,6 +485,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(TOO_MANY_REQUESTS)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS)
                         .build();
 
@@ -480,6 +496,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(SERVICE_UNAVAILABLE)
                         .expectedJobStatus(FAILED)
+                        .expectedAuditRecords(3)
                         .expectedErrorMessage(ELINKS_ACCESS_ERROR)
                         .build();
 
@@ -525,6 +542,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuthorisationSize(2)
                         .expectedRoleSize(1)
                         .expectedUserProfiles(1)
+                        .expectedAuditRecords(4)
                         .expectedActiveFlag(false)
                         .expectedDeletedFlag(true)
                         .expectedDeletedOnDate("2022-07-10")
@@ -995,7 +1013,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .stream()
                         .sorted(comparing(ElinkDataSchedularAudit::getApiName))
                         .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(7);
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(8);
 
         final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
         final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
@@ -1004,6 +1022,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         final ElinkDataSchedularAudit auditEntry5 = eLinksDataSchedulerAudits.get(4);
         final ElinkDataSchedularAudit auditEntry6 = eLinksDataSchedulerAudits.get(5);
         final ElinkDataSchedularAudit auditEntry7 = eLinksDataSchedulerAudits.get(6);
+        final ElinkDataSchedularAudit auditEntry8 = eLinksDataSchedulerAudits.get(7);
 
         assertThat(auditEntry1).isNotNull();
         assertThat(auditEntry2).isNotNull();
@@ -1051,5 +1070,11 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         assertThat(auditEntry7.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
         assertThat(auditEntry7.getSchedulerStartTime()).isNotNull();
         assertThat(auditEntry7.getSchedulerEndTime()).isNotNull();
+
+        assertThat(auditEntry8.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
+        assertThat(auditEntry8.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry8.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry8.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry8.getSchedulerEndTime()).isNotNull();
     }
 }

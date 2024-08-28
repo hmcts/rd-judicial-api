@@ -32,6 +32,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
 
 
 class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
@@ -68,7 +69,7 @@ class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
 
         verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
 
-        verifyDeletedDataLoadAudit(testDataArguments.expectedJobStatus());
+        verifyDeletedDataLoadAudit(testDataArguments.expectedJobStatus(), testDataArguments.expectedAuditRecords());
 
         verifyDeletedPeopleAudit(testDataArguments);
     }
@@ -92,7 +93,7 @@ class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
         loadDeletedData(expectedHttpStatus, RESPONSE_BODY_ERROR_MSG, testDataArguments.expectedErrorMessage());
 
-        verifyDeletedDataLoadAudit(testDataArguments.expectedJobStatus());
+        verifyDeletedDataLoadAudit(testDataArguments.expectedJobStatus(), testDataArguments.expectedAuditRecords());
     }
 
     private void verifySavedOriginalELinksResponse() {
@@ -127,14 +128,15 @@ class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(peopleElinksResponses.getElinksData()).isNotNull();
     }
 
-    private void verifyDeletedDataLoadAudit(RefDataElinksConstants.JobStatus expectedDeletedLoadJobStatus) {
+    private void verifyDeletedDataLoadAudit(RefDataElinksConstants.JobStatus expectedDeletedLoadJobStatus,
+                                            int expectedCount) {
 
         final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
                 elinkSchedularAuditRepository.findAll()
                         .stream()
                         .sorted(comparing(ElinkDataSchedularAudit::getApiName))
                         .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(3);
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(expectedCount);
 
         final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
         final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
@@ -160,6 +162,16 @@ class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
         assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
         assertThat(auditEntry3.getSchedulerEndTime()).isNotNull();
+
+        if (expectedCount > 3) {
+            final ElinkDataSchedularAudit auditEntry4 = eLinksDataSchedulerAudits.get(3);
+            assertThat(auditEntry4).isNotNull();
+            assertThat(auditEntry4.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
+            assertThat(auditEntry4.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+            assertThat(auditEntry4.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+            assertThat(auditEntry4.getSchedulerStartTime()).isNotNull();
+            assertThat(auditEntry4.getSchedulerEndTime()).isNotNull();
+        }
     }
 
     private void verifyDeletedPeopleAudit(TestDataArguments testDataArguments) {
