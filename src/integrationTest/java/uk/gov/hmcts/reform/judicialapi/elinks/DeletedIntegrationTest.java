@@ -128,10 +128,6 @@ class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(peopleElinksResponses.getElinksData()).isNotNull();
     }
 
-    private void verifyDeletedDataLoadAudit(RefDataElinksConstants.JobStatus expectedDeletedLoadJobStatus) {
-        verifyDeletedDataLoadAudit(expectedDeletedLoadJobStatus, 2);
-    }
-
     private void verifyDeletedDataLoadAudit(RefDataElinksConstants.JobStatus expectedDeletedLoadJobStatus,
                                             int expectedCount) {
 
