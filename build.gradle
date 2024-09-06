@@ -39,7 +39,7 @@ def versions = [
         log4j              : '2.23.1',
         springVersion      : '5.3.36',
         logback            : '1.2.13',
-        bytebuddy          : '1.14.18',
+        bytebuddy          : '1.15.1',
         testContainer_postgresql: '1.20.0',
         bouncycastle       : '1.78.1',
         jwtVersion         : '0.12.6'
@@ -590,6 +590,13 @@ configurations.all {
         }
     }
 
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'net.bytebuddy'
+                && details.requested.name == 'byte-buddy') {
+            details.useVersion versions.bytebuddy
+        }
+    }
+
     resolutionStrategy.dependencySubstitution {
         substitute module('com.google.inject:guice') using module('com.google.inject:guice:5.1.0') withoutClassifier()
     }
@@ -602,6 +609,9 @@ dependencies {
         }
         module("org.bouncycastle:bcprov-jdk15on") {
             replacedBy("org.bouncycastle:bcprov-jdk18on")
+        }
+        module("com.vaadin.external.google:android-json") {
+            replacedBy("org.json:json")
         }
     }
 }
