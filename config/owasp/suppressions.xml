@@ -17,62 +17,145 @@
 </suppress>
 <suppress>
     <notes>temporarily suppress in PR</notes>
-    <cve>CVE-2023-40167</cve>
-    <cve>CVE-2021-27807</cve>
-    <cve>CVE-2023-44487</cve>
-    <cve>CVE-2022-41966</cve>
-    <cve>CVE-2021-37533</cve>
-    <cve>CVE-2022-38752</cve>
-    <cve>CVE-2022-38751</cve>
-    <cve>CVE-2022-38750</cve>
-    <cve>CVE-2020-8908</cve>
-    <cve>CVE-2024-26308</cve>
-    <cve>CVE-2022-38749</cve>
-    <cve>CVE-2023-3635</cve>
-    <cve>CVE-2022-26336</cve>
+    <!-- addressed -->
+<!--    <cve>CVE-2018-11797</cve>-->
+<!--    <cve>CVE-2018-8036</cve>-->
+
+    <!-- not used in prod, org.seleniumhq.selenium:jetty-repacked:9.4.12.v20180830 -->
+    <cve>CVE-2019-10241</cve>
+
+    <!-- not used in prod, org.seleniumhq.selenium:jetty-repacked:9.4.12.v20180830 -->
+    <cve>CVE-2019-10247</cve>
+
+    <!-- not used in prod, com.codeborne:phantomjsdriver -->
     <cve>CVE-2019-17221</cve>
-    <cve>CVE-2022-2048</cve>
-    <cve>CVE-2022-2047</cve>
-    <cve>CVE-2023-36478</cve>
-    <cve>CVE-2021-22569</cve>
-    <cve>CVE-2022-41854</cve>
-    <cve>CVE-2021-34428</cve>
-    <cve>CVE-2020-28052</cve>
-    <cve>CVE-2023-2976</cve>
-    <cve>CVE-2020-5529</cve>
-    <cve>CVE-2021-43859</cve>
-    <cve>CVE-2018-8036</cve>
-    <cve>CVE-2023-49093</cve>
-    <cve>CVE-2021-22053</cve>
-    <cve>CVE-2022-3171</cve>
+
+    <!-- newer version used, org.bouncycastle:bcpkix-jdk18on:1.78.1 -->
+    <cve>CVE-2020-15522</cve>
+
+    <!-- not used in prod, org.seleniumhq.selenium:jetty-repacked:9.4.12.v20180830 -->
     <cve>CVE-2020-27216</cve>
     <cve>CVE-2020-27218</cve>
-    <cve>CVE-2022-25857</cve>
-    <cve>CVE-2019-10241</cve>
-    <cve>CVE-2021-27906</cve>
-    <cve>CVE-2019-10247</cve>
-    <cve>CVE-2023-26119</cve>
-    <cve>CVE-2022-36033</cve>
-    <cve>CVE-2023-26049</cve>
-    <cve>CVE-2023-26048</cve>
-    <cve>CVE-2018-11797</cve>
-    <cve>CVE-2024-25710</cve>
-    <cve>CVE-2022-29546</cve>
-    <cve>CVE-2021-28165</cve>
-    <cve>CVE-2023-33202</cve>
-    <cve>CVE-2021-28169</cve>
-    <cve>CVE-2023-36479</cve>
     <cve>CVE-2020-27223</cve>
-    <cve>CVE-2022-42889</cve>
-    <cve>CVE-2022-25647</cve>
-    <cve>CVE-2021-31811</cve>
-    <cve>CVE-2022-34169</cve>
-    <cve>CVE-2021-31812</cve>
-    <cve>CVE-2022-28366</cve>
+
+    <!-- newer version used, org.bouncycastle:bcpkix-jdk18on:1.78.1 -->
+    <cve>CVE-2020-28052</cve>
+
+    <!-- newer version used, net.sourceforge.htmlunit:htmlunit:2.60.0 -->
+    <cve>CVE-2020-5529</cve>
+
+    <!-- addressed -->
+<!--    <cve>CVE-2020-8908</cve>-->
+
+    <!-- to be addressed by spring-boot upgrade -->
+    <cve>CVE-2021-22053</cve>
+
+    <!-- false positive, google protobuf-java not used -->
+    <cve>CVE-2021-22569</cve>
+
+    <!-- addressed -->
+<!--    <cve>CVE-2021-27807</cve>-->
+<!--    <cve>CVE-2021-27906</cve>-->
+
+    <!-- not used in prod, org.seleniumhq.selenium:jetty-repacked:9.4.12.v20180830 -->
+    <cve>CVE-2021-28165</cve>
+    <cve>CVE-2021-28169</cve>
+
+    <!-- addressed -->
+<!--    <cve>CVE-2021-31811</cve>-->
+<!--    <cve>CVE-2021-31812</cve>-->
+
+    <!-- not used in prod, org.seleniumhq.selenium:jetty-repacked:9.4.12.v20180830 -->
+    <cve>CVE-2021-34428</cve>
+
+    <!-- addressed -->
+<!--    <cve>CVE-2021-37533</cve>-->
+
+    <!-- not used in prod, org.jsoup:jsoup:1.13.1 -->
     <cve>CVE-2021-37714</cve>
-    <cve>CVE-2020-15522</cve>
+
+    <!-- addressed -->
+<!--    <cve>CVE-2021-43859</cve>-->
+
+    <!-- not used in prod, org.seleniumhq.selenium:jetty-repacked:9.4.12.v20180830 -->
+    <cve>CVE-2022-2047</cve>
+    <cve>CVE-2022-2048</cve>
+
+    <!-- newer version used, com.google.code.gson:gson:2.11.0 -->
+    <cve>CVE-2022-25647</cve>
+
+    <!-- newer version used, org.yaml:snakeyaml:1.33 -->
+    <cve>CVE-2022-25857</cve>
+
+    <!-- false positive, poi-scratchpad not used -->
+    <cve>CVE-2022-26336</cve>
+
+    <!-- newer version used, net.sourceforge.htmlunit:htmlunit:2.60.0 -->
+    <cve>CVE-2022-28366</cve>
+
+    <!-- false positive, htmlunit-neko not used -->
+    <cve>CVE-2022-29546</cve>
+
+    <!-- false positive, google protobuf-java not used -->
+    <cve>CVE-2022-3171</cve>
+
+    <!-- addressed -->
+<!--    <cve>CVE-2022-34169</cve>-->
+
+    <!-- not used in prod, org.jsoup:jsoup:1.13.1 -->
+    <cve>CVE-2022-36033</cve>
+
+    <!-- newer version used, org.yaml:snakeyaml:1.33 -->
+    <cve>CVE-2022-38749</cve>
+    <cve>CVE-2022-38750</cve>
+    <cve>CVE-2022-38751</cve>
+    <cve>CVE-2022-38752</cve>
+
+    <!-- addressed -->
+<!--    <cve>CVE-2022-40151</cve>-->
+<!--    <cve>CVE-2022-40152</cve>-->
+
+    <!-- newer version used, org.yaml:snakeyaml:1.33 -->
+    <cve>CVE-2022-41854</cve>
+
+    <!-- addressed -->
+<!--    <cve>CVE-2022-41966</cve>-->
+
+    <!-- not used in prod, org.apache.commons:commons-text:1.9 -->
+    <cve>CVE-2022-42889</cve>
+
+    <!-- not used in prod, org.seleniumhq.selenium:jetty-repacked:9.4.12.v20180830 -->
+    <cve>CVE-2023-26048</cve>
+    <cve>CVE-2023-26049</cve>
+
+    <!-- not used in prod, net.sourceforge.htmlunit:htmlunit:2.60.0 -->
+    <cve>CVE-2023-26119</cve>
     <cve>CVE-2023-2798</cve>
-    <cve>CVE-2022-40151</cve>
-    <cve>CVE-2022-40152</cve>
+
+    <!-- addressed -->
+<!--    <cve>CVE-2023-2976</cve>-->
+
+    <!-- newer version used, org.bouncycastle:bcpkix-jdk18on:1.78.1 -->
+    <cve>CVE-2023-33202</cve>
+
+    <!-- not used in prod, com.squareup.okio:okio:2.8.0 -->
+    <cve>CVE-2023-3635</cve>
+
+    <!-- not used in prod, org.seleniumhq.selenium:jetty-repacked:9.4.12.v20180830 -->
+    <cve>CVE-2023-36478</cve>
+    <cve>CVE-2023-36479</cve>
+
+    <!-- newer version used, io.netty:netty-common:4.1.112.Final -->
+    <cve>CVE-2023-44487</cve>
+
+    <!-- not used in prod, net.sourceforge.htmlunit:htmlunit:2.60.0 -->
+    <cve>CVE-2023-49093</cve>
+
+    <!-- newer version used, org.apache.commons:commons-compress:1.27.1 -->
+    <cve>CVE-2024-25710</cve>
+    <cve>CVE-2024-26308</cve>
+
+    <!-- not used in prod, org.seleniumhq.selenium:jetty-repacked:9.4.12.v20180830 -->
+    <cve>CVE-2023-40167</cve>
 </suppress>
 </suppressions>

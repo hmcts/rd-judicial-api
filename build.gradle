@@ -597,6 +597,48 @@ configurations.all {
         }
     }
 
+    resolutionStrategy.eachDependency { details ->
+        if (details.requested.group == 'org.apache.commons' && details.requested.name == 'commons-compress') {
+            details.useVersion '1.27.1'
+        }
+    }
+
+    resolutionStrategy.eachDependency { details ->
+        // CVE-2018-8036, CVE-2018-11797, CVE-2021-27807, CVE-2021-27906,
+        // CVE-2021-31811, CVE-2021-31812
+        if (details.requested.group == 'org.apache.pdfbox' && details.requested.name == 'pdfbox') {
+            details.useVersion '2.0.32'
+        }
+    }
+
+    resolutionStrategy.eachDependency { details ->
+        // CVE-2018-8036, CVE-2018-11797, CVE-2023-2976
+        if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
+            details.useVersion '32.1.3-jre'
+        }
+    }
+
+    resolutionStrategy.eachDependency { details ->
+        // CVE-2021-37533
+        if (details.requested.group == 'commons-net' && details.requested.name == 'commons-net') {
+            details.useVersion '3.11.1'
+        }
+    }
+
+    resolutionStrategy.eachDependency { details ->
+        // CVE-2021-43859, CVE-2022-40151, CVE-2022-40152, CVE-2022-41966
+        if (details.requested.group == 'com.thoughtworks.xstream' && details.requested.name == 'xstream') {
+            details.useVersion '1.4.20'
+        }
+    }
+
+    resolutionStrategy.eachDependency { details ->
+        // CVE-2022-34169
+        if (details.requested.group == 'xalan' && details.requested.name == 'xalan') {
+            details.useVersion '2.7.3'
+        }
+    }
+
     resolutionStrategy.dependencySubstitution {
         substitute module('com.google.inject:guice') using module('com.google.inject:guice:5.1.0') withoutClassifier()
     }
