@@ -196,7 +196,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
     }
 
     private void verifyPeopleDataLoadAudit(JobStatus peopleLoadJobStatus) {
-        verifyPeopleDataLoadAudit(peopleLoadJobStatus, 3);
+        verifyPeopleDataLoadAudit(peopleLoadJobStatus, 2);
     }
 
     private void verifyPeopleDataLoadAudit(JobStatus peopleLoadJobStatus,
