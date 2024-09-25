@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.idam.client.models.TokenRequest;
@@ -27,8 +26,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SendEmail;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.SqlConstants;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -193,8 +190,10 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             null,
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), IDAMSEARCH);
         Set<IdamResponse> judicialUsers = new HashSet<>();
-        List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdFromCurrentDate();
-        String bearerToken =  "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
+        List<UserProfile> userProfiles = userProfileRepository.fetchObjectIdMissingSidamId();
+        int userProfileSize = userProfiles.size();
+        String bearerToken = userProfileSize > 0 ? "Bearer ".concat(getIdamBearerToken(schedulerStartTime)) : "";
+        log.debug("{}:: Number of User profiles from JRD :: " + userProfileSize, loggingComponentName);
         AtomicReference<Boolean> isPartialSuccess = new AtomicReference<>(false);
         userProfiles.forEach(userProfile -> {
             Map<String, String> params = new HashMap<>();
@@ -301,11 +300,10 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 updateSidamIds,
                 sidamObjectId,
                 10,
-                new ParameterizedPreparedStatementSetter<Pair<String, String>>() {
-                    public void setValues(PreparedStatement ps, Pair<String, String> argument) throws SQLException {
-                        ps.setString(1, argument.getLeft());
-                        ps.setString(2, argument.getRight());
-                    }
+                (ps, argument) -> {
+                    log.debug("SIDAM Id {} and Object ID {} to update " + argument.getLeft(), argument.getRight());
+                    ps.setString(1, argument.getLeft());
+                    ps.setString(2, argument.getRight());
                 });
 
     }

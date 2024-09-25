@@ -136,6 +136,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedRoleSize(1)
                         .expectedUserProfiles(2)
                         .expectedAuditRecords(2)
+                        .expectedAuditRecords(3)
                         .expectedJobStatus(SUCCESS)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
@@ -548,6 +549,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedRoleSize(2)
                         .expectedUserProfiles(2)
                         .expectedAuditRecords(3)
+                        .expectedAuditRecords(4)
                         .expectedActiveFlag(false)
                         .expectedDeletedFlag(true)
                         .expectedDeletedOnDate("2022-07-10")
@@ -1034,7 +1036,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .stream()
                         .sorted(comparing(ElinkDataSchedularAudit::getApiName))
                         .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(7);
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(8);
 
         final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
         final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
@@ -1043,6 +1045,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         final ElinkDataSchedularAudit auditEntry5 = eLinksDataSchedulerAudits.get(4);
         final ElinkDataSchedularAudit auditEntry6 = eLinksDataSchedulerAudits.get(5);
         final ElinkDataSchedularAudit auditEntry7 = eLinksDataSchedulerAudits.get(6);
+        final ElinkDataSchedularAudit auditEntry8 = eLinksDataSchedulerAudits.get(7);
 
         assertThat(auditEntry1).isNotNull();
         assertThat(auditEntry2).isNotNull();
@@ -1090,5 +1093,11 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         assertThat(auditEntry7.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
         assertThat(auditEntry7.getSchedulerStartTime()).isNotNull();
         assertThat(auditEntry7.getSchedulerEndTime()).isNotNull();
+
+        assertThat(auditEntry8.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
+        assertThat(auditEntry8.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(auditEntry8.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(auditEntry8.getSchedulerStartTime()).isNotNull();
+        assertThat(auditEntry8.getSchedulerEndTime()).isNotNull();
     }
 }

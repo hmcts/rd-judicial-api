@@ -172,8 +172,7 @@ class IdamElasticSearchServiceImplTest {
         map.put("X-Total-Count", list);
 
         when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(Lists.newArrayList());
-        when(userProfileRepository.fetchObjectIdFromCurrentDate()).thenReturn(createUserProfile());
-        when(userProfileRepository.fetchObjectId()).thenReturn(List.of("objectId1"));
+        when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamDetails();
         ElinkIdamWrapperResponse  elinkIdamWrapperResponse = (ElinkIdamWrapperResponse) useResponses.getBody();
@@ -213,7 +212,7 @@ class IdamElasticSearchServiceImplTest {
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
         when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenThrow(feignExceptionMock);
-        when(userProfileRepository.fetchObjectIdFromCurrentDate()).thenReturn(createUserProfile());
+        when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
 
         idamElasticSearchServiceImpl.getIdamDetails();
 

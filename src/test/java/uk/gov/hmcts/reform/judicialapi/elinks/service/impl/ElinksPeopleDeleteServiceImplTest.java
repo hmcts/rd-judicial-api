@@ -98,6 +98,13 @@ class ElinksPeopleDeleteServiceImplTest {
 
     @Test
     void testdeletePeople() {
+        List<UserProfile> userProfiles = new ArrayList<>();
+        userProfiles.add(UserProfile.builder()
+                .personalCode("1234")
+                .surname("surname")
+                .fullName("full name").build());
+        Mockito.when(profileRepository.deleteByPersonalCodeIn(anyList())).thenReturn(userProfiles);
+
         elinksPeopleDeleteServiceimpl.deletePeople(result1.getPersonalCode());
         Mockito.verify(profileRepository, Mockito.times(1)).findByPersonalCodeIn(anyList());
         Mockito.verify(profileRepository, Mockito.times(1)).saveAll(anyList());

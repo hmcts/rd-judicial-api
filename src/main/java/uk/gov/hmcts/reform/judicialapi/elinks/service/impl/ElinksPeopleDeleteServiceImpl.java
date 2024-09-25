@@ -19,10 +19,12 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeReposit
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleDeleteAuditService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleDeleteService;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -45,6 +47,9 @@ public class ElinksPeopleDeleteServiceImpl implements ElinksPeopleDeleteService 
 
     @Autowired
     private ElinksPeopleDeleteAuditService elinksPeopleDeleteAuditService;
+
+    @Autowired
+    private PublishSidamIdService publishSidamIdService;
 
 
     @Override
