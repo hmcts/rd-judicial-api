@@ -92,19 +92,13 @@ class ElinksPeopleDeleteServiceImplTest {
     @Test
     void testdeleteAuth() {
         elinksPeopleDeleteServiceimpl.deleteAuth(result1);
-        Mockito.verify(profileRepository, Mockito.times(1)).findByPersonalCodeIn(anyList());
-        Mockito.verify(profileRepository, Mockito.times(1)).saveAll(anyList());
+        Mockito.verify(authorisationsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
+        Mockito.verify(appointmentsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
+        Mockito.verify(judicialRoleTypeRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
     }
 
     @Test
     void testdeletePeople() {
-        List<UserProfile> userProfiles = new ArrayList<>();
-        userProfiles.add(UserProfile.builder()
-                .personalCode("1234")
-                .surname("surname")
-                .fullName("full name").build());
-        Mockito.when(profileRepository.deleteByPersonalCodeIn(anyList())).thenReturn(userProfiles);
-
         elinksPeopleDeleteServiceimpl.deletePeople(result1.getPersonalCode());
         Mockito.verify(profileRepository, Mockito.times(1)).findByPersonalCodeIn(anyList());
         Mockito.verify(profileRepository, Mockito.times(1)).saveAll(anyList());
