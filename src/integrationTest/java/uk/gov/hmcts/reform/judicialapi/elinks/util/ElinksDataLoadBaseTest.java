@@ -13,6 +13,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -130,9 +131,12 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .expectedAppointmentsSize(2)
                         .expectedAuthorisationSize(2)
+                        .expectedDeletedOnDate(LocalDate.now().toString())
+                        .expectedDeletedFlag(true)
                         .expectedRoleSize(1)
-                        .expectedUserProfiles(1)
-                        .expectedAuditRecords(3)
+                        .expectedUserProfiles(2)
+                        .expectedAuditRecords(2)
+                        .expectedAuditRecords(2)
                         .expectedJobStatus(SUCCESS)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
@@ -352,9 +356,11 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksPeopleApiResponseJson(PEOPLE_LOAD_DELETE_API_RESPONSE_JSON)
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .expectedAppointmentsSize(2)
+                        .expectedDeletedOnDate(LocalDate.now().toString())
+                        .expectedDeletedFlag(true)
                         .expectedAuthorisationSize(2)
                         .expectedRoleSize(1)
-                        .expectedUserProfiles(1)
+                        .expectedUserProfiles(2)
                         .expectedJobStatus(SUCCESS)
                         .expectedActiveFlag(true)
                         .expectedLastWorkingDate("2028-07-23")
@@ -538,11 +544,12 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .eLinksPeopleApiResponseJson(PEOPLE_API_RESPONSE_JSON)
                         .eLinksDeletedApiResponseJson(DELETED_API_RESPONSE_JSON)
-                        .expectedAppointmentsSize(2)
-                        .expectedAuthorisationSize(2)
-                        .expectedRoleSize(1)
-                        .expectedUserProfiles(1)
-                        .expectedAuditRecords(4)
+                        .expectedAppointmentsSize(4)
+                        .expectedAuthorisationSize(4)
+                        .expectedRoleSize(2)
+                        .expectedUserProfiles(2)
+                        .expectedAuditRecords(3)
+                        .expectedAuditRecords(3)
                         .expectedActiveFlag(false)
                         .expectedDeletedFlag(true)
                         .expectedDeletedOnDate("2022-07-10")
@@ -689,6 +696,9 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     }
 
     private void verifySecondUserAppointmentsData(List<Appointment> appointments, int size) {
+        if (isSecondUserDeleted()) {
+            return;
+        }
         Appointment secondUserAppointments1 = appointments.get(2);
         assertThat(secondUserAppointments1).isNotNull();
 
@@ -728,6 +738,16 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
             assertThat(secondUserAppointments2.getLocation()).isEqualTo("Unassigned");
             assertThat(secondUserAppointments2.getJoBaseLocationId()).isEqualTo("2218");
         }
+    }
+
+    private boolean isSecondUserDeleted() {
+        final List<UserProfile> userprofile =
+                profileRepository.findAll().stream()
+                        .sorted(Comparator.comparing(UserProfile::getPersonalCode))
+                        .toList();
+        UserProfile secondUser = userprofile.get(1);
+        Boolean deletedFlag = secondUser.getDeletedFlag();
+        return deletedFlag != null && deletedFlag;
     }
 
     protected void verifyUserAuthorisationsData(TestDataArguments testDataArguments) {
@@ -783,6 +803,9 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     }
 
     private void verifySecondUserAuthorisationsData(List<Authorisation> authorisations, int size) {
+        if (isSecondUserDeleted()) {
+            return;
+        }
         Authorisation secondUserAuthorisation1 = authorisations.get(2);
         assertThat(secondUserAuthorisation1).isNotNull();
 
@@ -1013,7 +1036,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .stream()
                         .sorted(comparing(ElinkDataSchedularAudit::getApiName))
                         .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(8);
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(7);
 
         final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
         final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
@@ -1022,7 +1045,6 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         final ElinkDataSchedularAudit auditEntry5 = eLinksDataSchedulerAudits.get(4);
         final ElinkDataSchedularAudit auditEntry6 = eLinksDataSchedulerAudits.get(5);
         final ElinkDataSchedularAudit auditEntry7 = eLinksDataSchedulerAudits.get(6);
-        final ElinkDataSchedularAudit auditEntry8 = eLinksDataSchedulerAudits.get(7);
 
         assertThat(auditEntry1).isNotNull();
         assertThat(auditEntry2).isNotNull();
@@ -1070,11 +1092,5 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         assertThat(auditEntry7.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
         assertThat(auditEntry7.getSchedulerStartTime()).isNotNull();
         assertThat(auditEntry7.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry8.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
-        assertThat(auditEntry8.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry8.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry8.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry8.getSchedulerEndTime()).isNotNull();
     }
 }

@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.testng.collections.Lists;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AppointmentsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AuthorisationsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
@@ -94,11 +95,17 @@ class ElinksPeopleDeleteServiceImplTest {
         Mockito.verify(authorisationsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(appointmentsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(judicialRoleTypeRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
-
     }
 
     @Test
     void testdeletePeople() {
+        elinksPeopleDeleteServiceimpl.deletePeople(result1.getPersonalCode());
+        Mockito.verify(profileRepository, Mockito.times(1)).findByPersonalCodeIn(anyList());
+        Mockito.verify(profileRepository, Mockito.times(1)).saveAll(anyList());
+    }
+
+    @Test
+    void testClearDeletePeople() {
         List<UserProfile> userProfiles = new ArrayList<>();
         userProfiles.add(UserProfile.builder()
                 .personalCode("1234")
@@ -106,13 +113,11 @@ class ElinksPeopleDeleteServiceImplTest {
                 .fullName("full name").build());
         Mockito.when(profileRepository.deleteByPersonalCodeIn(anyList())).thenReturn(userProfiles);
 
-        elinksPeopleDeleteServiceimpl.deletePeople(result1.getPersonalCode());
+        elinksPeopleDeleteServiceimpl.clearDeletedPeople(Lists.newArrayList("1234"));
         Mockito.verify(authorisationsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(appointmentsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(judicialRoleTypeRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(profileRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
-        Mockito.verify(publishSidamIdService,Mockito.times(1)).publishSidamIdToAsb(anyList());
-
     }
 
 }

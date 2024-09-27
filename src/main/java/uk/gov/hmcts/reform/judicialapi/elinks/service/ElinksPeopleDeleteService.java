@@ -12,4 +12,6 @@ public interface ElinksPeopleDeleteService {
 
     void deletePeople(List<String> personalCodes);
 
+    void clearDeletedPeople(List<String> personalCodes);
+
 }

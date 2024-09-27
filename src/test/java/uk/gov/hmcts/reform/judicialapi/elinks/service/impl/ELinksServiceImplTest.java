@@ -53,6 +53,7 @@ import java.util.List;
 import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -476,19 +477,13 @@ class ELinksServiceImplTest {
 
         eLinksServiceImpl.deleteJohProfiles(LocalDateTime.now());
         Mockito.verify(profileRepository,Mockito.times(1))
-                .findByDeletedOnBeforeAndDeletedFlag(any(),any());
+                .findByDeletedFlag(anyBoolean());
 
         Mockito.verify(profileRepository,Mockito.times(0))
                 .deleteByDeletedOnBeforeAndDeletedFlag(any(),any());
 
-        Mockito.verify(authorisationRepository,Mockito.times(0))
-                .deleteByPersonalCodeIn(any());
-
-        Mockito.verify(appointmentsRepository,Mockito.times(0))
-                .deleteByPersonalCodeIn(any());
-
-        Mockito.verify(judicialRoleTypeRepository,Mockito.times(0))
-                .deleteByPersonalCodeIn(any());
+        Mockito.verify(elinksPeopleDeleteService,Mockito.times(0))
+                .clearDeletedPeople(any());
 
         Mockito.verify(elinkDataExceptionHelper,Mockito.times(0))
                 .auditException(any(),any());
@@ -524,39 +519,20 @@ class ELinksServiceImplTest {
 
     @Test
     void elinksService_deleteJohProfiles_should_return_success_with_few_profiles() throws JsonProcessingException {
-
-
         var userProfile = buildUserProfile();
-
-
-        when(profileRepository.findByDeletedOnBeforeAndDeletedFlag(any(),any()))
+        when(profileRepository.findByDeletedFlag(any()))
                 .thenReturn(Collections.singletonList(userProfile));
 
         eLinksServiceImpl.deleteJohProfiles(LocalDateTime.now());
 
-
-
-
         Mockito.verify(profileRepository,Mockito.times(1))
-                .findByDeletedOnBeforeAndDeletedFlag(any(),any());
+                .findByDeletedFlag(anyBoolean());
 
-        Mockito.verify(profileRepository,Mockito.times(1))
-                .deleteByDeletedOnBeforeAndDeletedFlag(any(),any());
-
-        Mockito.verify(authorisationRepository,Mockito.times(1))
-                .deleteByPersonalCodeIn(any());
-
-        Mockito.verify(appointmentsRepository,Mockito.times(1))
-                .deleteByPersonalCodeIn(any());
-
-        Mockito.verify(judicialRoleTypeRepository,Mockito.times(1))
-                .deleteByPersonalCodeIn(any());
+        Mockito.verify(elinksPeopleDeleteService,Mockito.times(1))
+                .clearDeletedPeople(any());
 
         Mockito.verify(elinkDataExceptionHelper,Mockito.times(1))
                 .auditException(any(),any());
-
-
-
     }
 
     UserProfile buildUserProfile() {

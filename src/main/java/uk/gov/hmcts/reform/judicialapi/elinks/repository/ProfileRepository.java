@@ -136,10 +136,14 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
     List<UserProfile> fetchObjectIdMissingSidamId();
 
 
-    List<UserProfile> findByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
+    List<UserProfile> findByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn, Boolean deletedFlag);
+
+    List<UserProfile> findByDeletedFlag(Boolean deletedFlag);
 
     void deleteByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
 
     List<UserProfile> deleteByPersonalCodeIn(List<String> personalCodes);
+
+    List<UserProfile> findByPersonalCodeIn(List<String> personalCodes);
 
 }

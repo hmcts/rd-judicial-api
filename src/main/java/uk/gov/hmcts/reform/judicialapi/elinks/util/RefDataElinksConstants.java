@@ -58,6 +58,8 @@ public class RefDataElinksConstants {
 
     public static final String PUBLISHSIDAM = "PublishSidamIds";
 
+    public static final String CLEAR_DELETED = "ClearDeleted";
+
     public static final String DELETEDAPI = "Deleted";
 
     public static final String ELINKSRESPONSES = "elinks_responses";

@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 import feign.FeignException;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Triple;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,9 +45,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import uk.gov.hmcts.reform.judicialapi.util.JsonFeignResponseUtil;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
@@ -487,14 +488,31 @@ public class ELinksServiceImpl implements ELinksService {
 
     private void processDeletedResponse(ElinksDeleteApiResponse elinkDeletedResponseRequest) {
         try {
-            List<DeletedResponse> deletedResponses = elinkDeletedResponseRequest.getDeletedResponse();
-            List<String> personalCodes = deletedResponses.stream()
-                    .filter(request -> nonNull(request.getPersonalCode()))
-                    .map(request -> request.getPersonalCode()).collect(Collectors.toList());
-            elinksPeopleDeleteService.deletePeople(personalCodes);
+            updateDeleted(elinkDeletedResponseRequest.getDeletedResponse());
         } catch (Exception ex) {
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
         }
+    }
+
+    public void updateDeleted(List<DeletedResponse> deletedResponse) {
+
+        List<Triple<String, String, String>> deletedId = new ArrayList<>();
+
+        String updateDeletedId = "UPDATE dbjudicialdata.judicial_user_profile SET date_of_deletion = Date(?) , "
+                + "deleted_flag = ?,active_flag=false WHERE personal_code = ?";
+
+        deletedResponse.stream().filter(request -> nonNull(request.getPersonalCode())).forEach(s ->
+                deletedId.add(Triple.of(s.getPersonalCode(), s.getDeleted(), s.getDeletedOn())));
+        log.info("Insert Query batch Response from Deleted" + deletedId.size());
+        jdbcTemplate.batchUpdate(
+                updateDeletedId,
+                deletedId,
+                10,
+                (ps, argument) -> {
+                    ps.setString(1, argument.getRight());
+                    ps.setBoolean(2, Boolean.valueOf(argument.getMiddle()));
+                    ps.setString(3, argument.getLeft());
+                });
     }
 
 
@@ -518,17 +536,11 @@ public class ELinksServiceImpl implements ELinksService {
     public void deleteJohProfiles(LocalDateTime schedulerStartTime) {
         try {
             if (delJohProfiles) {
-                LocalDateTime delDate = LocalDateTime.now().minusYears(delJohProfilesYears);
-                List<UserProfile> userProfiles = profileRepository
-                        .findByDeletedOnBeforeAndDeletedFlag(delDate,true);
+                List<UserProfile> userProfiles = profileRepository.findByDeletedFlag(true);
 
                 List<String> personalCodes = userProfiles.stream().map(UserProfile::getPersonalCode).toList();
                 if (!personalCodes.isEmpty()) {
-                    authorisationsRepository.deleteByPersonalCodeIn(personalCodes);
-                    appointmentsRepository.deleteByPersonalCodeIn(personalCodes);
-                    judicialRoleTypeRepository.deleteByPersonalCodeIn(personalCodes);
-                    profileRepository.deleteByDeletedOnBeforeAndDeletedFlag(delDate,true);
-
+                    elinksPeopleDeleteService.clearDeletedPeople(personalCodes);
                     log.info("Deleted JOH UserProfiles Successfully");
                     elinkDataExceptionHelper.auditException(personalCodes, schedulerStartTime);
                 }
