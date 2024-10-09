@@ -15,4 +15,8 @@
 <cve>CVE-2023-5590</cve>
 <cve>CVE-2023-36052</cve>
 </suppress>
+<suppress>
+    <notes>https://tools.hmcts.net/jira/browse/DTSRD-3524 glassfish</notes>
+    <cve>CVE-2024-9329</cve>
+</suppress>
 </suppressions>
