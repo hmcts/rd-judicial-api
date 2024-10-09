@@ -138,7 +138,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedAuditRecords(2)
                         .expectedAuditRecords(2)
                         .expectedJobStatus(SUCCESS)
-                        .expectedActiveFlag(true)
+                        .expectedActiveFlag(false)
                         .expectedLastWorkingDate("2028-07-23")
                         .build();
 
@@ -362,7 +362,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .expectedRoleSize(1)
                         .expectedUserProfiles(2)
                         .expectedJobStatus(SUCCESS)
-                        .expectedActiveFlag(true)
+                        .expectedActiveFlag(false)
                         .expectedLastWorkingDate("2028-07-23")
                         .build();
 
