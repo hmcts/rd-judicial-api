@@ -106,15 +106,21 @@ public class ElinksPeopleDeleteServiceImpl implements ElinksPeopleDeleteService 
             clearDeleted(personalCodes, deleteUserProfile, persistDeleteAudit);
         } else {
             log.info("Soft Delete For Personal Codes Size {}", personalCodes.size());
-            authorisationsRepository.deleteByPersonalCodeIn(personalCodes);
-            appointmentsRepository.deleteByPersonalCodeIn(personalCodes);
-            judicialRoleTypeRepository.deleteByPersonalCodeIn(personalCodes);
+            List<Authorisation> authorisations = authorisationsRepository.deleteByPersonalCodeIn(personalCodes);
+            List<Appointment> appointments = appointmentsRepository.deleteByPersonalCodeIn(personalCodes);
+            List<JudicialRoleType> judicialRoleTypes = judicialRoleTypeRepository
+                    .deleteByPersonalCodeIn(personalCodes);
+            if (persistDeleteAudit) {
+                elinksPeopleDeleteAuditService
+                        .auditPeopleDelete(authorisations, appointments, judicialRoleTypes, null);
+            }
 
             if (deleteUserProfile) {
                 List<UserProfile> userProfiles = profileRepository.findByPersonalCodeIn(personalCodes);
 
                 userProfiles.forEach(userProfile -> {
                     userProfile.setDeletedFlag(true);
+                    userProfile.setActiveFlag(false);
                     userProfile.setDeletedOn(LocalDateTime.now());
                 });
                 profileRepository.saveAll(userProfiles);

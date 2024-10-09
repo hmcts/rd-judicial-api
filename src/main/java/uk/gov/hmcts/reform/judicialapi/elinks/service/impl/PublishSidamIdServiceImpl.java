@@ -1,6 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
@@ -100,6 +102,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
         } catch (Exception ex) {
             throw new ElinksException(HttpStatus.BAD_REQUEST, DATABASE_FETCH_ERROR, ex.getMessage());
         }
+        sidamIds = sidamIds.stream().filter(StringUtils::isNotEmpty).collect(Collectors.toList());
 
         sidamIdcount = sidamIds.size();
 
