@@ -45,4 +45,7 @@ public class ElinkDataSchedularAudit implements Serializable {
     @Column(name = "api_name")
     private String apiName;
 
+    @Column(name = "error_message")
+    private String errorMessage;
+
 }

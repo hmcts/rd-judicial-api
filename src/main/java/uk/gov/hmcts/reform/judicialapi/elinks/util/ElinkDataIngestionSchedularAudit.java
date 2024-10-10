@@ -26,7 +26,34 @@ public class ElinkDataIngestionSchedularAudit {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void auditSchedulerStatus(String schedulerName, LocalDateTime schedulerStartTime,
                                      LocalDateTime schedulerEndTime, String status, String apiName) {
+        auditSchedulerStatusMessage(schedulerName,
+                schedulerStartTime,
+                schedulerEndTime,
+                status,
+                apiName,
+                "");
+    }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void auditSchedulerStatus(String schedulerName,
+                                     LocalDateTime schedulerStartTime,
+                                     LocalDateTime schedulerEndTime,
+                                     String status, String apiName, String errorMessage) {
+
+        auditSchedulerStatusMessage(schedulerName,
+                schedulerStartTime,
+                schedulerEndTime,
+                status,
+                apiName,
+                errorMessage);
+    }
+
+    private void auditSchedulerStatusMessage(String schedulerName,
+                                             LocalDateTime schedulerStartTime,
+                                             LocalDateTime schedulerEndTime,
+                                             String status,
+                                             String apiName,
+                                             String errorMessage) {
         ElinkDataSchedularAudit audit = new ElinkDataSchedularAudit();
         try {
             if (nonNull(schedulerEndTime) && nonNull(schedulerStartTime)) {
@@ -44,13 +71,14 @@ public class ElinkDataIngestionSchedularAudit {
             audit.setSchedulerStartTime(schedulerStartTime);
             audit.setStatus(status);
             audit.setApiName(apiName);
+            audit.setErrorMessage(errorMessage != null && errorMessage.length() > 500
+                    ? errorMessage.substring(0, 500) : errorMessage);
 
             elinkSchedularAuditRepository.save(audit);
         } catch (Exception e) {
             log.error("{}:: Failure error Message {} in auditSchedulerStatus {}  ",
                 loggingComponentName, e.getMessage(), schedulerName);
         }
-
     }
 
 }

@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import feign.Request;
 import feign.Response;
 import lombok.SneakyThrows;
@@ -11,11 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.testng.collections.Lists;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
@@ -120,7 +123,7 @@ class IdamElasticSearchServiceImplTest {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         assertThrows(ElinksException.class, () -> idamElasticSearchServiceImpl.getIdamBearerToken(LocalDateTime.now()));
         verify(elinkDataIngestionSchedularAudit,times(1))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+            .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
     }
 
     @Test
@@ -138,19 +141,15 @@ class IdamElasticSearchServiceImplTest {
         list.add("5");
         map.put("X-Total-Count", list);
 
-        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
-                        Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
-                .status(200).build();
-        when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(Lists.newArrayList());
         when(userProfileRepository.fetchObjectId()).thenReturn(List.of("2234"));
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
-        assertThat(response).isNotNull();
         Set<IdamResponse>  idamResponse = (HashSet<IdamResponse>) useResponses.getBody();
         idamResponse.forEach(useResponse -> {
             assertThat(useResponse.getEmail()).isEqualTo("some@some.com");
         });
-        verify(idamClientMock, times(1)).getUserFeed(anyString(), any());
+        verify(idamClientMock, times(1)).searchUsers(anyString(), any(), any(), any());
         verify(elinkDataIngestionSchedularAudit,times(2))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
@@ -172,17 +171,13 @@ class IdamElasticSearchServiceImplTest {
         list.add("5");
         map.put("X-Total-Count", list);
 
-        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
-                Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
-            .status(200).build();
-        when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(Lists.newArrayList());
         when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamDetails();
-        assertThat(response).isNotNull();
         ElinkIdamWrapperResponse  elinkIdamWrapperResponse = (ElinkIdamWrapperResponse) useResponses.getBody();
         assertEquals(elinkIdamWrapperResponse.getMessage(),SIDAM_IDS_UPDATED);
-        verify(idamClientMock, times(2)).getUserFeed(anyString(), any());
+        verify(idamClientMock, times(2)).searchUsers(anyString(), any(), any(), any());
         verify(elinkDataIngestionSchedularAudit,times(2))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
@@ -196,42 +191,35 @@ class IdamElasticSearchServiceImplTest {
     }
 
     @Test
-    void testSyncFeedResponseError() throws JsonProcessingException {
+    void testSyncFeedResponseError() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
-        List<IdamResponse> users = new ArrayList<>();
-        users.add(createUser("some@some.com"));
-        ObjectMapper mapper = new ObjectMapper();
-        String body = mapper.writeValueAsString(users);
+        FeignException feignExceptionMock = Mockito.mock(FeignException.class);
+        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenThrow(feignExceptionMock);
 
-        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
-                        Request.Body.empty(), null)).body(body, Charset.defaultCharset())
-                .status(500).build();
-        when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
         assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed());
-        verify(elinkDataIngestionSchedularAudit,times(2))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+        verify(elinkDataIngestionSchedularAudit,times(1))
+                .auditSchedulerStatus(any(),any(),any(),any(),any());
+        verify(elinkDataIngestionSchedularAudit,times(1))
+            .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
     }
 
     @Test
-    void testIdamSearchResponseError() throws JsonProcessingException {
+    void testIdamSearchResponseError() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
-        List<IdamResponse> users = new ArrayList<>();
-        users.add(createUser("some@some.com"));
-        ObjectMapper mapper = new ObjectMapper();
-        String body = mapper.writeValueAsString(users);
-
-        Response response = Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
-                Request.Body.empty(), null)).body(body, Charset.defaultCharset())
-            .status(500).build();
-        when(idamClientMock.getUserFeed(anyString(), any())).thenReturn(response);
+        FeignException feignExceptionMock = Mockito.mock(FeignException.class);
+        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenThrow(feignExceptionMock);
         when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
-        assertThrows(ElinksException.class,() -> idamElasticSearchServiceImpl.getIdamDetails());
+
+        idamElasticSearchServiceImpl.getIdamDetails();
+
+        verify(elinkDataExceptionHelper,times(2))
+            .auditException(any(),any(),any(),any(),any(), any(), any(), any(), any());
         verify(elinkDataIngestionSchedularAudit,times(2))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+                .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
 
@@ -248,29 +236,10 @@ class IdamElasticSearchServiceImplTest {
 
     @Test
     @SneakyThrows
-    void testLogResponse() {
-        List<IdamResponse> users = new ArrayList<>();
-        users.add(createUser("some@some.com"));
-        ObjectMapper mapper = new ObjectMapper();
-        String body = mapper.writeValueAsString(users);
-        Map<String, Collection<String>> map = new HashMap<>();
-        Collection<String> list = new ArrayList<>();
-        list.add("5");
-        map.put("X-Total-Count", list);
-        Response response = spy(Response.builder().request(Request.create(Request.HttpMethod.GET, "", new HashMap<>(),
-                        Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
-                .status(200).build());
-        invokeMethod(idamElasticSearchServiceImpl, "logIdamResponses", response);
-        verify(response, times(2)).status();
-    }
-
-    @Test
-    @SneakyThrows
     void testLogEmptyResponse() {
         Response nullResponse = spy(Response.builder().request(Request.create(Request.HttpMethod.GET, "",
                 new HashMap<>(),
                 Request.Body.create((byte[]) null), null)).build());
-        invokeMethod(idamElasticSearchServiceImpl, "logIdamResponses", nullResponse);
         assertNull(nullResponse.body());
     }
 
@@ -289,8 +258,6 @@ class IdamElasticSearchServiceImplTest {
                         new HashMap<>(),
                         Request.Body.empty(), null)).headers(map).body(body, Charset.defaultCharset())
                 .status(500).build());
-        invokeMethod(idamElasticSearchServiceImpl, "logIdamResponses", response);
-        verify(response, times(3)).status();
     }
 
     @Test

@@ -116,6 +116,23 @@ class PublishSidamIdServiceImplTest {
 
     }
 
+    @SneakyThrows
+    @Test
+    @DisplayName("Should retry when job status is_failed")
+    void should_retry_when_job_status_is_failed_sidamids() {
+
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("1", FAILED.getStatus()));
+
+        ResponseEntity<SchedulerJobStatusResponse> response = publishSidamIdService.publishSidamIdToAsb(sidamIds);
+        SchedulerJobStatusResponse res = response.getBody();
+
+        assertEquals("FAILED",res.getJobStatus());
+        assertEquals("1",res.getId());
+        assertEquals(HttpStatus.OK.value(),res.getStatusCode());
+        assertEquals(sidamIds.size(),res.getSidamIdsCount());
+    }
+
 
     @SneakyThrows
     @Test
@@ -135,6 +152,23 @@ class PublishSidamIdServiceImplTest {
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK.value());
         verify(jdbcTemplate, times(1)).update(anyString(), any(), anyInt());
 
+    }
+
+    @SneakyThrows
+    @Test
+    @DisplayName("When no sidam id's is available then just update the status in db")
+    void update_succes_as_job_status_when_no_sidam_ids_available_sidamids() {
+        List<String> sidamIds = new ArrayList<>();
+        when(jdbcTemplate.queryForObject(anyString(), any(RowMapper.class)))
+                .thenReturn(Pair.of("2", SUCCESS.getStatus()));
+
+        ResponseEntity<SchedulerJobStatusResponse> response = publishSidamIdService.publishSidamIdToAsb(sidamIds);
+        SchedulerJobStatusResponse res = response.getBody();
+
+        assertEquals("SUCCESS",res.getJobStatus());
+        assertEquals(sidamIds.size(),res.getSidamIdsCount());
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK.value());
+        verify(jdbcTemplate, times(1)).update(anyString(), any(), anyInt());
     }
 
 
@@ -173,7 +207,7 @@ class PublishSidamIdServiceImplTest {
         verify(elinkTopicPublisher, times(1)).sendMessage(any(), anyString());
         verify(jdbcTemplate, times(1)).update(anyString(), any(), anyInt());
         verify(elinkDataIngestionSchedularAudit,times(1))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+            .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
     }
 
     @SneakyThrows
@@ -231,7 +265,7 @@ class PublishSidamIdServiceImplTest {
 
         verify(elinkTopicPublisher).sendMessage(sidamIds,"2");
         verify(elinkDataIngestionSchedularAudit,times(2))
-            .auditSchedulerStatus(any(),any(),any(),any(),any());
+            .auditSchedulerStatus(any(),any(),any(),any(),any(), any());
     }
 
 }

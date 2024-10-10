@@ -45,6 +45,34 @@ class ElinkDataExceptionHelperTest {
     }
 
     @Test
+    void auditExceptionSuccessWithEmptyMessage() {
+
+        elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                LocalDateTime.now(),
+                "ElinksApiJobScheduler" +  LocalDateTime.now(),
+                "Schedular_Run_date", "JRD load failed since job has already ran for the day",
+                "ElinksApiJobScheduler", null, 1, "");
+
+        verify(elinkDataExceptionRepository, times(1))
+                .save(any());
+
+    }
+
+    @Test
+    void auditExceptionSuccessWithNullMessage() {
+
+        elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                LocalDateTime.now(),
+                "ElinksApiJobScheduler" +  LocalDateTime.now(),
+                "Schedular_Run_date", "JRD load failed since job has already ran for the day",
+                "ElinksApiJobScheduler", null, 1, null);
+
+        verify(elinkDataExceptionRepository, times(1))
+                .save(any());
+
+    }
+
+    @Test
     void auditExceptionFailure() {
         when(elinkDataExceptionRepository.save(any())).thenThrow(new RuntimeException("Some Exception"));
         assertThrows(Exception.class, () -> elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
@@ -59,7 +87,6 @@ class ElinkDataExceptionHelperTest {
     @Test
     void auditExceptionListSuccess() {
 
-        ElinkDataExceptionRecords audit = spy(ElinkDataExceptionRecords.class);
         String personalCode1 = "123";
         String personalCode2 = "234";
 

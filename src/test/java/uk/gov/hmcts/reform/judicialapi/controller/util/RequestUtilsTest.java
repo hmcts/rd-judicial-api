@@ -3,7 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.controller.util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
-import uk.gov.hmcts.reform.judicialapi.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.util.RequestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
