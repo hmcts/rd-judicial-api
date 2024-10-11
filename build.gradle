@@ -211,7 +211,7 @@ task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verificatio
 
 task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     baselineOnMigrate = true
-    baselineVersion = 1.1
+    baselineVersion = '1.1'
     schemas = ['dbjudicialdata']
     locations = ["filesystem:src/main/resources/db/migration"]
     if (project.hasProperty("dburl")) {
