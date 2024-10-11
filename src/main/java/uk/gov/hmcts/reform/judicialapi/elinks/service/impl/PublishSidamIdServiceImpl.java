@@ -102,7 +102,12 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
         } catch (Exception ex) {
             throw new ElinksException(HttpStatus.BAD_REQUEST, DATABASE_FETCH_ERROR, ex.getMessage());
         }
-        sidamIds = sidamIds.stream().filter(StringUtils::isNotEmpty).collect(Collectors.toList());
+
+        sidamIds =
+                sidamIds.stream()
+                        .map(String::strip)
+                        .filter(s -> !s.isBlank())
+                        .toList();
 
         sidamIdcount = sidamIds.size();
 
