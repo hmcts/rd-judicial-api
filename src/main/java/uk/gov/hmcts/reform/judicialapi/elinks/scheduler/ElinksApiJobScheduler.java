@@ -141,9 +141,8 @@ public class ElinksApiJobScheduler {
                     .contains("jrd-elinks-location".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
-                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                        now(),
-                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),LOCATIONAPI);
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS, now(), now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), LOCATIONAPI, ex.getMessage());
                 }
             }
         }
@@ -159,9 +158,8 @@ public class ElinksApiJobScheduler {
                     .contains("jrd-elinks-load-people".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
-                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                        now(),
-                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),PEOPLEAPI);
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS, now(), now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), PEOPLEAPI, ex.getMessage());
                 }
             }
         }
@@ -177,9 +175,8 @@ public class ElinksApiJobScheduler {
                     .contains("jrd-elinks-leavers".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
-                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                        now(),
-                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),LEAVERSAPI);
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS, now(), now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), LEAVERSAPI, ex.getMessage());
                 }
             }
         }
@@ -195,9 +192,8 @@ public class ElinksApiJobScheduler {
                     .contains("jrd-elinks-load-deleted".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
-                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                        now(),
-                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),DELETEDAPI);
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS, now(), now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), DELETEDAPI, ex.getMessage());
                 }
             }
         }
@@ -213,9 +209,8 @@ public class ElinksApiJobScheduler {
                 .contains("jrd-elinks-idam-elastic-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
-                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                        now(),
-                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),ELASTICSEARCH);
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS, now(), now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), ELASTICSEARCH, ex.getMessage());
                 }
             }
         }
@@ -231,9 +226,8 @@ public class ElinksApiJobScheduler {
                     .contains("jrd-elinks-idam-sso-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
-                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                        now(),
-                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),IDAMSEARCH);
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS, now(), now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), IDAMSEARCH, ex.getMessage());
                 }
             }
         }
@@ -252,9 +246,8 @@ public class ElinksApiJobScheduler {
                 if (exception.getRawStatusCode()==403 && exception.getMessage()
                 .contains("jrd-elinks-publish-service-bus".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
-                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-                        now(),
-                        now(),RefDataElinksConstants.JobStatus.FAILED.getStatus(),PUBLISHSIDAM);
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS, now(), now(),
+                            RefDataElinksConstants.JobStatus.FAILED.getStatus(), PUBLISHSIDAM, ex.getMessage());
                 }
             }
         }

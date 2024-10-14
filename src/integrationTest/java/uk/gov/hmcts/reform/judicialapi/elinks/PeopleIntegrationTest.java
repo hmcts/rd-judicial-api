@@ -31,6 +31,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
 
 class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
@@ -44,6 +45,35 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideDataForPeopleApi")
     void shouldLoadPeopleApiData(TestDataArguments testDataArguments) throws Exception {
+
+        final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
+        final String locationApiResponseJson = readJsonAsString(testDataArguments.eLinksLocationApiResponseJson());
+
+        stubLocationApiResponse(locationApiResponseJson, OK);
+        stubPeopleApiResponse(peopleApiResponseJson, OK);
+
+        loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
+        loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
+
+        verifySavedOriginalELinksResponses();
+
+        verifyUserProfileData(testDataArguments);
+
+        verifyUserAppointmentsData(testDataArguments);
+
+        verifyUserAuthorisationsData(testDataArguments);
+
+        verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
+
+        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus(), testDataArguments.expectedAuditRecords());
+
+        verifyExceptions(testDataArguments);
+    }
+
+    @DisplayName("Success - ELinks People Api Data Load and Delete Success Scenarios")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideDataForPeopleLoadAndDeleteApi")
+    void shouldLoadPeopleApiDataAndDelete(TestDataArguments testDataArguments) throws Exception {
 
         final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
         final String locationApiResponseJson = readJsonAsString(testDataArguments.eLinksLocationApiResponseJson());
@@ -86,7 +116,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(expectedHttpStatus, RESPONSE_BODY_ERROR_MSG, testDataArguments.expectedErrorMessage());
 
-        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus());
+        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus(), 2);
     }
 
     @DisplayName("Should run scheduler job and load elinks api's data when appointment id null for authorisations")
@@ -166,17 +196,21 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
     }
 
     private void verifyPeopleDataLoadAudit(JobStatus peopleLoadJobStatus) {
+        verifyPeopleDataLoadAudit(peopleLoadJobStatus, 2);
+    }
+
+    private void verifyPeopleDataLoadAudit(JobStatus peopleLoadJobStatus,
+                                           int expectedSize) {
 
         final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
                 elinkSchedularAuditRepository.findAll()
                         .stream()
                         .sorted(comparing(ElinkDataSchedularAudit::getApiName))
                         .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(2);
+        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(expectedSize);
 
         final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
         final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
-
         assertThat(auditEntry1).isNotNull();
         assertThat(auditEntry2).isNotNull();
 
@@ -191,6 +225,16 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(auditEntry2.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
         assertThat(auditEntry2.getSchedulerStartTime()).isNotNull();
         assertThat(auditEntry2.getSchedulerEndTime()).isNotNull();
+
+        if (expectedSize > 2) {
+            final ElinkDataSchedularAudit auditEntry3 = eLinksDataSchedulerAudits.get(2);
+            assertThat(auditEntry3).isNotNull();
+            assertThat(auditEntry3.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
+            assertThat(auditEntry3.getStatus()).isNotNull().isEqualTo(peopleLoadJobStatus.getStatus());
+            assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+            assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
+            assertThat(auditEntry3.getSchedulerEndTime()).isNotNull();
+        }
     }
 
 

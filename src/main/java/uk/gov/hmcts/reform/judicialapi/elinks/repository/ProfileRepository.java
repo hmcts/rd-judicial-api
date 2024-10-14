@@ -125,13 +125,25 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
 
     @Query(value = "select per "
             + "from judicialUserProfile per "
+            + "where (per.objectId != '' and per.objectId is not null) "
+            + "and (per.objectId IN :objectIds)")
+    List<UserProfile> fetchUserProfiles(List<String> objectIds);
+
+    @Query(value = "select per "
+            + "from judicialUserProfile per "
             + "where (per.objectId != '' and per.objectId is not null)"
             + "and per.sidamId is null ")
     List<UserProfile> fetchObjectIdMissingSidamId();
 
 
-    List<UserProfile> findByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
+    List<UserProfile> findByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn, Boolean deletedFlag);
+
+    List<UserProfile> findByDeletedFlag(Boolean deletedFlag);
 
     void deleteByDeletedOnBeforeAndDeletedFlag(LocalDateTime deletedDateOn,Boolean deletedFlag);
+
+    List<UserProfile> deleteByPersonalCodeIn(List<String> personalCodes);
+
+    List<UserProfile> findByPersonalCodeIn(List<String> personalCodes);
 
 }

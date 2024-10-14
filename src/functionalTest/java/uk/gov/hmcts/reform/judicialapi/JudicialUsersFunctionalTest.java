@@ -12,18 +12,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
-import uk.gov.hmcts.reform.judicialapi.controller.request.RefreshRoleRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.request.UserRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.request.UserSearchRequest;
-import uk.gov.hmcts.reform.judicialapi.controller.response.UserProfileRefreshResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.UserSearchRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtension;
 import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
 import uk.gov.hmcts.reform.lib.util.serenity5.SerenityTest;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,7 +28,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
-import static uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtension.getToggledOffMessage;
 
 @SerenityTest
 @SpringBootTest
@@ -39,58 +35,8 @@ import static uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtensi
 @Slf4j
 class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
 
-    public static final String FETCH_USERS = "JrdUsersController.fetchUsers";
-    public static final String USERS_SEARCH = "JrdUsersController.searchUsers";
-    public static final String REFRESH_USER = "JrdUsersController.refreshUserProfile";
-
-
-
-    @ParameterizedTest
-    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
-    @ExtendWith(FeatureToggleConditionExtension.class)
-    @ToggleEnable(mapKey = FETCH_USERS, withFeature = true)
-    void shouldReturn_200Status(String role) {
-        var response = judicialApiClient.fetchUserProfiles(getDummyUserRequest(), 10, 0,
-                 NOT_FOUND, role);
-
-        assertNotNull(response);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
-    @ExtendWith(FeatureToggleConditionExtension.class)
-    @ToggleEnable(mapKey = FETCH_USERS, withFeature = true)
-    void shouldReturnDataNotFoundWhenUserProfilesDoNotExistForGivenUserId(String role) {
-        ErrorResponse errorResponse = (ErrorResponse)
-                judicialApiClient.fetchUserProfiles(getDummyUserRequest(), 10, 0, NOT_FOUND,
-                        role);
-
-        assertNotNull(errorResponse);
-    }
-
-    @Test
-    @ExtendWith(FeatureToggleConditionExtension.class)
-    @ToggleEnable(mapKey = FETCH_USERS, withFeature = true)
-    void shouldThrowForbiddenExceptionForNonCompliantRole() {
-        ErrorResponse errorResponse = (ErrorResponse)
-                judicialApiClient.fetchUserProfiles(getDummyUserRequest(), 10, 0, FORBIDDEN,
-                        "prd-admin");
-
-        assertNotNull(errorResponse);
-    }
-
-    @Test
-    @ExtendWith(FeatureToggleConditionExtension.class)
-    @ToggleEnable(mapKey = FETCH_USERS, withFeature = false)
-    void shouldGet403WhenApiToggledOff() {
-
-        ErrorResponse errorResponse = (ErrorResponse)
-                judicialApiClient.fetchUserProfiles(getDummyUserRequest(), 10, 0, FORBIDDEN,
-                        ROLE_JRD_SYSTEM_USER);
-
-        assertNotNull(errorResponse);
-        assertEquals(getToggledOffMessage(), errorResponse.getErrorMessage());
-    }
+    public static final String USERS_SEARCH = "JrdElinkController.retrieveUsers";
+    public static final String REFRESH_USER = "JrdElinkController.refreshUserProfile";
 
     @Test
     @ExtendWith(FeatureToggleConditionExtension.class)
@@ -164,16 +110,6 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
         } else {
             assertEquals(NOT_FOUND.value(), refreshResponse.getStatusCode());
         }
-    }
-
-
-    private UserRequest getDummyUserRequest() {
-        var userIds = new ArrayList<String>();
-        userIds.add(UUID.randomUUID().toString());
-        userIds.add(UUID.randomUUID().toString());
-        userIds.add(UUID.randomUUID().toString());
-
-        return new UserRequest(userIds);
     }
 
     private UserSearchRequest getUserSearchRequest(String location, String serviceCode, String searchString) {

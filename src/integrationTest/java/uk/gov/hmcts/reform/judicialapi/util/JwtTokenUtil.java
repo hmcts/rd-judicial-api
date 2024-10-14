@@ -54,7 +54,7 @@ public final class JwtTokenUtil {
                     builder.build());
             signedJwt.sign(new RSASSASigner(KeyGenUtil.getRsaJwk()));
         } catch (JOSEException e) {
-            log.error("error while creating bearer token : " + (e.getMessage()));
+            log.error("error while creating bearer token: {} " + e.getMessage());
         }
         return signedJwt.serialize();
     }

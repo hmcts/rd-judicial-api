@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfiguration;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
+import uk.gov.hmcts.reform.judicialapi.elinks.exception.JudicialDataLoadException;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
@@ -74,8 +75,16 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
 
     private int sidamIdcount;
 
-    public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() {
+    public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() throws JudicialDataLoadException {
 
+        // Get all sidam id's from the judicial_user_profile table
+        List<String> sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
+        return publishSidamIdToAsb(sidamIds);
+    }
+
+    @Override
+    public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb(List<String> sidamIds)
+            throws JudicialDataLoadException {
         //Get the job details from dataload_schedular_job table
 
         log.info("Calling Publish Sidam id Service");
@@ -83,41 +92,43 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
         Pair<String, String> jobDetails;
         LocalDateTime schedulerStartTime = now();
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-            schedulerStartTime,
-            null,
-            RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), PUBLISHSIDAM);
+                schedulerStartTime,
+                null,
+                RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), PUBLISHSIDAM);
         try {
             jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
         } catch (Exception ex) {
             throw new ElinksException(HttpStatus.BAD_REQUEST, DATABASE_FETCH_ERROR, ex.getMessage());
         }
 
-        // Get all sidam id's from the judicial_user_profile table
-        List<String> sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
+        sidamIds =
+                sidamIds.stream()
+                        .map(String::strip)
+                        .filter(s -> !s.isBlank())
+                        .toList();
 
         sidamIdcount = sidamIds.size();
 
         log.info("{}::Total SIDAM Id count from JUD_Database: {}", logComponentName, sidamIdcount);
         if (isEmpty(sidamIds)) {
             log.warn("{}:: No Sidam id exists in JRD for publishing in ASB for JOB id: {} ",
-                logComponentName, jobDetails.getLeft());
+                    logComponentName, jobDetails.getLeft());
             updateAsbStatus(jobDetails.getLeft(), SUCCESS.getStatus(),schedulerStartTime);
         }
 
         publishMessage(jobDetails.getRight(), sidamIds, jobDetails.getLeft(),schedulerStartTime);
         jobDetails = getJobDetails(SELECT_JOB_STATUS_SQL);
         log.info("{}:: completed Publish SidamId to ASB with JOB Id: {}  ",
-            logComponentName, jobDetails.getLeft());
+                logComponentName, jobDetails.getLeft());
 
         SchedulerJobStatusResponse response = SchedulerJobStatusResponse.builder().id(jobDetails.getLeft())
-            .jobStatus(jobDetails.getRight()).sidamIdsCount(sidamIdcount).statusCode(HttpStatus.OK.value()).build();
+                .jobStatus(jobDetails.getRight()).sidamIdsCount(sidamIdcount).statusCode(HttpStatus.OK.value()).build();
 
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
-            schedulerStartTime,
-            now(),
-            RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), PUBLISHSIDAM);
+                schedulerStartTime,
+                now(),
+                RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), PUBLISHSIDAM);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-
     }
 
     private Pair<String, String> getJobDetails(String jobStatusQuery) {
@@ -168,7 +179,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 now(),
-                RefDataElinksConstants.JobStatus.FAILED.getStatus(), PUBLISHSIDAM);
+                RefDataElinksConstants.JobStatus.FAILED.getStatus(), PUBLISHSIDAM, ex.getMessage());
             throw ex;
         }
     }
@@ -181,7 +192,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 now(),
-                RefDataElinksConstants.JobStatus.FAILED.getStatus(), PUBLISHSIDAM);
+                RefDataElinksConstants.JobStatus.FAILED.getStatus(), PUBLISHSIDAM, ex.getMessage());
             throw new ElinksException(HttpStatus.FORBIDDEN, JOB_DETAILS_UPDATE_ERROR, JOB_DETAILS_UPDATE_ERROR);
         }
 

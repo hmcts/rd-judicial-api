@@ -38,6 +38,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.BaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleDeleteService;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleLeaverService;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksResponsesHelper;
@@ -51,6 +53,7 @@ import java.util.List;
 import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -108,6 +111,12 @@ class ELinksServiceImplTest {
 
     @Spy
     JudicialRoleTypeRepository judicialRoleTypeRepository;
+
+    @Spy
+    ElinksPeopleLeaverService elinksPeopleLeaverService;
+
+    @Spy
+    ElinksPeopleDeleteService elinksPeopleDeleteService;
 
 
     @BeforeEach
@@ -459,7 +468,7 @@ class ELinksServiceImplTest {
         eLinksServiceImpl.cleanUpElinksResponses();
 
         Mockito.verify(elinkDataExceptionHelper,Mockito.times(1))
-                .auditException(any(),any(),any(),any(),any(),any(),any(),any());
+                .auditException(any(),any(),any(),any(),any(),any(),any(),any(), any());
 
     }
 
@@ -468,19 +477,13 @@ class ELinksServiceImplTest {
 
         eLinksServiceImpl.deleteJohProfiles(LocalDateTime.now());
         Mockito.verify(profileRepository,Mockito.times(1))
-                .findByDeletedOnBeforeAndDeletedFlag(any(),any());
+                .findByDeletedFlag(anyBoolean());
 
         Mockito.verify(profileRepository,Mockito.times(0))
                 .deleteByDeletedOnBeforeAndDeletedFlag(any(),any());
 
-        Mockito.verify(authorisationRepository,Mockito.times(0))
-                .deleteByPersonalCodeIn(any());
-
-        Mockito.verify(appointmentsRepository,Mockito.times(0))
-                .deleteByPersonalCodeIn(any());
-
-        Mockito.verify(judicialRoleTypeRepository,Mockito.times(0))
-                .deleteByPersonalCodeIn(any());
+        Mockito.verify(elinksPeopleDeleteService,Mockito.times(0))
+                .clearDeletedPeople(any());
 
         Mockito.verify(elinkDataExceptionHelper,Mockito.times(0))
                 .auditException(any(),any());
@@ -516,39 +519,20 @@ class ELinksServiceImplTest {
 
     @Test
     void elinksService_deleteJohProfiles_should_return_success_with_few_profiles() throws JsonProcessingException {
-
-
         var userProfile = buildUserProfile();
-
-
-        when(profileRepository.findByDeletedOnBeforeAndDeletedFlag(any(),any()))
+        when(profileRepository.findByDeletedFlag(any()))
                 .thenReturn(Collections.singletonList(userProfile));
 
         eLinksServiceImpl.deleteJohProfiles(LocalDateTime.now());
 
-
-
-
         Mockito.verify(profileRepository,Mockito.times(1))
-                .findByDeletedOnBeforeAndDeletedFlag(any(),any());
+                .findByDeletedFlag(anyBoolean());
 
-        Mockito.verify(profileRepository,Mockito.times(1))
-                .deleteByDeletedOnBeforeAndDeletedFlag(any(),any());
-
-        Mockito.verify(authorisationRepository,Mockito.times(1))
-                .deleteByPersonalCodeIn(any());
-
-        Mockito.verify(appointmentsRepository,Mockito.times(1))
-                .deleteByPersonalCodeIn(any());
-
-        Mockito.verify(judicialRoleTypeRepository,Mockito.times(1))
-                .deleteByPersonalCodeIn(any());
+        Mockito.verify(elinksPeopleDeleteService,Mockito.times(1))
+                .clearDeletedPeople(any());
 
         Mockito.verify(elinkDataExceptionHelper,Mockito.times(1))
                 .auditException(any(),any());
-
-
-
     }
 
     UserProfile buildUserProfile() {

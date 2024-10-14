@@ -52,6 +52,56 @@ class ElinkDataIngestionSchedularAuditTest {
     }
 
     @ParameterizedTest
+    @CsvSource(value = {"Location:SUCCESS", "BaseLocation:SUCCESS", "People:SUCCESS"}, delimiter = ':')
+    void testSaveScheduleSuccessAuditWithEmptyMessage(String apiName, String status) {
+        ElinkDataSchedularAudit schedularAudit = new ElinkDataSchedularAudit();
+        schedularAudit.setId(1);
+        schedularAudit.setSchedulerName("Test User");
+        schedularAudit.setSchedulerStartTime(LocalDateTime.now());
+        schedularAudit.setSchedulerEndTime(LocalDateTime.now());
+        schedularAudit.setStatus(status);
+        schedularAudit.setApiName(apiName);
+
+        when(elinkSchedularAuditRepository.findBySchedulerStartTime(any())).thenReturn(schedularAudit);
+        when(elinkSchedularAuditRepository.save(any())).thenReturn(schedularAudit);
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus("Test User",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                schedularAudit.getStatus(),
+                schedularAudit.getApiName(),
+                "");
+
+        verify(elinkSchedularAuditRepository, times(1))
+                .save(any());
+
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {"Location:SUCCESS", "BaseLocation:SUCCESS", "People:SUCCESS"}, delimiter = ':')
+    void testSaveScheduleSuccessAuditWithNullErrorMessage(String apiName, String status) {
+        ElinkDataSchedularAudit schedularAudit = new ElinkDataSchedularAudit();
+        schedularAudit.setId(1);
+        schedularAudit.setSchedulerName("Test User");
+        schedularAudit.setSchedulerStartTime(LocalDateTime.now());
+        schedularAudit.setSchedulerEndTime(LocalDateTime.now());
+        schedularAudit.setStatus(status);
+        schedularAudit.setApiName(apiName);
+
+        when(elinkSchedularAuditRepository.findBySchedulerStartTime(any())).thenReturn(schedularAudit);
+        when(elinkSchedularAuditRepository.save(any())).thenReturn(schedularAudit);
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus("Test User",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                schedularAudit.getStatus(),
+                schedularAudit.getApiName(),
+                null);
+
+        verify(elinkSchedularAuditRepository, times(1))
+                .save(any());
+
+    }
+
+    @ParameterizedTest
     @CsvSource(value = {"Location:SUCCESS", "BaseLocation:SUCCESS", "People:PARTIAL_SUCCESS"}, delimiter = ':')
     void testSaveSchedulePeopleApiPartialSuccessAudit(String apiName, String status) {
         ElinkDataSchedularAudit schedularAudit = new ElinkDataSchedularAudit();

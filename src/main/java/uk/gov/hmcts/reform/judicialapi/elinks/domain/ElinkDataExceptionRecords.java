@@ -58,4 +58,7 @@ public class ElinkDataExceptionRecords implements Serializable {
     @Column(name = "page_id")
     private Integer pageId;
 
+    @Column(name = "error_message")
+    private String errorMessage;
+
 }

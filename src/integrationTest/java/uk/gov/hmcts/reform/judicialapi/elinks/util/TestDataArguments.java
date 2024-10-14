@@ -24,6 +24,7 @@ public record TestDataArguments(
         String idamElasticSearchResponse,
         String expectedErrorMessage,
         int expectedUserProfiles,
+        int expectedAuditRecords,
         boolean isAfterIdamElasticSearch,
         boolean isDuplicateUserProfile,
         String elasticSearchSidamId) {

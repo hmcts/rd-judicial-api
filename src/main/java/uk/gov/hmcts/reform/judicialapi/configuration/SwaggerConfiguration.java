@@ -12,7 +12,6 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.HandlerMethod;
-import uk.gov.hmcts.reform.judicialapi.versions.V1;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
 
@@ -21,15 +20,6 @@ import uk.gov.hmcts.reform.judicialapi.versions.V2;
 @SecurityScheme(name = "ServiceAuthorization", type = SecuritySchemeType.APIKEY,
         in = SecuritySchemeIn.HEADER, bearerFormat = "JWT", description = "ServiceAuthorization")
 public class SwaggerConfiguration {
-
-    @Bean
-    public GroupedOpenApi publicApiV1(OperationCustomizer customGlobalHeaders) {
-        return GroupedOpenApi.builder()
-                .group("V1")
-                .packagesToScan("uk.gov.hmcts.reform.judicialapi.controller")
-                .producesToMatch(V1.MediaType.SERVICE)
-                .build();
-    }
 
     @Bean
     public GroupedOpenApi publicApiV2(OperationCustomizer customGlobalHeaders) {

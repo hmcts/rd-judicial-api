@@ -72,7 +72,7 @@ public class Appointment implements Serializable {
     private String epimmsId;
 
     @Column(name = "appointment")
-    @Size(max = 64)
+    @Size(max = 256)
     private String appointmentMapping;
 
     @Column(name = "appointment_type")

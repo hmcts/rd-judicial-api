@@ -211,7 +211,8 @@ task smoke(type: Test, description: 'Runs the smoke tests.', group: 'Verificatio
 
 task migratePostgresDatabase(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     baselineOnMigrate = true
-    schemas = ['dbjuddata']
+    baselineVersion = '1.1'
+    schemas = ['dbjudicialdata']
     locations = ["filesystem:src/main/resources/db/migration"]
     if (project.hasProperty("dburl")) {
         url = "jdbc:postgresql://${dburl}"
@@ -297,8 +298,9 @@ sonarqube {
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/SendGridConfig.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/util/DataloadSchedulerJobAudit.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/exception/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/scheduler/ElinksApiJobScheduler.java,"
-
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/scheduler/ElinksApiJobScheduler.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/**," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/util/**,"
     }
 }
 

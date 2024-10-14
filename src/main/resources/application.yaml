@@ -23,7 +23,7 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        default_schema: dbjuddata
+        default_schema: dbjudicialdata
         jdbc:
           lob:
             non_contextual_creation: true
@@ -49,18 +49,18 @@ spring:
   jackson.date-format: yyyy-MM-dd
   flyway:
     enabled: true
+    baseline-version: 1.1
     baselineOnMigrate: true
 
     locations: ${JUDICIAL_DB:classpath:db/migration}
     schemas:
-      - dbjuddata
       - dbjudicialdata
     placeholders:
       dbReaderUserName: ${DB_READER_USERNAME:postgres}
   ### database configuration
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}?currentSchema=dbjuddata
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5456}/${POSTGRES_NAME:dbjuddata}${POSTGRES_CONNECTION_OPTIONS:}?currentSchema=dbjudicialdata
     username: ${POSTGRES_USERNAME:dbjuddata}
     password: ${POSTGRES_PASSWORD:dbjuddata}
     min-idle: 1

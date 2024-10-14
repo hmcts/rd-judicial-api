@@ -68,8 +68,8 @@
           "name": "Course Director for COP (JC)",
           "judiciary_role_id": 427,
           "judiciary_role_name_id": "fee",
-          "start_date": "2016-04-30T00:00:00.000Z",
-          "end_date": "2019-04-30T00:00:00.000Z"
+          "start_date": "2016-04-30",
+          "end_date": "2019-04-30"
         }
       ],
       "authorisations": [
@@ -170,8 +170,8 @@
           "name": "District Tribunal Judge",
           "judiciary_role_id": 629,
           "judiciary_role_name_id": "fee",
-          "start_date": "2014-05-01T00:00:00.000Z",
-          "end_date": "2041-04-11T00:00:00.000Z"
+          "start_date": "2014-05-01",
+          "end_date": "2041-04-11"
         },
         {
           "name": "IT Liaison Judge",
