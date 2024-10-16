@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.reform.judicialapi.config.TestConfigProperties;
-import uk.gov.hmcts.reform.lib.idam.IdamOpenId;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;

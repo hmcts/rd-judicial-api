@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -137,7 +138,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode() == HttpStatus.FORBIDDEN && exception.getMessage()
                     .contains("jrd-elinks-location".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -149,12 +150,12 @@ public class ElinksApiJobScheduler {
         try{
         ResponseEntity<ElinkPeopleWrapperResponse> peopleResponse
                 = retrievePeopleDetails();
-        } catch(Exception ex) {
-            log.error("Elinks people retrieval Job execution completed failure for people Response",ex);
+        } catch (Exception ex) {
+            log.error("Elinks people retrieval Job execution completed failure for people Response", ex);
             if (ex instanceof HttpClientErrorException)
             {
-                HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                HttpClientErrorException exception = (HttpClientErrorException) ex;
+                if (exception.getStatusCode() == HttpStatus.FORBIDDEN && exception.getMessage()
                     .contains("jrd-elinks-load-people".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -171,7 +172,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode() == HttpStatus.FORBIDDEN && exception.getMessage()
                     .contains("jrd-elinks-leavers".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -188,7 +189,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode() == HttpStatus.FORBIDDEN && exception.getMessage()
                     .contains("jrd-elinks-load-deleted".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -200,12 +201,12 @@ public class ElinksApiJobScheduler {
         try{
         ResponseEntity<Object> idamSearchResponse
                 = retrieveIdamElasticSearchDetails();
-        } catch(Exception ex) {
-            log.error("Elinks idam elastic search Job execution completed failure for elastic Response",ex);
+        } catch (Exception ex) {
+            log.error("Elinks idam elastic search Job execution completed failure for elastic Response", ex);
             if (ex instanceof HttpClientErrorException)
             {
-                HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                HttpClientErrorException exception = (HttpClientErrorException) ex;
+                if (exception.getStatusCode() == HttpStatus.FORBIDDEN && exception.getMessage()
                 .contains("jrd-elinks-idam-elastic-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -214,15 +215,14 @@ public class ElinksApiJobScheduler {
                 }
             }
         }
-        try{
-            ResponseEntity<Object> idamResponce
-                = retrieveSidamids();
-        } catch(Exception ex) {
-            log.error("Elinks idam retrieval Job execution completed failure for sidam Response",ex);
+        try {
+            ResponseEntity<Object> idamResponce = retrieveSidamids();
+        } catch (Exception ex) {
+            log.error("Elinks idam retrieval Job execution completed failure for sidam Response", ex);
             if (ex instanceof HttpClientErrorException)
             {
-                HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                HttpClientErrorException exception = (HttpClientErrorException) ex;
+                if (exception.getStatusCode() == HttpStatus.FORBIDDEN && exception.getMessage()
                     .contains("jrd-elinks-idam-sso-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
 
@@ -232,10 +232,9 @@ public class ElinksApiJobScheduler {
             }
         }
 
-        try{
-        ResponseEntity<SchedulerJobStatusResponse> schedulerResponse
-            = retrieveAsbPublishDetails();
-        } catch(Exception ex) {
+        try {
+            ResponseEntity<SchedulerJobStatusResponse> schedulerResponse = retrieveAsbPublishDetails();
+        } catch (Exception ex) {
             log.warn("ElinksApiJobScheduler.loadElinksData Job execution completed failure for Publish ASB Response");
             jdbcTemplate.update(UPDATE_JOB_SQL, FAILED.getStatus(),
                 dataloadSchedulerJobRepository.findFirstByOrderByIdDesc().getId());
@@ -243,7 +242,7 @@ public class ElinksApiJobScheduler {
             if (ex instanceof HttpClientErrorException)
             {
                 HttpClientErrorException exception=(HttpClientErrorException)ex;
-                if (exception.getRawStatusCode()==403 && exception.getMessage()
+                if (exception.getStatusCode() == HttpStatus.FORBIDDEN && exception.getMessage()
                 .contains("jrd-elinks-publish-service-bus".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
                 {
                     elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS, now(), now(),

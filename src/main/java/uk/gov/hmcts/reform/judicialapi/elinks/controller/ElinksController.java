@@ -1,9 +1,8 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.controller;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkBaseLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkDeletedWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ELinksService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleService;
@@ -42,7 +39,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @SuppressWarnings("all")
 public class ElinksController {
 
-
     @Autowired
     ELinksService eLinksService;
 
@@ -55,72 +51,26 @@ public class ElinksController {
     @Autowired
     PublishSidamIdService publishSidamIdService;
 
-    @ApiOperation(
-        value = "", hidden = true)
-    @ApiResponses({
-            @ApiResponse(
-                    code = 200,
-                    message = "Get list of location and populate region type.",
-                    response = ElinkLocationWrapperResponse.class
-            ),
-            @ApiResponse(
-                    code = 400,
-                    message = BAD_REQUEST
-            ),
-            @ApiResponse(
-                    code = 401,
-                    message = UNAUTHORIZED_ERROR
-            ),
-            @ApiResponse(
-                    code = 403,
-                    message = FORBIDDEN_ERROR
-            ),
-            @ApiResponse(
-                    code = 404,
-                    message = NO_DATA_FOUND
-            ),
-            @ApiResponse(
-                    code = 429,
-                    message = TOO_MANY_REQUESTS
-            ),
-            @ApiResponse(
-                    code = 500,
-                    message = INTERNAL_SERVER_ERROR
-            )
-    })
+    @Operation(description = "", hidden = true)
+    @ApiResponse(responseCode = "200", description = "Get list of location and populate region type.")
+    @ApiResponse(responseCode = "400", description = BAD_REQUEST)
+    @ApiResponse(responseCode = "401", description = UNAUTHORIZED_ERROR)
+    @ApiResponse(responseCode = "403", description = FORBIDDEN_ERROR)
+    @ApiResponse(responseCode = "404", description = NO_DATA_FOUND)
+    @ApiResponse(responseCode = "429", description = TOO_MANY_REQUESTS)
+    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR)
     @GetMapping (path = "/reference_data/location",
             produces =V2.MediaType.SERVICE)
     public ResponseEntity<ElinkBaseLocationWrapperResponse> loadLocation(){
-
-
         return eLinksService.retrieveLocation();
     }
 
-    @ApiOperation(
-        value = "", hidden = true)
-    @ApiResponses({
-            @ApiResponse(
-                    code = 200,
-                    message = "Get list of idam users.",
-                    response = Object.class
-            ),
-            @ApiResponse(
-                    code = 400,
-                    message = BAD_REQUEST
-            ),
-            @ApiResponse(
-                    code = 401,
-                    message = UNAUTHORIZED_ERROR
-            ),
-            @ApiResponse(
-                    code = 403,
-                    message = FORBIDDEN_ERROR
-            ),
-            @ApiResponse(
-                    code = 500,
-                    message = INTERNAL_SERVER_ERROR
-            )
-    })
+    @Operation(description = "", hidden = true)
+    @ApiResponse(responseCode = "200", description = "Get list of idam users.")
+    @ApiResponse(responseCode = "400", description = BAD_REQUEST)
+    @ApiResponse(responseCode = "401", description = UNAUTHORIZED_ERROR)
+    @ApiResponse(responseCode = "403", description = FORBIDDEN_ERROR)
+    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR)
     @GetMapping (path = "/people",
         produces = V2.MediaType.SERVICE)
     @ResponseBody
@@ -130,31 +80,12 @@ public class ElinksController {
 
     }
 
-    @ApiOperation(
-        value = "", hidden = true)
-    @ApiResponses({
-            @ApiResponse(
-                    code = 200,
-                    message = "Get list of idam users.",
-                    response = IdamResponse.class
-            ),
-            @ApiResponse(
-                    code = 400,
-                    message = BAD_REQUEST
-            ),
-            @ApiResponse(
-                    code = 401,
-                    message = UNAUTHORIZED_ERROR
-            ),
-            @ApiResponse(
-                    code = 403,
-                    message = FORBIDDEN_ERROR
-            ),
-            @ApiResponse(
-                    code = 500,
-                    message = INTERNAL_SERVER_ERROR
-            )
-    })
+    @Operation(description = "", hidden = true)
+    @ApiResponse(responseCode = "200", description = "Get list of idam users.")
+    @ApiResponse(responseCode = "400", description = BAD_REQUEST)
+    @ApiResponse(responseCode = "401", description = UNAUTHORIZED_ERROR)
+    @ApiResponse(responseCode = "403", description = FORBIDDEN_ERROR)
+    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR)
     @GetMapping (path = "/idam/elastic/search",
         produces = V2.MediaType.SERVICE)
     public ResponseEntity<Object> idamElasticSearch() {
@@ -164,31 +95,12 @@ public class ElinksController {
         return response;
     }
 
-    @ApiOperation(
-        value = "", hidden = true)
-    @ApiResponses({
-        @ApiResponse(
-            code = 200,
-            message = "Get list of idam users.",
-            response = IdamResponse.class
-        ),
-        @ApiResponse(
-            code = 400,
-            message = BAD_REQUEST
-        ),
-        @ApiResponse(
-            code = 401,
-            message = UNAUTHORIZED_ERROR
-        ),
-        @ApiResponse(
-            code = 403,
-            message = FORBIDDEN_ERROR
-        ),
-        @ApiResponse(
-            code = 500,
-            message = INTERNAL_SERVER_ERROR
-        )
-    })
+    @Operation(description = "", hidden = true)
+    @ApiResponse(responseCode = "200", description = "Get list of idam users.")
+    @ApiResponse(responseCode = "400", description = BAD_REQUEST)
+    @ApiResponse(responseCode = "401", description = UNAUTHORIZED_ERROR)
+    @ApiResponse(responseCode = "403", description = FORBIDDEN_ERROR)
+    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR)
     @GetMapping (path = "/idam/find",
         produces = V2.MediaType.SERVICE)
     public ResponseEntity<Object> fetchIdamIds() {
@@ -198,115 +110,41 @@ public class ElinksController {
         return response;
     }
 
-    @ApiOperation(
-        value = "", hidden = true)
-    @ApiResponses({
-            @ApiResponse(
-                    code = 200,
-                    message = "Get list of leavers.",
-                    response = ElinkLeaversWrapperResponse.class
-            ),
-            @ApiResponse(
-                    code = 400,
-                    message = BAD_REQUEST
-            ),
-            @ApiResponse(
-                    code = 401,
-                    message = UNAUTHORIZED_ERROR
-            ),
-            @ApiResponse(
-                    code = 403,
-                    message = FORBIDDEN_ERROR
-            ),
-            @ApiResponse(
-                    code = 404,
-                    message = NO_DATA_FOUND
-            ),
-            @ApiResponse(
-                    code = 429,
-                    message = TOO_MANY_REQUESTS
-            ),
-            @ApiResponse(
-                    code = 500,
-                    message = INTERNAL_SERVER_ERROR
-            )
-    })
+    @Operation(description = "", hidden = true)
+    @ApiResponse(responseCode = "200", description = "Get list of leavers.")
+    @ApiResponse(responseCode = "400", description = BAD_REQUEST)
+    @ApiResponse(responseCode = "401", description = UNAUTHORIZED_ERROR)
+    @ApiResponse(responseCode = "403", description = FORBIDDEN_ERROR)
+    @ApiResponse(responseCode = "404", description = NO_DATA_FOUND)
+    @ApiResponse(responseCode = "429", description = TOO_MANY_REQUESTS)
+    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR)
     @GetMapping (path = "/leavers",
         produces = V2.MediaType.SERVICE)
     public ResponseEntity<ElinkLeaversWrapperResponse> loadLeavers(){
         return eLinksService.retrieveLeavers();
     }
 
-    @ApiOperation(
-        value = "", hidden = true)
-    @ApiResponses({
-        @ApiResponse(
-            code = 200,
-            message = "Get Deleted Idam Users ",
-            response = ElinkLeaversWrapperResponse.class
-        ),
-        @ApiResponse(
-            code = 400,
-            message = BAD_REQUEST
-        ),
-        @ApiResponse(
-            code = 401,
-            message = UNAUTHORIZED_ERROR
-        ),
-        @ApiResponse(
-            code = 403,
-            message = FORBIDDEN_ERROR
-        ),
-        @ApiResponse(
-            code = 404,
-            message = NO_DATA_FOUND
-        ),
-        @ApiResponse(
-            code = 429,
-            message = TOO_MANY_REQUESTS
-        ),
-        @ApiResponse(
-            code = 500,
-            message = INTERNAL_SERVER_ERROR
-        )
-    })
+    @Operation(description = "", hidden = true)
+    @ApiResponse(responseCode = "200", description = "Get Deleted Idam Users ")
+    @ApiResponse(responseCode = "400", description = BAD_REQUEST)
+    @ApiResponse(responseCode = "401", description = UNAUTHORIZED_ERROR)
+    @ApiResponse(responseCode = "403", description = FORBIDDEN_ERROR)
+    @ApiResponse(responseCode = "404", description = NO_DATA_FOUND)
+    @ApiResponse(responseCode = "429", description = TOO_MANY_REQUESTS)
+    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR)
     @GetMapping (path = "/deleted",
         produces = V2.MediaType.SERVICE)
     public ResponseEntity<ElinkDeletedWrapperResponse> loadDeleted(){
         return eLinksService.retrieveDeleted();
     }
 
-    @ApiResponses({
-        @ApiResponse(
-            code = 200,
-            message = "Publish all SIDAM id's to ASB",
-            response = String.class
-        ),
-        @ApiResponse(
-            code = 400,
-            message = BAD_REQUEST
-        ),
-        @ApiResponse(
-            code = 401,
-            message = UNAUTHORIZED_ERROR
-        ),
-        @ApiResponse(
-            code = 403,
-            message = FORBIDDEN_ERROR
-        ),
-        @ApiResponse(
-            code = 404,
-            message = NO_DATA_FOUND
-        ),
-        @ApiResponse(
-            code = 429,
-            message = TOO_MANY_REQUESTS
-        ),
-        @ApiResponse(
-            code = 500,
-            message = INTERNAL_SERVER_ERROR
-        )
-    })
+    @ApiResponse(responseCode = "200", description = "Publish all SIDAM id's to ASB")
+    @ApiResponse(responseCode = "400", description = BAD_REQUEST)
+    @ApiResponse(responseCode = "401", description = UNAUTHORIZED_ERROR)
+    @ApiResponse(responseCode = "403", description = FORBIDDEN_ERROR)
+    @ApiResponse(responseCode = "404", description = NO_DATA_FOUND)
+    @ApiResponse(responseCode = "429", description = TOO_MANY_REQUESTS)
+    @ApiResponse(responseCode = "500", description = INTERNAL_SERVER_ERROR)
     @GetMapping(path = "/sidam/asb/publish",
         produces = V2.MediaType.SERVICE)
     public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() {
