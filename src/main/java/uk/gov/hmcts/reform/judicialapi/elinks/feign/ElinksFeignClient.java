@@ -13,19 +13,19 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinksFeignIntercept
 @SuppressWarnings("checkstyle:Indentation")
 public interface ElinksFeignClient {
 
-    @GetMapping(value = "/reference_data/base_location")
+    @GetMapping("/reference_data/base_location")
     @RequestLine("GET /reference_data/base_location")
     @Headers({"Authorization: {authorization}",
             "Content-Type: application/json"})
     Response getBaseLocationDetails();
 
-    @GetMapping(value = "/reference_data/location")
+    @GetMapping("/reference_data/location")
     @RequestLine("GET /reference_data/location")
     @Headers({"Authorization: {authorization}",
             "Content-Type: application/json"})
     Response getLocationDetails();
 
-    @GetMapping(value = "/people")
+    @GetMapping("/people")
     @RequestLine("GET /people")
     @Headers({"Authorization: {authorization}",
             "Content-Type: application/json"})
@@ -33,7 +33,7 @@ public interface ElinksFeignClient {
                               @RequestParam("per_page") String perPage, @RequestParam("page") String page,
                               @RequestParam("include_previous_appointments") boolean includePreviousAppointments);
 
-    @GetMapping(value = "/leavers")
+    @GetMapping("/leavers")
     @RequestLine("GET /leavers")
     @Headers({"Authorization: {authorization}",
             "Content-Type: application/json"})
@@ -42,7 +42,7 @@ public interface ElinksFeignClient {
                               @RequestParam("per_page") String perPage, @RequestParam("page") String page);
 
 
-    @GetMapping(value = "/deleted")
+    @GetMapping("/deleted")
     @RequestLine("GET /deleted")
     @Headers({"Authorization: {authorization}",
         "Content-Type: application/json"})
