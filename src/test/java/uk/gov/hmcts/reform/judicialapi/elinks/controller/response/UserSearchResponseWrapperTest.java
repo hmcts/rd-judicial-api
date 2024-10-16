@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.junit.MatcherAssert.assertThat;
 
 public class UserSearchResponseWrapperTest {
 

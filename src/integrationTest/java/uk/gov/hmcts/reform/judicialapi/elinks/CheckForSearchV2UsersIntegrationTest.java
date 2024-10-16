@@ -21,7 +21,7 @@ import uk.gov.hmcts.reform.judicialapi.versions.V2;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -24,13 +24,13 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 public class BaseLocationResponse implements Serializable {
 
 
-    @JsonProperty(value = "id")
+    @JsonProperty("id")
     private String id;
 
-    @JsonProperty(value = "name")
+    @JsonProperty("name")
     private String name;
 
-    @JsonProperty(value = "type_id")
+    @JsonProperty("type_id")
     private String typeId;
 
     @JsonProperty("parent_id")

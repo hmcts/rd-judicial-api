@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.testng.collections.Lists;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AppointmentsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AuthorisationsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
@@ -113,7 +112,7 @@ class ElinksPeopleDeleteServiceImplTest {
                 .fullName("full name").build());
         Mockito.when(profileRepository.deleteByPersonalCodeIn(anyList())).thenReturn(userProfiles);
 
-        elinksPeopleDeleteServiceimpl.clearDeletedPeople(Lists.newArrayList("1234"));
+        elinksPeopleDeleteServiceimpl.clearDeletedPeople(List.of("1234"));
         Mockito.verify(authorisationsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(appointmentsRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());
         Mockito.verify(judicialRoleTypeRepository,Mockito.times(1)).deleteByPersonalCodeIn(anyList());

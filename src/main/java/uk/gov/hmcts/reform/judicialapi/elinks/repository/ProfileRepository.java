@@ -16,7 +16,7 @@ import java.util.Set;
 public interface ProfileRepository extends JpaRepository<UserProfile, String> {
 
 
-    @Query(value = "select distinct new uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper"
+    @Query("select distinct new uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper"
         + "(per.title,per.knownAs,per.surname,per.fullName"
         + ",per.emailId,per.sidamId,per.initials"
         + ",per.postNominals,per.personalCode)"
@@ -45,7 +45,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
                                                           List<String> searchServiceCode);
 
 
-    @Query(value = "select distinct per "
+    @Query("select distinct per "
             + "from judicialUserProfile per "
             + "LEFT JOIN FETCH judicialOfficeAppointment appt "
             + "on per.personalCode = appt.personalCode "
@@ -58,7 +58,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
     Page<UserProfile> fetchUserProfileByObjectIds(List<String> objectIds, Pageable pageable);
 
 
-    @Query(value = "select distinct per "
+    @Query("select distinct per "
             + "from judicialUserProfile per "
             + "LEFT JOIN FETCH judicialOfficeAppointment appt "
             + "on per.personalCode = appt.personalCode "
@@ -70,7 +70,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "and (per.sidamId IN :sidamIds)")
     Page<UserProfile> fetchUserProfileBySidamIds(List<String> sidamIds, Pageable pageable);
 
-    @Query(value = "select distinct per "
+    @Query("select distinct per "
             + "from judicialUserProfile per "
             + "LEFT JOIN FETCH judicialOfficeAppointment appt "
             + "on per.personalCode = appt.personalCode "
@@ -82,7 +82,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
             + "and (per.personalCode IN :personalCodes)")
     Page<UserProfile> fetchUserProfileByPersonalCodes(List<String> personalCodes, Pageable pageable);
 
-    @Query(value = "select distinct per "
+    @Query("select distinct per "
             + "from judicialUserProfile per "
             + "LEFT JOIN FETCH judicialOfficeAppointment appt "
             + "on per.personalCode = appt.personalCode "
@@ -97,7 +97,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
     Page<UserProfile> fetchUserProfileByServiceNames(Set<String> ccdServiceCode,
                                                      List<String> ticketCode, Pageable pageable);
 
-    @Query(value = "select distinct per "
+    @Query("select distinct per "
             + "from judicialUserProfile per "
             + "LEFT JOIN FETCH judicialOfficeAppointment appt "
             + "on per.personalCode = appt.personalCode "
@@ -112,24 +112,18 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
     Page<UserProfile> fetchUserProfileByTicketCodes(List<String> ticketCode, Pageable pageable);
 
 
-    @Query(value = "select distinct per.objectId "
+    @Query("select distinct per.objectId "
             + "from judicialUserProfile per "
             + "where (per.objectId != '' and per.objectId is not null)")
     List<String> fetchObjectId();
 
-    @Query(value = "select per "
-        + "from judicialUserProfile per "
-        + "where (per.objectId != '' and per.objectId is not null)"
-        + "and date(lastLoadedDate)=CURRENT_DATE ")
-    List<UserProfile> fetchObjectIdFromCurrentDate();
-
-    @Query(value = "select per "
+    @Query("select per "
             + "from judicialUserProfile per "
             + "where (per.objectId != '' and per.objectId is not null) "
             + "and (per.objectId IN :objectIds)")
     List<UserProfile> fetchUserProfiles(List<String> objectIds);
 
-    @Query(value = "select per "
+    @Query("select per "
             + "from judicialUserProfile per "
             + "where (per.objectId != '' and per.objectId is not null)"
             + "and per.sidamId is null ")

@@ -1,13 +1,11 @@
 package uk.gov.hmcts.reform.judicialapi.docs;
 
-import com.microsoft.applicationinsights.web.internal.WebRequestTrackingFilter;
-import net.thucydides.core.annotations.WithTag;
-import net.thucydides.core.annotations.WithTags;
+import net.serenitybdd.annotations.WithTag;
+import net.serenitybdd.annotations.WithTags;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockFilterConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
@@ -34,10 +32,10 @@ class SwaggerPublisherTest extends AuthorizationEnabledIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-        WebRequestTrackingFilter filter = new WebRequestTrackingFilter();
-        filter.init(new MockFilterConfig());
+
+
         this.mvc = webAppContextSetup(webApplicationContext)
-                .addFilter(filter)
+
                 .build();
     }
 

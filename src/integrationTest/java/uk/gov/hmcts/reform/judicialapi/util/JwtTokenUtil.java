@@ -69,7 +69,8 @@ public final class JwtTokenUtil {
     }
 
     /**
-     * Fetch userId and role from the token body.TokenBody is in json format and it fetches key 'sub'
+     * Fetch userId and role from the token body.
+     * TokenBody is in json format and it fetches key 'sub'
      * to get comma separated value containing userId and role
      *
      * @param tokenBody tokenBody in string format

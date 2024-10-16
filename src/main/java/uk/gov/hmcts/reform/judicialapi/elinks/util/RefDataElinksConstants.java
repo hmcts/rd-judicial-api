@@ -150,6 +150,7 @@ public class RefDataElinksConstants {
         SUCCESS("SUCCESS"),
         PARTIAL_SUCCESS("PARTIAL_SUCCESS");
         String status;
+
         JobStatus(String status) {
             this.status = status;
         }

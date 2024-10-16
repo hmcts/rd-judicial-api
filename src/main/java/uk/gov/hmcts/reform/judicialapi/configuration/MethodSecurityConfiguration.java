@@ -1,32 +1,21 @@
 package uk.gov.hmcts.reform.judicialapi.configuration;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.AccessDecisionManager;
-import org.springframework.security.access.AccessDecisionVoter;
-import org.springframework.security.access.expression.method.ExpressionBasedPreInvocationAdvice;
-import org.springframework.security.access.vote.AffirmativeBased;
-import org.springframework.security.access.vote.AuthenticatedVoter;
-import org.springframework.security.access.vote.RoleVoter;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 
 @Configuration
-@EnableGlobalMethodSecurity(securedEnabled = true)
-public class MethodSecurityConfiguration extends GlobalMethodSecurityConfiguration {
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = false)
+public class MethodSecurityConfiguration {
 
-    protected AccessDecisionManager accessDecisionManager() {
-        List<AccessDecisionVoter<? extends Object>> decisionVoters
-                = new ArrayList<AccessDecisionVoter<? extends Object>>();
-        ExpressionBasedPreInvocationAdvice expressionAdvice = new ExpressionBasedPreInvocationAdvice();
-        expressionAdvice.setExpressionHandler(getExpressionHandler());
-        RoleVoter voter = new RoleVoter();
-        voter.setRolePrefix("");
-        decisionVoters.add(voter);
-        decisionVoters.add(new AuthenticatedVoter());
-        return new AffirmativeBased(decisionVoters);
+    @Bean
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        // Remove the default "ROLE_" prefix by setting it to an empty string
+        expressionHandler.setDefaultRolePrefix("");
+        return expressionHandler;
     }
 }

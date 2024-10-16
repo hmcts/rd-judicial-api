@@ -1,16 +1,16 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
-import com.github.tomakehurst.wiremock.common.FileSource;
-import com.github.tomakehurst.wiremock.extension.Parameters;
-import com.github.tomakehurst.wiremock.extension.ResponseTransformer;
-import com.github.tomakehurst.wiremock.http.Request;
+import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
 import com.github.tomakehurst.wiremock.http.Response;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.launchdarkly.sdk.server.LDClient;
-import net.thucydides.core.annotations.WithTag;
-import net.thucydides.core.annotations.WithTags;
+import net.serenitybdd.annotations.WithTag;
+import net.serenitybdd.annotations.WithTags;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +44,6 @@ import uk.gov.hmcts.reform.judicialapi.service.impl.FeatureToggleServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.util.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
-import uk.gov.hmcts.reform.lib.util.serenity5.SerenityTest;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -60,7 +59,7 @@ import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRole
 
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
-@SerenityTest
+@ExtendWith(SerenityJUnit5Extension.class)
 @TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
 @ContextConfiguration(classes = {RestTemplateConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -252,13 +251,14 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                         .withBody(leaversApiResponseJson)));
     }
 
-    public static class JudicialTransformer extends ResponseTransformer {
+    public static class JudicialTransformer implements ResponseTransformerV2 {
+
         @Override
-        public Response transform(Request request, Response response, FileSource files, Parameters parameters) {
+        public Response transform(Response response, ServeEvent serveEvent) {
 
             String formatResponse = response.getBodyAsString();
 
-            String token = request.getHeader("Authorization");
+            String token = serveEvent.getRequest().header("Authorization").firstValue();
             String tokenBody = decodeJwtToken(token.split(" ")[1]);
             var tokenInfo = getUserIdAndRoleFromToken(tokenBody);
             formatResponse = format(formatResponse, tokenInfo.get(1), tokenInfo.get(1), tokenInfo.get(0));
@@ -266,6 +266,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
             return Response.Builder.like(response)
                     .but().body(formatResponse)
                     .build();
+
         }
 
         @Override
@@ -273,6 +274,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
             return "user-token-response";
         }
 
+        @Override
         public boolean applyGlobally() {
             return false;
         }

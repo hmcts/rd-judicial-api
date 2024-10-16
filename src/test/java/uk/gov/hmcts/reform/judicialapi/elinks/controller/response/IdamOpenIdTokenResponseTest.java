@@ -3,8 +3,8 @@ package uk.gov.hmcts.reform.judicialapi.elinks.controller.response;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.junit.MatcherAssert.assertThat;
 
 class IdamOpenIdTokenResponseTest {
 

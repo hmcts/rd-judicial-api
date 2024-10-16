@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshRespons
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserSearchResponseWrapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinkUserService;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
-
-import javax.validation.Valid;
 
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.BAD_REQUEST;
 
