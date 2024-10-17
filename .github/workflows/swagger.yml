@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - DTSRD-3562_Swagger_Publishing
 
 jobs:
   publish-openapi:
