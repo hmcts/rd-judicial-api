@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.judicialapi.service.impl;
 
 import com.launchdarkly.sdk.LDUser;
 import com.launchdarkly.sdk.server.LDClient;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,6 @@ import uk.gov.hmcts.reform.judicialapi.service.FeatureToggleService;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.PostConstruct;
 
 @Service
 public class FeatureToggleServiceImpl implements FeatureToggleService {
@@ -30,8 +30,8 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
         this.userName = userName;
     }
 
-    /**
-     * add controller.method name, flag name  in map to apply ld flag on api like below
+    /** mapServiceToFlag.
+     * add controller method name, flag name  in map to apply ld flag on api like below
      * launchDarklyMap.put("OrganisationExternalController.retrieveOrganisationsByStatusWithAddressDetailsOptional",
      * "prd-aac-get-org-by-status");
      */

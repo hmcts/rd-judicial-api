@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +53,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import javax.validation.constraints.NotNull;
 
 import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -313,7 +313,7 @@ class ElinkUserServiceImplTest {
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
     }
 
     @Test
@@ -375,7 +375,7 @@ class ElinkUserServiceImplTest {
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "DESC", "objectId");
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
 
         ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>)responseEntity
                 .getBody();
@@ -420,7 +420,7 @@ class ElinkUserServiceImplTest {
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
         ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>)responseEntity
                 .getBody();
         assertEquals(2, profiles.size());
@@ -470,7 +470,7 @@ class ElinkUserServiceImplTest {
             var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                     0, "DESC", "objectId");
 
-            assertEquals(200, responseEntity.getStatusCodeValue());
+            assertEquals(200, responseEntity.getStatusCode().value());
 
             ArrayList<UserProfileRefreshResponse> profiles = (ArrayList<UserProfileRefreshResponse>) responseEntity
                     .getBody();
@@ -509,7 +509,7 @@ class ElinkUserServiceImplTest {
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
         ArrayList profiles =  (ArrayList)responseEntity.getBody();
         assertEquals(1, profiles.size());
 
@@ -538,7 +538,7 @@ class ElinkUserServiceImplTest {
 
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
         ArrayList profiles =  (ArrayList)responseEntity.getBody();
         assertEquals(1, profiles.size());
         UserProfileRefreshResponse profile = (UserProfileRefreshResponse)profiles.get(0);
@@ -582,7 +582,7 @@ class ElinkUserServiceImplTest {
                 userProfileRefreshResponses = (List<uk.gov.hmcts.reform.judicialapi.elinks
                 .response.UserProfileRefreshResponse>) responseEntity.getBody();
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
         assertNotNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getStartDate());
         assertNull(userProfileRefreshResponses.get(0).getAppointments().get(0).getEndDate());
         assertNotNull(userProfileRefreshResponses.get(0).getAuthorisations().get(0).getStartDate());
@@ -659,7 +659,7 @@ class ElinkUserServiceImplTest {
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,
                 0, "ASC", "objectId");
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
     }
 
     @Test
@@ -798,7 +798,7 @@ class ElinkUserServiceImplTest {
 
         var responseEntity = elinkUserService.refreshUserProfile(refreshRoleRequest, 1,0, "ASC", "objectId");
 
-        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(200, responseEntity.getStatusCode().value());
         verify(serviceCodeMappingRepository, times(1)).fetchTicketCodeFromServiceCode(anySet());
         verify(profileRepository, times(1)).fetchUserProfileByTicketCodes(anyList(), any());
     }
@@ -1125,7 +1125,7 @@ class ElinkUserServiceImplTest {
         appointmentTwo.setJoBaseLocationId("test");
 
 
-        
+
 
         var authorisationOne = new Authorisation();
         authorisationOne.setOfficeAuthId(1L);
