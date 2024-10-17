@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-//import org.testng.collections.Lists;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AppointmentsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AuthorisationsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.ResultsRequest;
