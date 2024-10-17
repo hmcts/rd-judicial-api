@@ -248,14 +248,17 @@ pitest {
     testSourceSets = [sourceSets.test]
     excludedClasses = [
             'uk.gov.hmcts.reform.judicialapi.configuration.*',
-            'uk.gov.hmcts.reform.judicialapi.elinks.configuration.*',
             'uk.gov.hmcts.reform.judicialapi.controller.*',
-            'uk.gov.hmcts.reform.judicialapi.elinks.scheduler.*',
             'uk.gov.hmcts.reform.judicialapi.JudicialApplication',
-            'uk.gov.hmcts.reform.judicialapi.repository.IdamUserProfileRepository',
-            'uk.gov.hmcts.reform.judicialapi.service.impl.IdamUserProfileServiceImpl',
-            'uk.gov.hmcts.reform.judicialapi.elinks.servicebus.TopicPublisher'
-
+            'uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinksFeignInterceptorConfiguration',
+            'uk.gov.hmcts.reform.judicialapi.elinks.controller.advice.ForbiddenException',
+            'uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl',
+            'uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ElinksPeopleServiceImpl',
+            'uk.gov.hmcts.reform.judicialapi.elinks.service.impl.IdamElasticSearchServiceImpl',
+            'uk.gov.hmcts.reform.judicialapi.elinks.configuration.SchedulerConfig',
+            'uk.gov.hmcts.reform.judicialapi.elinks.configuration.SendGridConfig',
+            'uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit',
+            'uk.gov.hmcts.reform.judicialapi.elinks.scheduler.ElinksApiJobScheduler'
     ]
     threads = 10
     enableDefaultIncrementalAnalysis = true
@@ -263,7 +266,7 @@ pitest {
     historyOutputLocation = 'build/reports/pitest/fastermutationtestingoutput'
     outputFormats = ['XML', 'HTML']
     timestampedReports = false
-    mutationThreshold = 65
+    mutationThreshold = 70
     useClasspathFile = true
 }
 
