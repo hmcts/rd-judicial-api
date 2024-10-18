@@ -113,7 +113,7 @@ withPipeline(type, product, component) {
     // Sync demo and perftest with master branch
     syncBranchesWithMaster(branchesToSync)
 
-    afterSuccess('sonarscan') {
+    afterAlways('sonarscan') {
 
         publishHTML target: [
             allowMissing         : true,
@@ -134,7 +134,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    afterSuccess('smoketest:preview') {
+    afterAlways('smoketest:preview') {
         publishHTML target: [
             allowMissing         : true,
             alwaysLinkToLastBuild: true,
@@ -145,7 +145,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    afterSuccess('smoketest:aat') {
+    afterAlways('smoketest:aat') {
         publishHTML target: [
             allowMissing         : true,
             alwaysLinkToLastBuild: true,
@@ -156,7 +156,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    afterSuccess('functionalTest:aat') {
+    afterAlways('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
         publishHTML target: [
             allowMissing         : true,
@@ -168,7 +168,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    afterSuccess('functionalTest:preview') {
+    afterAlways('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/site/serenity/**/*'
         publishHTML target: [
             allowMissing         : true,
@@ -180,7 +180,7 @@ withPipeline(type, product, component) {
         ]
     }
 
-    afterSuccess('pact-provider-verification') {
+    afterAlways('pact-provider-verification') {
         publishHTML target: [
              allowMissing         : true,
              alwaysLinkToLastBuild: true,
