@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.testng.collections.Lists;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfiguration;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AppointmentsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.AuthorisationsRequest;
@@ -722,7 +721,7 @@ class ElinksPeopleServiceImplTest {
                 .authorisationsRequests(List.of(AuthorisationsRequest.builder().jurisdiction("juristriction")
                         .ticket("lowerlevel").startDate("1991-12-19")
                         .endDate("2022-12-20").ticketCode("ticketId").build()))
-                .judiciaryRoles(Lists.newArrayList()).build();
+                .judiciaryRoles(List.of()).build();
         PaginationRequest pagination = PaginationRequest.builder()
                 .results(1)
                 .pages(1).currentPage(1).resultsPerPage(1).morePages(false).build();

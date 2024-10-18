@@ -14,6 +14,7 @@ management:
 
 spring:
   flyway:
+    clean-disabled: false
     out-of-order: true
     enabled: true
     locations: classpath:db/testmigration
@@ -38,7 +39,7 @@ spring:
     name: RD Judicial Ref API
   datasource:
     driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: ${DB_URL:jdbc:tc:postgresql:11.1:///dbjudicialdata}
+    url: ${DB_URL:jdbc:tc:postgresql:16:///dbjudicialdata}
     username: ${DB_USERNAME:dbjuddata}
     password: ${DB_PASSWORD:dbjuddata}
     min-idle: 1
