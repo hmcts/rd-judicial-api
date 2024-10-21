@@ -1,5 +1,10 @@
 package uk.gov.hmcts.reform.judicialapi;
 
+import com.google.common.collect.ImmutableMap;
+import com.warrenstrange.googleauth.GoogleAuthenticator;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.rest.SerenityRest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +16,13 @@ import uk.gov.hmcts.reform.judicialapi.client.JudicialApiClient;
 import uk.gov.hmcts.reform.judicialapi.config.Oauth2;
 import uk.gov.hmcts.reform.judicialapi.config.TestConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.idam.IdamOpenIdClient;
-import uk.gov.hmcts.reform.lib.client.response.S2sClient;
 
-import javax.annotation.PostConstruct;
+import java.util.Map;
 
-import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
+import static org.apache.commons.lang3.RandomStringUtils.secure;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @ContextConfiguration(classes = {TestConfigProperties.class, Oauth2.class})
 @ComponentScan("uk.gov.hmcts.reform.judicialapi")
@@ -42,6 +49,8 @@ public class AuthorizationFunctionalTest {
     @Autowired
     protected TestConfigProperties configProperties;
 
+    private final GoogleAuthenticator authenticator = new GoogleAuthenticator();
+
     protected static String s2sToken;
 
     public static final String EMAIL = "EMAIL";
@@ -59,11 +68,7 @@ public class AuthorizationFunctionalTest {
 
         if (null == s2sToken) {
             log.info(":::: Generating S2S Token");
-            s2sToken = new S2sClient(
-                    testConfigProperties.getS2sUrl(),
-                    testConfigProperties.getS2sName(),
-                    testConfigProperties.getS2sSecret())
-                    .signIntoS2S();
+            s2sToken = signIntoS2S();
         }
 
         if (null == idamOpenIdClient) {
@@ -74,6 +79,26 @@ public class AuthorizationFunctionalTest {
     }
 
     public static String generateRandomEmail() {
-        return String.format(EMAIL_TEMPLATE, randomAlphanumeric(10)).toLowerCase();
+        return String.format(EMAIL_TEMPLATE, secure().nextAlphanumeric(10)).toLowerCase();
+    }
+
+    public String signIntoS2S() {
+        Map<String, Object> params = ImmutableMap.of("microservice",
+                testConfigProperties.getS2sName(),
+                "oneTimePassword",
+                authenticator.getTotpPassword(testConfigProperties.getS2sSecret()));
+
+        Response response = RestAssured
+                .given()
+                .relaxedHTTPSValidation()
+                .baseUri(testConfigProperties.getS2sUrl())
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .body(params)
+                .post("/lease")
+                .andReturn();
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+
+        return response.getBody().asString();
     }
 }

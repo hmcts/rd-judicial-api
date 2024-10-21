@@ -2,14 +2,16 @@ package uk.gov.hmcts.reform.judicialapi;
 
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
-import net.thucydides.core.annotations.WithTag;
-import net.thucydides.core.annotations.WithTags;
+import net.serenitybdd.annotations.WithTag;
+import net.serenitybdd.annotations.WithTags;
+import net.serenitybdd.junit.runners.SerenityRunner;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
@@ -17,7 +19,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.UserSearchReque
 import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtension;
 import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
-import uk.gov.hmcts.reform.lib.util.serenity5.SerenityTest;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-@SerenityTest
+@RunWith(SerenityRunner.class)
 @SpringBootTest
 @WithTags({@WithTag("testType:Functional")})
 @Slf4j
