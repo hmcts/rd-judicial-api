@@ -42,7 +42,7 @@ def versions = [
         pact_version       : '4.1.7',
         log4j              : '2.23.1',
         springVersion      : '5.3.36',
-        logback            : '1.2.13',
+        logback            : '1.5.12',
         bytebuddy          : '1.14.18',
         testContainer_postgresql: '1.20.0',
         bouncycastle       : '1.78.1',
