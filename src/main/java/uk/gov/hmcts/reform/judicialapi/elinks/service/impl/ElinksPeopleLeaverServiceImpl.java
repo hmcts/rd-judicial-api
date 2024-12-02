@@ -5,6 +5,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.LeaversResultsRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
@@ -39,14 +40,19 @@ public class ElinksPeopleLeaverServiceImpl implements ElinksPeopleLeaverService 
                         QUERY,
                         leaversId,
                         10,
-                        (ps, argument) -> {
-                            ps.setString(1, argument.getRight());
-                            ps.setBoolean(2, !(Boolean.valueOf(argument.getMiddle())));
-                            ps.setString(3, argument.getLeft());
-                        });
+                        getTripleParameterizedPreparedStatementSetter());
             }
         } catch (Exception ex) {
             throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, DATA_UPDATE_ERROR, DATA_UPDATE_ERROR);
         }
+    }
+
+    private ParameterizedPreparedStatementSetter<Triple<String, String, String>>
+        getTripleParameterizedPreparedStatementSetter() {
+        return (ps, argument) -> {
+            ps.setString(1, argument.getRight());
+            ps.setBoolean(2, !(Boolean.valueOf(argument.getMiddle())));
+            ps.setString(3, argument.getLeft());
+        };
     }
 }

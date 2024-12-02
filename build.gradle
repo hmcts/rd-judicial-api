@@ -285,28 +285,17 @@ sonarqube {
         property "sonar.pitest.mode", "reuseReport"
         property "sonar.pitest.reportsDirectory", "build/reports/pitest"
         property "sonar.exclusions", "src/main/java/uk/gov/hmcts/reform/judicialapi/configuration/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/JudicialApplication.java,"+
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/domain/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/request/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/TestingSupportController.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/feign/IdamUserFeignClient.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/controller/response/**," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/service/impl/IdamUserProfileServiceImpl.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/repository/IdamUserProfileRepository.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/JudicialApplication.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/domain/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/response/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/ElinksFeignInterceptorConfiguration.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/controller/advice/ForbiddenException.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/ELinksServiceImpl.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/ElinksPeopleServiceImpl.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/IdamElasticSearchServiceImpl.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/SchedulerConfig.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/configuration/SendGridConfig.java," +
+                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/ElinksPeopleLeaverServiceImpl.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/util/DataloadSchedulerJobAudit.java," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/exception/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/scheduler/ElinksApiJobScheduler.java," +
-                "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/service/impl/**," +
                 "src/main/java/uk/gov/hmcts/reform/judicialapi/elinks/util/**,"
     }
 }
