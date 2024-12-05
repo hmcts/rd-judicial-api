@@ -263,5 +263,4 @@ public class SendEmailTest {
         verify(emailService, atLeastOnce()).sendEmail(any());
     }
 
-
 }
