@@ -4,14 +4,13 @@ import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.annotations.WithTags;
-import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.ErrorResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
@@ -30,7 +29,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-@RunWith(SerenityRunner.class)
+@ExtendWith(SerenityJUnit5Extension.class)
 @SpringBootTest
 @WithTags({@WithTag("testType:Functional")})
 @Slf4j

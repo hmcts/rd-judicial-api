@@ -6,12 +6,12 @@ import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.launchdarkly.sdk.server.LDClient;
 import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.annotations.WithTags;
-import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -59,7 +59,7 @@ import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRole
 
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
-@RunWith(SerenityRunner.class)
+@ExtendWith(SerenityJUnit5Extension.class)
 @TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
 @ContextConfiguration(classes = {RestTemplateConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
