@@ -2,16 +2,14 @@ package uk.gov.hmcts.reform.judicialapi.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.common.FileSource;
-import com.github.tomakehurst.wiremock.extension.Parameters;
-import com.github.tomakehurst.wiremock.extension.ResponseTransformer;
-import com.github.tomakehurst.wiremock.http.Request;
+import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
 import com.github.tomakehurst.wiremock.http.Response;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.launchdarkly.sdk.server.LDClient;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.RSAKey;
-import net.thucydides.core.annotations.WithTag;
-import net.thucydides.core.annotations.WithTags;
+import net.serenitybdd.annotations.WithTag;
+import net.serenitybdd.annotations.WithTags;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -157,13 +155,15 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
                 .build();
     }
 
-    public static class JudicialTransformer extends ResponseTransformer {
+    public static class JudicialTransformer implements ResponseTransformerV2 {
+
+
         @Override
-        public Response transform(Request request, Response response, FileSource files, Parameters parameters) {
+        public Response transform(Response response, ServeEvent serveEvent) {
 
             String formatResponse = response.getBodyAsString();
 
-            String token = request.getHeader("Authorization");
+            String token = serveEvent.getRequest().header("Authorization").firstValue();
             String tokenBody = decodeJwtToken(token.split(" ")[1]);
             var tokenInfo = getUserIdAndRoleFromToken(tokenBody);
             formatResponse = format(formatResponse, tokenInfo.get(1), tokenInfo.get(1), tokenInfo.get(0));
@@ -171,6 +171,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
             return Response.Builder.like(response)
                     .but().body(formatResponse)
                     .build();
+
         }
 
         @Override
@@ -178,6 +179,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
             return "user-token-response";
         }
 
+        @Override
         public boolean applyGlobally() {
             return false;
         }
