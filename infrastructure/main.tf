@@ -67,7 +67,7 @@ module "db-rd-judicial-ref-v16" {
   product       = "rd"
   name          = local.db_name
 
-  pgsql_server_configuration = var.pgsql_server_configuration
+  pgsql_server_configuration  = var.pgsql_server_configuration
   action_group_name           = join("-", [var.action_group_name, local.db_name, var.env])
   email_address_key           = var.email_address_key
   email_address_key_vault_id  = data.azurerm_key_vault.rd_key_vault.id
