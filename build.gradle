@@ -348,7 +348,7 @@ dependencies {
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '1.2.0'
 
 
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.8'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.9'
 
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: versions.springBoot
