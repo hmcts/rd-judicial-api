@@ -32,7 +32,7 @@ def versions = [
         pitest             : '1.16.1',
         sonarPitest        : '0.5',
         junitPitest        : '1.2.1',
-        reformLogging      : '6.1.5',
+        reformLogging      : '6.1.7',
         serenity           : '2.0.76',
         springBoot         : '2.7.18',
         springfoxSwagger   : '2.10.5',
