@@ -359,7 +359,7 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
-    implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.17.2', ext: 'pom'
+    implementation group: 'com.fasterxml.jackson', name: 'jackson-bom', version: '2.18.2', ext: 'pom'
 
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
