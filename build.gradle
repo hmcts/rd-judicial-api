@@ -393,7 +393,7 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: versions.jwtVersion
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: versions.jwtVersion
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: versions.jwtVersion
-    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.40'
+    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.47'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
