@@ -433,7 +433,7 @@ dependencies {
     implementation group: 'org.json', name: 'json', version: '20230227'
 
 
-    testImplementation ('com.github.hmcts:rd-commons-lib:0.0.18'){
+    testImplementation ('com.github.hmcts:rd-commons-lib:0.1.0'){
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
     }
 
