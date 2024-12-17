@@ -71,7 +71,7 @@ class ElinksControllerTest {
 
         ResponseEntity<ElinkBaseLocationWrapperResponse> actual = eLinksController.loadLocation();
         assertThat(actual).isNotNull();
-        assertThat(actual.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody().getMessage()).isEqualTo(LOCATION_DATA_LOAD_SUCCESS);
 
     }
@@ -95,7 +95,7 @@ class ElinksControllerTest {
 
         ResponseEntity<ElinkPeopleWrapperResponse> actual = eLinksController.loadPeople();
         assertThat(actual).isNotNull();
-        assertThat(actual.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody().getMessage()).hasToString(PEOPLE_DATA_LOAD_SUCCESS);
 
     }
@@ -110,7 +110,7 @@ class ElinksControllerTest {
 
         ResponseEntity<Object> actual = eLinksController.idamElasticSearch();
         assertThat(actual).isNotNull();
-        assertThat(actual.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     }
 
@@ -125,7 +125,7 @@ class ElinksControllerTest {
 
         ResponseEntity<Object> actual = eLinksController.fetchIdamIds();
         assertThat(actual).isNotNull();
-        assertThat(actual.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     }
 
@@ -149,7 +149,7 @@ class ElinksControllerTest {
 
         ResponseEntity<ElinkLeaversWrapperResponse> actual = eLinksController.loadLeavers();
         assertThat(actual).isNotNull();
-        assertThat(actual.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody().getMessage()).isEqualTo(LEAVERSSUCCESS);
 
     }
@@ -162,8 +162,6 @@ class ElinksControllerTest {
         ElinkDeletedWrapperResponse elinkDeletedWrapperResponse = new ElinkDeletedWrapperResponse();
         elinkDeletedWrapperResponse.setMessage(DELETEDSUCCESS);
 
-
-
         responseEntity = new ResponseEntity<>(
             elinkDeletedWrapperResponse,
             null,
@@ -174,7 +172,7 @@ class ElinksControllerTest {
 
         ResponseEntity<ElinkDeletedWrapperResponse> actual = eLinksController.loadDeleted();
         assertThat(actual).isNotNull();
-        assertThat(actual.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody().getMessage()).isEqualTo(DELETEDSUCCESS);
 
     }
@@ -188,8 +186,6 @@ class ElinksControllerTest {
         SchedulerJobStatusResponse schedulerJobStatusResponse = SchedulerJobStatusResponse.builder().id("id")
             .jobStatus("success").sidamIdsCount(10).statusCode(HttpStatus.OK.value()).build();
 
-
-
         responseEntity = new ResponseEntity<>(
             schedulerJobStatusResponse,
             null,
@@ -200,10 +196,8 @@ class ElinksControllerTest {
 
         ResponseEntity<SchedulerJobStatusResponse> actual = eLinksController.publishSidamIdToAsb();
         assertThat(actual).isNotNull();
-        assertThat(actual.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actual.getBody().getJobStatus()).isEqualTo("success");
 
     }
-
-
 }

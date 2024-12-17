@@ -65,6 +65,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.nio.charset.Charset.defaultCharset;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -721,7 +722,7 @@ class ElinksPeopleServiceImplTest {
                 .authorisationsRequests(List.of(AuthorisationsRequest.builder().jurisdiction("juristriction")
                         .ticket("lowerlevel").startDate("1991-12-19")
                         .endDate("2022-12-20").ticketCode("ticketId").build()))
-                .judiciaryRoles(List.of()).build();
+                .judiciaryRoles(emptyList()).build();
         PaginationRequest pagination = PaginationRequest.builder()
                 .results(1)
                 .pages(1).currentPage(1).resultsPerPage(1).morePages(false).build();

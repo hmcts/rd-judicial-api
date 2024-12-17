@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.configuration;
 
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,8 +50,7 @@ public class SecurityConfiguration {
     private final SecurityEndpointFilter securityEndpointFilter;
 
     @Setter
-    @Getter
-    List<String> anonymousPaths;
+    private List<String> anonymousPaths;
 
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
 

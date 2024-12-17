@@ -29,38 +29,38 @@ public class BaseLocation {
 
     @Column(name = "name")
     @Size(max = 256)
-    @JsonProperty("name")
+    @JsonProperty
     private String name;
 
     @Column(name = "type_id")
     @Size(max = 64)
-    @JsonProperty("typeId")
+    @JsonProperty
     private String typeId;
 
     @Column(name = "parent_id")
     @Size(max = 64)
-    @JsonProperty("parentId")
+    @JsonProperty
     private String parentId;
 
     @Column(name = "jurisdiction_id")
     @Size(max = 64)
-    @JsonProperty("jurisdictionId")
+    @JsonProperty
     private String jurisdictionId;
 
     @Column(name = "start_date")
-    @JsonProperty("startDate")
+    @JsonProperty
     private LocalDate startDate;
 
     @Column(name = "end_date")
-    @JsonProperty("endDate")
+    @JsonProperty
     private LocalDate endDate;
 
     @Column(name = "created_at")
-    @JsonProperty("createAt")
+    @JsonProperty
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    @JsonProperty("updatedAt")
+    @JsonProperty
     private LocalDateTime updatedAt;
 
 }
