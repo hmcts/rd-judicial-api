@@ -34,4 +34,10 @@ class FeatureToggleServiceImplTest {
         assertTrue(flaFeatureToggleService.isFlagEnabled("test1"));
     }
 
+    @Test
+    void mapServiceToFlagTest() {
+        flaFeatureToggleService = new FeatureToggleServiceImpl(ldClient, "rd");
+        assertTrue(flaFeatureToggleService.getLaunchDarklyMap().size() >= 1);
+    }
+
 }
