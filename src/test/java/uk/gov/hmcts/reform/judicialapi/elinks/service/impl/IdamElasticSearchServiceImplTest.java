@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.testng.collections.Lists;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
@@ -46,6 +45,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -141,7 +141,7 @@ class IdamElasticSearchServiceImplTest {
         list.add("5");
         map.put("X-Total-Count", list);
 
-        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(Lists.newArrayList());
+        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(emptyList());
         when(userProfileRepository.fetchObjectId()).thenReturn(List.of("2234"));
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
@@ -171,7 +171,7 @@ class IdamElasticSearchServiceImplTest {
         list.add("5");
         map.put("X-Total-Count", list);
 
-        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(Lists.newArrayList());
+        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(emptyList());
         when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamDetails();

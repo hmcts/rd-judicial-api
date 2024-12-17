@@ -159,7 +159,7 @@ class ELinksServiceImplTest {
         ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
 
         assertThat(responseEntity).isNotNull();
-        assertThat(responseEntity.getStatusCodeValue()).isEqualTo(HttpStatus.OK.value());
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().getMessage()).contains(BASE_LOCATION_DATA_LOAD_SUCCESS);
 
     }
@@ -175,7 +175,6 @@ class ELinksServiceImplTest {
         ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
         elinkLocationResponse.setResults(baseLocationResponses);
 
-
         ObjectMapper mapper = new ObjectMapper();
 
         String body = mapper.writeValueAsString(elinkLocationResponse);
@@ -189,9 +188,8 @@ class ELinksServiceImplTest {
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
         when(baseLocationRepository.saveAll(anyList())).thenThrow(dataAccessException);
-        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
-        });
+        ElinksException thrown = Assertions.assertThrows(
+                ElinksException.class, () -> eLinksServiceImpl.retrieveLocation());
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
@@ -220,9 +218,8 @@ class ELinksServiceImplTest {
                 .request(mock(Request.class)).body(body, defaultCharset()).status(200).build());
 
 
-        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
-        });
+        ElinksException thrown = Assertions.assertThrows(
+                ElinksException.class, () -> eLinksServiceImpl.retrieveLocation());
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
 
@@ -233,54 +230,33 @@ class ELinksServiceImplTest {
     }
 
     @Test
-    void elinksService_load_location_should_return_elinksException_when_FeignException()
-            throws JsonProcessingException {
+    void elinksService_load_location_should_return_elinksException_when_FeignException() {
 
         List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
-
 
         ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
         elinkLocationResponse.setResults(baseLocationResponses);
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        String body = mapper.writeValueAsString(elinkLocationResponse);
 
         when(elinksFeignClient.getLocationDetails()).thenThrow(feignExceptionMock);
 
-
-        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
-        });
+        ElinksException thrown = Assertions.assertThrows(
+                ElinksException.class, () -> eLinksServiceImpl.retrieveLocation());
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
 
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ACCESS_ERROR);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ACCESS_ERROR);
-
-
     }
 
     @Test
-    void elinksService_load_location_should_return_elinksException_when_http_BAD_REQUEST()
-            throws JsonProcessingException {
+    void elinksService_load_location_should_return_elinksException_when_http_BAD_REQUEST() {
 
         List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
-
         ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
         elinkLocationResponse.setResults(baseLocationResponses);
-
-        FeignException feignExceptionMock = Mockito.mock(FeignException.class);
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        String body = mapper.writeValueAsString(elinkLocationResponse);
-
 
         when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class))
@@ -289,9 +265,8 @@ class ELinksServiceImplTest {
                 .request(mock(Request.class))
                 .body("", defaultCharset()).status(HttpStatus.BAD_REQUEST.value()).build());
 
-        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
-        });
+        ElinksException thrown = Assertions.assertThrows(
+                ElinksException.class, () -> eLinksServiceImpl.retrieveLocation());
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
 
@@ -303,22 +278,12 @@ class ELinksServiceImplTest {
 
 
     @Test
-    void elinksService_load_location_should_return_elinksException_when_http_UNAUTHORIZED()
-            throws JsonProcessingException {
+    void elinksService_load_location_should_return_elinksException_when_http_UNAUTHORIZED() {
 
         List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
-
         ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
         elinkLocationResponse.setResults(baseLocationResponses);
-
-        FeignException feignExceptionMock = Mockito.mock(FeignException.class);
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        String body = mapper.writeValueAsString(elinkLocationResponse);
-
 
         when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class))
@@ -327,44 +292,30 @@ class ELinksServiceImplTest {
                 .request(mock(Request.class))
                 .body("", defaultCharset()).status(HttpStatus.UNAUTHORIZED.value()).build());
 
-        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
-        });
+        ElinksException thrown = Assertions.assertThrows(
+                ElinksException.class, () -> eLinksServiceImpl.retrieveLocation());
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
 
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_UNAUTHORIZED);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ERROR_RESPONSE_UNAUTHORIZED);
-
-
     }
 
     @Test
-    void elinksService_load_location_should_return_elinksException_when_http_FORBIDDEN()
-            throws JsonProcessingException {
+    void elinksService_load_location_should_return_elinksException_when_http_FORBIDDEN() {
 
         List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
-
         ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
         elinkLocationResponse.setResults(baseLocationResponses);
-
-        FeignException feignExceptionMock = Mockito.mock(FeignException.class);
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        String body = mapper.writeValueAsString(elinkLocationResponse);
-
 
         when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.FORBIDDEN.value()).build());
         when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.FORBIDDEN.value()).build());
 
-        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
-        });
+        ElinksException thrown = Assertions.assertThrows(
+                ElinksException.class, () -> eLinksServiceImpl.retrieveLocation());
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.FORBIDDEN.value());
 
@@ -375,22 +326,13 @@ class ELinksServiceImplTest {
     }
 
     @Test
-    void elinksService_load_location_should_return_elinksException_when_http_NOT_FOUND()
-            throws JsonProcessingException {
+    void elinksService_load_location_should_return_elinksException_when_http_NOT_FOUND() {
 
         List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
 
         ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
         elinkLocationResponse.setResults(baseLocationResponses);
-
-        FeignException feignExceptionMock = Mockito.mock(FeignException.class);
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        String body = mapper.writeValueAsString(elinkLocationResponse);
-
 
         when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.NOT_FOUND.value()).build());
@@ -399,10 +341,8 @@ class ELinksServiceImplTest {
         when(elinksResponsesHelper.saveElinksResponse(any(),any())).thenReturn(Response.builder()
                 .request(mock(Request.class)).body("", defaultCharset()).status(HttpStatus.NOT_FOUND.value()).build());
 
-
-        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
-        });
+        ElinksException thrown = Assertions.assertThrows(
+                ElinksException.class, () -> eLinksServiceImpl.retrieveLocation());
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
@@ -413,22 +353,12 @@ class ELinksServiceImplTest {
     }
 
     @Test
-    void elinksService_load_location_should_return_elinksException_when_http_TOO_MANY_REQUESTS()
-            throws JsonProcessingException {
+    void elinksService_load_location_should_return_elinksException_when_http_TOO_MANY_REQUESTS() {
 
         List<BaseLocationResponse> baseLocationResponses = getBaseLocationResponseData();
 
-
         ElinkBaseLocationResponse elinkLocationResponse = new ElinkBaseLocationResponse();
         elinkLocationResponse.setResults(baseLocationResponses);
-
-        FeignException feignExceptionMock = Mockito.mock(FeignException.class);
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        String body = mapper.writeValueAsString(elinkLocationResponse);
-
 
         when(elinksFeignClient.getLocationDetails()).thenReturn(Response.builder()
                 .request(mock(Request.class))
@@ -439,20 +369,17 @@ class ELinksServiceImplTest {
                 .request(mock(Request.class))
                 .body("", defaultCharset()).status(HttpStatus.TOO_MANY_REQUESTS.value()).build());
 
-        ElinksException thrown = Assertions.assertThrows(ElinksException.class, () -> {
-            ResponseEntity<ElinkBaseLocationWrapperResponse> responseEntity = eLinksServiceImpl.retrieveLocation();
-        });
+        ElinksException thrown = Assertions.assertThrows(
+                ElinksException.class, () -> eLinksServiceImpl.retrieveLocation());
 
         assertThat(thrown.getStatus().value()).isEqualTo(HttpStatus.TOO_MANY_REQUESTS.value());
 
         assertThat(thrown.getErrorMessage()).contains(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS);
         assertThat(thrown.getErrorDescription()).contains(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS);
-
-
     }
 
     @Test
-    void elinksService_cleanUpData_should_return_success_msg_with_status_200() throws JsonProcessingException {
+    void elinksService_cleanUpData_should_return_success_msg_with_status_200() {
 
         eLinksServiceImpl.cleanUpElinksResponses();
         Mockito.verify(elinksResponsesRepository,Mockito.times(1))
@@ -461,7 +388,7 @@ class ELinksServiceImplTest {
     }
 
     @Test
-    void elinksService_cleanUpData_should_return_failure() throws JsonProcessingException {
+    void elinksService_cleanUpData_should_return_failure() {
 
         DataAccessException dataAccessException = mock(DataAccessException.class);
         doThrow(dataAccessException).when(elinksResponsesRepository).deleteByCreatedDateBefore(any());
@@ -473,7 +400,7 @@ class ELinksServiceImplTest {
     }
 
     @Test
-    void elinksService_deleteJohProfiles_should_return_success_with_zero_profiles() throws JsonProcessingException {
+    void elinksService_deleteJohProfiles_should_return_success_with_zero_profiles() {
 
         eLinksServiceImpl.deleteJohProfiles(LocalDateTime.now());
         Mockito.verify(profileRepository,Mockito.times(1))
@@ -491,7 +418,7 @@ class ELinksServiceImplTest {
     }
 
     @Test
-    void elinksService_deleteJohProfiles_should_return_failure_msg() throws JsonProcessingException {
+    void elinksService_deleteJohProfiles_should_return_failure_msg() {
 
         ReflectionTestUtils.setField(eLinksServiceImpl, "delJohProfiles",
                 false);
@@ -518,7 +445,7 @@ class ELinksServiceImplTest {
     }
 
     @Test
-    void elinksService_deleteJohProfiles_should_return_success_with_few_profiles() throws JsonProcessingException {
+    void elinksService_deleteJohProfiles_should_return_success_with_few_profiles() {
         var userProfile = buildUserProfile();
         when(profileRepository.findByDeletedFlag(any()))
                 .thenReturn(Collections.singletonList(userProfile));
