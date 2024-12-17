@@ -141,7 +141,8 @@ class IdamElasticSearchServiceImplTest {
         list.add("5");
         map.put("X-Total-Count", list);
 
-        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(Lists.newArrayList());
+        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(
+                List.of(createUser("some@some.com")));
         when(userProfileRepository.fetchObjectId()).thenReturn(List.of("2234"));
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
@@ -155,7 +156,7 @@ class IdamElasticSearchServiceImplTest {
     }
 
     @Test
-    void testSidamUpdate() throws JsonProcessingException {
+    void testSidamUpdateMultipleUserProfiles() throws JsonProcessingException {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
@@ -172,7 +173,7 @@ class IdamElasticSearchServiceImplTest {
         map.put("X-Total-Count", list);
 
         when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(Lists.newArrayList());
-        when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
+        when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createMultipleUserProfile());
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamDetails();
         ElinkIdamWrapperResponse  elinkIdamWrapperResponse = (ElinkIdamWrapperResponse) useResponses.getBody();
@@ -182,12 +183,49 @@ class IdamElasticSearchServiceImplTest {
             .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
 
-    private List<UserProfile> createUserProfile() {
+    @Test
+    void testSidamUpdateSingleUserProfile() throws JsonProcessingException {
+        when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
+        when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
+
+        Set<IdamResponse> users = new HashSet<>();
+        IdamResponse idamResponseOne = createUser("some@some.com");
+        idamResponseOne.setSsoId("objectId1");
+        users.add(idamResponseOne);
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(users);
+
+        Map<String, Collection<String>> map = new HashMap<>();
+        Collection<String> list = new ArrayList<>();
+        list.add("5");
+        map.put("X-Total-Count", list);
+
+        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(
+                List.of(createUser("some@some.com")));
+        when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createSingleUserProfile());
+        when(userProfileRepository.fetchUserProfiles(any())).thenReturn(createSingleUserProfile());
+
+        ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamDetails();
+        ElinkIdamWrapperResponse  elinkIdamWrapperResponse = (ElinkIdamWrapperResponse) useResponses.getBody();
+        assertEquals(elinkIdamWrapperResponse.getMessage(),SIDAM_IDS_UPDATED);
+        verify(idamClientMock, times(1)).searchUsers(anyString(), any(), any(), any());
+        verify(elinkDataIngestionSchedularAudit,times(2))
+                .auditSchedulerStatus(any(),any(),any(),any(),any());
+        verify(userProfileRepository,times(1)).fetchUserProfiles(any());
+    }
+
+    private List<UserProfile> createMultipleUserProfile() {
         UserProfile userProfileOne = UserProfile.builder()
             .personalCode("12222").objectId("objectId1").emailId("email@justice").build();
         UserProfile userProfileTwo = UserProfile.builder()
             .personalCode("12223").objectId("objectId12").emailId("email@justice").build();
         return List.of(userProfileOne,userProfileTwo);
+    }
+
+    private List<UserProfile> createSingleUserProfile() {
+        UserProfile userProfileOne = UserProfile.builder()
+                .personalCode("12222").objectId("1234").emailId("email@justice").build();
+        return List.of(userProfileOne);
     }
 
     @Test
@@ -212,7 +250,7 @@ class IdamElasticSearchServiceImplTest {
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
         when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenThrow(feignExceptionMock);
-        when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
+        when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createMultipleUserProfile());
 
         idamElasticSearchServiceImpl.getIdamDetails();
 

@@ -63,4 +63,20 @@ class ElinksPeopleLeaverServiceImplTest {
 
         verify(jdbcTemplate, times(1)).batchUpdate(any(), any(), anyInt(), any());
     }
+
+    // this test requires getTripleParameterizedPreparedStatementSetter() to be made default and not private
+    // and works when run in intellij but fails when run from the commandline
+    //@Test
+    //void testGetTripleParameterizedPreparedStatementSetter() throws SQLException {
+    //    ParameterizedPreparedStatementSetter<Triple<String, String, String>> setter =
+    //            elinksPeopleLeaverService.getTripleParameterizedPreparedStatementSetter();
+    //    PreparedStatement ps = mock(PreparedStatement.class);
+    //    Triple<String, String, String> argument = Triple.of("personalCode", "true", "2022-12-20");
+
+    //    setter.setValues(ps, argument);
+
+    //    verify(ps, times(1)).setString(1, "2022-12-20");
+    //    verify(ps, times(1)).setBoolean(2, false);
+    //    verify(ps, times(1)).setString(3, "personalCode");
+    //}
 }
