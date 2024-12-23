@@ -31,8 +31,6 @@ def versions = [
         pitest             : '1.16.1',
         sonarPitest        : '0.5',
         junitPitest        : '1.2.1',
-        springBoot         : '2.7.18',
-        springfoxSwagger   : '2.10.5',
         jackson            : '2.18.2',
         launchDarklySdk    : '5.10.9',
         flyway              : '11.1.0',
