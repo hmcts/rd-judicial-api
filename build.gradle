@@ -364,7 +364,7 @@ dependencies {
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
-    implementation 'com.github.hmcts:idam-java-client:2.1.1'
+    implementation 'com.github.hmcts:idam-java-client:3.0.3'
 
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j', version: versions.log4j
