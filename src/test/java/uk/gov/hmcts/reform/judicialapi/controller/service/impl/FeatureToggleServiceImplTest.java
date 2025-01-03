@@ -37,7 +37,7 @@ class FeatureToggleServiceImplTest {
     @Test
     void mapServiceToFlagTest() {
         flaFeatureToggleService = new FeatureToggleServiceImpl(ldClient, "rd");
-        flaFeatureToggleService.mapServiceToFlag();
         assertTrue(flaFeatureToggleService.getLaunchDarklyMap().size() >= 1);
     }
+
 }

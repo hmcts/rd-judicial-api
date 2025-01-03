@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.wiremock;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.extension.ResponseTransformer;
+import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -14,7 +14,7 @@ public class WireMockExtension extends WireMockServer implements BeforeAllCallba
         super(port);
     }
 
-    public WireMockExtension(int port, ResponseTransformer judicialTransformer) {
+    public WireMockExtension(int port, ResponseTransformerV2 judicialTransformer) {
         super(wireMockConfig().extensions(judicialTransformer).port(port));
     }
 

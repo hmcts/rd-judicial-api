@@ -37,7 +37,6 @@ public class FeatureToggleConditionExtension implements ExecutionCondition {
                     Optional<ToggleEnable> toggleEnable = findAnnotation(element, ToggleEnable.class);
 
                     return toggleEnable.map(toggle -> {
-                        featureToggleService.mapServiceToFlag();
                         flagName = featureToggleService.getLaunchDarklyMap().get(toggle.mapKey());
 
                         final boolean isFlagEnabled =
