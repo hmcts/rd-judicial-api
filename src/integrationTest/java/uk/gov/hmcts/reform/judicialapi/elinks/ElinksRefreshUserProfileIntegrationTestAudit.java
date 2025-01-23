@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.security.oauth2.jwt.Jwt;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoadBaseTest {
 
     private static final String JRD_SYSTEM_USER = "jrd-system-user";
-    @MockBean
+    @MockitoBean
     LocationReferenceDataFeignClient locationReferenceDataFeignClient;
 
     @BeforeEach

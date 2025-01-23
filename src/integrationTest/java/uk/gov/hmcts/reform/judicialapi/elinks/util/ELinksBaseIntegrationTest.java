@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -78,9 +78,9 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     protected static final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
     @RegisterExtension
     protected static final WireMockExtension elinks = new WireMockExtension(8000);
-    @MockBean
+    @MockitoBean
     protected FeatureToggleServiceImpl featureToggleServiceImpl;
-    @MockBean
+    @MockitoBean
     protected JwtDecoder jwtDecoder;
     protected ElinksReferenceDataClient elinksReferenceDataClient;
     @Autowired
@@ -117,13 +117,13 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     protected AppointmentsRepositoryAudit appointmentsRepositoryAudit;
     @Autowired
     protected ProfileRepositoryAudit profileRepositoryAudit;
-    @MockBean
+    @MockitoBean
     protected ElinkTopicPublisher elinkTopicPublisher;
-    @MockBean
+    @MockitoBean
     protected IdamTokenConfigProperties idamTokenConfigProperties;
     @Value("${elinks.cleanElinksResponsesDays}")
     protected Long cleanElinksResponsesDays;
-    @MockBean
+    @MockitoBean
     private LDClient ldClient;
     @Autowired
     private Flyway flyway;
