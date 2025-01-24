@@ -17,7 +17,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -60,12 +60,12 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     protected static final WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
     @RegisterExtension
     protected static final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
-    @MockBean
+    @MockitoBean
     protected FeatureToggleServiceImpl featureToggleServiceImpl;
     protected JudicialReferenceDataClient judicialReferenceDataClient;
-    @MockBean
+    @MockitoBean
     protected JwtDecoder jwtDecoder;
-    @MockBean
+    @MockitoBean
     LDClient ldClient;
     @Autowired
     Flyway flyway;
