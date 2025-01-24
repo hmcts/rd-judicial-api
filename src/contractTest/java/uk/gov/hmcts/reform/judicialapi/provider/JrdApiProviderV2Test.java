@@ -18,7 +18,7 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.ContextConfiguration;
@@ -78,33 +78,33 @@ public class JrdApiProviderV2Test {
     @Autowired
     JrdElinkController jrdElinkController;
 
-    @MockBean
+    @MockitoBean
     ProfileRepository userProfileRepository;
 
-    @MockBean
+    @MockitoBean
     LocationMapppingRepository locationMapppingRepository;
 
-    @MockBean
+    @MockitoBean
     JudicialRoleTypeRepository judicialRoleTypeRepository;
 
-    @MockBean
+    @MockitoBean
     AuthorisationsRepository authorisationsRepository;
 
-    @MockBean
+    @MockitoBean
     AppointmentsRepository appointmentsRepository;
 
-    @MockBean
+    @MockitoBean
     ElinksRefreshUserValidator elinksRefreshUserValidator;
 
-    @MockBean
+    @MockitoBean
     @Qualifier("elinksServiceCodeMappingRepository")
     ServiceCodeMappingRepository serviceCodeMappingRepository;
 
-    @MockBean
+    @MockitoBean
     JrdRegionMappingRepository regionMappingRepository;
 
 
-    @MockBean
+    @MockitoBean
     LocationReferenceDataFeignClient locationReferenceDataFeignClient;
 
     @TestTemplate
