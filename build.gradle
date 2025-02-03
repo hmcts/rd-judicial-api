@@ -371,7 +371,7 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: versions.jwtVersion
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: versions.jwtVersion
     implementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
-    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.1'
     implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '5.16.0'
     implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '5.16.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.4'
