@@ -1,0 +1,15 @@
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_service_code_lower ON dbjudicialdata.judicial_service_code_mapping (LOWER(service_code));
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_ticket_code_service_code ON dbjudicialdata.judicial_service_code_mapping (service_code);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_jrd_region_mapping ON dbjudicialdata.jrd_lrd_region_mapping (jrd_region);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_location_mapping_base_location ON dbjudicialdata.judicial_location_mapping (judicial_base_location_id);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_location_mapping_epimms_id ON dbjudicialdata.judicial_location_mapping (epimms_id);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_profile_object_id ON dbjudicialdata.judicial_user_profile (object_id);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_profile_sidam_id ON dbjudicialdata.judicial_user_profile (sidam_id);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_appointment_personal_code ON dbjudicialdata.judicial_office_appointment (personal_code);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_appointment_base_location_id ON dbjudicialdata.judicial_office_appointment (base_location_id);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_profile_ticket_code ON dbjudicialdata.judicial_office_authorisation (ticket_code);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_profile_appointment_id ON dbjudicialdata.judicial_office_authorisation (appointment_id);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_judicial_location_mapping_base_location ON dbjudicialdata.judicial_location_mapping (judicial_base_location_id);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_judicial_location_mapping_service_code ON dbjudicialdata.judicial_location_mapping (service_code);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_judicial_additional_roles_personal_code ON dbjudicialdata.judicial_additional_roles (personal_code);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_user_profile_deleted_flag ON dbjudicialdata.judicial_user_profile (deleted_flag);
