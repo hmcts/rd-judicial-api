@@ -45,7 +45,7 @@ def versions = [
         flyway              : '11.1.0',
         lombok              : '1.18.36',
         reformLogging       : '6.1.8',
-        serenity            : '4.2.13',
+        serenity            : '4.2.16',
         restAssured         : '5.5.0',
         pact_version        : '4.6.16',
         log4j               : '2.24.3',
