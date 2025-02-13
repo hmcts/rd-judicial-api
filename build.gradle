@@ -348,7 +348,7 @@ dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: versions.commonsIo
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
-    implementation group: 'com.azure', name: 'azure-core', version: '1.55.0'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.55.1'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.8'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
@@ -359,7 +359,7 @@ dependencies {
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
     implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.3'
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.2.0'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.12.1'
     implementation group: 'com.google.guava', name: 'guava', version: '33.3.1-jre'
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
     implementation group: 'com.nimbusds', name: 'lang-tag', version: '1.7'
