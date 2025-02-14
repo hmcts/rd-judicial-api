@@ -47,7 +47,7 @@ def versions = [
         reformLogging       : '6.1.8',
         serenity            : '4.2.16',
         restAssured         : '5.5.0',
-        pact_version        : '4.6.16',
+        pact_version        : '4.6.17',
         log4j               : '2.24.3',
         logback             : '1.5.16',
         testContainer_postgresql: '1.20.4',
