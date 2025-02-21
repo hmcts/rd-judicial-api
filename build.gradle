@@ -17,7 +17,7 @@ plugins {
     id 'org.owasp.dependencycheck' version '12.0.2'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '4.2.16'
     id 'org.sonarqube' version '6.0.1.5171'
-    id 'org.springframework.boot' version '3.4.2'
+    id 'org.springframework.boot' version '3.4.3'
     id 'uk.gov.hmcts.java' version '0.12.65'
     id "info.solidsoft.pitest" version '1.15.0'
     id "io.freefair.lombok" version "8.12.1"
@@ -348,7 +348,7 @@ dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: versions.commonsIo
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
-    implementation group: 'com.azure', name: 'azure-core', version: '1.55.1'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.55.2'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.8'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
