@@ -20,7 +20,7 @@ plugins {
     id 'org.springframework.boot' version '3.4.3'
     id 'uk.gov.hmcts.java' version '0.12.65'
     id "info.solidsoft.pitest" version '1.15.0'
-    id "io.freefair.lombok" version "8.12.1"
+    id "io.freefair.lombok" version "8.12.2"
     id "org.flywaydb.flyway" version '11.3.3'
 }
 
@@ -207,7 +207,7 @@ pmd {
 
 checkstyle {
     maxWarnings = 0
-    toolVersion = '10.21.2'
+    toolVersion = '10.21.3'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
