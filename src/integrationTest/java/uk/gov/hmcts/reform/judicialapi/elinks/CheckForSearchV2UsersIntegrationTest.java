@@ -188,7 +188,7 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
                 MediaType.valueOf(V2.MediaType.SERVICE));
         var profiles = (List<Map<String, String>>) response.get("body");
         if (("BBA3").equals(serviceCode)) {
-            assertEquals(0, profiles.size());
+            assertEquals(1, profiles.size());
         } else if (("BFA1").equals(serviceCode)) {
             assertEquals(1, profiles.size());
         }
