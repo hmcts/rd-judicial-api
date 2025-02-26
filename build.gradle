@@ -49,7 +49,7 @@ def versions = [
         restAssured         : '5.5.1',
         pact_version        : '4.6.17',
         log4j               : '2.24.3',
-        logback             : '1.5.16',
+        logback             : '1.5.17',
         testContainer_postgresql: '1.20.5',
         bouncycastle        : '1.80',
         jwtVersion          : '0.12.6',
