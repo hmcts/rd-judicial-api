@@ -420,6 +420,7 @@ dependencies {
     }
 
     testImplementation group: 'com.github.mifmif', name: 'generex', version: '1.0.2'
+    testImplementation 'com.github.hmcts:fortify-client:1.4.9:all'
     testImplementation group: 'org.codehaus.sonar-plugins', name: 'sonar-pitest-plugin', version: '0.5'
 
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
