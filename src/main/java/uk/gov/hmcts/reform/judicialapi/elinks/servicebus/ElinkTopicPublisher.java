@@ -33,6 +33,8 @@ public class ElinkTopicPublisher {
     @Value("${jrd.publisher.azure.service.bus.topic}")
     String topic;
 
+    Integer counter;
+
     @Autowired
     ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
 
@@ -76,6 +78,21 @@ public class ElinkTopicPublisher {
             });
 
         for (ServiceBusMessage message : serviceBusMessages) {
+
+            /*counter ++;
+            if(counter >=3){
+                try {
+                    ServiceBusTransactionContext  elinktransactionNewContext =
+                    elinkserviceBusSenderClient.createTransaction();
+                    elinkmessageBatch = serviceBusSenderClient.createMessageBatch();
+                    elinkmessageBatch.tryAddMessage(message);
+                    sendMessageToAsb(serviceBusSenderClient, transactionContext, elinkmessageBatch, jobId);
+                }catch (Exception exception) {
+                    log.error("{}:: number of message exceeded sending in new transaction failed",
+                        loggingComponentName, exception.getMessage(), jobId);
+                }
+            }*/
+
 
             if (elinkmessageBatch.tryAddMessage(message)) {
                 continue;
