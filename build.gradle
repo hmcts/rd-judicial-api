@@ -44,7 +44,7 @@ def versions = [
         launchDarklySdk    : '5.10.9',
         flyway              : '11.3.3',
         lombok              : '1.18.36',
-        reformLogging       : '6.1.8',
+        reformLogging       : '6.1.9',
         serenity            : '4.2.16',
         restAssured         : '5.5.1',
         pact_version        : '4.6.17',
