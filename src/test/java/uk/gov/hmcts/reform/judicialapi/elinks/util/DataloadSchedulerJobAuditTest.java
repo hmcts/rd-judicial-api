@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 class DataloadSchedulerJobAuditTest {
 
@@ -38,6 +40,19 @@ class DataloadSchedulerJobAuditTest {
     }
 
     @Test
+    void testAuditSchedulerJobStatusException() {
+        when(dataloadSchedulerJobRepository.save(any())).thenThrow(new RuntimeException("test exception message"));
+
+        DataloadSchedulerJob dataloadSchedulerJob = dataloadSchedulerJobAudit
+                .auditSchedulerJobStatus(convertToLocalDateTime("2023-04-12T16:42:35Z"),
+                        convertToLocalDateTime("2023-04-12T16:42:35Z"),"success");
+
+        assertThat(dataloadSchedulerJob.getJobStartTime()).isEqualTo(convertToLocalDateTime("2023-04-12T16:42:35Z"));
+        assertThat(dataloadSchedulerJob.getJobEndTime()).isEqualTo(convertToLocalDateTime("2023-04-12T16:42:35Z"));
+        assertThat(dataloadSchedulerJob.getPublishingStatus()).isEqualTo("success");
+    }
+
+    @Test
     void testAuditSchedulerJobStatus_withSuccess() {
         DataloadSchedulerJob dataloadSchedulerJob = new DataloadSchedulerJob(1,
             convertToLocalDateTime("2023-04-12T16:42:35Z"),
@@ -48,6 +63,23 @@ class DataloadSchedulerJobAuditTest {
             .isEqualTo(convertToLocalDateTime("2023-04-12T16:42:35Z"));
         assertThat(dataloadSchedulerJobResponse.getJobEndTime())
             .isEqualTo(convertToLocalDateTime("2023-04-12T16:42:35Z"));
+        assertThat(dataloadSchedulerJobResponse.getPublishingStatus()).isEqualTo("success");
+    }
+
+    @Test
+    void testAuditSchedulerJobStatus_withSuccess_exception() {
+        when(dataloadSchedulerJobRepository.save(any())).thenThrow(new RuntimeException("test exception message"));
+
+        DataloadSchedulerJob dataloadSchedulerJob = new DataloadSchedulerJob(1,
+                convertToLocalDateTime("2023-04-12T16:42:35Z"),
+                convertToLocalDateTime("2023-04-12T16:42:35Z"),"success");
+        DataloadSchedulerJob dataloadSchedulerJobResponse = dataloadSchedulerJobAudit
+                .auditSchedulerJobStatus(dataloadSchedulerJob);
+
+        assertThat(dataloadSchedulerJobResponse.getJobStartTime())
+                .isEqualTo(convertToLocalDateTime("2023-04-12T16:42:35Z"));
+        assertThat(dataloadSchedulerJobResponse.getJobEndTime())
+                .isEqualTo(convertToLocalDateTime("2023-04-12T16:42:35Z"));
         assertThat(dataloadSchedulerJobResponse.getPublishingStatus()).isEqualTo("success");
     }
 
