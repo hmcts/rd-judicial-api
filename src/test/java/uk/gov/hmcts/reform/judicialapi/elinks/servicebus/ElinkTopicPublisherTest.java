@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ class ElinkTopicPublisherTest {
         elinkTopicPublisher.jrdMessageBatchSize = 2;
         elinkTopicPublisher.loggingComponentName = "loggingComponent";
         elinkTopicPublisher.topic = "dummyTopic";
+        ReflectionTestUtils.setField(elinkTopicPublisher, "thresholdValue", 4);
     }
 
     @Test
