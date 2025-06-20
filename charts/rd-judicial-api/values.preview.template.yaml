@@ -11,12 +11,12 @@ java:
     POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
     POSTGRES_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     JUDICIAL_DB: classpath:db/migration
-    JRD_MQ_HOST: "rd-sb-preview.servicebus.windows.net"
+    JRD_MQ_HOST: rd-sb-preview.servicebus.windows.net
     JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY: "$(JRD_MQ_PASSWORD)"
     JRD_MQ_TOPIC_NAME: "{{ .Release.Name }}-servicebus-jrdapi-topic"
     JRD_MQ_USERNAME: RootManageSharedAccessKey
     JRD_MQ_TRUST_ALL_CERTS: false
-    JRD_DATA_PER_MESSAGE: 200
+    JRD_DATA_PER_MESSAGE: 4
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
     Del_Joh_Profiles: true
@@ -68,7 +68,7 @@ servicebus:
   enabled: true
   teamName: RD
   resourceGroup: rd-aso-preview-rg
-  sbNamespace: rd-servicebus-preview
+  sbNamespace: rd-sb-preview
   setup:
     topics:
       - name: jrdapi-topic
