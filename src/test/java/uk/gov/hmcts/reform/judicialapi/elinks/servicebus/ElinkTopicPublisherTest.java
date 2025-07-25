@@ -51,6 +51,7 @@ class ElinkTopicPublisherTest {
         elinkTopicPublisher.jrdMessageBatchSize = 2;
         elinkTopicPublisher.loggingComponentName = "loggingComponent";
         elinkTopicPublisher.topic = "dummyTopic";
+        //ReflectionTestUtils.setField(elinkTopicPublisher, "thresholdValue", 4);
     }
 
     @Test
@@ -120,4 +121,6 @@ class ElinkTopicPublisherTest {
         verify(serviceBusSenderClient, never())
                 .sendMessages((ServiceBusMessageBatch) any(), any());
     }
+
+
 }

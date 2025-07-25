@@ -83,8 +83,8 @@ public class ElinkTopicPublisher {
 
             // The batch is full, so we create a new batch and send the batch.
             sendMessageToAsb(serviceBusSenderClient, transactionContext, elinkmessageBatch, jobId);
-
             // create a new batch
+            transactionContext = elinkserviceBusSenderClient.createTransaction();
             elinkmessageBatch = serviceBusSenderClient.createMessageBatch();
             // Add that message that we couldn't before.
             if (!elinkmessageBatch.tryAddMessage(message)) {
@@ -93,6 +93,7 @@ public class ElinkTopicPublisher {
             }
 
         }
+
         sendMessageToAsb(serviceBusSenderClient, transactionContext, elinkmessageBatch, jobId);
     }
 

@@ -305,7 +305,6 @@ public class JrdApiProviderV2Test {
         userProfile.setJudicialRoleTypes(Collections.singletonList(judicialRoleType));
 
         var userProfiles = Collections.singletonList(userProfile);
-
         return new PageImpl<>(userProfiles);
     }
 
