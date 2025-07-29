@@ -35,7 +35,7 @@ dependencyManagement {
 }
 
 def versions = [
-        commonsIo          : '2.19.0',
+        commonsIo          : '2.20.0',
         gradlePitest       : '1.15.0',
         pitest             : '1.16.1',
         sonarPitest        : '0.5',
