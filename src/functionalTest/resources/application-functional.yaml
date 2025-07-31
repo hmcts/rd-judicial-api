@@ -11,6 +11,19 @@ s2s-secret: ${JUDICIAL_API_S2S_SECRET:}
 jrd.security.roles.hmcts-admin: jrd-admin
 jrd.security.roles.system-user: jrd-system-user
 
+jrd:
+  publisher:
+    azure:
+      service:
+        bus:
+          host: ${JRD_MQ_HOST:rd-sb-preview.servicebus.windows.net}
+          username: ${JRD_MQ_USERNAME:RootManageSharedAccessKey}
+          password: ${JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY:}
+          topic: ${JRD_MQ_TOPIC_NAME:}
+          # DO NOT SET THIS 'true' IN PRODUCTION!
+          trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
+    jrd-message-batch-size: 10
+
 elinks:
   people:
     lastUpdated: 2015-01-01
