@@ -16,7 +16,7 @@ import net.serenitybdd.annotations.WithTags;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import uk.gov.hmcts.reform.judicialapi.config.MessagingConfig;
+import uk.gov.hmcts.reform.judicialapi.config.ServiceBusConfig;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 
@@ -39,7 +39,7 @@ class ElinksPublisherFunctionalTest  {
     private ElinkDataIngestionSchedularAudit audit;
 
     @Autowired
-    MessagingConfig messagingConfig;
+    ServiceBusConfig messagingConfig;
 
 
     @Test
