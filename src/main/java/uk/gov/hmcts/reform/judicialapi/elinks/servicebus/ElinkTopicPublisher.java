@@ -96,6 +96,8 @@ public class ElinkTopicPublisher {
         sendMessageToAsb(serviceBusSenderClient, transactionContext, elinkmessageBatch, jobId);
     }
 
+
+
     private void sendMessageToAsb(ServiceBusSenderClient serviceBusSenderClient,
                                   ServiceBusTransactionContext transactionContext,
                                   ServiceBusMessageBatch messageBatch,
