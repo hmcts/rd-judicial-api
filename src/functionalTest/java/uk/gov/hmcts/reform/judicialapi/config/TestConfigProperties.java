@@ -24,22 +24,22 @@ public class TestConfigProperties implements TestConfig {
     public String clientSecret;
 
 
-    @Value("${idam.api.url}")
+    @Value("https://idam-api.aat.platform.hmcts.net")
     public String idamApiUrl;
 
-    @Value("${idam.auth.redirectUrl}")
+    @Value("https://rd-judicial-api-aat.service.core-compute-aat.internal/oauth2redirect")
     public String oauthRedirectUrl;
 
-    @Value("${idam.auth.clientId}")
+    @Value("rd-professional-api")
     public String clientId;
 
-    @Value("${targetInstance}")
+    @Value("http://localhost:8093")
     protected String targetInstance;
 
-    @Value("${s2s-url}")
+    @Value("http://rpe-service-auth-provider-aat.service.core-compute-aat.internal")
     protected String s2sUrl;
 
-    @Value("${s2s-name}")
+    @Value("rd_judicial_api")
     protected String s2sName;
 
     @Value("${s2s-secret}")
