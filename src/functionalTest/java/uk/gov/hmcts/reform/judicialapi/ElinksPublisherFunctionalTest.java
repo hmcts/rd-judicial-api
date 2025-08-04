@@ -16,6 +16,7 @@ import net.serenitybdd.annotations.WithTags;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.reform.judicialapi.config.MessagingConfig;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
@@ -24,6 +25,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAu
 @SpringBootTest
 //@Disabled("Run when needed")
 @WithTags({@WithTag("testType:Functional")})
+@TestPropertySource(properties = "spring.flyway.enabled=false")
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
 class ElinksPublisherFunctionalTest {
