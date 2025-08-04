@@ -23,8 +23,6 @@ public class TestConfigProperties implements TestConfig {
     @Value("${oauth2.client.secret}")
     public String clientSecret;
 
-    @Value("${test.user.password}")
-    public String testUserPassword;
 
     @Value("${idam.api.url}")
     public String idamApiUrl;
