@@ -4,14 +4,26 @@ s2s-url: ${S2S_URL_FOR_TESTS:http://rpe-service-auth-provider-aat.service.core-c
 s2s-name: rd_judicial_api
 scope-name: openid profile roles openid roles profile create-user manage-user
 oauth2.client.secret: ${OAUTH2_CLIENT_SECRET:}
-oauth2.client.id: ${OAUTH2_CLIENT_ID:rd-judicial-api}
-oauth2.redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
 idam.api.url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
 idam.auth.clientId: ${OAUTH2_CLIENT_ID:rd-judicial-api}
 idam.auth.redirectUrl: ${OAUTH2_REDIRECT_URI:https://rd-judicial-api-aat.service.core-compute-aat.internal/oauth2redirect}
 s2s-secret: ${JUDICIAL_API_S2S_SECRET:}
 jrd.security.roles.hmcts-admin: jrd-admin
 jrd.security.roles.system-user: jrd-system-user
+
+idam:
+  s2s-auth:
+    totp_secret: ${JUDICIAL_API_S2S_SECRET:}
+    microservice: rd_judicial_api
+    url: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
+  s2s-authorised:
+    services: ${JRD_S2S_AUTHORISED_SERVICES:rd_judicial_api,am_org_role_mapping_service,iac,xui_webapp}
+  api:
+    url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
+    client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
+    redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
+    authorization: ${RD_SYSTEM_USER_USERNAME:}:${RD_SYSTEM_USER_PASSWORD:}
+    client-authorization: ${OAUTH2_CLIENT_SECRET:}
 
 jrd:
   publisher:
