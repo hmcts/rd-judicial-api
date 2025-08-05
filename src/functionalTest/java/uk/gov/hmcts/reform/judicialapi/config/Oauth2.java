@@ -17,8 +17,8 @@ public class Oauth2 {
 
     @Autowired
     public Oauth2(
-            @Value("https://rd-judicial-api-aat.service.core-compute-aat.internal/oauth2redirect") String redirectUrl,
-            @Value("rd-professional-api") String clientId,
+            @Value("${oauth2.redirect.uri}") String redirectUrl,
+            @Value("${oauth2.client.id}") String clientId,
             @Value("${oauth2.client.secret}") String clientSecret) {
         this.clientId = clientId;
         this.redirectUrl = redirectUrl;
