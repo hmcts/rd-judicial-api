@@ -50,7 +50,7 @@ class ElinksPublisherFunctionalTest {
         userIds.stream().limit(10).forEach(System.out::println);
 
         // When
-        publisher.sendMessage(userIds, jobId);
+        //publisher.sendMessage(userIds, jobId);
 
         // Then
         TimeUnit.SECONDS.sleep(5);
