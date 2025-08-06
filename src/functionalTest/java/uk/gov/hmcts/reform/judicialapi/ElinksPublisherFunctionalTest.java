@@ -24,7 +24,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
     org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration.class
 })
 @Slf4j
-class ElinksPublisherFunctionalTest {
+class ElinksPublisherFunctionalTest extends AuthorizationFunctionalTest {
 
     @Autowired
     private ElinkTopicPublisher publisher;
