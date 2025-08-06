@@ -19,7 +19,7 @@ public class ElinkMessagingConfig {
     @Value("${jrd.publisher.azure.service.bus.host}")
     String host;
 
-    @Value("${jrd.publisher.azure.service.bus.username}")
+    @Value("RootManageSharedAccessKey")
     String sharedAccessKeyName;
 
     @Value("${jrd.publisher.azure.service.bus.password}")

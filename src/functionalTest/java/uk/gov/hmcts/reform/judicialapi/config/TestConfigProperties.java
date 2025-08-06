@@ -23,9 +23,6 @@ public class TestConfigProperties implements TestConfig {
     @Value("${oauth2.client.secret}")
     public String clientSecret;
 
-    @Value("${test.user.password}")
-    public String testUserPassword;
-
     @Value("${idam.api.url}")
     public String idamApiUrl;
 
@@ -58,7 +55,5 @@ public class TestConfigProperties implements TestConfig {
                 .registerModule(new JavaTimeModule()).disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
-
-
 
 }

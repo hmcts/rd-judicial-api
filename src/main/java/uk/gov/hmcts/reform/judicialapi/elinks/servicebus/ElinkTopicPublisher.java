@@ -26,6 +26,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @Component
 public class ElinkTopicPublisher {
 
+
     @Value("${logging-component-name}")
     String loggingComponentName;
     @Value("${jrd.publisher.jrd-message-batch-size}")
@@ -85,6 +86,7 @@ public class ElinkTopicPublisher {
             sendMessageToAsb(serviceBusSenderClient, transactionContext, elinkmessageBatch, jobId);
 
             // create a new batch
+            transactionContext = elinkserviceBusSenderClient.createTransaction();
             elinkmessageBatch = serviceBusSenderClient.createMessageBatch();
             // Add that message that we couldn't before.
             if (!elinkmessageBatch.tryAddMessage(message)) {
