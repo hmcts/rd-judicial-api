@@ -23,8 +23,8 @@ class ElinksPublisherFunctionalTest {
     //@Autowired
     //private ElinkTopicPublisher publisher;
 
-    @Autowired
-    private ServiceBusSenderClient serviceBusSenderClient;
+    // @Autowired
+    //private ServiceBusSenderClient serviceBusSenderClient;
 
     @Autowired
     private ElinkDataIngestionSchedularAudit audit;
