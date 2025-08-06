@@ -4,11 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.annotations.WithTags;
 import org.junit.jupiter.api.Test;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 
 
 @SpringBootTest
@@ -26,8 +23,8 @@ class ElinksPublisherFunctionalTest {
     // @Autowired
     //private ServiceBusSenderClient serviceBusSenderClient;
 
-    @Autowired
-    private ElinkDataIngestionSchedularAudit audit;
+    //@Autowired
+    //private ElinkDataIngestionSchedularAudit audit;
 
     //@Autowired
     //MessagingConfig messagingConfig;
