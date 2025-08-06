@@ -20,8 +20,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 class ElinksPublisherFunctionalTest {
 
 
-    @Autowired
-    private ElinkTopicPublisher publisher;
+    //@Autowired
+    //private ElinkTopicPublisher publisher;
 
     //@Autowired
     //private ServiceBusSenderClient serviceBusSenderClient;
