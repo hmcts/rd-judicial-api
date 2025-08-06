@@ -62,7 +62,7 @@ public class TestConfigProperties implements TestConfig {
 
     @Bean
     public FlywayMigrationStrategy flywayMigrationStrategy() {
-        return flyway -> {}; // ensure no migrations if bean still present
+        return flyway -> { }; // ensure no migrations if bean still present
     }
 
 }
