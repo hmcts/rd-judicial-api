@@ -9,7 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.annotations.WithTags;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 
 
 @SpringBootTest
@@ -17,16 +20,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 @WithTags({@WithTag("testType:Functional")})
 //@TestPropertySource(properties = "spring.flyway.enabled=false")
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@EnableAutoConfiguration(exclude = {
+    org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration.class
+})
 @Slf4j
 class ElinksPublisherFunctionalTest {
 
-
-    //@Autowired
-    //private ElinkTopicPublisher publisher;
-
-    // @Autowired
-    //private ServiceBusSenderClient serviceBusSenderClient;
-
+    @Autowired
+    private ElinkTopicPublisher publisher;
 
     //@Autowired
     //MessagingConfig messagingConfig;
@@ -34,8 +35,6 @@ class ElinksPublisherFunctionalTest {
 
     @Test
     void testSendMessageToTopic() throws InterruptedException {
-
-        //ServiceBusReceiverClient receiverClient = messagingConfig.getServiceBusRecieverClient();
 
         // Given a list of ids from judicial that will be sent to the topic
         String jobId = UUID.randomUUID().toString();
@@ -50,19 +49,18 @@ class ElinksPublisherFunctionalTest {
         userIds.stream().limit(10).forEach(System.out::println);
 
         // When
-        //publisher.sendMessage(userIds, jobId);
+        publisher.sendMessage(userIds, jobId);
 
         // Then
         TimeUnit.SECONDS.sleep(5);
 
         // Wait for propagation
-        /*ServiceBusReceivedMessage message = receiverClient.receiveMessages(1).stream().findFirst()
+        /*ServiceBusReceiverClient receiverClient = messagingConfig.getServiceBusRecieverClient();
+        ServiceBusReceivedMessage message = receiverClient.receiveMessages(1).stream().findFirst()
             .orElse(null);
-
         assertNotNull(message, "Message should be received from topic subscription");
         String body = message.getBody().toString();
         assertTrue(body.contains("integration-user-1"), "Message body should contain sent userId");
-
         receiverClient.complete(message);*/
     }
 }
