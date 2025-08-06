@@ -11,7 +11,7 @@ import net.serenitybdd.annotations.WithTags;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
+
 
 
 @SpringBootTest
@@ -23,8 +23,8 @@ import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 class ElinksPublisherFunctionalTest {
 
 
-    @Autowired
-    private ElinkTopicPublisher publisher;
+    //@Autowired
+    //private ElinkTopicPublisher publisher;
 
     // @Autowired
     //private ServiceBusSenderClient serviceBusSenderClient;
@@ -52,7 +52,7 @@ class ElinksPublisherFunctionalTest {
         userIds.stream().limit(10).forEach(System.out::println);
 
         // When
-        publisher.sendMessage(userIds, jobId);
+        //publisher.sendMessage(userIds, jobId);
 
         // Then
         TimeUnit.SECONDS.sleep(5);
