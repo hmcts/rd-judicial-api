@@ -26,6 +26,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @Component
 public class ElinkTopicPublisher {
 
+
     @Value("${logging-component-name}")
     String loggingComponentName;
     @Value("${jrd.publisher.jrd-message-batch-size}")
