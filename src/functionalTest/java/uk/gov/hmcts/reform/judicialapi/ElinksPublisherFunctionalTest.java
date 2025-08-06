@@ -11,7 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest
 //@Disabled("Run when needed")
 @WithTags({@WithTag("testType:Functional")})
-@TestPropertySource(properties = "spring.flyway.enabled=false")
+//@TestPropertySource(properties = "spring.flyway.enabled=false")
 //@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Slf4j
 class ElinksPublisherFunctionalTest {
