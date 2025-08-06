@@ -1,11 +1,18 @@
 package uk.gov.hmcts.reform.judicialapi;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
 import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.annotations.WithTags;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
 
 
 @SpringBootTest
@@ -17,14 +24,12 @@ import org.springframework.test.context.TestPropertySource;
 class ElinksPublisherFunctionalTest {
 
 
-    //@Autowired
-    //private ElinkTopicPublisher publisher;
+    @Autowired
+    private ElinkTopicPublisher publisher;
 
     // @Autowired
     //private ServiceBusSenderClient serviceBusSenderClient;
 
-    //@Autowired
-    //private ElinkDataIngestionSchedularAudit audit;
 
     //@Autowired
     //MessagingConfig messagingConfig;
@@ -36,15 +41,9 @@ class ElinksPublisherFunctionalTest {
         //ServiceBusReceiverClient receiverClient = messagingConfig.getServiceBusRecieverClient();
 
         // Given a list of ids from judicial that will be sent to the topic
-      //  String jobId = UUID.randomUUID().toString();
-        /*List<String> userIds = List.of("integration-user-1", "integration-user-2",
-            "integration-user-3","integration-user-4","integration-user-5","integration-user-6","integration-user-7",
-            "integration-user-8","integration-user-9","integration-user-10","integration-user-11",
-            "integration-user-12","integration-user-13","integration-user-14","integration-user-15",
-            "integration-user-16","integration-user-17","integration-user-18","integration-user-19",
-            "integration-user-20");*/
+        String jobId = UUID.randomUUID().toString();
 
-      /*  List<String> userIds = new ArrayList<>(4000);
+        List<String> userIds = new ArrayList<>(4000);
 
         for (int i = 1; i <= 4000; i++) {
             userIds.add("integration-user-" + i);
