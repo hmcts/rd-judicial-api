@@ -141,6 +141,10 @@ public class RefDataElinksConstants {
     public static final String SEND_EMAIL_EXCEPTION
         = "An error occurred while sending mail";
 
+    public static final String JOB_PUBLISH_ERROR
+        = "An error occurred while publishing ids to azure service bus";
+
+
     public static final String SPTW
         = "SPTW-";
 
