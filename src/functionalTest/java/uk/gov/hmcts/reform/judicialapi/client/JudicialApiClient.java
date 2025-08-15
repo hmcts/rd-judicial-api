@@ -32,6 +32,7 @@ public class JudicialApiClient {
     private final IdamOpenIdClient idamOpenIdClient;
     private static final String USERS_SEARCH_URI = "/refdata/judicial/users/search";
     private static final String REFRESH_ROLE_URI = "/refdata/judicial/users";
+    private static final String PUBLISH_USER_URI = "/refdata/internal/topicPublish/publish";
 
 
     public JudicialApiClient(String judicialApiUrl,
@@ -101,6 +102,20 @@ public class JudicialApiClient {
         log.info("JRD get refreshResponse status code: {}", refreshResponse.getStatusCode());
 
         return refreshResponse;
+    }
+
+    public Response publishUserProfiles(RefreshRoleRequest refreshRoleRequest, int pageSize, int pageNumber,
+                                        String sortColumn, String sortDirection,
+                                        String role) {
+
+        Response publishUsersResponse = getMultipleAuthHeaders(role,pageSize,pageNumber,sortColumn,sortDirection)
+            .body(refreshRoleRequest).log().body(true)
+            .post(PUBLISH_USER_URI)
+            .andReturn();
+
+        log.info("JRD get publishUsersResponse status code: {}", publishUsersResponse.getStatusCode());
+
+        return publishUsersResponse;
     }
 
 }
