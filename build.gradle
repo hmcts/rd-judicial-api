@@ -53,7 +53,7 @@ def versions = [
         testContainer_postgresql: '1.20.5',
         bouncycastle        : '1.81',
         jwtVersion          : '0.12.6',
-        wiremock            : '3.12.0'
+        wiremock            : '3.13.1'
 ]
 
 application {
