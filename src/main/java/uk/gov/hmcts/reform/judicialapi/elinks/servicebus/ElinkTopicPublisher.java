@@ -1,5 +1,12 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.servicebus;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static com.google.common.collect.Lists.partition;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.UNAUTHORIZED_ERROR;
+
 import com.azure.messaging.servicebus.ServiceBusMessage;
 import com.azure.messaging.servicebus.ServiceBusMessageBatch;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
@@ -15,13 +22,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.PublishingData;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import static com.google.common.collect.Lists.partition;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.UNAUTHORIZED_ERROR;
-
 @Slf4j
 @Component
 public class ElinkTopicPublisher {
@@ -33,6 +33,9 @@ public class ElinkTopicPublisher {
     @Value("${jrd.publisher.azure.service.bus.topic}")
     String topic;
 
+    @Value("${jrd.publisher.jrd-message-transaction-size}")
+    int maxMessagesPerTransaction;
+
     @Autowired
     ElinkDataIngestionSchedularAudit elinkDataIngestionSchedularAudit;
 
@@ -40,60 +43,55 @@ public class ElinkTopicPublisher {
     private ServiceBusSenderClient elinkserviceBusSenderClient;
 
     public void sendMessage(@NotNull List<String> judicalIds, String jobId) {
-        ServiceBusTransactionContext elinktransactionContext = null;
+        log.info("****************** sendMessage: {}",judicalIds.size());
+        ServiceBusTransactionContext elinktransactionContext =
+            elinkserviceBusSenderClient.createTransaction();
+        ServiceBusMessageBatch elinkmessageBatch = null;
+        List<ServiceBusMessage> currentBatch = new ArrayList<>();
+        List<ServiceBusMessage> serviceBusMessages = new ArrayList<>();
         try {
-            elinktransactionContext = elinkserviceBusSenderClient.createTransaction();
-            publishMessageToTopic(judicalIds, elinkserviceBusSenderClient, elinktransactionContext, jobId);
+            // Split the incoming judicial IDs into smaller chunks based on the configured batch size
+            partition(judicalIds, jrdMessageBatchSize)
+                .forEach(data -> {
+                    PublishingData judicialDataChunk = new PublishingData();
+                    judicialDataChunk.setUserIds(data);
+                    serviceBusMessages.add(new ServiceBusMessage(new Gson().toJson(judicialDataChunk)));
+                });
+            log.info("****************** serviceBusMessages : {}",serviceBusMessages.size());
+
+            // Iterate through the prepared Service Bus messages
+            for (ServiceBusMessage messageRecord : serviceBusMessages) {
+                log.info("****************** in loop : {}",messageRecord.getMessageId());
+                elinkmessageBatch = elinkserviceBusSenderClient.createMessageBatch();
+                // Add the message to the current batch
+                // Check if the message can be added to the batch based on the maxbatchsize preconfigured
+                // or if the batch size exceeds the transaction limit(MAX_MESSAGES_PER_TRANSACTION= 100)
+                currentBatch.add(messageRecord);
+                if (elinkmessageBatch.tryAddMessage(messageRecord) || currentBatch.size()
+                    < maxMessagesPerTransaction) {
+                    continue;// Continue adding messages to the batch
+                }
+                // Create a new transaction for the current batch
+                elinktransactionContext = elinkserviceBusSenderClient.createTransaction();
+                // Send the current batch of messages to the Service Bus and commit the transaction
+                log.info("****************** sending message : {}",elinkmessageBatch.getCount());
+                sendMessageToAsb(elinkserviceBusSenderClient, elinktransactionContext, elinkmessageBatch, jobId);
+                elinkserviceBusSenderClient.commitTransaction(elinktransactionContext);
+                // Clear the current batch for the next set of messages
+                currentBatch.clear();
+            }
         } catch (Exception exception) {
             log.error("{}:: Publishing message to service bus topic failed with exception: {}:: Job Id {}",
                 loggingComponentName, exception.getMessage(), jobId);
-            if (Objects.nonNull(elinktransactionContext) && Objects.nonNull(elinkserviceBusSenderClient)) {
+            if (Objects.nonNull(elinktransactionContext) || Objects.nonNull(elinkserviceBusSenderClient)) {
                 elinkserviceBusSenderClient.rollbackTransaction(elinktransactionContext);
             }
+            // Throw exception to indicate the failure
             throw new ElinksException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_ERROR, UNAUTHORIZED_ERROR);
         }
+        log.info("****************** comitting transac : {}");
+        // Commit the transaction for any remaining messages
         elinkserviceBusSenderClient.commitTransaction(elinktransactionContext);
-    }
-
-    private void publishMessageToTopic(List<String> judicalIds,
-                                       ServiceBusSenderClient serviceBusSenderClient,
-                                       ServiceBusTransactionContext transactionContext,
-                                       String jobId) {
-
-        ServiceBusMessageBatch elinkmessageBatch;
-        try {
-            elinkmessageBatch = serviceBusSenderClient.createMessageBatch();
-        } catch (Exception ex) {
-            throw new ElinksException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED_ERROR, ex.getMessage());
-        }
-        List<ServiceBusMessage> serviceBusMessages = new ArrayList<>();
-
-        partition(judicalIds, jrdMessageBatchSize)
-            .forEach(data -> {
-                PublishingData judicialDataChunk = new PublishingData();
-                judicialDataChunk.setUserIds(data);
-                serviceBusMessages.add(new ServiceBusMessage(new Gson().toJson(judicialDataChunk)));
-            });
-
-        for (ServiceBusMessage message : serviceBusMessages) {
-
-            if (elinkmessageBatch.tryAddMessage(message)) {
-                continue;
-            }
-
-            // The batch is full, so we create a new batch and send the batch.
-            sendMessageToAsb(serviceBusSenderClient, transactionContext, elinkmessageBatch, jobId);
-
-            // create a new batch
-            elinkmessageBatch = serviceBusSenderClient.createMessageBatch();
-            // Add that message that we couldn't before.
-            if (!elinkmessageBatch.tryAddMessage(message)) {
-                log.error("{}:: Message is too large for an empty batch. Skipping. Max size: {}. Job id::{}",
-                    loggingComponentName, elinkmessageBatch.getMaxSizeInBytes(), jobId);
-            }
-
-        }
-        sendMessageToAsb(serviceBusSenderClient, transactionContext, elinkmessageBatch, jobId);
     }
 
     private void sendMessageToAsb(ServiceBusSenderClient serviceBusSenderClient,
@@ -102,7 +100,8 @@ public class ElinkTopicPublisher {
                                   String jobId) {
         if (messageBatch.getCount() > 0) {
             serviceBusSenderClient.sendMessages(messageBatch, transactionContext);
-            log.info("{}:: Sent a batch of messages to the topic: {} ::Job id::{}", loggingComponentName, topic, jobId);
+            log.info("******************************{}:: Sent a batch of messages to the topic: {} ::Job id::{}",
+                loggingComponentName, topic, jobId);
         }
     }
 }
