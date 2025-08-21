@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshRespons
 import uk.gov.hmcts.reform.judicialapi.util.FeatureToggleConditionExtension;
 import uk.gov.hmcts.reform.judicialapi.util.ToggleEnable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,6 +38,7 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
 
     public static final String USERS_SEARCH = "JrdElinkController.retrieveUsers";
     public static final String REFRESH_USER = "JrdElinkController.refreshUserProfile";
+    public static final String PUBLISH_USER = "TestTopicPublishController.publishSidamIdToAsbIdsFromReqBody";
 
     @Test
     @ExtendWith(FeatureToggleConditionExtension.class)
@@ -111,6 +113,37 @@ class JudicialUsersFunctionalTest extends AuthorizationFunctionalTest {
             assertEquals(NOT_FOUND.value(), refreshResponse.getStatusCode());
         }
     }
+
+    @DisplayName("Scenario: publish list of judicial users to Azure Service Bus")
+    @ParameterizedTest
+    @ValueSource(strings = {"jrd-system-user","jrd-admin"})
+    void publishUsesToServiceBus(String role) {
+
+        List<String> userIds = new ArrayList<>(4000);
+
+        for (int i = 1; i < 100000; i++) {
+            userIds.add("NEW1-integration-user-" + i);
+        }
+
+        RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
+            .ccdServiceNames("ia")
+            .sidamIds(userIds)
+            .objectIds(Collections.emptyList())
+            .build();
+
+        Response publishResponse = judicialApiClient.publishUserProfiles(refreshRoleRequest, OK,role);
+        assertEquals(OK.value(), publishResponse.getStatusCode());
+        String expected = "{\n"
+            + "    \"statusCode\": 200,\n"
+            + "    \"sidamIdsCount\": 99999,\n"
+            + "    \"id\": \"1234\",\n"
+            + "    \"publishing_status\": \"SUCCESS\"\n"
+            + "}";
+        log.info("JRD get publishResponse response: {}", publishResponse.getBody().prettyPrint().toString().trim());
+        assertEquals(expected, publishResponse.getBody().prettyPrint().toString());
+
+    }
+
 
     private UserSearchRequest getUserSearchRequest(String location, String serviceCode, String searchString) {
         return UserSearchRequest
