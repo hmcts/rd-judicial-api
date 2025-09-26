@@ -411,8 +411,8 @@ dependencies {
 
     testImplementation group: 'com.github.hmcts', name: 'rd-commons-lib', version: '0.1.2'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '3.0'
-    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '4.11.0'
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '4.11.0'
+    testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.20.0'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '5.2.0'
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
     testImplementation group: 'org.wiremock', name: 'wiremock-standalone', version: versions.wiremock
 
