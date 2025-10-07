@@ -350,7 +350,7 @@ dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: versions.commonsIo
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
-    implementation group: 'com.azure', name: 'azure-core', version: '1.56.1'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.57.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.15'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
