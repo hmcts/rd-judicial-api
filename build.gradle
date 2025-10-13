@@ -40,7 +40,7 @@ def versions = [
         pitest             : '1.16.1',
         sonarPitest        : '0.5',
         junitPitest        : '1.2.1',
-        jackson            : '2.18.2',
+        jackson            : '2.20.0',
         launchDarklySdk    : '5.10.9',
         flyway              : '11.14.0',
         lombok              : '1.18.42',
@@ -352,7 +352,7 @@ dependencies {
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
     implementation group: 'com.azure', name: 'azure-core', version: '1.57.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.15'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.20'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
