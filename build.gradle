@@ -40,7 +40,7 @@ def versions = [
         pitest             : '1.16.1',
         sonarPitest        : '0.5',
         junitPitest        : '1.2.1',
-        jackson            : '2.18.2',
+        jackson            : '2.20.0',
         launchDarklySdk    : '5.10.9',
         flyway              : '11.13.2',
         lombok              : '1.18.42',
