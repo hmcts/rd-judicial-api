@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath("org.flywaydb:flyway-database-postgresql:11.13.0")
+        classpath("org.flywaydb:flyway-database-postgresql:11.14.1")
     }
 }
 
@@ -12,20 +12,20 @@ plugins {
     id 'pmd'
     id 'project-report'
     id 'au.com.dius.pact' version '4.6.17'
-    id 'com.github.ben-manes.versions' version '0.52.0'
+    id 'com.github.ben-manes.versions' version '0.53.0'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '4.2.34'
     id 'org.owasp.dependencycheck' version '12.1.6'
-    id 'org.sonarqube' version '6.0.1.5171'
-    id 'org.springframework.boot' version '3.4.3'
+    id 'org.sonarqube' version '7.0.1.6134'
+    id 'org.springframework.boot' version '3.5.7'
     id 'uk.gov.hmcts.java' version '0.12.67'
     id "info.solidsoft.pitest" version '1.15.0'
-    id "io.freefair.lombok" version "8.12.2"
-    id "org.flywaydb.flyway" version '11.13.0'
+    id "io.freefair.lombok" version "9.0.0"
+    id "org.flywaydb.flyway" version '11.14.1'
 }
 
 ext {
-    set('springCloudVersion', "2024.0.2")
+    set('springCloudVersion', "2025.0.0")
 }
 
 dependencyManagement {
@@ -40,19 +40,19 @@ def versions = [
         pitest             : '1.16.1',
         sonarPitest        : '0.5',
         junitPitest        : '1.2.1',
-        jackson            : '2.18.2',
+        jackson            : '2.20.0',
         launchDarklySdk    : '7.10.2',
-        flyway              : '11.13.0',
+        flyway              : '11.14.1',
         lombok              : '1.18.42',
         reformLogging       : '6.1.9',
         serenity            : '4.2.34',
         restAssured         : '5.5.6',
         pact_version        : '4.6.17',
-        log4j               : '2.24.3',
-        logback             : '1.5.19',
-        testContainer_postgresql: '1.20.5',
+        log4j               : '2.25.2',
+        logback             : '1.5.20',
+        testContainer_postgresql: '1.21.3',
         bouncycastle        : '1.82',
-        jwtVersion          : '0.12.7',
+        jwtVersion          : '0.13.0',
         wiremock            : '3.13.1'
 ]
 
@@ -208,7 +208,7 @@ pmd {
 
 checkstyle {
     maxWarnings = 0
-    toolVersion = '10.26.1'
+    toolVersion = '12.1.0'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -350,9 +350,9 @@ dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: versions.commonsIo
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
-    implementation group: 'com.azure', name: 'azure-core', version: '1.56.1'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.57.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.15'
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.20'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
@@ -374,8 +374,8 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: versions.jwtVersion
     implementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
     implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.1'
-    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '5.16.0'
-    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '5.16.0'
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '6.10.0'
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '6.10.0'
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '8.1'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.19.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
@@ -385,7 +385,7 @@ dependencies {
     implementation group: 'org.bouncycastle', name: 'bcpkix-jdk18on', version: versions.bouncycastle
     implementation group: 'org.flywaydb', name: 'flyway-core', version: versions.flyway
     implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: versions.flyway
-    implementation group: 'org.json', name: 'json', version: '20240303'
+    implementation group: 'org.json', name: 'json', version: '20250517'
     implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.8'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.8.13'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
@@ -409,7 +409,7 @@ dependencies {
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: versions.testContainer_postgresql
     testImplementation group: 'org.testcontainers', name: 'testcontainers', version: versions.testContainer_postgresql
 
-    testImplementation group: 'com.github.hmcts', name: 'rd-commons-lib', version: '0.1.2'
+    testImplementation group: 'com.github.hmcts', name: 'rd-commons-lib', version: '0.1.3'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '3.0'
     testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.20.0'
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '5.2.0'
