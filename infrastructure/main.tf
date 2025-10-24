@@ -44,14 +44,23 @@ module "db-rd-judicial-ref-v16" {
   common_tags          = var.common_tags
   component            = var.component-v16
   env                  = var.env
+  enable_db_report_privileges = true
   pgsql_databases = [
     {
       name = "dbjuddata"
+      report_privilege_schema : "dbjuddata"
+      report_privilege_tables : ["judicial_user_profile", "judicial_office_appointment", "judicial_office_authorisation", "dataload_schedular_job", "base_location_type", "region_type", "dataload_schedular_audit", "dataload_exception_records"]
+    },
+    {
+      name : "dbjudicialdata"
+      report_privilege_schema : "dbjudicialdata"
+      report_privilege_tables : ["judicial_user_profile", "judicial_office_appointment", "judicial_office_authorisation", "dataload_schedular_job", "location_type", "hmcts_region_type", "dataload_schedular_audit", "dataload_exception_records"]
     }
   ]
 
   # Setup Access Reader db user
   force_user_permissions_trigger = "3"
+  force_db_report_privileges_trigger = "1"
 
   # Sets correct DB owner after migration to fix permissions
   enable_schema_ownership        = var.enable_schema_ownership
