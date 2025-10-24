@@ -60,6 +60,10 @@ module "db-rd-judicial-ref-v16" {
   # Setup Access Reader db user
   force_user_permissions_trigger = "3"
 
+  # Reporting
+  enable_db_reporting_privileges = true
+  force_db_report_privileges_trigger = "1"
+
   # Sets correct DB owner after migration to fix permissions
   enable_schema_ownership        = var.enable_schema_ownership
   force_schema_ownership_trigger = "3"
@@ -78,10 +82,6 @@ module "db-rd-judicial-ref-v16" {
   action_group_name           = join("-", [var.action_group_name, local.db_name, var.env])
   email_address_key           = var.email_address_key
   email_address_key_vault_id  = data.azurerm_key_vault.rd_key_vault.id
-
-  # Reporting
-  enable_db_reporting_privileges = true
-  force_db_report_privileges_trigger = "1"
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
