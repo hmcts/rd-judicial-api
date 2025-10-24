@@ -47,6 +47,13 @@ module "db-rd-judicial-ref-v16" {
   pgsql_databases = [
     {
       name = "dbjuddata"
+      report_privilege_schema : "dbjuddata"
+      report_privilege_tables : ["judicial_user_profile", "judicial_office_appointment", "judicial_office_authorisation", "dataload_schedular_job", "base_location_type", "region_type", "dataload_schedular_audit", "dataload_exception_records"]
+    },
+    {
+      name : "dbjudicialdata"
+      report_privilege_schema : "dbjudicialdata"
+      report_privilege_tables : ["judicial_user_profile", "judicial_office_appointment", "judicial_office_authorisation", "dataload_schedular_job", "location_type", "hmcts_region_type", "dataload_schedular_audit", "dataload_exception_records"]
     }
   ]
 
@@ -75,13 +82,6 @@ module "db-rd-judicial-ref-v16" {
   # Reporting
   enable_db_reporting_privileges = true
   force_db_report_privileges_trigger = "1"
-  pgsql_databases = [
-    {
-      name = var.database_name
-      report_privilege_schema : "dbjudicialdata"
-      report_privilege_tables : ["judicial_user_profile", "judicial_office_appointment", "judicial_office_authorisation", "dataload_schedular_job", "location_type", "hmcts_region_type", "dataload_schedular_audit", "dataload_exception_records"]
-    }
-  ]
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
