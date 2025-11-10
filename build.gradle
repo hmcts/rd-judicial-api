@@ -20,7 +20,7 @@ plugins {
     id 'org.springframework.boot' version '3.5.7'
     id 'uk.gov.hmcts.java' version '0.12.67'
     id "info.solidsoft.pitest" version '1.15.0'
-    id "io.freefair.lombok" version "9.0.0"
+    id "io.freefair.lombok" version "9.1.0"
     id "org.flywaydb.flyway" version '11.16.0'
 }
 
