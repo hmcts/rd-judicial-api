@@ -50,7 +50,7 @@ def versions = [
         pact_version        : '4.6.18',
         log4j               : '2.25.3',
         logback             : '1.5.22',
-        testContainer_postgresql: '2.0.2',
+        testContainer_postgresql: '2.0.3',
         bouncycastle        : '1.83',
         jwtVersion          : '0.13.0',
         wiremock            : '3.13.2'
@@ -404,8 +404,8 @@ dependencies {
     testImplementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: versions.serenity
     testImplementation group: 'net.serenity-bdd', name: 'serenity-spring', version: versions.serenity
 
-    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.21.3'
-    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.21.3'
+    testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.21.4'
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.21.4'
     testImplementation group: 'org.testcontainers', name: 'testcontainers', version: versions.testContainer_postgresql
 
     testImplementation group: 'com.github.hmcts', name: 'rd-commons-lib', version: '0.1.3'
