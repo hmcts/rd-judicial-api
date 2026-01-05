@@ -114,7 +114,7 @@ idam:
     microservice: rd_judicial_api
     url: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
   s2s-authorised:
-    services: ${JRD_S2S_AUTHORISED_SERVICES:rd_judicial_api,am_org_role_mapping_service,iac,xui_webapp}
+    services: ${JRD_S2S_AUTHORISED_SERVICES:rd_judicial_api,am_org_role_mapping_service,iac,xui_webapp,idam-user-profile-bridge}
   api:
     url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
     client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
