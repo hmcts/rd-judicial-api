@@ -39,7 +39,7 @@ java:
     rd:
       secrets:
         - name: app-insights-connection-string
-        - alias: app-insights-connection-string
+          alias: app-insights-connection-string
         - name: LD-SDK-KEY
           alias: LD_SDK_KEY
         - name: judicial-api-s2s-secret

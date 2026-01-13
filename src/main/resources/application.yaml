@@ -174,14 +174,6 @@ elinks:
 
 logging.level.uk.gov.hmcts: ${APPLICATION_LOGGING_LEVEL:INFO}
 
-logging:
-  level:
-    org:
-      springframework:
-        jdbc:
-          core:
-            JdbcTemplate: DEBUG
-
 elastic:
   search:
     query: ${JRD_SIDAM_SEARCH_QUERY:(roles:judiciary) AND lastModified:>now-%sh}
