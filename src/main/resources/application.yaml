@@ -172,7 +172,7 @@ elinks:
     defaultLockAtMostFor: ${Default_Lock_At_Most_For:PT30M}
 
 
-logging.level.uk.gov.hmcts.reform: DEBUG
+logging.level.uk.gov.hmcts: ${APPLICATION_LOGGING_LEVEL:INFO}
 
 logging:
   level:
