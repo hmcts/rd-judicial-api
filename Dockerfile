@@ -1,4 +1,4 @@
-ARG APP_INSIGHTS_AGENT_VERSION=3.4.9
+ARG APP_INSIGHTS_AGENT_VERSION=3.7.6
 ARG PLATFORM=""
 FROM hmctspublic.azurecr.io/base/java${PLATFORM}:21-distroless
 
