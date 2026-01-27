@@ -135,23 +135,14 @@ class IdamElasticSearchServiceImplTest {
         List<String> emails = List.of("some@some.com", "someoneelse@some.com");
         List<IdamResponse> users = new ArrayList<>();
         emails.forEach(email -> users.add(createUser(email)));
-        ObjectMapper mapper = new ObjectMapper();
-        String body = mapper.writeValueAsString(users);
-
-        Map<String, Collection<String>> map = new HashMap<>();
-        Collection<String> list = new ArrayList<>();
-        list.add("5");
-        map.put("X-Total-Count", list);
 
         // Loop the users
-        Integer count = 0;
-        users.forEach(user -> {
+        for (Integer count = 0; count < emails.size() + 1; count++) {
+            List<IdamResponse> paginatedUsers = count < emails.size()
+                    ? List.of(users.get(count)) : emptyList();
             when(idamClientMock.searchUsers(anyString(), any(), any(), eq(count.toString())))
-                    .thenReturn(List.of(user));
-
-        });
-        // Return a final empty list to end the loop
-        when(idamClientMock.searchUsers(anyString(), any(), any(), eq(count.toString()))).thenReturn(emptyList());
+                    .thenReturn(paginatedUsers);
+        }
         when(userProfileRepository.fetchObjectId()).thenReturn(List.of("2234"));
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
@@ -159,7 +150,7 @@ class IdamElasticSearchServiceImplTest {
         idamResponse.forEach(useResponse -> {
             assertThat(emails.contains(useResponse.getEmail()));
         });
-        // verify(idamClientMock, times(users.size())).searchUsers(anyString(), any(), any(), any());
+        verify(idamClientMock, times(users.size() + 1)).searchUsers(anyString(), any(), any(), any());
         verify(elinkDataIngestionSchedularAudit,times(2))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
