@@ -3,6 +3,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
@@ -35,33 +36,16 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
     @DisplayName("Should update sidam id for matched object id")
     @Test
     void shouldUpdateSidamIdForMatchedObjectId() throws IOException {
-
-        given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
-
-        final String peopleApiResponseJson = readJsonAsString(PEOPLE_API_RESPONSE_JSON);
-        final String idamElasticSearchResponse = readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON);
-        final String locationApiResponseJson = readJsonAsString(LOCATION_API_RESPONSE_JSON);
-
-        stubLocationApiResponse(locationApiResponseJson, OK);
-        stubPeopleApiResponse(peopleApiResponseJson, OK);
-        stubIdamResponse(idamElasticSearchResponse, OK);
-        stubIdamTokenResponse(OK);
-
-        loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
-        loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
-
-        verifyUserSidamIdIsNull();
-
-        elasticSearchLoadSidamIdsByObjectIds(OK);
-
-        verifyUpdatedUserSidamId();
-
-        verifySchedulerAudit(SUCCESS);
+        runTest(OK);
     }
 
     @DisplayName("Should audit failed idam elastic search")
     @Test
     void shouldAuditFailedIdamElasticSearch() throws IOException {
+        runTest(INTERNAL_SERVER_ERROR);
+    }
+
+    private void runTest(final HttpStatus httpStatus) throws IOException {
 
         given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
 
@@ -71,7 +55,7 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
         stubLocationApiResponse(locationApiResponseJson, OK);
         stubPeopleApiResponse(peopleApiResponseJson, OK);
-        stubIdamResponse(idamElasticSearchResponse, INTERNAL_SERVER_ERROR);
+        stubIdamResponse(idamElasticSearchResponse, httpStatus);
         stubIdamTokenResponse(OK);
 
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
@@ -79,11 +63,11 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
         verifyUserSidamIdIsNull();
 
-        elasticSearchLoadSidamIdsByObjectIds(INTERNAL_SERVER_ERROR);
+        elasticSearchLoadSidamIdsByObjectIds(httpStatus);
 
-        verifyUserSidamIdIsNull();
+        verifyUpdatedUserSidamId();
 
-        verifySchedulerAudit(FAILED);
+        verifySchedulerAudit(OK.equals(httpStatus) ? SUCCESS : FAILED);
     }
 
     private void verifyUpdatedUserSidamId() {
