@@ -38,6 +38,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JOB_DETAILS_UPDATE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.GET_DELTA_LOAD_SIDAM_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.GET_DISTINCT_SIDAM_ID;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.SELECT_JOB_STATUS_SQL;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.SqlContants.UPDATE_JOB_SQL;
@@ -73,12 +74,22 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
     @Value("${launchdarkly.sdk.environment}")
     String environment;
 
+    @Value("${jrd.publisher.publish-Idams-delta}")
+    boolean publishIdamsDelta;
+
     private int sidamIdcount;
 
     public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() throws JudicialDataLoadException {
-
-        // Get all sidam id's from the judicial_user_profile table
-        List<String> sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
+        List<String> sidamIds;
+        if(publishIdamsDelta){
+            log.info("{}:: Publish Sidam Id delta load to ASB is enabled as publish-Idams-delta is set to {true}",
+                logComponentName, publishIdamsDelta);
+            // Get delta load of sidam id's from the judicial_user_profile table
+            sidamIds = jdbcTemplate.query(GET_DELTA_LOAD_SIDAM_ID, RefDataConstants.ROW_MAPPER);
+        }else {
+            // Get all sidam id's from the judicial_user_profile table
+            sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
+        }
         return publishSidamIdToAsb(sidamIds);
     }
 

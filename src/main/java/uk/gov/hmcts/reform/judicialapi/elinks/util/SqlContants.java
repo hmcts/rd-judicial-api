@@ -16,4 +16,7 @@ public class SqlContants {
 
     public static final String UPDATE_JOB_SQL = "UPDATE dbjudicialdata.dataload_schedular_job "
             + "SET job_end_time = NOW() , publishing_status = ? WHERE id =?";
+
+    public static final String GET_DELTA_LOAD_SIDAM_ID = "SELECT DISTINCT sidam_id FROM "
+        + "dbjudicialdata.judicial_user_profile WHERE sidam_id IS NOT NULL";
 }
