@@ -101,7 +101,6 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
             log.info("{}:: Publish Sidam Id delta load to ASB is enabled as publish-Idams-delta is set to {true}",
                 logComponentName, publishIdamsDelta);
             // Get delta load of sidam id's from the judicial_user_profile table
-            //sidamIds = jdbcTemplate.query(GET_DELTA_LOAD_SIDAM_ID, RefDataConstants.ROW_MAPPER);
             try {
                 maxSuccessfulSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSuccessfulSchedularEndTime();
             } catch (Exception ex) {
