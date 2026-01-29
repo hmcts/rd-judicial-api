@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import feign.Request;
@@ -128,17 +127,24 @@ class IdamElasticSearchServiceImplTest {
     }
 
     @Test
-    void testSyncFeed() throws JsonProcessingException {
+    void testSyncFeed() {
+        testIdamElasticSearchSyncFeed(List.of("some@some.com", "someoneelse@some.com"));
+    }
+
+    @Test
+    void testSyncFeed_EmptyList() {
+        testIdamElasticSearchSyncFeed(emptyList());
+    }
+
+    private void testIdamElasticSearchSyncFeed(final List<String> emails) {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
-        List<String> emails = List.of("some@some.com", "someoneelse@some.com");
-        List<IdamResponse> users = new ArrayList<>();
-        emails.forEach(email -> users.add(createUser(email)));
+        List<IdamResponse> users = createIdamResponses(emails);
 
         // Loop the users
-        for (Integer count = 0; count < emails.size() + 1; count++) {
-            List<IdamResponse> paginatedUsers = count < emails.size()
+        for (Integer count = 0; count < users.size() + 1; count++) {
+            List<IdamResponse> paginatedUsers = count < users.size()
                     ? List.of(users.get(count)) : emptyList();
             when(idamClientMock.searchUsers(anyString(), any(), any(), eq(count.toString())))
                     .thenReturn(paginatedUsers);
@@ -156,31 +162,28 @@ class IdamElasticSearchServiceImplTest {
     }
 
     @Test
-    void testSidamUpdate() throws JsonProcessingException {
+    void testSidamUpdate() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
-        Set<IdamResponse> users = new HashSet<>();
-        IdamResponse idamResponseOne = createUser("some@some.com");
-        idamResponseOne.setSsoId("objectId1");
-        users.add(idamResponseOne);
-        ObjectMapper mapper = new ObjectMapper();
-        String body = mapper.writeValueAsString(users);
+        List<String> emails = List.of("some@some.com");
+        List<IdamResponse> users = createIdamResponses(emails);
 
-        Map<String, Collection<String>> map = new HashMap<>();
-        Collection<String> list = new ArrayList<>();
-        list.add("5");
-        map.put("X-Total-Count", list);
-
-        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(emptyList());
+        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(users);
         when(userProfileRepository.fetchObjectIdMissingSidamId()).thenReturn(createUserProfile());
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamDetails();
-        ElinkIdamWrapperResponse  elinkIdamWrapperResponse = (ElinkIdamWrapperResponse) useResponses.getBody();
+        ElinkIdamWrapperResponse elinkIdamWrapperResponse = (ElinkIdamWrapperResponse) useResponses.getBody();
         assertEquals(elinkIdamWrapperResponse.getMessage(),SIDAM_IDS_UPDATED);
         verify(idamClientMock, times(2)).searchUsers(anyString(), any(), any(), any());
         verify(elinkDataIngestionSchedularAudit,times(2))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
+    }
+
+    private List<IdamResponse> createIdamResponses(List<String> emails) {
+        List<IdamResponse> results = new ArrayList<>();
+        emails.forEach(email -> results.add(createUser(email)));
+        return results;
     }
 
     private List<UserProfile> createUserProfile() {

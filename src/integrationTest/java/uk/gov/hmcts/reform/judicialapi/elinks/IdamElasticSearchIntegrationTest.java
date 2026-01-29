@@ -28,6 +28,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 
 class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
+    private static final String EMPTY_LIST_JSON = "[]";
+
     @BeforeEach
     void setUp() {
         deleteData();
@@ -37,6 +39,12 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
     @Test
     void shouldUpdateSidamIdForMatchedObjectId() throws IOException {
         runTest(OK, readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON));
+    }
+
+    @DisplayName("Should not update on empty list")
+    @Test
+    void shouldNotUpdateonEmptyList() throws IOException {
+        runTest(OK, EMPTY_LIST_JSON);
     }
 
     @DisplayName("Should audit failed idam elastic search")
@@ -65,7 +73,7 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
         elasticSearchLoadSidamIdsByObjectIds(httpStatus);
 
-        if (OK.equals(httpStatus)) {
+        if (OK.equals(httpStatus) && !EMPTY_LIST_JSON.equals(idamElasticSearchResponse)) {
             verifyUpdatedUserSidamId();
         } else {
             verifyUserSidamIdIsNull();
