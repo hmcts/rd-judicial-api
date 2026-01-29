@@ -36,21 +36,21 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
     @DisplayName("Should update sidam id for matched object id")
     @Test
     void shouldUpdateSidamIdForMatchedObjectId() throws IOException {
-        runTest(OK);
+        runTest(OK, readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON));
     }
 
     @DisplayName("Should audit failed idam elastic search")
     @Test
     void shouldAuditFailedIdamElasticSearch() throws IOException {
-        runTest(INTERNAL_SERVER_ERROR);
+        runTest(INTERNAL_SERVER_ERROR, readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON));
     }
 
-    private void runTest(final HttpStatus httpStatus) throws IOException {
+    private void runTest(final HttpStatus httpStatus,
+                         String idamElasticSearchResponse) throws IOException {
 
         given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
 
         final String peopleApiResponseJson = readJsonAsString(PEOPLE_API_RESPONSE_JSON);
-        final String idamElasticSearchResponse = readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON);
         final String locationApiResponseJson = readJsonAsString(LOCATION_API_RESPONSE_JSON);
 
         stubLocationApiResponse(locationApiResponseJson, OK);
