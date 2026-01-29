@@ -17,41 +17,15 @@ public class SqlContants {
     public static final String UPDATE_JOB_SQL = "UPDATE dbjudicialdata.dataload_schedular_job "
             + "SET job_end_time = NOW() , publishing_status = ? WHERE id =?";
 
-    public static final String GET_DELTA_LOAD_SIDAM_ID = "SELECT DISTINCT jup.sidam_id\n" +
-        "FROM dbjudicialdata.judicial_user_profile jup\n" +
-        "JOIN dbjudicialdata.judicial_office_appointment joa\n" +
-        "  ON joa.personal_code = jup.personal_code\n" +
-        " AND joa.last_loaded_date >= (\n" +
-        "       SELECT MAX(scheduler_end_time)\n" +
-        "       FROM dbjudicialdata.dataload_schedular_audit\n" +
-        "       WHERE scheduler_name = 'judicial-ref-data-elinks'\n" +
-        "         AND api_name = 'PublishSidamIds'\n" +
-        "         AND status = 'SUCCESS'\n" +
-        "     )\n" +
-        "JOIN dbjudicialdata.judicial_office_authorisation joa2\n" +
-        "  ON joa2.personal_code = jup.personal_code\n" +
-        " AND joa2.last_updated >= (\n" +
-        "       SELECT MAX(scheduler_end_time)\n" +
-        "       FROM dbjudicialdata.dataload_schedular_audit\n" +
-        "       WHERE scheduler_name = 'judicial-ref-data-elinks'\n" +
-        "         AND api_name = 'PublishSidamIds'\n" +
-        "         AND status = 'SUCCESS'\n" +
-        "     )\n" +
-        "JOIN dbjudicialdata.judicial_additional_roles jar\n" +
-        "  ON jar.personal_code = jup.personal_code\n" +
-        " AND jar.end_date >= (\n" +
-        "       SELECT MAX(scheduler_end_time)\n" +
-        "       FROM dbjudicialdata.dataload_schedular_audit\n" +
-        "       WHERE scheduler_name = 'judicial-ref-data-elinks'\n" +
-        "         AND api_name = 'PublishSidamIds'\n" +
-        "         AND status = 'SUCCESS'\n" +
-        "     ) \n" +
-        "WHERE jup.sidam_id IS NOT NULL\n" +
-        "  AND jup.last_loaded_date >= (\n" +
-        "       SELECT MAX(scheduler_end_time)\n" +
-        "       FROM dbjudicialdata.dataload_schedular_audit\n" +
-        "       WHERE scheduler_name = 'judicial-ref-data-elinks'\n" +
-        "         AND api_name = 'PublishSidamIds'\n" +
-        "         AND status = 'SUCCESS'\n" +
-        "     );";
+    public static final String GET_DELTA_LOAD_SIDAM_ID = "SELECT DISTINCT jup.sidam_id" +
+        " FROM dbjudicialdata.judicial_user_profile jup LEFT JOIN dbjudicialdata.judicial_office_appointment joa" +
+        "  ON joa.personal_code = jup.personal_code LEFT JOIN dbjudicialdata.judicial_office_authorisation joa2" +
+        "  ON joa2.personal_code = jup.personal_code LEFT JOIN dbjudicialdata.judicial_additional_roles jar" +
+        "  ON jar.personal_code = jup.personal_code WHERE jup.sidam_id IS NOT NULL" +
+        "  AND(jup.last_loaded_date >= '2025-01-22 07:08:45.775'" +
+        "  OR joa.last_loaded_date >= '2026-01-22 07:08:45.775'" +
+        "  OR joa2.last_updated >= '2026-01-22 07:08:45.775'" +
+        "  OR jar.end_date BETWEEN '2026-01-22 07:08:45.775' AND now()" +
+        "  OR joa.end_date BETWEEN '2026-01-22 07:08:45.775' AND now()" +
+        "  OR joa2.end_date BETWEEN '2026-01-22 07:08:45.775' AND now())";
 }

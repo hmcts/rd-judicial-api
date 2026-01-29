@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:8093}
+  port: ${PORT:8090}
 
 management:
   endpoints:
@@ -205,6 +205,7 @@ jrd:
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
     jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:50}
     publish-Idams-delta : ${PUBLISH_IDAMS_DELTA:true}
+    no_of_hours : ${NO_OF_HOURS:24}
 email:
   mailTypes:
     asb:
