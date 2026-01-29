@@ -5,20 +5,30 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonParser;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.DeserializationFeature;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.MapperFeature;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.json.JsonMapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
+import static uk.gov.hmcts.reform.judicialapi.elinks.IdamElasticSearchIntegrationTest.PAGE_SIZE;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.ELASTICSEARCH;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.FAILED;
@@ -27,10 +37,17 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 
-@TestPropertySource(properties = {"elastic.search.recordsPerPage=1"})
+@TestPropertySource(properties = {"elastic.search.recordsPerPage=" + PAGE_SIZE})
 class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
     private static final String EMPTY_LIST_JSON = "[]";
+    public static final int PAGE_SIZE = 1;
+
+    private static final JsonMapper MAPPER = JsonMapper.builder()
+            .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
+            .configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
+            .configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).build();
 
     @BeforeEach
     void setUp() {
@@ -65,7 +82,8 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
         stubLocationApiResponse(locationApiResponseJson, OK);
         stubPeopleApiResponse(peopleApiResponseJson, OK);
-        stubIdamResponse(idamElasticSearchResponse, httpStatus);
+        paginateIdamResponseJson(idamElasticSearchResponse).entrySet().stream()
+                .forEach(entry -> stubIdamResponse(entry.getValue(), httpStatus));
         stubIdamTokenResponse(OK);
 
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
@@ -82,6 +100,29 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
         }
 
         verifySchedulerAudit(OK.equals(httpStatus) ? SUCCESS : FAILED);
+    }
+
+    private Map<Integer, String> paginateIdamResponseJson(String json) throws JsonProcessingException {
+        List<IdamResponse> idamResponses = MAPPER.readValue(json, MAPPER.getTypeFactory()
+                .constructCollectionType(List.class, IdamResponse.class));
+        return getPaginatedMap(idamResponses);
+    }
+
+    private Map<Integer, String> getPaginatedMap(List<IdamResponse> idamResponses)
+            throws JsonProcessingException {
+        Map<Integer, String> result = new HashMap<>();
+        Integer pageNo = 0;
+        List<IdamResponse> list = new ArrayList<>();
+        for (IdamResponse idamResponse : idamResponses) {
+            list.add(idamResponse);
+            if (list.size() >= PAGE_SIZE) {
+                MAPPER.writeValueAsString(list);
+                result.put(pageNo, MAPPER.writeValueAsString(list));
+                list.clear();
+                pageNo++;
+            }
+        }
+        return result;
     }
 
     private void verifyUpdatedUserSidamId() {
