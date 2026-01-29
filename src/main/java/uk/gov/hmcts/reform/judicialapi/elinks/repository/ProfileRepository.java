@@ -140,4 +140,18 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
 
     List<UserProfile> findByPersonalCodeIn(List<String> personalCodes);
 
+    @Query("SELECT DISTINCT jup.sidam_id" +
+        "FROM dbjudicialdata.judicial_user_profile jup LEFT JOIN dbjudicialdata.judicial_office_appointment joa" +
+        " ON joa.personal_code = jup.personal_code LEFT JOIN dbjudicialdata.judicial_office_authorisation joa2" +
+        " ON joa2.personal_code = jup.personal_code LEFT JOIN dbjudicialdata.judicial_additional_roles jar" +
+        " ON jar.personal_code = jup.personal_code WHERE jup.sidam_id IS NOT NULL" +
+        " AND(jup.last_loaded_date >= :last_loaded_date" +
+        " OR joa.last_loaded_date >= :last_loaded_date'" +
+        " OR joa2.last_updated >= :last_loaded_date" +
+        " OR jar.end_date BETWEEN :last_loaded_date_adjusted AND now()" +
+        " OR joa.end_date BETWEEN :last_loaded_date_adjusted AND now()" +
+        " OR joa2.end_date BETWEEN :last_loaded_date_adjusted AND now())")
+    List<String> fetchDeltaLoadIdamIds(LocalDateTime last_loaded_date,LocalDateTime last_loaded_date_adjusted);
+
+
 }
