@@ -52,6 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -131,25 +132,25 @@ class IdamElasticSearchServiceImplTest {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
         when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
-        Set<IdamResponse> users = new HashSet<>();
-        users.add(createUser("some@some.com"));
-        ObjectMapper mapper = new ObjectMapper();
-        String body = mapper.writeValueAsString(users);
+        List<String> emails = List.of("some@some.com", "someoneelse@some.com");
+        List<IdamResponse> users = new ArrayList<>();
+        emails.forEach(email -> users.add(createUser(email)));
 
-        Map<String, Collection<String>> map = new HashMap<>();
-        Collection<String> list = new ArrayList<>();
-        list.add("5");
-        map.put("X-Total-Count", list);
-
-        when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenReturn(emptyList());
+        // Loop the users
+        for (Integer count = 0; count < emails.size() + 1; count++) {
+            List<IdamResponse> paginatedUsers = count < emails.size()
+                    ? List.of(users.get(count)) : emptyList();
+            when(idamClientMock.searchUsers(anyString(), any(), any(), eq(count.toString())))
+                    .thenReturn(paginatedUsers);
+        }
         when(userProfileRepository.fetchObjectId()).thenReturn(List.of("2234"));
 
         ResponseEntity<Object> useResponses = idamElasticSearchServiceImpl.getIdamElasticSearchSyncFeed();
         Set<IdamResponse>  idamResponse = (HashSet<IdamResponse>) useResponses.getBody();
         idamResponse.forEach(useResponse -> {
-            assertThat(useResponse.getEmail()).isEqualTo("some@some.com");
+            assertThat(emails.contains(useResponse.getEmail()));
         });
-        verify(idamClientMock, times(1)).searchUsers(anyString(), any(), any(), any());
+        verify(idamClientMock, times(users.size() + 1)).searchUsers(anyString(), any(), any(), any());
         verify(elinkDataIngestionSchedularAudit,times(2))
             .auditSchedulerStatus(any(),any(),any(),any(),any());
     }
