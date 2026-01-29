@@ -65,7 +65,11 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
         elasticSearchLoadSidamIdsByObjectIds(httpStatus);
 
-        verifyUpdatedUserSidamId();
+        if (OK.equals(httpStatus)) {
+            verifyUpdatedUserSidamId();
+        } else {
+            verifyUserSidamIdIsNull();
+        }
 
         verifySchedulerAudit(OK.equals(httpStatus) ? SUCCESS : FAILED);
     }
