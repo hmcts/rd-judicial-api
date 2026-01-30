@@ -203,7 +203,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
         } else {
             String scenarioStatePrefix = "Page ";
             String scenarioState = STARTED;
-            String nextScenarioState = STARTED;
+            String nextScenarioState;
             for (int pageNo = 0; pageNo < idamResponseValidationJsonArray.length - 1; pageNo++) {
                 final String idamResponseValidationJson = idamResponseValidationJsonArray[pageNo];
                 nextScenarioState = scenarioStatePrefix + (pageNo + 1);
@@ -217,12 +217,13 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                                 .withHeader("Connection", "close")
                                 .withBody(idamResponseValidationJson)
                         ));
+                scenarioState = nextScenarioState;
             }
             // Add a final page stub with an empty list to end loop
             final int pageNo = idamResponseValidationJsonArray.length - 1;
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                     .inScenario("Idam Search Users")
-                    .whenScenarioStateIs(nextScenarioState)
+                    .whenScenarioStateIs(scenarioState)
                     .willReturn(aResponse()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
