@@ -46,7 +46,6 @@ import uk.gov.hmcts.reform.judicialapi.versions.V2;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
@@ -204,7 +203,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
             for (int pageNo = 0; pageNo < idamResponseValidationJsonArray.length - 1; pageNo++) {
                 final String idamResponseValidationJson = idamResponseValidationJsonArray[pageNo];
                 sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                        .withHeader("pageNo", equalTo(String.valueOf(pageNo)))
+                        .inScenario("Idam Search Users")
                         .willReturn(aResponse()
                                 .withStatus(httpStatus.value())
                                 .withHeader("Content-Type", "application/json")
@@ -215,7 +214,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
             // Add a final page stub with an empty list to end loop
             final int pageNo = idamResponseValidationJsonArray.length - 1;
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                    .withHeader("pageNo", equalTo(String.valueOf(pageNo)))
+                    .inScenario("Idam Search Users")
                     .willReturn(aResponse()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
