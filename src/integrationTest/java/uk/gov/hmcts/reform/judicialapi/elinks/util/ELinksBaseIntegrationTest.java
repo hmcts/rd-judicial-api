@@ -46,6 +46,8 @@ import uk.gov.hmcts.reform.judicialapi.util.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 
+import java.util.UUID;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -211,6 +213,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                 log.info("Stubbing Idam Search Users - Page {}", pageNo);
                 nextScenarioState = scenarioStatePrefix + String.valueOf(pageNo + 1);
                 sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                        .withId(UUID.randomUUID())
                         .inScenario(scenario)
                         .whenScenarioStateIs(scenarioState)
                         .willReturn(aResponse()
@@ -223,6 +226,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
             }
             // Add a final page stub with an empty list to end loop
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                    .withId(UUID.randomUUID())
                     .inScenario(scenario)
                     .whenScenarioStateIs(scenarioState)
                     .willReturn(aResponse()
