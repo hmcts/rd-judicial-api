@@ -84,6 +84,7 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
         stubPeopleApiResponse(peopleApiResponseJson, OK);
         paginateIdamResponseJson(idamElasticSearchResponse).entrySet().stream()
                 .forEach(entry -> stubIdamResponse(entry.getValue(), httpStatus));
+        stubIdamResponse(EMPTY_LIST_JSON, httpStatus); // A final stub with an empty list to end loop
         stubIdamTokenResponse(OK);
 
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);

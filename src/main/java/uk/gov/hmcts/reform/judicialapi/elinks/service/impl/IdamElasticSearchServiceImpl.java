@@ -152,9 +152,8 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 judicialUsers.addAll(users);
                 count++;
                 log.debug("{}:: batch count :: ", count);
-                // When we are at the last page (ie empty results or no longer a full page), we stop
-                moreAvailable = users != null && !users.isEmpty()
-                        && users.size() == recordsPerPage;
+                // When we are at the last page (ie empty results), we stop
+                moreAvailable = users != null && !users.isEmpty();
             } while (moreAvailable);
         } catch (Exception ex) {
             //There is No header.
