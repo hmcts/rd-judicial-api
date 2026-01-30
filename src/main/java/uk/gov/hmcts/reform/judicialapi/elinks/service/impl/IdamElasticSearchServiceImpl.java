@@ -151,7 +151,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                         String.valueOf(count));
                 judicialUsers.addAll(users);
                 count++;
-                log.debug("{}:: batch count :: ", count);
+                log.info("{}:: batch count :: ", count);
                 // When we are at the last page (ie empty results), we stop
                 moreAvailable = users != null && !users.isEmpty();
             } while (moreAvailable);
