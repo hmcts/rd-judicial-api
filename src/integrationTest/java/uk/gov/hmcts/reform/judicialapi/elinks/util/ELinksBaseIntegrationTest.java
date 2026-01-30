@@ -46,6 +46,7 @@ import uk.gov.hmcts.reform.judicialapi.versions.V2;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
@@ -70,6 +71,8 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     public static final String RESPONSE_BODY_MSG_KEY = "message";
     protected static final String USER_PASSWORD = "user:password";
     protected static final String JUDICIAL_REF_DATA_ELINKS = "judicial-ref-data-elinks";
+    protected static final String EMPTY_LIST_JSON = "[]";
+    private static final String IDAM_SEARCHUSERS = "/api/v1/users";
     @RegisterExtension
     protected static final WireMockExtension s2sService = new WireMockExtension(8990);
     @RegisterExtension
@@ -185,20 +188,39 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
 
     protected void stubIdamResponse(final String idamResponseValidationJson,
                                     final HttpStatus httpStatus) {
+        stubIdamResponse(new String[] {idamResponseValidationJson}, httpStatus);
+    }
+
+    protected void stubIdamResponse(final String[] idamResponseValidationJsonArray,
+                                    final HttpStatus httpStatus) {
         if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
-            sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                     .willReturn(serverError()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
                             .withBody("Internal server error")
                     ));
         } else {
-            sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+            for (int pageNo = 0; pageNo < idamResponseValidationJsonArray.length - 1; pageNo++) {
+                final String idamResponseValidationJson = idamResponseValidationJsonArray[pageNo];
+                sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                        .withHeader("pageNo", equalTo(String.valueOf(pageNo)))
+                        .willReturn(aResponse()
+                                .withStatus(httpStatus.value())
+                                .withHeader("Content-Type", "application/json")
+                                .withHeader("Connection", "close")
+                                .withBody(idamResponseValidationJson)
+                        ));
+            }
+            // Add a final page stub with an empty list to end loop
+            final int pageNo = idamResponseValidationJsonArray.length - 1;
+            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                    .withHeader("pageNo", equalTo(String.valueOf(pageNo)))
                     .willReturn(aResponse()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
                             .withHeader("Connection", "close")
-                            .withBody(idamResponseValidationJson)
+                            .withBody(EMPTY_LIST_JSON)
                     ));
         }
     }
