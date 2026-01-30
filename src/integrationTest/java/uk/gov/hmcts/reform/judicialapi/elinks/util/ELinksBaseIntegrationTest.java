@@ -201,27 +201,27 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                             .withBody("Internal server error")
                     ));
         } else {
+            String scenario = "Idam Search Users";
             String scenarioStatePrefix = "Page ";
             String scenarioState = STARTED;
             String nextScenarioState;
             for (int pageNo = 0; pageNo < idamResponseValidationJsonArray.length; pageNo++) {
                 final String idamResponseValidationJson = idamResponseValidationJsonArray[pageNo];
-                nextScenarioState = scenarioStatePrefix + (pageNo + 1);
+                nextScenarioState = scenarioStatePrefix + String.valueOf(pageNo + 1);
                 sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                        .inScenario("Idam Search Users")
+                        .inScenario(scenario)
                         .whenScenarioStateIs(scenarioState)
-                        .willSetStateTo(nextScenarioState)
                         .willReturn(aResponse()
                                 .withStatus(httpStatus.value())
                                 .withHeader("Content-Type", "application/json")
                                 .withHeader("Connection", "close")
                                 .withBody(idamResponseValidationJson)
-                        ));
+                        ).willSetStateTo(nextScenarioState));
                 scenarioState = nextScenarioState;
             }
             // Add a final page stub with an empty list to end loop
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                    .inScenario("Idam Search Users")
+                    .inScenario(scenario)
                     .whenScenarioStateIs(scenarioState)
                     .willReturn(aResponse()
                             .withStatus(httpStatus.value())
