@@ -51,6 +51,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static java.lang.String.format;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -200,10 +201,16 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                             .withBody("Internal server error")
                     ));
         } else {
+            String scenarioStatePrefix = "Page ";
+            String scenarioState = STARTED;
+            String nextScenarioState = STARTED;
             for (int pageNo = 0; pageNo < idamResponseValidationJsonArray.length - 1; pageNo++) {
                 final String idamResponseValidationJson = idamResponseValidationJsonArray[pageNo];
+                nextScenarioState = scenarioStatePrefix + (pageNo + 1);
                 sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                         .inScenario("Idam Search Users")
+                        .whenScenarioStateIs(scenarioState)
+                        .willSetStateTo(nextScenarioState)
                         .willReturn(aResponse()
                                 .withStatus(httpStatus.value())
                                 .withHeader("Content-Type", "application/json")
@@ -215,6 +222,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
             final int pageNo = idamResponseValidationJsonArray.length - 1;
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                     .inScenario("Idam Search Users")
+                    .whenScenarioStateIs(nextScenarioState)        .
                     .willReturn(aResponse()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
