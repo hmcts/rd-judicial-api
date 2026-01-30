@@ -60,7 +60,7 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
     @DisplayName("Should not update on empty list")
     @Test
     void shouldNotUpdateonEmptyList() throws IOException {
-        runTest(OK, new String[] {EMPTY_LIST_JSON});
+        runTest(OK, new String[] {});
     }
 
     @DisplayName("Should audit failed idam elastic search")
@@ -90,7 +90,7 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
         elasticSearchLoadSidamIdsByObjectIds(httpStatus);
 
-        if (OK.equals(httpStatus) && !EMPTY_LIST_JSON.equals(idamElasticSearchResponseArray[0])) {
+        if (OK.equals(httpStatus) && idamElasticSearchResponseArray.length > 0) {
             verifyUpdatedUserSidamId();
         } else {
             verifyUserSidamIdIsNull();
