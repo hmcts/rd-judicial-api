@@ -133,7 +133,6 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
 
         Set<IdamResponse> judicialUsers = new HashSet<>();
         int count = 0;
-        int totalCount = 0;
 
         LocalDateTime schedulerStartTime = now();
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
@@ -143,6 +142,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
 
         log.info("Calling idam client");
         try {
+            boolean moreAvailable = true;
             String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
             do {
                 List<IdamResponse> users = idamFeignClient.searchUsers(bearerToken,
@@ -151,8 +151,14 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                         String.valueOf(count));
                 judicialUsers.addAll(users);
                 count++;
-                log.debug("{}:: batch count :: ", count);
-            } while (totalCount > 0 && recordsPerPage * count < totalCount);
+                log.info("{}:: batch count :: ", count);
+                log.info("{}:: records fetched :: ", users.size());
+                users.forEach(user -> {
+                    log.info("user = {}", user.getEmail());
+                });
+                // When we are at the last page (ie empty results), we stop
+                moreAvailable = users != null && !users.isEmpty();
+            } while (moreAvailable);
         } catch (Exception ex) {
             //There is No header.
             log.error("{}:: Error processing IDAM elastic search query ::{}", loggingComponentName, ex);

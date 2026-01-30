@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
 import com.github.tomakehurst.wiremock.http.Response;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.launchdarkly.sdk.server.LDClient;
+import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.annotations.WithTags;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
@@ -45,18 +46,22 @@ import uk.gov.hmcts.reform.judicialapi.util.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 
+import java.util.UUID;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static java.lang.String.format;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.decodeJwtToken;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRoleFromToken;
 
+@Slf4j
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
 @ExtendWith(SerenityJUnit5Extension.class)
@@ -70,6 +75,8 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     public static final String RESPONSE_BODY_MSG_KEY = "message";
     protected static final String USER_PASSWORD = "user:password";
     protected static final String JUDICIAL_REF_DATA_ELINKS = "judicial-ref-data-elinks";
+    protected static final String EMPTY_LIST_JSON = "[]";
+    private static final String IDAM_SEARCHUSERS = "/api/v1/users";
     @RegisterExtension
     protected static final WireMockExtension s2sService = new WireMockExtension(8990);
     @RegisterExtension
@@ -185,20 +192,48 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
 
     protected void stubIdamResponse(final String idamResponseValidationJson,
                                     final HttpStatus httpStatus) {
+        stubIdamResponse(new String[] {idamResponseValidationJson}, httpStatus);
+    }
+
+    protected void stubIdamResponse(final String[] idamResponseValidationJsonArray,
+                                    final HttpStatus httpStatus) {
         if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
-            sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                     .willReturn(serverError()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
                             .withBody("Internal server error")
                     ));
         } else {
-            sidamService.stubFor(get(urlPathMatching("/api/v1/users"))
+            String scenario = "Idam Search Users";
+            String scenarioStatePrefix = "Page ";
+            String scenarioState = STARTED;
+            String nextScenarioState;
+            for (int pageNo = 0; pageNo < idamResponseValidationJsonArray.length; pageNo++) {
+                log.info("Stubbing Idam Search Users - Page {}", pageNo);
+                nextScenarioState = scenarioStatePrefix + String.valueOf(pageNo + 1);
+                sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                        .withId(UUID.randomUUID())
+                        .inScenario(scenario)
+                        .whenScenarioStateIs(scenarioState)
+                        .willReturn(aResponse()
+                                .withStatus(httpStatus.value())
+                                .withHeader("Content-Type", "application/json")
+                                .withHeader("Connection", "close")
+                                .withBody(idamResponseValidationJsonArray[pageNo])
+                        ).willSetStateTo(nextScenarioState));
+                scenarioState = nextScenarioState;
+            }
+            // Add a final page stub with an empty list to end loop
+            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                    .withId(UUID.randomUUID())
+                    .inScenario(scenario)
+                    .whenScenarioStateIs(scenarioState)
                     .willReturn(aResponse()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
                             .withHeader("Connection", "close")
-                            .withBody(idamResponseValidationJson)
+                            .withBody(EMPTY_LIST_JSON)
                     ));
         }
     }
