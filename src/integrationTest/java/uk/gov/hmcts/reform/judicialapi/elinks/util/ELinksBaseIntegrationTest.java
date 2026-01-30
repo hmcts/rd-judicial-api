@@ -209,7 +209,6 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
             String nextScenarioState;
             for (int pageNo = 0; pageNo < idamResponseValidationJsonArray.length; pageNo++) {
                 log.info("Stubbing Idam Search Users - Page {}", pageNo);
-                final String idamResponseValidationJson = idamResponseValidationJsonArray[pageNo];
                 nextScenarioState = scenarioStatePrefix + String.valueOf(pageNo + 1);
                 sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                         .inScenario(scenario)
@@ -218,7 +217,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                                 .withStatus(httpStatus.value())
                                 .withHeader("Content-Type", "application/json")
                                 .withHeader("Connection", "close")
-                                .withBody(idamResponseValidationJson)
+                                .withBody(idamResponseValidationJsonArray[pageNo])
                         ).willSetStateTo(nextScenarioState));
                 scenarioState = nextScenarioState;
             }
