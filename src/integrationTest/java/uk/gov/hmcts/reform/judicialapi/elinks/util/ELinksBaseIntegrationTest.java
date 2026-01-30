@@ -222,7 +222,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
             final int pageNo = idamResponseValidationJsonArray.length - 1;
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                     .inScenario("Idam Search Users")
-                    .whenScenarioStateIs(nextScenarioState)        .
+                    .whenScenarioStateIs(nextScenarioState)
                     .willReturn(aResponse()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
