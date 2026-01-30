@@ -7,22 +7,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonParser;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.DeserializationFeature;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.MapperFeature;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.json.JsonMapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,23 +53,25 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
     @DisplayName("Should update sidam id for matched object id")
     @Test
     void shouldUpdateSidamIdForMatchedObjectId() throws IOException {
-        runTest(OK, readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON));
+        runTest(OK, new String[] {readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_PG1_JSON),
+                readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_PG2_JSON)});
     }
 
     @DisplayName("Should not update on empty list")
     @Test
     void shouldNotUpdateonEmptyList() throws IOException {
-        runTest(OK, EMPTY_LIST_JSON);
+        runTest(OK, new String[] {EMPTY_LIST_JSON});
     }
 
     @DisplayName("Should audit failed idam elastic search")
     @Test
     void shouldAuditFailedIdamElasticSearch() throws IOException {
-        runTest(INTERNAL_SERVER_ERROR, readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON));
+        runTest(INTERNAL_SERVER_ERROR,
+                new String[] {readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON)});
     }
 
     private void runTest(final HttpStatus httpStatus,
-                         String idamElasticSearchResponse) throws IOException {
+                         String[] idamElasticSearchResponseArray) throws IOException {
 
         given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
 
@@ -83,9 +80,7 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
         stubLocationApiResponse(locationApiResponseJson, OK);
         stubPeopleApiResponse(peopleApiResponseJson, OK);
-        paginateIdamResponseJson(idamElasticSearchResponse).entrySet().stream()
-                .forEach(entry -> stubIdamResponse(entry.getValue(), httpStatus));
-        stubIdamResponse(EMPTY_LIST_JSON, httpStatus); // A final stub with an empty list to end loop
+        stubIdamResponse(idamElasticSearchResponseArray, httpStatus);
         stubIdamTokenResponse(OK);
 
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
@@ -95,38 +90,13 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
         elasticSearchLoadSidamIdsByObjectIds(httpStatus);
 
-        if (OK.equals(httpStatus) && !EMPTY_LIST_JSON.equals(idamElasticSearchResponse)) {
+        if (OK.equals(httpStatus) && !EMPTY_LIST_JSON.equals(idamElasticSearchResponseArray[0])) {
             verifyUpdatedUserSidamId();
         } else {
             verifyUserSidamIdIsNull();
         }
 
         verifySchedulerAudit(OK.equals(httpStatus) ? SUCCESS : FAILED);
-    }
-
-    private Map<Integer, String> paginateIdamResponseJson(String json) throws JsonProcessingException {
-        List<IdamResponse> idamResponses = MAPPER.readValue(json, MAPPER.getTypeFactory()
-                .constructCollectionType(List.class, IdamResponse.class));
-        return getPaginatedMap(idamResponses);
-    }
-
-    private Map<Integer, String> getPaginatedMap(List<IdamResponse> idamResponses)
-            throws JsonProcessingException {
-        Map<Integer, String> result = new HashMap<>();
-        Integer pageNo = 0;
-        List<IdamResponse> list = new ArrayList<>();
-        for (IdamResponse idamResponse : idamResponses) {
-            list.add(idamResponse);
-            if (list.size() >= PAGE_SIZE) {
-                MAPPER.writeValueAsString(list);
-                result.put(pageNo, MAPPER.writeValueAsString(list));
-                list.clear();
-                pageNo++;
-            }
-        }
-        log.info("{}:: Total Pages :: ", result.size());
-        log.info("{}:: Page Size :: ", PAGE_SIZE);
-        return result;
     }
 
     private void verifyUpdatedUserSidamId() {
