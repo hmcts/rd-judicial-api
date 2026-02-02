@@ -141,7 +141,7 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
 
     List<UserProfile> findByPersonalCodeIn(List<String> personalCodes);
 
-    @Query(value ="""
+    @Query(value = """
         SELECT DISTINCT jup.sidam_id 
         FROM dbjudicialdata.judicial_user_profile jup 
         LEFT JOIN dbjudicialdata.judicial_office_appointment joa
