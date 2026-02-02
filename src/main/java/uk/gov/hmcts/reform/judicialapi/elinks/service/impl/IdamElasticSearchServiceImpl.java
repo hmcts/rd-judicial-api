@@ -153,9 +153,6 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 count++;
                 log.debug("{}:: batch count :: ", count);
                 log.debug("{}:: records fetched :: ", users.size());
-                users.forEach(user -> {
-                    log.info("user = {}", user.getEmail());
-                });
                 // When we are at the last page (ie empty results), we stop
                 moreAvailable = users != null && !users.isEmpty();
             } while (moreAvailable);
