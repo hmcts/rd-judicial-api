@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
 import com.github.tomakehurst.wiremock.http.Response;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.launchdarkly.sdk.server.LDClient;
-import lombok.extern.slf4j.Slf4j;
 import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.annotations.WithTags;
 import net.serenitybdd.junit5.SerenityJUnit5Extension;
@@ -61,7 +60,6 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.decodeJwtToken;
 import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRoleFromToken;
 
-@Slf4j
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
 @ExtendWith(SerenityJUnit5Extension.class)
@@ -211,8 +209,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
             String scenarioState = STARTED;
             String nextScenarioState;
             for (int pageNo = 0; pageNo < idamResponseValidationJsonArray.length; pageNo++) {
-                log.info("Stubbing Idam Search Users - Page {}", pageNo);
-                nextScenarioState = scenarioStatePrefix + String.valueOf(pageNo + 1);
+                nextScenarioState = scenarioStatePrefix + (pageNo + 1);
                 sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                         .withId(UUID.randomUUID())
                         .inScenario(scenario)

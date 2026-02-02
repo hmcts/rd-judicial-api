@@ -151,8 +151,8 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                         String.valueOf(count));
                 judicialUsers.addAll(users);
                 count++;
-                log.info("{}:: batch count :: ", count);
-                log.info("{}:: records fetched :: ", users.size());
+                log.debug("{}:: batch count :: ", count);
+                log.debug("{}:: records fetched :: ", users.size());
                 users.forEach(user -> {
                     log.info("user = {}", user.getEmail());
                 });
