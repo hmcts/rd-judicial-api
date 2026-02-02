@@ -151,13 +151,13 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
         LEFT JOIN dbjudicialdata.judicial_additional_roles jar
         ON jar.personal_code = jup.personal_code 
         WHERE jup.sidam_id IS NOT NULL
-        AND(jup.last_loaded_date >= :last_published_date
-        OR jar.end_date BETWEEN :last_published_date_adjusted AND now()
-        OR joa.end_date BETWEEN :last_published_date_adjusted AND now()
-        OR joa2.end_date BETWEEN :last_published_date_adjusted AND now())
+        AND(jup.last_loaded_date >= :lastPublishedDate
+        OR jar.end_date BETWEEN :lastPublishedDateAdjusted AND now()
+        OR joa.end_date BETWEEN :lastPublishedDateAdjusted AND now()
+        OR joa2.end_date BETWEEN :lastPublishedDateAdjusted AND now())
         """)
-    List<String> fetchDeltaLoadIdamIds(@Param("last_published_date")LocalDateTime last_published_date,
-                                       @Param("last_published_date_adjusted")LocalDateTime last_published_date_adjusted);
+    List<String> fetchDeltaLoadIdamIds(@Param("lastPublishedDate")LocalDateTime lastPublishedDate,
+                                       @Param("lastPublishedDateAdjusted")LocalDateTime lastPublishedDateAdjusted);
 
 
 }

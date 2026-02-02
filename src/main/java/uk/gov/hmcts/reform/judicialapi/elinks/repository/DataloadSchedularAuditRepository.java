@@ -31,8 +31,8 @@ public interface DataloadSchedularAuditRepository extends JpaRepository<ElinkDat
 
 
     @Query(value = "SELECT MAX(scheduler_end_time) FROM dbjudicialdata.dataload_schedular_audit "
-        +"WHERE scheduler_name = 'judicial-ref-data-elinks' AND api_name = 'PublishSidamIds' "
-        +"AND status = 'SUCCESS'", nativeQuery = true)
+        + "WHERE scheduler_name = 'judicial-ref-data-elinks' AND api_name = 'PublishSidamIds' "
+        + "AND status = 'SUCCESS'", nativeQuery = true)
     LocalDateTime findLatestSuccessfulSchedularEndTime();
 
 }

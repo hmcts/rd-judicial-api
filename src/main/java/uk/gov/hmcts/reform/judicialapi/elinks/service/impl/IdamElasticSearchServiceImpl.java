@@ -295,7 +295,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
         });
         log.debug("Insert Query batch Response from IDAM " + sidamObjectId.size());
         String updateSidamIds = "UPDATE dbjudicialdata.judicial_user_profile SET sidam_id = ? "
-            +"and last_loaded_date = NOW() WHERE object_id = ? ";
+            + "and last_loaded_date = NOW() WHERE object_id = ? ";
         jdbcTemplate.batchUpdate(
                 updateSidamIds,
                 sidamObjectId,

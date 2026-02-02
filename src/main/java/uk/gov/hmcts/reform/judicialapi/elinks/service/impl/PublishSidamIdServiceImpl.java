@@ -24,9 +24,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAu
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
