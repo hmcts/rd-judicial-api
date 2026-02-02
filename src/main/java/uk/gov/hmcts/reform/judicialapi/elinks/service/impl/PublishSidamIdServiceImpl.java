@@ -81,7 +81,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
     @Value("${jrd.publisher.publish-Idams-delta}")
     boolean publishIdamsDelta;
 
-    @Value("${jrd.publisher.no_of_hours}")
+    @Value("${jrd.publisher.no-of-hours}")
     int noOfHours;
 
     private int sidamIdcount;
