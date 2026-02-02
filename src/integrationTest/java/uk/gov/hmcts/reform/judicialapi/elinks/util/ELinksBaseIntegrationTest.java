@@ -197,6 +197,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
 
     protected void stubIdamResponse(final String[] idamResponseValidationJsonArray,
                                     final HttpStatus httpStatus) {
+        sidamService.resetAll();
         if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                     .willReturn(serverError()
