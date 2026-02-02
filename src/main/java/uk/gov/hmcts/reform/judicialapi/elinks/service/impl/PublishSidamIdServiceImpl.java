@@ -24,7 +24,9 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAu
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -103,16 +105,13 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
             } catch (Exception ex) {
                 throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
             }
-           // if (Optional.ofNullable(maxSuccessfulSchedulerEndTime).isEmpty()) {
-                //lastSuccessSince = commonUtil.getUpdatedDateFormat(lastUpdated);
-            //} else {
-                //lastSuccessSince = maxSuccessfulSchedulerEndTime.toString();
-                //updatedSince = updatedSince.substring(0, updatedSince.indexOf('T'));
-            //}
+            //if maxSuccessfulSchedulerEndTime is null, then set it to an old date in the past to get all records
+            if (Optional.ofNullable(maxSuccessfulSchedulerEndTime).isEmpty()) {
+                maxSuccessfulSchedulerEndTime = LocalDateTime.now().minusYears(8);
+            }
             LocalDateTime newTime = maxSuccessfulSchedulerEndTime.minusHours(noOfHours);
             sidamIds = userProfileRepository
                 .fetchDeltaLoadIdamIds(maxSuccessfulSchedulerEndTime,newTime);
-
         }else {
             // Get all sidam id's from the judicial_user_profile table
             sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
