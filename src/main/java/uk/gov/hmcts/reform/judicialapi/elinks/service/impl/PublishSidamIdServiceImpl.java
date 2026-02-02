@@ -19,7 +19,6 @@ import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.dto.Email;
 import uk.gov.hmcts.reform.judicialapi.elinks.servicebus.ElinkTopicPublisher;
-import uk.gov.hmcts.reform.judicialapi.elinks.util.CommonUtil;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataIngestionSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants;
@@ -75,9 +74,6 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
 
     @Autowired
     private ProfileRepository userProfileRepository;
-
-    @Autowired
-    CommonUtil commonUtil;
 
     @Value("${launchdarkly.sdk.environment}")
     String environment;
