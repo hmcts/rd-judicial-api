@@ -94,7 +94,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
         List<String> sidamIds;
         String lastSuccessSince;
         LocalDateTime maxSuccessfulSchedulerEndTime;
-        if(publishIdamsDelta){
+        if (publishIdamsDelta) {
             log.info("{}:: Publish Sidam Id delta load to ASB is enabled as publish-Idams-delta is set to {true}",
                 logComponentName, publishIdamsDelta);
             // Get delta load of sidam id's from the judicial_user_profile table
@@ -110,7 +110,7 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
             LocalDateTime newTime = maxSuccessfulSchedulerEndTime.minusHours(noOfHours);
             sidamIds = userProfileRepository
                 .fetchDeltaLoadIdamIds(maxSuccessfulSchedulerEndTime,newTime);
-        }else {
+        } else {
             // Get all sidam id's from the judicial_user_profile table
             sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
         }
