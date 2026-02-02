@@ -37,7 +37,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @TestPropertySource(properties = {"elastic.search.recordsPerPage=" + PAGE_SIZE})
 class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
-    public static final int PAGE_SIZE = 1;
+    public static final int PAGE_SIZE = 4;
 
     private static final JsonMapper MAPPER = JsonMapper.builder()
             .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
