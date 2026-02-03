@@ -6,10 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonParser;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.DeserializationFeature;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.MapperFeature;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.json.JsonMapper;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
@@ -38,12 +34,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
     public static final int PAGE_SIZE = 4;
-
-    private static final JsonMapper MAPPER = JsonMapper.builder()
-            .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
-            .configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
-            .configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).build();
 
     @BeforeEach
     void setUp() {
