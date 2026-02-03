@@ -14,13 +14,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import uk.gov.hmcts.reform.judicialapi.configuration.RestTemplateConfiguration;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigProperties;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
@@ -48,12 +48,12 @@ import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
-import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
 import static java.lang.String.format;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -63,7 +63,7 @@ import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRole
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
 @ExtendWith(SerenityJUnit5Extension.class)
-@TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
+@TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5001"})
 @ContextConfiguration(classes = {RestTemplateConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext
@@ -73,14 +73,13 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     public static final String RESPONSE_BODY_MSG_KEY = "message";
     protected static final String USER_PASSWORD = "user:password";
     protected static final String JUDICIAL_REF_DATA_ELINKS = "judicial-ref-data-elinks";
-    protected static final String EMPTY_LIST_JSON = "[]";
     private static final String IDAM_SEARCHUSERS = "/api/v1/users";
     @RegisterExtension
     protected static final WireMockExtension s2sService = new WireMockExtension(8990);
     @RegisterExtension
-    protected static final WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
+    protected static final WireMockExtension sidamService = new WireMockExtension(5001, new JudicialTransformer());
     @RegisterExtension
-    protected static final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
+    protected static final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7001);
     @RegisterExtension
     protected static final WireMockExtension elinks = new WireMockExtension(8000);
     @MockitoBean
@@ -190,12 +189,6 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
 
     protected void stubIdamResponse(final String idamResponseValidationJson,
                                     final HttpStatus httpStatus) {
-        stubIdamResponse(new String[] {idamResponseValidationJson}, httpStatus);
-    }
-
-    protected void stubIdamResponse(final String[] idamResponseValidationJsonArray,
-                                    final HttpStatus httpStatus) {
-        sidamService.resetAll();
         if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
                     .willReturn(serverError()
@@ -204,35 +197,36 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                             .withBody("Internal server error")
                     ));
         } else {
-            String scenario = "Idam Search Users";
-            String scenarioStatePrefix = "Page ";
-            String scenarioState = STARTED;
-            String nextScenarioState;
-            for (int pageNo = 0; pageNo < idamResponseValidationJsonArray.length; pageNo++) {
-                nextScenarioState = scenarioStatePrefix + (pageNo + 1);
-                sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                        .withId(UUID.randomUUID())
-                        .inScenario(scenario)
-                        .whenScenarioStateIs(scenarioState)
-                        .willReturn(aResponse()
-                                .withStatus(httpStatus.value())
-                                .withHeader("Content-Type", "application/json")
-                                .withHeader("Connection", "close")
-                                .withBody(idamResponseValidationJsonArray[pageNo])
-                        ).willSetStateTo(nextScenarioState));
-                scenarioState = nextScenarioState;
-            }
-            // Add a final page stub with an empty list to end loop
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                    .withId(UUID.randomUUID())
-                    .inScenario(scenario)
-                    .whenScenarioStateIs(scenarioState)
                     .willReturn(aResponse()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
                             .withHeader("Connection", "close")
-                            .withBody(EMPTY_LIST_JSON)
+                            .withBody(idamResponseValidationJson)
                     ));
+        }
+    }
+
+    protected void stubIdamElasticSearchResponse(final String idamResponseValidationJson,
+                                                 final int pageNumber,
+                                                 final HttpStatus httpStatus) {
+        if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
+            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                    .willReturn(serverError()
+                            .withStatus(httpStatus.value())
+                            .withHeader("Content-Type", "application/json")
+                            .withBody("Internal server error")
+                    ));
+        } else {
+            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                    .withId(UUID.randomUUID())
+                    .withQueryParam("page", equalTo(String.valueOf(pageNumber)))
+                    .withQueryParam("size", equalTo(String.valueOf(4)))
+                    .willReturn(aResponse()
+                            .withStatus(httpStatus.value())
+                            .withHeader("Content-Type", "application/json")
+                            .withHeader("Connection", "close")
+                            .withBody(idamResponseValidationJson)));
         }
     }
 
@@ -246,7 +240,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                                   {
                                   "access_token": "12345"
                                    }
-                                   """
+                                  """
                         )
                 ));
     }
