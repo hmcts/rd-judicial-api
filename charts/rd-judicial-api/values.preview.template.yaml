@@ -26,7 +26,7 @@ java:
     ELINKS_URL: https://gateway.staging.elinks.judiciary.uk/elinks/api/v5
     LAST_UPDATED: 1900-01-01
     SCHEDULER_ENABLED: true
-    CRON_EXPRESSION: "0 45 11 3 2 ?"
+    CRON_EXPRESSION: "0 15 12 3 2 ?"
     DB_READER_USERNAME: "{{ .Values.postgresql.auth.username}}"
   postgresql:
     enabled: true
