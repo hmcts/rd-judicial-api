@@ -1,5 +1,5 @@
 # rd-judicial-api
-Judicial reference data service  (JRD)
+Judicial reference data service (JRD)
 
 ## Purpose
 
