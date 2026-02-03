@@ -151,7 +151,8 @@ public interface ProfileRepository extends JpaRepository<UserProfile, String> {
         LEFT JOIN dbjudicialdata.judicial_additional_roles jar
         ON jar.personal_code = jup.personal_code 
         WHERE jup.sidam_id IS NOT NULL
-        AND(jup.last_loaded_date >= :lastPublishedDate
+        AND (jup.last_updated >= :lastPublishedDate
+        OR jup.last_loaded_date >= :lastPublishedDate
         OR jar.end_date BETWEEN :lastPublishedDateAdjusted AND now()
         OR joa.end_date BETWEEN :lastPublishedDateAdjusted AND now()
         OR joa2.end_date BETWEEN :lastPublishedDateAdjusted AND now())
