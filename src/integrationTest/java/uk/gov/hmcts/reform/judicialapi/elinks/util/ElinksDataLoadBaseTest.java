@@ -110,6 +110,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     protected static final String PEOPLE_INVALID_APPOINTMENT_ROLE_NAME_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/people_invalid_appointment_role_name.json";
     private static final String YYYY_MM_DD_T_HH_MM_SS_SSS_Z = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    protected static final String EMPTY_RESPONSE = "[]";
 
     public static Stream<Arguments> provideDataForPeopleApi() {
 

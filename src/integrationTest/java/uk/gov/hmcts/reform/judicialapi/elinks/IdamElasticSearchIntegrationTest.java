@@ -29,8 +29,6 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 @Slf4j
 class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
-    private static final String EMPTY_RESPONSE = "[]";
-
     @BeforeEach
     void setUp() {
         deleteData();
@@ -55,9 +53,8 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
-        verifyUserSidamIdIsNull();
-
         //When
+        verifyUserSidamIdIsNull();
         elasticSearchLoadSidamIdsByObjectIds(OK);
 
         //Then
@@ -83,9 +80,8 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
-        verifyUserSidamIdIsNull();
-
         //When
+        verifyUserSidamIdIsNull();
         elasticSearchLoadSidamIdsByObjectIds(OK);
 
         //Then
@@ -110,9 +106,8 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
-        verifyUserSidamIdIsNull();
-
         //When
+        verifyUserSidamIdIsNull();
         elasticSearchLoadSidamIdsByObjectIds(INTERNAL_SERVER_ERROR);
 
         //Then
