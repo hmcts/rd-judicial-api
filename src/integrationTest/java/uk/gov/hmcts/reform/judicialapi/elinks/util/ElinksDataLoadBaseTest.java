@@ -89,6 +89,10 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
             WIREMOCK_RESPONSES_FOLDER + "/people_duplicate_personal_code.json";
     protected static final String IDAM_IDS_SEARCH_RESPONSE_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/sidamId_update_for_matched_objectId.json";
+    protected static final String IDAM_IDS_SEARCH_RESPONSE_PG1_JSON =
+            WIREMOCK_RESPONSES_FOLDER + "/sidamId_update_for_matched_objectId_pg1.json";
+    protected static final String IDAM_IDS_SEARCH_RESPONSE_PG2_JSON =
+            WIREMOCK_RESPONSES_FOLDER + "/sidamId_update_for_matched_objectId_pg2.json";
     protected static final String LOCATION_API_RESPONSE_WITH_PARENT_ID_NULL_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/location_with_null_parent_id.json";
     protected static final String PEOPLE_API_BASE_LOCATION_PARENT_ID_NULL_JSON =
@@ -106,6 +110,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     protected static final String PEOPLE_INVALID_APPOINTMENT_ROLE_NAME_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/people_invalid_appointment_role_name.json";
     private static final String YYYY_MM_DD_T_HH_MM_SS_SSS_Z = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    protected static final String EMPTY_RESPONSE = "[]";
 
     public static Stream<Arguments> provideDataForPeopleApi() {
 
