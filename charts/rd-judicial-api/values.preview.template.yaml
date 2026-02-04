@@ -16,7 +16,7 @@ java:
     JRD_MQ_TOPIC_NAME: "{{ .Release.Name }}-servicebus-jrdapi-topic"
     JRD_MQ_USERNAME: RootManageSharedAccessKey
     JRD_MQ_TRUST_ALL_CERTS: false
-    JRD_DATA_PER_MESSAGE: 200
+    JRD_DATA_PER_MESSAGE: 2
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
     Del_Joh_Profiles: true
