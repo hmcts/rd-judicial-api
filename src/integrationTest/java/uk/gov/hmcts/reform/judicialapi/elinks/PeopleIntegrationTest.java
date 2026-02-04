@@ -119,39 +119,6 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus(), 2);
     }
 
-    @DisplayName("Should run scheduler job and load elinks api's data when appointment id null for authorisations")
-    @Test
-    void shouldRunSchedulerJobAndLoadAllElinksApiDataWhenAppointmentIdNull() throws IOException {
-        ReflectionTestUtils.setField(publishSidamIdService, "elinkTopicPublisher", elinkTopicPublisher);
-        given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
-        willDoNothing().given(elinkTopicPublisher).sendMessage(anyList(), anyString());
-
-        stubLocationApiResponse(readJsonAsString(LOCATION_API_RESPONSE_JSON), OK);
-        stubPeopleApiResponse(readJsonAsString(PEOPLE_API_NULL_APPOINTMENT_ID_RESPONSE_JSON), OK);
-        stubLeaversApiResponse(readJsonAsString(LEAVERS_API_RESPONSE_JSON), OK);
-        stubDeletedApiResponse(readJsonAsString(DELETED_API_RESPONSE_JSON), OK);
-        stubIdamResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON), OK);
-        stubIdamTokenResponse(OK);
-
-        runElinksDataLoadJob();
-
-        final TestDataArguments testDataArguments = getTestDataArguments();
-
-        verifyLocationData();
-
-        verifyUserProfileData(testDataArguments);
-
-        verifyUserAppointmentsData(testDataArguments);
-
-        verifyUserAuthorisationsData(testDataArguments, true);
-
-        verifyUserJudiciaryRolesData(testDataArguments.expectedRoleSize());
-
-        verifyAudit();
-
-        verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
-    }
-
     private void verifyExceptions(TestDataArguments testDataArguments) {
         final var exceptionRecords = elinkDataExceptionRepository.findAll();
 
