@@ -50,7 +50,7 @@ public class IntegrationTestOidcSecurityConfig extends ContextCleanupListener {
 
         HashMap<String,String> data = new HashMap<>();
         data.put("issuer","http://0.0.0.0:6000/o");
-        data.put("jwks_uri","http://0.0.0.0:7001/jwks");
+        data.put("jwks_uri","http://0.0.0.0:7000/jwks");
 
         mockHttpServerForOidc.stubFor(get(urlPathMatching("/o/.well-known/openid-configuration"))
                 .willReturn(aResponse()
