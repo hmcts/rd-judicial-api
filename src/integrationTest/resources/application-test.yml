@@ -102,16 +102,16 @@ idam:
   s2s-authorised:
     services: rd_judicial_api
   api:
-    url: ${IDAM_URL:http://127.0.0.1:5001}
+    url: ${IDAM_URL:http://127.0.0.1:5000}
     client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
     redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
     authorization: ${OAUTH2_AUTH:}
     client-authorization: ${OAUTH2_CLIENT_AUTH:}
 
 ## IDAM feign connection
-auth.idam.client.baseUrl: ${http://127.0.0.1:5001/o}
+auth.idam.client.baseUrl: ${http://127.0.0.1:5000/o}
 oidc:
-  issuer: ${OIDC_ISSUER:http://127.0.0.1:5001/openam/oauth2/hmcts}
+  issuer: ${OIDC_ISSUER:http://127.0.0.1:5000/openam/oauth2/hmcts}
   expiration: 14400000 # milliseconds 4 hours
 
 feign:
@@ -140,7 +140,7 @@ refresh:
   sortColumn: ${REFRESH_SORT_COLUMN:objectId}
 testing:
   support:
-    idamUrl: ${http://127.0.0.1:5001/o}
+    idamUrl: ${http://127.0.0.1:5000/o}
 
 
 elinksApiKey: ${judicial_api_elinks_api_key:}

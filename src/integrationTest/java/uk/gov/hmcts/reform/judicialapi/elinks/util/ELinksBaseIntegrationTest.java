@@ -63,7 +63,7 @@ import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRole
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
 @ExtendWith(SerenityJUnit5Extension.class)
-@TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5001"})
+@TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
 @ContextConfiguration(classes = {RestTemplateConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext
@@ -77,9 +77,9 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     @RegisterExtension
     protected static final WireMockExtension s2sService = new WireMockExtension(8990);
     @RegisterExtension
-    protected static final WireMockExtension sidamService = new WireMockExtension(5001, new JudicialTransformer());
+    protected static final WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
     @RegisterExtension
-    protected static final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7001);
+    protected static final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
     @RegisterExtension
     protected static final WireMockExtension elinks = new WireMockExtension(8000);
     @MockitoBean
