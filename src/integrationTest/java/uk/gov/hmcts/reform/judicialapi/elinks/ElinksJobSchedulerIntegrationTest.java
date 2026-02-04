@@ -42,6 +42,8 @@ public class ElinksJobSchedulerIntegrationTest extends ElinksDataLoadBaseTest {
         stubLeaversApiResponse(readJsonAsString(LEAVERS_API_RESPONSE_JSON), OK);
         stubDeletedApiResponse(readJsonAsString(DELETED_API_RESPONSE_JSON), OK);
         stubIdamResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON), OK);
+        stubIdamElasticSearchResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON), 0, OK);
+        stubIdamElasticSearchResponse(EMPTY_RESPONSE, 1, OK);
         stubIdamTokenResponse(OK);
 
         runElinksDataLoadJob();
@@ -100,6 +102,8 @@ public class ElinksJobSchedulerIntegrationTest extends ElinksDataLoadBaseTest {
         stubLeaversApiResponse(readJsonAsString(LEAVERS_API_RESPONSE_JSON), OK);
         stubDeletedApiResponse(readJsonAsString(DELETED_API_RESPONSE_JSON), OK);
         stubIdamResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON), OK);
+        stubIdamElasticSearchResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON), 0, OK);
+        stubIdamElasticSearchResponse(EMPTY_RESPONSE, 1, OK);
         stubIdamTokenResponse(OK);
 
         runElinksDataLoadJob();
