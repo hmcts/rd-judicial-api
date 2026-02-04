@@ -1,5 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 
+@Slf4j
 class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
 
     @BeforeEach
@@ -32,57 +34,84 @@ class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
         deleteData();
     }
 
-    @DisplayName("Should update sidam id for matched object id")
+    @DisplayName("Should update sidam id for matched object ids")
     @Test
-    void shouldUpdateSidamIdForMatchedObjectId() throws IOException {
-
+    void shouldUpdateSidamIdForMatchedObjectIds() throws IOException {
+        //Given
         given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
 
         final String peopleApiResponseJson = readJsonAsString(PEOPLE_API_RESPONSE_JSON);
-        final String idamElasticSearchResponse = readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON);
         final String locationApiResponseJson = readJsonAsString(LOCATION_API_RESPONSE_JSON);
 
         stubLocationApiResponse(locationApiResponseJson, OK);
         stubPeopleApiResponse(peopleApiResponseJson, OK);
-        stubIdamResponse(idamElasticSearchResponse, OK);
+        stubIdamElasticSearchResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_PG1_JSON), 0, OK);
+        stubIdamElasticSearchResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_PG2_JSON), 1, OK);
+        stubIdamElasticSearchResponse(EMPTY_RESPONSE, 2, OK);
         stubIdamTokenResponse(OK);
 
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
+        //When
         verifyUserSidamIdIsNull();
-
         elasticSearchLoadSidamIdsByObjectIds(OK);
 
+        //Then
         verifyUpdatedUserSidamId();
+        verifySchedulerAudit(SUCCESS);
+    }
 
+    @DisplayName("Should not update on empty Idam ids list")
+    @Test
+    void shouldNotUpdateOnEmptyList() throws IOException {
+
+        //Given
+        given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
+
+        final String peopleApiResponseJson = readJsonAsString(PEOPLE_API_RESPONSE_JSON);
+        final String locationApiResponseJson = readJsonAsString(LOCATION_API_RESPONSE_JSON);
+
+        stubLocationApiResponse(locationApiResponseJson, OK);
+        stubPeopleApiResponse(peopleApiResponseJson, OK);
+        stubIdamElasticSearchResponse(EMPTY_RESPONSE, 0, OK);
+        stubIdamTokenResponse(OK);
+
+        loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
+        loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
+
+        //When
+        verifyUserSidamIdIsNull();
+        elasticSearchLoadSidamIdsByObjectIds(OK);
+
+        //Then
+        verifyUserSidamIdIsNull();
         verifySchedulerAudit(SUCCESS);
     }
 
     @DisplayName("Should audit failed idam elastic search")
     @Test
     void shouldAuditFailedIdamElasticSearch() throws IOException {
-
+        //Given
         given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
 
         final String peopleApiResponseJson = readJsonAsString(PEOPLE_API_RESPONSE_JSON);
-        final String idamElasticSearchResponse = readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON);
         final String locationApiResponseJson = readJsonAsString(LOCATION_API_RESPONSE_JSON);
 
         stubLocationApiResponse(locationApiResponseJson, OK);
         stubPeopleApiResponse(peopleApiResponseJson, OK);
-        stubIdamResponse(idamElasticSearchResponse, INTERNAL_SERVER_ERROR);
+        stubIdamElasticSearchResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_PG1_JSON), 0, INTERNAL_SERVER_ERROR);
         stubIdamTokenResponse(OK);
 
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
+        //When
         verifyUserSidamIdIsNull();
-
         elasticSearchLoadSidamIdsByObjectIds(INTERNAL_SERVER_ERROR);
 
+        //Then
         verifyUserSidamIdIsNull();
-
         verifySchedulerAudit(FAILED);
     }
 
