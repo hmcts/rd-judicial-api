@@ -109,6 +109,8 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
             WIREMOCK_RESPONSES_FOLDER + "/people_invalid_appointment_location.json";
     protected static final String PEOPLE_INVALID_APPOINTMENT_ROLE_NAME_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/people_invalid_appointment_role_name.json";
+    protected static final String PEOPLE_NOT_EXPIRED_JSON =
+        WIREMOCK_RESPONSES_FOLDER + "/people_not_epired.json";
     private static final String YYYY_MM_DD_T_HH_MM_SS_SSS_Z = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     protected static final String EMPTY_RESPONSE = "[]";
 
@@ -308,6 +310,21 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .errorMsg1("Personal Code : 4913085 is already loaded")
                         .build();
 
+        final TestDataArguments successLoadTestDataNotExpiredUserArguments =
+            TestDataArguments
+                .builder()
+                .eLinksPeopleApiResponseJson(PEOPLE_NOT_EXPIRED_JSON)
+                .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
+                .expectedAppointmentsSize(4)
+                .expectedAuthorisationSize(4)
+                .expectedRoleSize(2)
+                .expectedUserProfiles(2)
+                .expectedJobStatus(SUCCESS)
+                .expectedActiveFlag(true)
+                .expectedAuditRecords(2)
+                .expectedLastWorkingDate("2028-07-23")
+                .build();
+
         return Stream.of(
                 arguments(
                         named("Should load people data with success status", successLoadTestDataArguments)),
@@ -347,7 +364,10 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
 
                 arguments(
                         named("Should load people data with partial success status when duplicate personal code "
-                                + "is present", duplicatePersonalCodeTestDataArguments))
+                                + "is present", duplicatePersonalCodeTestDataArguments)),
+
+                arguments(
+                        named("Should load people data not expired ", successLoadTestDataNotExpiredUserArguments))
 
 
         );

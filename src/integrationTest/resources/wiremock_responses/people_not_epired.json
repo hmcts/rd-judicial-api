@@ -1,0 +1,116 @@
+{
+  "pagination": {
+    "results": 23376,
+    "pages": 468,
+    "current_page": 20,
+    "results_per_page": 50,
+    "more_pages": false
+  },
+  "results": [
+    {
+      "id": "5f8b26ba-0c8b-4192-b5c7-311d242f0cae",
+      "per_id": 66992,
+      "personal_code": "66920248",
+      "sidamId": "006245c8-fccf-4265-80a2-6e5c573f662c",
+      "lastLoadedDate": "2026-02-04 11:18:58.185",
+      "lastUpdated": "2026-02-04 11:18:58.185",
+      "title": "District Judge District Judge Rachel Jones Court of Protection District Judge",
+      "known_as": "John",
+      "surname": "Chung",
+      "fullname": "District Judge John Chung",
+      "initials": "JC",
+      "post_nominals": null,
+      "email": "EmploymentJudge.JohnChung@ejudiciary.net",
+      "sex": "male",
+      "work_phone": "07965 544394",
+      "disability": false,
+      "retirement_date": "2026-07-23",
+      "leaving_on": "2026-07-23",
+      "appointments": [
+        {
+          "appointment_id": 998,
+          "role_name": "District Judge",
+          "role_name_id": 90004,
+          "type": "Voluntary",
+          "court_name": "Court of Protection",
+          "court_type": null,
+          "circuit": "London",
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "London",
+          "base_location": "Court of Protection",
+          "base_location_id": 1032,
+          "is_principal": true,
+          "start_date": "2010-03-23",
+          "end_date": "2023-03-08",
+          "contract_type": "SPTW-50%",
+          "contract_type_id": 5
+        },
+        {
+          "appointment_id": 999,
+          "role_name": "Tribunal Judge",
+          "role_name_id": 90005,
+          "type": "Tribunals",
+          "court_name": "Unassigned",
+          "court_type": "First Tier Tribunal",
+          "circuit": null,
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "Unassigned",
+          "base_location": "Social Entitlement Chamber - Unassigned",
+          "base_location_id": 1036,
+          "is_principal": false,
+          "start_date": "2007-05-11",
+          "end_date": "2014-06-20",
+          "contract_type": "Fee-paid",
+          "contract_type_id": 1
+        }
+      ],
+      "judiciary_roles": [
+        {
+          "name": "Course Director for COP (JC)",
+          "judiciary_role_id": 638,
+          "judiciary_role_name_id": "90003",
+          "start_date": "2015-04-01",
+          "end_date": "2019-03-31"
+        }
+      ],
+      "authorisations": [
+        {
+          "jurisdiction": "Family",
+          "tickets": [
+            "Court of Protection"
+          ]
+        },
+        {
+          "jurisdiction": "Tribunals",
+          "tickets": [
+            "Criminal Injuries Compensations"
+          ]
+        }
+      ],
+      "authorisations_with_dates": [
+        {
+          "authorisation_id": 66899,
+          "appointment_id": 998,
+          "jurisdiction": "Authorisation Magistrate",
+          "jurisdiction_id": 1,
+          "ticket": "Court of Protection",
+          "ticket_id": 313,
+          "start_date": "2002-09-09",
+          "end_date": "2022-07-23"
+        },
+        {
+          "authorisation_id": 76899,
+          "appointment_id": 999,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "Criminal Injuries Compensations",
+          "ticket_id": 368,
+          "start_date": "2007-05-11",
+          "end_date": "2014-06-20"
+        }
+      ]
+    }
+  ]
+}

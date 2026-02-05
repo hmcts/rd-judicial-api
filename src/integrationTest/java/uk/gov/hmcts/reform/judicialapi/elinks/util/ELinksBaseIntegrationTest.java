@@ -26,6 +26,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigPrope
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AppointmentsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.AuthorisationsRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.BaseLocationRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedulerJobRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkSchedularAuditRepository;
