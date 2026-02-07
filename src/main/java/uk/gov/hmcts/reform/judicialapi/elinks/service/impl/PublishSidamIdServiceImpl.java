@@ -10,9 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfiguration;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.JudicialDataLoadException;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JrdRegionMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
@@ -85,6 +89,8 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
     int noOfHours;
 
     private int sidamIdcount;
+    @Autowired
+    private JudicialRoleTypeRepository judicialRoleTypeRepository;
 
     public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() throws JudicialDataLoadException {
         List<String> sidamIds;
@@ -104,8 +110,19 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
                 maxSuccessfulSchedulerEndTime = LocalDateTime.now().minusYears(8);
             }
             LocalDateTime newTime = maxSuccessfulSchedulerEndTime.minusHours(noOfHours);
+            List <UserProfile> users = userProfileRepository.findAll();
+            List<JudicialRoleType> judiciaryRoleTypes = judicialRoleTypeRepository.findAll();
+
+
             sidamIds = userProfileRepository
                 .fetchDeltaLoadIdamIds(maxSuccessfulSchedulerEndTime,newTime);
+            System.out.println("@@@@@@@@@@@@@@@@@@@@was null hence maxSuccessfulSchedulerEndTime"+maxSuccessfulSchedulerEndTime);
+
+            System.out.println("@@@@@@@@@@@@@@@@@@@@sidamIds"+sidamIds.size());
+            for(String ids : sidamIds){
+                System.out.println("@@@@@@@@@@@@@@@@@@@@sidamIds"+ids);
+            }
+
         } else {
             // Get all sidam id's from the judicial_user_profile table
             sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
