@@ -10,9 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.judicialapi.elinks.configuration.ElinkEmailConfiguration;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.JudicialRoleType;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.JudicialDataLoadException;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.DataloadSchedularAuditRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JrdRegionMappingRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.JudicialRoleTypeRepository;
+import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.IEmailService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
@@ -34,6 +39,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.FAILED;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.IN_PROGRESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.JobStatus.SUCCESS;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataConstants.CONTENT_TYPE_PLAIN;
+import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.AUDIT_DATA_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.DATABASE_FETCH_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JOB_DETAILS_UPDATE_ERROR;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JUDICIAL_REF_DATA_ELINKS;
@@ -70,15 +76,57 @@ public class PublishSidamIdServiceImpl implements PublishSidamIdService {
     @Autowired
     private DataloadSchedularAuditRepository dataloadSchedularAuditRepository;
 
+    @Autowired
+    private ProfileRepository userProfileRepository;
+
     @Value("${launchdarkly.sdk.environment}")
     String environment;
 
+    @Value("${jrd.publisher.publish-Idams-delta}")
+    boolean publishIdamsDelta;
+
+    @Value("${jrd.publisher.no-of-hours}")
+    int noOfHours;
+
     private int sidamIdcount;
+    @Autowired
+    private JudicialRoleTypeRepository judicialRoleTypeRepository;
 
     public ResponseEntity<SchedulerJobStatusResponse> publishSidamIdToAsb() throws JudicialDataLoadException {
+        List<String> sidamIds;
+        String lastSuccessSince;
+        LocalDateTime maxSuccessfulSchedulerEndTime;
+        if (publishIdamsDelta) {
+            log.info("{}:: Publish Sidam Id delta load to ASB is enabled as publish-Idams-delta is set to {true}",
+                logComponentName, publishIdamsDelta);
+            // Get delta load of sidam id's from the judicial_user_profile table
+            try {
+                maxSuccessfulSchedulerEndTime = dataloadSchedularAuditRepository.findLatestSuccessfulSchedularEndTime();
+            } catch (Exception ex) {
+                throw new ElinksException(HttpStatus.NOT_ACCEPTABLE, AUDIT_DATA_ERROR, AUDIT_DATA_ERROR);
+            }
+            //if maxSuccessfulSchedulerEndTime is null, then set it to an old date in the past to get all records
+            if (Optional.ofNullable(maxSuccessfulSchedulerEndTime).isEmpty()) {
+                maxSuccessfulSchedulerEndTime = LocalDateTime.now().minusYears(8);
+            }
+            LocalDateTime newTime = maxSuccessfulSchedulerEndTime.minusHours(noOfHours);
+            List <UserProfile> users = userProfileRepository.findAll();
+            List<JudicialRoleType> judiciaryRoleTypes = judicialRoleTypeRepository.findAll();
 
-        // Get all sidam id's from the judicial_user_profile table
-        List<String> sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
+
+            sidamIds = userProfileRepository
+                .fetchDeltaLoadIdamIds(maxSuccessfulSchedulerEndTime,newTime);
+            System.out.println("@@@@@@@@@@@@@@@@@@@@was null hence maxSuccessfulSchedulerEndTime"+maxSuccessfulSchedulerEndTime);
+
+            System.out.println("@@@@@@@@@@@@@@@@@@@@sidamIds"+sidamIds.size());
+            for(String ids : sidamIds){
+                System.out.println("@@@@@@@@@@@@@@@@@@@@sidamIds"+ids);
+            }
+
+        } else {
+            // Get all sidam id's from the judicial_user_profile table
+            sidamIds = jdbcTemplate.query(GET_DISTINCT_SIDAM_ID, RefDataConstants.ROW_MAPPER);
+        }
         return publishSidamIdToAsb(sidamIds);
     }
 
