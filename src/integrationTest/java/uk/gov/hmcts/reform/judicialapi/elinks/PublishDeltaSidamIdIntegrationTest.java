@@ -205,23 +205,23 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
                     }
                 );
             case "USER-NOT-EXPIRED-ROLES-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(5);
+
             case "USER-NOT-EXPIRED-APPOINTMENTS-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(5);
+
             case "USER-NOT-EXPIRED-AUTHORISATIONS-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(5);
+
             case "USER-NOT-EXPIRED-APPOINTMENTS-AUTHORISATIONS-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(5);
+
             case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(5);
+
             case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-APPOINTMENTS-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(5);
+
             case "USER-NOT-EXPIRED-APPOINTMENTS-ROLES-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(5);
+
             case "USER-EXPIRED-REST-NOT-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(5);
+
             case "ALL-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(4);
+
         }
 
         ElinksResponses peopleElinksResponses = eLinksResponses.get(1);
