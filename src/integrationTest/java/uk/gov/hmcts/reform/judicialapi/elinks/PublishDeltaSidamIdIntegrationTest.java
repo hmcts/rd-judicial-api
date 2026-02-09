@@ -59,6 +59,12 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
     @DisplayName("Should publish delta SidamId to topic")
     @ParameterizedTest
     @ValueSource(strings = {
+        "EXISTING-USER-AUTHORISATIONS-EXPIRED",
+        "EXISTING-USER-APPOINTMENTS-EXPIRED",
+        "EXISTING-USER-ROLES-EXPIRED",
+        "EXISTING-USER-NOT-EXPIRED-REST-NOT-EXPIRED",
+        "EXISTING-USER-NO-EXPIRY-DATES",
+        "EXISTING-USER-EXPIRED-REST-NOT-EXPIRED",
         "ALL-EXPIRED",
         "ALL-EXPIRED-FLAG-DISABLED",
     }) void testScenariosDeltaFlagEnabled(String scenario) throws IOException {
@@ -72,6 +78,7 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
 
         stubPeopleApiResponse(mapper.writeValueAsString(mutatedPeopleData), OK);
 
+
         stubResponsesToRunElinks();
 
         manipulatePeopleDataBeforePublish(scenario);
@@ -79,13 +86,10 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         publishSidamIds(OK);
 
         verifyPeopleResponse(scenario);
-        cleanUpElinksResponses();
+
         verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
     }
 
-    public void cleanUpElinksResponses() {
-     elinksResponsesRepository.flush();
-    }
 
     protected JsonNode mutatePeopleResponse(String scenario,
                                         ObjectMapper mapper,
@@ -234,6 +238,5 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
             assertThat(item.path("email").asText()).contains("User1@ejudiciary.net");
         }
     }
-
 
 }
