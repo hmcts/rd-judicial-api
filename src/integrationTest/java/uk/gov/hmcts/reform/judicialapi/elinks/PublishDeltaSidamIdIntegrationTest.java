@@ -2,6 +2,9 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
@@ -14,32 +17,31 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpStatus.OK;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.IDAMSEARCH;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus.SUCCESS;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ObjectNode;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus;
 
 class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
-    private static final String LAST_LOADED_DATE_REGEX = "\"lastLoadedDate\":\"[^\"]+\"";
-    private static final String LAST_UPDATED_DATE_REGEX = "\"lastUpdated\":\"[^\"]+\"";
-
+    @Autowired
+    private ConfigurableApplicationContext context;
+    protected static final String PEOPLE_DELTA_LOAD_JSON = "wiremock_responses/people_delta_load.json";
     @BeforeEach
     void setUp() {
         deleteData();
@@ -53,121 +55,84 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         given(idamTokenConfigProperties.getAuthorization()).willReturn(USER_PASSWORD);
     }
 
+
     @DisplayName("Should publish delta SidamId to topic")
     @ParameterizedTest
     @ValueSource(strings = {
-        "USER-NOT-EXPIRED-REST-NOT-EXPIRED",
-        "USER-NOT-EXPIRED-ROLES-EXPIRED",
-        "USER-NOT-EXPIRED-APPOINTMENTS-EXPIRED",
-        "USER-NOT-EXPIRED-AUTHORISATIONS-EXPIRED",
-        "USER-NOT-EXPIRED-APPOINTMENTS-AUTHORISATIONS-EXPIRED",
-        "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-EXPIRED",
-        "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-APPOINTMENTS-EXPIRED",
-        "USER-NOT-EXPIRED-APPOINTMENTS-ROLES-EXPIRED",
-        "USER-EXPIRED-REST-NOT-EXPIRED",
         "ALL-EXPIRED",
-    })
-    void testScenarios(String scenario) throws IOException {
+        "ALL-EXPIRED-FLAG-DISABLED",
+    }) void testScenariosDeltaFlagEnabled(String scenario) throws IOException {
         willDoNothing().given(elinkTopicPublisher).sendMessage(anyList(), anyString());
 
-        String newEndDate = "2014-04-30";
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode basePeopleData = loadBasePeopleJson(mapper);
+        InputStream jsonInput = getClass().getClassLoader()
+            .getResourceAsStream(PEOPLE_DELTA_LOAD_JSON);
+        JsonNode basePeopleData = mapper.readTree(jsonInput);
+        JsonNode mutatedPeopleData = mutatePeopleResponse(scenario, mapper, basePeopleData);
 
-        JsonNode mutatedPeopleData = mutatePeopleResponse(scenario, mapper, basePeopleData, newEndDate);
+        stubPeopleApiResponse(mapper.writeValueAsString(mutatedPeopleData), OK);
 
-        if (mutatedPeopleData != null) {
-            stubPeopleApiResponse(mapper.writeValueAsString(mutatedPeopleData), OK);
-        }
+        stubResponsesToRunElinks();
 
-        stubCommonResponses();
+        manipulatePeopleDataBeforePublish(scenario);
 
-        verifyElinksResponse(scenario);
-        verifyAudit(scenario);
+        publishSidamIds(OK);
 
+        verifyPeopleResponse(scenario);
+        cleanUpElinksResponses();
         verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
     }
 
-    private JsonNode loadBasePeopleJson(ObjectMapper mapper) throws IOException {
-        InputStream jsonInput = getClass().getClassLoader()
-            .getResourceAsStream("wiremock_responses/people_not_epired.json");
-
-        return mapper.readTree(jsonInput);
+    public void cleanUpElinksResponses() {
+     elinksResponsesRepository.flush();
     }
 
-    private JsonNode mutatePeopleResponse(String scenario,
-                                          ObjectMapper mapper,
-                                          JsonNode base,
-                                          String newEndDate) throws IOException {
+    protected JsonNode mutatePeopleResponse(String scenario,
+                                        ObjectMapper mapper,
+                                        JsonNode base) throws IOException {
 
         ObjectNode root = (ObjectNode) base.deepCopy();
         JsonNode results = root.path("results");
 
         switch (scenario) {
-            case "USER-NOT-EXPIRED-REST-NOT-EXPIRED":
-                return base;
-
-            case "USER-NOT-EXPIRED-ROLES-EXPIRED":
-                expireFields(results, "judiciary_roles", newEndDate);
+            case "EXISTING-USER-AUTHORISATIONS-EXPIRED":
+                expireFields(results, "judiciary_roles");
                 break;
-
-            case "USER-NOT-EXPIRED-APPOINTMENTS-EXPIRED":
-                expireFields(results, "appointments", newEndDate);
+            case "EXISTING-USER-APPOINTMENTS-EXPIRED":
+                expireFields(results, "appointments");
                 break;
-
-            case "USER-NOT-EXPIRED-AUTHORISATIONS-EXPIRED":
-                expireFields(results, "authorisations", newEndDate);
+            case "EXISTING-USER-ROLES-EXPIRED":
+                expireFields(results, "authorisations_with_dates");
                 break;
-
-            case "USER-NOT-EXPIRED-APPOINTMENTS-AUTHORISATIONS-EXPIRED":
-                expireFields(results, "appointments", newEndDate);
-                expireFields(results, "authorisations", newEndDate);
-                break;
-
-            case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-EXPIRED":
-                expireFields(results, "authorisations", newEndDate);
-                expireFields(results, "judiciary_roles", newEndDate);
-                break;
-
-            case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-APPOINTMENTS-EXPIRED":
-                expireFields(results, "authorisations", newEndDate);
-                expireFields(results, "appointments", newEndDate);
-                expireFields(results, "judiciary_roles", newEndDate);
-                break;
-
-            case "USER-NOT-EXPIRED-APPOINTMENTS-ROLES-EXPIRED":
-                expireFields(results, "appointments", newEndDate);
-                expireFields(results, "judiciary_roles", newEndDate);
-                break;
-
             case "ALL-EXPIRED":
-                expireFields(results, "appointments", newEndDate);
-                expireFields(results, "judiciary_roles", newEndDate);
+                expireFields(results, "judiciary_roles");
+                expireFields(results, "appointments");
+                expireFields(results, "authorisations_with_dates");
                 break;
-
-            case "USER-EXPIRED-REST-NOT-EXPIRED":
-                // only audit/date replacement, no stub change
-                return null;
+            case "ALL-EXPIRED-FLAG-DISABLED":
+                expireFields(results, "judiciary_roles");
+                expireFields(results, "appointments");
+                expireFields(results, "authorisations_with_dates");
+                break;
         }
-
-        return root;
+     return root;
     }
 
-    private void expireFields(JsonNode resultsNode, String fieldName, String newEndDate) {
+
+    private void expireFields(JsonNode resultsNode, String fieldName) {
         if (resultsNode.isArray()) {
             for (JsonNode item : resultsNode) {
-                String knownAs = item.path("known_as").asText();
-                if ("Ronin".equalsIgnoreCase(knownAs)) {
                     item.path(fieldName)
-                        .forEach(role -> ((ObjectNode) role).put("end_date", newEndDate));
-                }
+                        .forEach(role -> ((ObjectNode) role).put("end_date",
+                            LocalDate.now().minusYears(9)
+                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
             }
         }
     }
 
-    private void stubCommonResponses() throws IOException {
-        stubLocationApiResponse(readJsonAsString(LOCATION_API_RESPONSE_JSON), OK);
+    private void stubResponsesToRunElinks() throws IOException {
 
+        stubLocationApiResponse(readJsonAsString(LOCATION_API_RESPONSE_JSON), OK);
         stubIdamResponse(readJsonAsString(IDAM_IDS_SEARCH_RESPONSE_JSON), OK);
         stubIdamTokenResponse(OK);
 
@@ -175,54 +140,49 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
         findSidamIdsByObjectIds(OK);
-        publishSidamIds(OK);
     }
-    public void verifyElinksResponse(String scenario) {
-        final List<ElinksResponses> eLinksResponses =
-            elinksResponsesRepository.findAll()
-                .stream()
-                .sorted(comparing(ElinksResponses::getApiName))
-                .toList();
+
+
+    protected void manipulatePeopleDataBeforePublish(String scenario) throws IOException {
+
+        List<String> personalCodes = List.of("100000");
+
+        List<UserProfile> users = profileRepository
+            .fetchUserProfileByPersonalCodes(personalCodes, PageRequest.of(0, 100)).getContent();
+
         switch (scenario) {
-            case "USER-NOT-EXPIRED-REST-NOT-EXPIRED":
-                assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(2);
-                eLinksResponses.forEach(response ->
-                    {
-                        if (response.getApiName().equalsIgnoreCase(PEOPLEAPI)) {
-                            assertThat(response.getElinksData()).isNotNull();
-                            com.fasterxml.jackson.databind.JsonNode rootNode = response.getElinksData();
-                            com.fasterxml.jackson.databind.JsonNode resultsNode = rootNode.path("results");
-                            if (resultsNode.isArray()) {
-                                for (com.fasterxml.jackson.databind.JsonNode item : resultsNode) {
-                                    //String id = item.path("id").asText();
-                                    //String email = item.path("email").asText();
-                                    //assertThat(response.getElinksData().get("id")).contains("");
-                                    assertThat(item.path("email").asText()).contains("");
-                                }
-                            }
 
-                        }
-                    }
-                );
-            case "USER-NOT-EXPIRED-ROLES-EXPIRED":
-
-            case "USER-NOT-EXPIRED-APPOINTMENTS-EXPIRED":
-
-            case "USER-NOT-EXPIRED-AUTHORISATIONS-EXPIRED":
-
-            case "USER-NOT-EXPIRED-APPOINTMENTS-AUTHORISATIONS-EXPIRED":
-
-            case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-EXPIRED":
-
-            case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-APPOINTMENTS-EXPIRED":
-
-            case "USER-NOT-EXPIRED-APPOINTMENTS-ROLES-EXPIRED":
-
-            case "USER-EXPIRED-REST-NOT-EXPIRED":
-
+            case "EXISTING-USER-NO-EXPIRY-DATES":
+                users.get(0).setLastLoadedDate(null);
+                break;
+            case "EXISTING-USER-EXPIRED-REST-NOT-EXPIRED":
+                users.get(0).setLastLoadedDate(now().minusYears(9));
+                users.get(0).setLastUpdated(now().minusYears(9));
+                break;
+            case "EXISTING-USER-NOT-EXPIRED-REST-NOT-EXPIRED":
+                break;
             case "ALL-EXPIRED":
-
+                users.get(0).setLastLoadedDate(now().minusYears(9));
+                users.get(0).setLastUpdated(now().minusYears(9));
+                users.get(0).setKnownAs("Sabina");
+                break;
+            case "ALL-EXPIRED-FLAG-DISABLED":
+                TestPropertyValues.of("jrd.publisher.publish-Idams-delta=false")
+                    .applyTo(context);
+                users.get(0).setLastLoadedDate(now().minusYears(9));
+                users.get(0).setLastUpdated(now().minusYears(9));
+                break;
         }
+        profileRepository.saveAll(users);
+    }
+
+
+
+
+    public void verifyPeopleResponse(String scenario) {
+        final List<ElinksResponses> eLinksResponses = elinksResponsesRepository.findAll()
+                .stream().sorted(comparing(ElinksResponses::getApiName)).toList();
+        assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(2);
 
         ElinksResponses peopleElinksResponses = eLinksResponses.get(1);
         assertThat(peopleElinksResponses).isNotNull();
@@ -230,50 +190,49 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(peopleElinksResponses.getCreatedDate()).isNotNull();
         assertThat(peopleElinksResponses.getElinksData()).isNotNull();
 
+        com.fasterxml.jackson.databind.JsonNode resultsNode = peopleElinksResponses.getElinksData().path("results");
+        if (resultsNode.isArray()) {
+            switch (scenario) {
+                case "USER-NOT-EXPIRED-REST-NOT-EXPIRED":
+                    assertsToVerifyUserPublished(1, resultsNode);
+                    break;
+                case "USER-NOT-EXPIRED-ROLES-EXPIRED":
+                    assertsToVerifyUserPublished(1, resultsNode);
+                    break;
+                case "USER-NOT-EXPIRED-APPOINTMENTS-EXPIRED":
+                    assertsToVerifyUserPublished(1, resultsNode);
+                    break;
+                case "USER-NOT-EXPIRED-AUTHORISATIONS-EXPIRED":
+                    assertsToVerifyUserPublished(1, resultsNode);
+                    break;
+                case "USER-NOT-EXPIRED-APPOINTMENTS-AUTHORISATIONS-EXPIRED":
+                    assertsToVerifyUserPublished(1, resultsNode);
+                    break;
+                case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-EXPIRED":
+                    assertsToVerifyUserPublished(1, resultsNode);
+                    break;
+                case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-APPOINTMENTS-EXPIRED":
+                    assertsToVerifyUserPublished(0, resultsNode);
+                    break;
+                case "USER-EXPIRED-REST-NOT-EXPIRED":
+                    assertsToVerifyUserPublished(1, resultsNode);
+                    break;
+                case "ALL-EXPIRED":
+                    assertsToVerifyUserPublished(0, resultsNode);
+                    break;
+            }
+        }
     }
 
-    private void verifyAudit(String scenario) {
+    private void assertsToVerifyUserPublished(int size,com.fasterxml.jackson.databind.JsonNode resultsNode) {
 
-        final List<ElinkDataSchedularAudit> eLinksDataSchedulerAudits =
-            elinkSchedularAuditRepository.findAll()
-                .stream()
-                .sorted(comparing(ElinkDataSchedularAudit::getApiName))
-                .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(4);
-
-        final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
-        final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
-        final ElinkDataSchedularAudit auditEntry3 = eLinksDataSchedulerAudits.get(2);
-        final ElinkDataSchedularAudit auditEntry4 = eLinksDataSchedulerAudits.get(3);
-
-        assertThat(auditEntry1).isNotNull();
-        assertThat(auditEntry2).isNotNull();
-        assertThat(auditEntry3).isNotNull();
-        assertThat(auditEntry4).isNotNull();
-
-        assertThat(auditEntry1.getApiName()).isNotNull().isEqualTo(IDAMSEARCH);
-        assertThat(auditEntry1.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry1.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry1.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry1.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry2.getApiName()).isNotNull().isEqualTo(LOCATIONAPI);
-        assertThat(auditEntry2.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry2.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry2.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry2.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry3.getApiName()).isNotNull().isEqualTo(PEOPLEAPI);
-        assertThat(auditEntry3.getStatus()).isNotNull().isEqualTo(PARTIAL_SUCCESS.getStatus());
-        assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry3.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry4.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
-        assertThat(auditEntry4.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry4.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry4.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry4.getSchedulerEndTime()).isNotNull();
+        assertThat(resultsNode.size()).isEqualTo(size);
+        for (com.fasterxml.jackson.databind.JsonNode item : resultsNode) {
+            assertThat(item.path("id").asText()).contains("10000000-0c8b-4192-b5c7-311d737f0cae");
+            assertThat(item.path("personal_code").asText()).contains("100000");
+            assertThat(item.path("known_as").asText()).contains("User1");
+            assertThat(item.path("email").asText()).contains("User1@ejudiciary.net");
+        }
     }
 
 

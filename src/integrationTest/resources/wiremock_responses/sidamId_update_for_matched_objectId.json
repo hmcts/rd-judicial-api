@@ -3,7 +3,7 @@
     "id": "6455c84c-e77d-4c4f-9759-bf4a93a8e972",
     "forename": "Service",
     "surname": "Account",
-    "email": "DJ.Rachel.Jones@ejudiciary.net",
+    "email": "HHJ.Leslie.Jones@judiciarystagingtest999.onmicrosoft.com",
     "active": true,
     "locked": false,
     "pending": true,
@@ -24,44 +24,15 @@
       "caseworker-privatelaw-courtadmin"
     ],
     "ssoProvider": "string",
-    "ssoId": "5f8b26ba-0c8b-4192-b5c7-311d242f0cae",
+    "ssoId": "5f8b26ba-0c8b-4192-b5c7-311d737f0cae",
     "lastModified": "2023-01-17T13:15:36.435Z",
     "createDate": "2022-12-02T11:54:55.212Z"
-  },
-  {
-    "id": "6455c84c-e77d-4c4f-9759-bf4a93a8e977",
-    "forename": "Service",
-    "surname": "Account",
-    "email": "DJ.Ronin.Brown@ejudiciary.net",
-    "active": true,
-    "locked": false,
-    "pending": true,
-    "stale": true,
-    "pwdAccountLockedTime": "string",
-    "roles": [
-      "caseworker-privatelaw-systemupdate",
-      "caseworker-privatelaw",
-      "hearing-manager",
-      "hearing-viewer",
-      "jrd-admin",
-      "listed-hearing-viewer",
-      "idam-service-account",
-      "judge",
-      "caseworker",
-      "judiciary",
-      "jrd-system-user",
-      "caseworker-privatelaw-courtadmin"
-    ],
-    "ssoProvider": "string",
-    "ssoId": "24Cb26ba-0c8b-4192-b5c7-311d737f0cae",
-    "lastModified": "2014-01-17T13:15:36.435Z",
-    "createDate": "2012-12-02T11:54:55.212Z"
   },
   {
     "id": "6455c84c-e77d-4c4f-9759-bf4a93a8e974",
     "forename": "Service",
     "surname": "Account",
-    "email": "DJ.Mathew.Gomes@ejudiciary.net",
+    "email": "HHJ.Yuriko.Koiko@judiciarystaging13232.onmicrosoft.com",
     "active": true,
     "locked": false,
     "pending": true,
@@ -82,15 +53,15 @@
       "caseworker-privatelaw-courtadmin"
     ],
     "ssoProvider": "string",
-    "ssoId": "8eft26ba-0c8b-4192-b5c7-311d737f0cae",
+    "ssoId": "5f8b26ba-0c8b-4192-b5c7-311d737f0cab",
     "lastModified": "2023-01-17T13:15:36.435Z",
     "createDate": "2022-12-02T11:54:55.212Z"
   },
   {
-    "id": "8455c84c-e77d-4c4f-9759-bf4a93a8e974",
-    "forename": "Hue",
-    "surname": "Chang",
-    "email": "Hue.Chang@ejudiciary.net",
+    "id": "1055c84c-e77d-4c4f-9759-bf4a93a8e977",
+    "forename": "User1",
+    "surname": "Account",
+    "email": "User1@ejudiciary.net",
     "active": true,
     "locked": false,
     "pending": true,
@@ -111,37 +82,9 @@
       "caseworker-privatelaw-courtadmin"
     ],
     "ssoProvider": "string",
-    "ssoId": "pandab43-0c8b-4192-b5c7-311d737f0cae",
-    "lastModified": "2023-01-17T13:15:36.435Z",
-    "createDate": "2022-12-02T11:54:55.212Z"
-  },
-  {
-    "id": "9455c84c-e77d-4c4f-9759-bf4a93a8e974",
-    "forename": "Marie",
-    "surname": "Singer",
-    "email": "Marie.Singer@ejudiciary.net",
-    "active": true,
-    "locked": false,
-    "pending": true,
-    "stale": true,
-    "pwdAccountLockedTime": "string",
-    "roles": [
-      "caseworker-privatelaw-systemupdate",
-      "caseworker-privatelaw",
-      "hearing-manager",
-      "hearing-viewer",
-      "jrd-admin",
-      "listed-hearing-viewer",
-      "idam-service-account",
-      "judge",
-      "caseworker",
-      "judiciary",
-      "jrd-system-user",
-      "caseworker-privatelaw-courtadmin"
-    ],
-    "ssoProvider": "string",
-    "ssoId": "kolard43-0c8b-4192-b5c7-311d737f0cae",
-    "lastModified": "2023-01-17T13:15:36.435Z",
-    "createDate": "2022-12-02T11:54:55.212Z"
+    "ssoId": "10000000-0c8b-4192-b5c7-311d737f0cae",
+    "lastModified": "2014-01-17T13:15:36.435Z",
+    "createDate": "2012-12-02T11:54:55.212Z"
   }
+
 ]
