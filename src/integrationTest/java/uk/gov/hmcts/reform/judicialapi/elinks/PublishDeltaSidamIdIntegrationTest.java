@@ -23,6 +23,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -50,7 +51,7 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
     protected static final String EXISTING_USER_NOT_EXPIRED = "EXISTING-USER-NOT-EXPIRED-REST-NOT-EXPIRED";
     protected static final String RECENTLY_UPLOADED_USER = "RECENTLY_UPLOADED_USER";
     protected static final String RECENTLY_UPDATED_USER = "RECENTLY_UPDATED_USER";
-
+    protected static final String expectedIdamIdLoaded = "1055c84c-e77d-4c4f-9759-bf4a93a8e977";
     @BeforeEach
     void setUp() {
         deleteData();
@@ -257,44 +258,57 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
             switch (scenario) {
                 case RECENTLY_UPDATED_USER:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
                     break;
                 case RECENTLY_UPLOADED_USER:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
                     break;
                 case EXISTING_USER_AUTHORISATIONS_EXPIRED:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
                     break;
                 case EXISTING_USER_ROLES_EXPIRED:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
                     break;
                 case EXISTING_USER_APPOINTMENTS_EXPIRED:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
                     break;
                 case EXISTING_USER_NOT_EXPIRED:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
                     break;
                 case EXISTING_USER_NO_EXPIRY_DATES:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
                     break;
                 case EXISTING_USER_EXPIRED_LONG_TIME:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
                     break;
                 case ALL_EXPIRED:
-                    if((ReflectionTestUtils.getField(publishSidamIdService, "publishIdamsDelta")).toString().equalsIgnoreCase("true")) {
+                    String publishFlagValue = String.valueOf(ReflectionTestUtils.getField(publishSidamIdService, "publishIdamsDelta"));
+                    if (publishFlagValue.equalsIgnoreCase("true")) {
                         assertThat(actualSidamIdsCountPublished).isEqualTo(0);
-                    }else{
+                    } else {
                         assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                        verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
                     }
-                    break;
-            }
+                     break;
+             }
+         }
+
+    private void verifySentSidamIds(int expectedCount, String... expectedIds) {
+        ArgumentCaptor<List<String>> sidamIdsCaptor = ArgumentCaptor.forClass(List.class);
+        verify(elinkTopicPublisher).sendMessage(sidamIdsCaptor.capture(), anyString());
+        List<String> sentSidamIds = sidamIdsCaptor.getValue();
+        assertThat(sentSidamIds).hasSize(expectedCount);
+        assertThat(sentSidamIds.get(0)).isEqualToIgnoringCase(expectedIdamIdLoaded);
+        if (expectedIds != null && expectedIds.length > 0) {
+            assertThat(sentSidamIds).containsExactlyInAnyOrder(expectedIds);
         }
+    }
 
 }
