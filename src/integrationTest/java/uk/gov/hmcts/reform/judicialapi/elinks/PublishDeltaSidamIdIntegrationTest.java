@@ -52,6 +52,7 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
     protected static final String RECENTLY_UPLOADED_USER = "RECENTLY_UPLOADED_USER";
     protected static final String RECENTLY_UPDATED_USER = "RECENTLY_UPDATED_USER";
     protected static final String expectedIdamIdLoaded = "1055c84c-e77d-4c4f-9759-bf4a93a8e977";
+    protected static final String expectedObjectIdLoaded = "10000000-0c8b-4192-b5c7-311d737f0cae";
 
     @BeforeEach
     void setUp() {
@@ -81,11 +82,10 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         EXISTING_USER_NOT_EXPIRED,
         ALL_EXPIRED
     }) void testScenariosDeltaFlagDisabled(String scenario) throws IOException {
-        // Inject property to disable delta flag BEFORE calling the service
+
         TestPropertyValues.of("jrd.publisher.publish-Idams-delta=false")
             .applyTo(context);
 
-        // Also directly set the field on the service to ensure it reads the new value
         ReflectionTestUtils.setField(publishSidamIdService, "publishIdamsDelta", false);
 
         willDoNothing().given(elinkTopicPublisher).sendMessage(anyList(), anyString());
@@ -121,11 +121,10 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         EXISTING_USER_NOT_EXPIRED,
         ALL_EXPIRED
     }) void testScenariosDeltaFlagEnabled(String scenario) throws IOException {
-        // Inject property to enable delta flag BEFORE calling the service
+
         TestPropertyValues.of("jrd.publisher.publish-Idams-delta=true")
             .applyTo(context);
 
-        // Also directly set the field on the service to ensure it reads the new value
         ReflectionTestUtils.setField(publishSidamIdService, "publishIdamsDelta", true);
 
         willDoNothing().given(elinkTopicPublisher).sendMessage(anyList(), anyString());
@@ -259,35 +258,35 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         switch (scenario) {
             case RECENTLY_UPDATED_USER:
                 assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                verifySentSidamIds(1, expectedObjectIdLoaded);
                 break;
             case RECENTLY_UPLOADED_USER:
                 assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                verifySentSidamIds(1, expectedObjectIdLoaded);
                 break;
             case EXISTING_USER_AUTHORISATIONS_EXPIRED:
                 assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                verifySentSidamIds(1, expectedObjectIdLoaded);
                 break;
             case EXISTING_USER_ROLES_EXPIRED:
                 assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                verifySentSidamIds(1, expectedObjectIdLoaded);
                 break;
             case EXISTING_USER_APPOINTMENTS_EXPIRED:
                 assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                verifySentSidamIds(1, expectedObjectIdLoaded);
                 break;
             case EXISTING_USER_NOT_EXPIRED:
                 assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                verifySentSidamIds(1, expectedObjectIdLoaded);
                 break;
             case EXISTING_USER_NO_EXPIRY_DATES:
                 assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                verifySentSidamIds(1, expectedObjectIdLoaded);
                 break;
             case EXISTING_USER_EXPIRED_LONG_TIME:
                 assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                verifySentSidamIds(1, expectedObjectIdLoaded);
                 break;
             case ALL_EXPIRED:
                 String publishFlagValue = String.valueOf(ReflectionTestUtils.getField(publishSidamIdService,
@@ -296,7 +295,7 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
                     assertThat(actualSidamIdsCountPublished).isEqualTo(0);
                 } else {
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                    verifySentSidamIds(1, expectedObjectIdLoaded);
                 }
                 break;
         }
