@@ -52,6 +52,7 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
     protected static final String RECENTLY_UPLOADED_USER = "RECENTLY_UPLOADED_USER";
     protected static final String RECENTLY_UPDATED_USER = "RECENTLY_UPDATED_USER";
     protected static final String expectedIdamIdLoaded = "1055c84c-e77d-4c4f-9759-bf4a93a8e977";
+
     @BeforeEach
     void setUp() {
         deleteData();
@@ -179,15 +180,15 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
                 expireFields(results, "authorisations_with_dates",newDate);
                 break;
         }
-     return root;
+        return root;
     }
 
 
-    private void expireFields(JsonNode resultsNode, String fieldName,String newDate ) {
+    private void expireFields(JsonNode resultsNode, String fieldName,String newDate) {
         if (resultsNode.isArray()) {
             for (JsonNode item : resultsNode) {
-                    item.path(fieldName)
-                        .forEach(role -> ((ObjectNode) role).put("end_date",newDate));
+                item.path(fieldName)
+                    .forEach(role -> ((ObjectNode) role).put("end_date",newDate));
             }
         }
     }
@@ -255,50 +256,51 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
     public void verifyPeopleResponse(String scenario, ValidatableResponse response) {
         int actualSidamIdsCountPublished = response.extract().path("sidamIdsCount");
 
-            switch (scenario) {
-                case RECENTLY_UPDATED_USER:
+        switch (scenario) {
+            case RECENTLY_UPDATED_USER:
+                assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                break;
+            case RECENTLY_UPLOADED_USER:
+                assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                break;
+            case EXISTING_USER_AUTHORISATIONS_EXPIRED:
+                assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                break;
+            case EXISTING_USER_ROLES_EXPIRED:
+                assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                break;
+            case EXISTING_USER_APPOINTMENTS_EXPIRED:
+                assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                break;
+            case EXISTING_USER_NOT_EXPIRED:
+                assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                break;
+            case EXISTING_USER_NO_EXPIRY_DATES:
+                assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                break;
+            case EXISTING_USER_EXPIRED_LONG_TIME:
+                assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
+                break;
+            case ALL_EXPIRED:
+                String publishFlagValue = String.valueOf(ReflectionTestUtils.getField(publishSidamIdService,
+                    "publishIdamsDelta"));
+                if (publishFlagValue.equalsIgnoreCase("true")) {
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(0);
+                } else {
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
-                    break;
-                case RECENTLY_UPLOADED_USER:
-                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
-                    break;
-                case EXISTING_USER_AUTHORISATIONS_EXPIRED:
-                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
-                    break;
-                case EXISTING_USER_ROLES_EXPIRED:
-                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
-                    break;
-                case EXISTING_USER_APPOINTMENTS_EXPIRED:
-                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
-                    break;
-                case EXISTING_USER_NOT_EXPIRED:
-                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
-                    break;
-                case EXISTING_USER_NO_EXPIRY_DATES:
-                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
-                    break;
-                case EXISTING_USER_EXPIRED_LONG_TIME:
-                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                    verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
-                    break;
-                case ALL_EXPIRED:
-                    String publishFlagValue = String.valueOf(ReflectionTestUtils.getField(publishSidamIdService, "publishIdamsDelta"));
-                    if (publishFlagValue.equalsIgnoreCase("true")) {
-                        assertThat(actualSidamIdsCountPublished).isEqualTo(0);
-                    } else {
-                        assertThat(actualSidamIdsCountPublished).isEqualTo(1);
-                        verifySentSidamIds(1, "10000000-0c8b-4192-b5c7-311d737f0cae");
-                    }
-                     break;
-             }
-         }
+                }
+                break;
+        }
+    }
 
     private void verifySentSidamIds(int expectedCount, String... expectedIds) {
         ArgumentCaptor<List<String>> sidamIdsCaptor = ArgumentCaptor.forClass(List.class);
