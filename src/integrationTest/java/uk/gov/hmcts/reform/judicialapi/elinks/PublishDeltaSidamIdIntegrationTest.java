@@ -83,7 +83,6 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
 
         verifyPeopleResponse(scenario, publishDeltaSidamIdsResponse);
 
-        verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
     }
 
 
@@ -184,27 +183,34 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
             switch (scenario) {
                 case "EXISTING-USER-APPOINTMENTS-EXPIRED":
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
                 case "EXISTING-USER-ROLES-EXPIRED":
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
                 case "EXISTING-USER-AUTHORISATIONS-EXPIRED":
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
                 case "EXISTING-USER-NOT-EXPIRED-REST-NOT-EXPIRED":
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
                 case "EXISTING-USER-NO-EXPIRY-DATES":
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
                 case "EXISTING-USER-EXPIRED-REST-NOT-EXPIRED":
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
-                case "ALL_EXPIRED":
+                case "ALL-EXPIRED":
                     assertThat(actualSidamIdsCountPublished).isEqualTo(0);
                     break;
                 case "ALL-EXPIRED-FLAG-DISABLED":
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
             }
         }
