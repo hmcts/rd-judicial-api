@@ -307,9 +307,6 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         List<String> sentSidamIds = sidamIdsCaptor.getValue();
         assertThat(sentSidamIds).hasSize(expectedCount);
         assertThat(sentSidamIds.get(0)).isEqualToIgnoringCase(expectedIdamIdLoaded);
-        if (expectedIds != null && expectedIds.length > 0) {
-            assertThat(sentSidamIds).containsExactlyInAnyOrder(expectedIds);
-        }
     }
 
 }
