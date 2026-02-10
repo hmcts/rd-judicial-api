@@ -109,8 +109,6 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
             WIREMOCK_RESPONSES_FOLDER + "/people_invalid_appointment_location.json";
     protected static final String PEOPLE_INVALID_APPOINTMENT_ROLE_NAME_JSON =
             WIREMOCK_RESPONSES_FOLDER + "/people_invalid_appointment_role_name.json";
-    protected static final String PEOPLE_DELTA_LOAD_JSON =
-        WIREMOCK_RESPONSES_FOLDER + "/people_delta_load.json";
     private static final String YYYY_MM_DD_T_HH_MM_SS_SSS_Z = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     protected static final String EMPTY_RESPONSE = "[]";
 
