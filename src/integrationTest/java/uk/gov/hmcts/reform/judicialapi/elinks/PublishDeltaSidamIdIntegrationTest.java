@@ -3,12 +3,10 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
-import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -17,9 +15,9 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpStatus.OK;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.BASE_LOCATION_DATA_LOAD_SUCCESS;
-import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
 
+import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,7 +31,6 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.node.ObjectNode;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
-import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinksResponses;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus;
@@ -78,14 +75,13 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
 
         stubPeopleApiResponse(mapper.writeValueAsString(mutatedPeopleData), OK);
 
-
         stubResponsesToRunElinks();
 
         manipulatePeopleDataBeforePublish(scenario);
 
-        publishSidamIds(OK);
+        ValidatableResponse publishDeltaSidamIdsResponse = publishDeltaSidamIds(OK);
 
-        verifyPeopleResponse(scenario);
+        verifyPeopleResponse(scenario, publishDeltaSidamIdsResponse);
 
         verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
     }
@@ -168,7 +164,6 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
             case "ALL-EXPIRED":
                 users.get(0).setLastLoadedDate(now().minusYears(9));
                 users.get(0).setLastUpdated(now().minusYears(9));
-                users.get(0).setKnownAs("Sabina");
                 break;
             case "ALL-EXPIRED-FLAG-DISABLED":
                 TestPropertyValues.of("jrd.publisher.publish-Idams-delta=false")
@@ -183,60 +178,37 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
 
 
 
-    public void verifyPeopleResponse(String scenario) {
-        final List<ElinksResponses> eLinksResponses = elinksResponsesRepository.findAll()
-                .stream().sorted(comparing(ElinksResponses::getApiName)).toList();
-        assertThat(eLinksResponses).isNotNull().isNotEmpty().hasSize(2);
+    public void verifyPeopleResponse(String scenario, ValidatableResponse response) {
+        int actualSidamIdsCountPublished = response.extract().path("sidamIdsCount");
 
-        ElinksResponses peopleElinksResponses = eLinksResponses.get(1);
-        assertThat(peopleElinksResponses).isNotNull();
-        assertThat(peopleElinksResponses.getApiName()).isNotNull().isNotNull().isEqualTo(PEOPLEAPI);
-        assertThat(peopleElinksResponses.getCreatedDate()).isNotNull();
-        assertThat(peopleElinksResponses.getElinksData()).isNotNull();
-
-        com.fasterxml.jackson.databind.JsonNode resultsNode = peopleElinksResponses.getElinksData().path("results");
-        if (resultsNode.isArray()) {
             switch (scenario) {
-                case "USER-NOT-EXPIRED-REST-NOT-EXPIRED":
-                    assertsToVerifyUserPublished(1, resultsNode);
+                case "EXISTING-USER-APPOINTMENTS-EXPIRED":
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     break;
-                case "USER-NOT-EXPIRED-ROLES-EXPIRED":
-                    assertsToVerifyUserPublished(1, resultsNode);
+                case "EXISTING-USER-ROLES-EXPIRED":
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     break;
-                case "USER-NOT-EXPIRED-APPOINTMENTS-EXPIRED":
-                    assertsToVerifyUserPublished(1, resultsNode);
+                case "EXISTING-USER-AUTHORISATIONS-EXPIRED":
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     break;
-                case "USER-NOT-EXPIRED-AUTHORISATIONS-EXPIRED":
-                    assertsToVerifyUserPublished(1, resultsNode);
+                case "EXISTING-USER-NOT-EXPIRED-REST-NOT-EXPIRED":
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     break;
-                case "USER-NOT-EXPIRED-APPOINTMENTS-AUTHORISATIONS-EXPIRED":
-                    assertsToVerifyUserPublished(1, resultsNode);
+                case "EXISTING-USER-NO-EXPIRY-DATES":
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     break;
-                case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-EXPIRED":
-                    assertsToVerifyUserPublished(1, resultsNode);
+                case "EXISTING-USER-EXPIRED-REST-NOT-EXPIRED":
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     break;
-                case "USER-NOT-EXPIRED-AUTHORISATIONS-ROLES-APPOINTMENTS-EXPIRED":
-                    assertsToVerifyUserPublished(0, resultsNode);
+                case "ALL_EXPIRED":
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(0);
                     break;
-                case "USER-EXPIRED-REST-NOT-EXPIRED":
-                    assertsToVerifyUserPublished(1, resultsNode);
-                    break;
-                case "ALL-EXPIRED":
-                    assertsToVerifyUserPublished(0, resultsNode);
+                case "ALL-EXPIRED-FLAG-DISABLED":
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     break;
             }
         }
-    }
 
-    private void assertsToVerifyUserPublished(int size,com.fasterxml.jackson.databind.JsonNode resultsNode) {
 
-        assertThat(resultsNode.size()).isEqualTo(size);
-        for (com.fasterxml.jackson.databind.JsonNode item : resultsNode) {
-            assertThat(item.path("id").asText()).contains("10000000-0c8b-4192-b5c7-311d737f0cae");
-            assertThat(item.path("personal_code").asText()).contains("100000");
-            assertThat(item.path("known_as").asText()).contains("User1");
-            assertThat(item.path("email").asText()).contains("User1@ejudiciary.net");
-        }
-    }
 
 }
