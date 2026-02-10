@@ -20,6 +20,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,21 @@ import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
     @Autowired
     private ConfigurableApplicationContext context;
     protected static final String PEOPLE_DELTA_LOAD_JSON = "wiremock_responses/people_delta_load.json";
+    protected static final String EXISTING_USER_AUTHORISATIONS_EXPIRED = "EXISTING-USER-AUTHORISATIONS-EXPIRED";
+    protected static final String EXISTING_USER_APPOINTMENTS_EXPIRED = "EXISTING-USER-APPOINTMENTS-EXPIRED";
+    protected static final String EXISTING_USER_ROLES_EXPIRED = "EXISTING-USER-ROLES-EXPIRED";
+    protected static final String EXISTING_USER_EXPIRED_LONG_TIME =  "EXISTING-USER-EXPIRED-REST-NOT-EXPIRED";
+    protected static final String ALL_EXPIRED = "ALL-EXPIRED";
+    protected static final String EXISTING_USER_NO_EXPIRY_DATES = "EXISTING-USER-NO-EXPIRY-DATES";
+    protected static final String EXISTING_USER_NOT_EXPIRED = "EXISTING-USER-NOT-EXPIRED-REST-NOT-EXPIRED";
+    protected static final String RECENTLY_UPLOADED_USER = "RECENTLY_UPLOADED_USER";
+    protected static final String RECENTLY_UPDATED_USER = "RECENTLY_UPDATED_USER";
+
     @BeforeEach
     void setUp() {
         deleteData();
@@ -53,18 +65,67 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
     }
 
 
+
     @DisplayName("Should publish delta SidamId to topic")
     @ParameterizedTest
     @ValueSource(strings = {
-        "EXISTING-USER-AUTHORISATIONS-EXPIRED",
-        "EXISTING-USER-APPOINTMENTS-EXPIRED",
-        "EXISTING-USER-ROLES-EXPIRED",
-        "EXISTING-USER-NOT-EXPIRED-REST-NOT-EXPIRED",
-        "EXISTING-USER-NO-EXPIRY-DATES",
-        "EXISTING-USER-EXPIRED-REST-NOT-EXPIRED",
-        "ALL-EXPIRED",
-        "ALL-EXPIRED-FLAG-DISABLED",
+        RECENTLY_UPDATED_USER,
+        RECENTLY_UPLOADED_USER,
+        EXISTING_USER_AUTHORISATIONS_EXPIRED,
+        EXISTING_USER_APPOINTMENTS_EXPIRED,
+        EXISTING_USER_ROLES_EXPIRED,
+        EXISTING_USER_EXPIRED_LONG_TIME,
+        EXISTING_USER_NO_EXPIRY_DATES,
+        EXISTING_USER_NOT_EXPIRED,
+        ALL_EXPIRED
+    }) void testScenariosDeltaFlagDisabled(String scenario) throws IOException {
+        // Inject property to disable delta flag BEFORE calling the service
+        TestPropertyValues.of("jrd.publisher.publish-Idams-delta=false")
+            .applyTo(context);
+
+        // Also directly set the field on the service to ensure it reads the new value
+        ReflectionTestUtils.setField(publishSidamIdService, "publishIdamsDelta", false);
+
+        willDoNothing().given(elinkTopicPublisher).sendMessage(anyList(), anyString());
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream jsonInput = getClass().getClassLoader()
+            .getResourceAsStream(PEOPLE_DELTA_LOAD_JSON);
+        JsonNode basePeopleData = mapper.readTree(jsonInput);
+        JsonNode mutatedPeopleData = mutatePeopleResponse(scenario, mapper, basePeopleData);
+
+        stubPeopleApiResponse(mapper.writeValueAsString(mutatedPeopleData), OK);
+
+        stubResponsesToRunElinks();
+
+        manipulatePeopleDataBeforePublish(scenario);
+
+        ValidatableResponse publishDeltaSidamIdsResponse = publishDeltaSidamIds(OK);
+
+        verifyPeopleResponse(scenario, publishDeltaSidamIdsResponse);
+
+    }
+
+
+    @DisplayName("Should publish delta SidamId to topic")
+    @ParameterizedTest
+    @ValueSource(strings = {
+        RECENTLY_UPDATED_USER,
+        RECENTLY_UPLOADED_USER,
+        EXISTING_USER_AUTHORISATIONS_EXPIRED,
+        EXISTING_USER_APPOINTMENTS_EXPIRED,
+        EXISTING_USER_ROLES_EXPIRED,
+        EXISTING_USER_EXPIRED_LONG_TIME,
+        EXISTING_USER_NO_EXPIRY_DATES,
+        EXISTING_USER_NOT_EXPIRED,
+        ALL_EXPIRED
     }) void testScenariosDeltaFlagEnabled(String scenario) throws IOException {
+        // Inject property to enable delta flag BEFORE calling the service
+        TestPropertyValues.of("jrd.publisher.publish-Idams-delta=true")
+            .applyTo(context);
+
+        // Also directly set the field on the service to ensure it reads the new value
+        ReflectionTestUtils.setField(publishSidamIdService, "publishIdamsDelta", true);
+
         willDoNothing().given(elinkTopicPublisher).sendMessage(anyList(), anyString());
 
         ObjectMapper mapper = new ObjectMapper();
@@ -92,39 +153,40 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
 
         ObjectNode root = (ObjectNode) base.deepCopy();
         JsonNode results = root.path("results");
-
+        String newDate =  LocalDate.now().minusYears(10).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         switch (scenario) {
-            case "EXISTING-USER-AUTHORISATIONS-EXPIRED":
-                expireFields(results, "judiciary_roles");
+            case EXISTING_USER_EXPIRED_LONG_TIME:
+                expireFields(results, "authorisations_with_dates",newDate);
                 break;
-            case "EXISTING-USER-APPOINTMENTS-EXPIRED":
-                expireFields(results, "appointments");
+            case EXISTING_USER_NO_EXPIRY_DATES:
+                expireFields(results, "judiciary_roles","");
+                expireFields(results, "appointments","");
+                expireFields(results, "authorisations_with_dates","");
                 break;
-            case "EXISTING-USER-ROLES-EXPIRED":
-                expireFields(results, "authorisations_with_dates");
+            case EXISTING_USER_AUTHORISATIONS_EXPIRED:
+                expireFields(results, "authorisations_with_dates",newDate);
                 break;
-            case "ALL-EXPIRED":
-                expireFields(results, "judiciary_roles");
-                expireFields(results, "appointments");
-                expireFields(results, "authorisations_with_dates");
+            case EXISTING_USER_APPOINTMENTS_EXPIRED:
+                expireFields(results, "appointments",newDate);
                 break;
-            case "ALL-EXPIRED-FLAG-DISABLED":
-                expireFields(results, "judiciary_roles");
-                expireFields(results, "appointments");
-                expireFields(results, "authorisations_with_dates");
+            case EXISTING_USER_ROLES_EXPIRED:
+                expireFields(results, "judiciary_roles",newDate);
+                break;
+            case ALL_EXPIRED:
+                expireFields(results, "judiciary_roles",newDate);
+                expireFields(results, "appointments",newDate);
+                expireFields(results, "authorisations_with_dates",newDate);
                 break;
         }
      return root;
     }
 
 
-    private void expireFields(JsonNode resultsNode, String fieldName) {
+    private void expireFields(JsonNode resultsNode, String fieldName,String newDate ) {
         if (resultsNode.isArray()) {
             for (JsonNode item : resultsNode) {
                     item.path(fieldName)
-                        .forEach(role -> ((ObjectNode) role).put("end_date",
-                            LocalDate.now().minusYears(9)
-                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+                        .forEach(role -> ((ObjectNode) role).put("end_date",newDate));
             }
         }
     }
@@ -150,71 +212,89 @@ class PublishDeltaSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
             .fetchUserProfileByPersonalCodes(personalCodes, PageRequest.of(0, 100)).getContent();
 
         switch (scenario) {
-
-            case "EXISTING-USER-NO-EXPIRY-DATES":
-                users.get(0).setLastLoadedDate(null);
+            case RECENTLY_UPDATED_USER:
+                users.get(0).setLastUpdated(now());
                 break;
-            case "EXISTING-USER-EXPIRED-REST-NOT-EXPIRED":
-                users.get(0).setLastLoadedDate(now().minusYears(9));
-                users.get(0).setLastUpdated(now().minusYears(9));
+            case RECENTLY_UPLOADED_USER:
+                users.get(0).setLastLoadedDate(now());
                 break;
-            case "EXISTING-USER-NOT-EXPIRED-REST-NOT-EXPIRED":
+            case EXISTING_USER_NO_EXPIRY_DATES:
+                users.get(0).setLastLoadedDate(now().minusYears(2));
+                users.get(0).setLastUpdated(now().minusYears(2));
                 break;
-            case "ALL-EXPIRED":
-                users.get(0).setLastLoadedDate(now().minusYears(9));
-                users.get(0).setLastUpdated(now().minusYears(9));
+            case EXISTING_USER_EXPIRED_LONG_TIME:
+                users.get(0).setLastLoadedDate(now().minusYears(2));
+                users.get(0).setLastUpdated(now().minusYears(2));
                 break;
-            case "ALL-EXPIRED-FLAG-DISABLED":
-                TestPropertyValues.of("jrd.publisher.publish-Idams-delta=false")
-                    .applyTo(context);
-                users.get(0).setLastLoadedDate(now().minusYears(9));
-                users.get(0).setLastUpdated(now().minusYears(9));
+            case EXISTING_USER_NOT_EXPIRED:
+                users.get(0).setLastLoadedDate(now().minusYears(2));
+                users.get(0).setLastUpdated(now().minusYears(2));
+                break;
+            case EXISTING_USER_AUTHORISATIONS_EXPIRED:
+                users.get(0).setLastLoadedDate(now().minusYears(2));
+                users.get(0).setLastUpdated(now().minusYears(2));
+                break;
+            case EXISTING_USER_APPOINTMENTS_EXPIRED:
+                users.get(0).setLastLoadedDate(now().minusYears(2));
+                users.get(0).setLastUpdated(now().minusYears(2));
+                break;
+            case EXISTING_USER_ROLES_EXPIRED:
+                users.get(0).setLastLoadedDate(now().minusYears(2));
+                users.get(0).setLastUpdated(now().minusYears(2));
+                break;
+            case ALL_EXPIRED:
+                users.get(0).setLastLoadedDate(now().minusYears(10));
+                users.get(0).setLastUpdated(now().minusYears(10));
                 break;
         }
         profileRepository.saveAll(users);
     }
 
 
-
-
     public void verifyPeopleResponse(String scenario, ValidatableResponse response) {
         int actualSidamIdsCountPublished = response.extract().path("sidamIdsCount");
 
             switch (scenario) {
-                case "EXISTING-USER-APPOINTMENTS-EXPIRED":
+                case RECENTLY_UPDATED_USER:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
-                case "EXISTING-USER-ROLES-EXPIRED":
+                case RECENTLY_UPLOADED_USER:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
-                case "EXISTING-USER-AUTHORISATIONS-EXPIRED":
+                case EXISTING_USER_AUTHORISATIONS_EXPIRED:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
-                case "EXISTING-USER-NOT-EXPIRED-REST-NOT-EXPIRED":
+                case EXISTING_USER_ROLES_EXPIRED:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
-                case "EXISTING-USER-NO-EXPIRY-DATES":
+                case EXISTING_USER_APPOINTMENTS_EXPIRED:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
-                case "EXISTING-USER-EXPIRED-REST-NOT-EXPIRED":
+                case EXISTING_USER_NOT_EXPIRED:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
                     break;
-                case "ALL-EXPIRED":
-                    assertThat(actualSidamIdsCountPublished).isEqualTo(0);
-                    break;
-                case "ALL-EXPIRED-FLAG-DISABLED":
+                case EXISTING_USER_NO_EXPIRY_DATES:
                     assertThat(actualSidamIdsCountPublished).isEqualTo(1);
                     verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    break;
+                case EXISTING_USER_EXPIRED_LONG_TIME:
+                    assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                    verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+                    break;
+                case ALL_EXPIRED:
+                    if((ReflectionTestUtils.getField(publishSidamIdService, "publishIdamsDelta")).toString().equalsIgnoreCase("true")) {
+                        assertThat(actualSidamIdsCountPublished).isEqualTo(0);
+                    }else{
+                        assertThat(actualSidamIdsCountPublished).isEqualTo(1);
+                    }
                     break;
             }
         }
-
-
 
 }
