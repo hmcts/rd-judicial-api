@@ -1,0 +1,115 @@
+{
+  "pagination": {
+    "results": 23376,
+    "pages": 468,
+    "current_page": 20,
+    "results_per_page": 50,
+    "more_pages": false
+  },
+  "results": [
+    {
+      "id": "10000000-0c8b-4192-b5c7-311d737f0cae",
+      "per_id": 37992,
+      "personal_code": "100000",
+      "title": "District Judge District User1",
+      "known_as": "User1",
+      "surname": "Surname",
+      "fullname": "District Judge User1",
+      "initials": "RB",
+      "post_nominals": null,
+      "email": "User1@ejudiciary.net",
+      "sex": "female",
+      "work_phone": "07965 544394",
+      "disability": false,
+      "retirement_date": "2014-07-23",
+      "leaving_on": "2014-07-23",
+      "lastLoadedDate": "2026-02-05 11:18:58.185",
+      "lastUpdated": "2026-02-05 11:18:58.185",
+      "appointments": [
+        {
+          "appointment_id": 25502,
+          "role_name": "District Judge",
+          "role_name_id": 45,
+          "type": "Courts",
+          "court_name": "Court of Protection",
+          "court_type": null,
+          "circuit": "London",
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "London",
+          "base_location": "Court of Protection",
+          "base_location_id": 768,
+          "is_principal": true,
+          "start_date": "2010-03-23",
+          "end_date": "2024-07-23",
+          "contract_type": "SPTW-50%",
+          "contract_type_id": 5
+        },
+        {
+          "appointment_id": 25503,
+          "role_name": "Tribunal Judge",
+          "role_name_id": 84,
+          "type": "Tribunals",
+          "court_name": "Unassigned",
+          "court_type": "First Tier Tribunal",
+          "circuit": null,
+          "bench": null,
+          "advisory_committee_area": null,
+          "location": "Unassigned",
+          "base_location": "Social Entitlement Chamber - Unassigned",
+          "base_location_id": 2218,
+          "is_principal": false,
+          "start_date": "2007-05-11",
+          "end_date": "2024-06-20",
+          "contract_type": "Fee-paid",
+          "contract_type_id": 1
+        }
+      ],
+      "judiciary_roles": [
+        {
+          "name": "Course Director for COP (JC)",
+          "judiciary_role_id": 428,
+          "judiciary_role_name_id": "fee",
+          "start_date": "2016-04-30",
+          "end_date": "2024-04-30"
+        }
+      ],
+      "authorisations": [
+        {
+          "jurisdiction": "Family",
+          "tickets": [
+            "Court of Protection"
+          ]
+        },
+        {
+          "jurisdiction": "Tribunals",
+          "tickets": [
+            "Criminal Injuries Compensations"
+          ]
+        }
+      ],
+      "authorisations_with_dates": [
+        {
+          "authorisation_id": 9918,
+          "appointment_id": 25502,
+          "jurisdiction": "Family",
+          "jurisdiction_id": 26,
+          "ticket": "Court of Protection",
+          "ticket_id": 313,
+          "start_date": "2017-03-24",
+          "end_date": "2024-07-23"
+        },
+        {
+          "authorisation_id": 14752,
+          "appointment_id": 25503,
+          "jurisdiction": "Tribunals",
+          "jurisdiction_id": 27,
+          "ticket": "Criminal Injuries Compensations",
+          "ticket_id": 328,
+          "start_date": "2007-05-11",
+          "end_date": "2024-06-20"
+        }
+      ]
+    }
+  ]
+}
