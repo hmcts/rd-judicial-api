@@ -186,16 +186,18 @@ Idam:
 
 jrd:
   publisher:
+    jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:50}
+    jrd-batches-per-transaction: 100
     azure:
       service:
         bus:
-          host: ${JRD_MQ_HOST:rd-servicebus-sandbox.servicebus.windows.net}
+          host: ${JRD_MQ_HOST:rd-sb-preview.servicebus.windows.net}
           username: ${JRD_MQ_USERNAME:SendAndListenSharedAccessKey}
           password: ${JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY:}
-          topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-sandbox}
+          topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-api-pr-1018-servicebus-jrdapi-topic}
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
-    jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:50}
+
 email:
   mailTypes:
     asb:
@@ -262,7 +264,6 @@ email:
         - dts-refdata-team@HMCTS.NET
       subject: "Official Sensitive: JRD - Incorrect JO Profile Configurations in Elinks - %s"
       template: simple-template-objectIdDuplicate.ftl
-
 
 sendgrid:
   key: ${RD_SENDGRID_API_KEY}

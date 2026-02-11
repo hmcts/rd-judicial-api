@@ -194,6 +194,7 @@ jrd:
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
     jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:50}
+    jrd-batches-per-transaction: 100
   security:
     roles:
       hmcts-admin: jrd-admin
