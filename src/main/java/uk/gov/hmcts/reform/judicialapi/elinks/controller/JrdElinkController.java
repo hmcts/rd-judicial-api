@@ -82,7 +82,8 @@ public class JrdElinkController {
             path = "/search",
             produces = V2.MediaType.SERVICE
     )
-   public ResponseEntity<Object> retrieveUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {
+    @Secured({"jrd-system-user", "jrd-admin"})
+    public ResponseEntity<Object> retrieveUsers(@Valid @RequestBody UserSearchRequest userSearchRequest) {
         return elinkUserService.retrieveElinkUsers(userSearchRequest);
     }
 
