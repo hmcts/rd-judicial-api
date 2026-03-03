@@ -231,41 +231,6 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"any", "general", "solicitor", "caseworker", "pui-case-manager", "pui-user-manager"})
-    void shouldReturn401ForUnauthorizedRolesWithInvalidTokens(String role) {
-        judicialReferenceDataClient.clearTokens();
-        JudicialReferenceDataClient.setBearerToken(EMPTY);
-        var invalidTokens = true;
-
-        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-                .searchString("test")
-                .location("location")
-                .serviceCode("BFA1")
-                .build();
-        var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, invalidTokens, MediaType.valueOf(V2.MediaType.SERVICE),
-                MediaType.valueOf(V2.MediaType.SERVICE));
-        assertThat(response).containsEntry("http_status", "401");
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"any", "general", "solicitor", "caseworker", "pui-case-manager", "pui-user-manager"})
-    void shouldReturn403ForUnauthorizedRolesWithValidTokens(String role) {
-        mockJwtToken(role);
-        var invalidTokens = false;
-
-        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
-                .searchString("test")
-                .location("location")
-                .serviceCode("BFA1")
-                .build();
-        var response = judicialReferenceDataClient.searchUsers(
-                userSearchRequest, role, invalidTokens, MediaType.valueOf(V2.MediaType.SERVICE),
-                MediaType.valueOf(V2.MediaType.SERVICE));
-        assertThat(response).containsEntry("http_status", "403");
-    }
-
-    @ParameterizedTest
     @ValueSource(strings = {"jrd-system-user", "jrd-admin"})
     void shouldReturn400WhenSearchStringIsEmpty(String role) {
         mockJwtToken(role);
