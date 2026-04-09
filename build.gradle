@@ -208,7 +208,7 @@ pmd {
 
 checkstyle {
     maxWarnings = 0
-    toolVersion = '13.1.0'
+    toolVersion = '13.4.0'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
