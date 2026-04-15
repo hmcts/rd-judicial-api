@@ -180,6 +180,7 @@ elastic:
     recordsPerPage: 500
 
 Idam:
+  sync: true
   find:
     query: ${JRD_FIND_QUERY:ssoid:}
     recordsPerPage: 500
