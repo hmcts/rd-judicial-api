@@ -181,6 +181,17 @@ withPipeline(type, product, component) {
         ]
     }
 
+    before('pact-provider-verification') {
+        sh """
+          ./gradlew --no-daemon --init-script init.gradle \
+            -Ppact.broker.url=${env.PACT_BROKER_URL} \
+            -Ppactbroker.url=${env.PACT_BROKER_URL} \
+            -Ppact.provider.version=${env.GIT_COMMIT.take(7)} \
+            -Ppact.verifier.publishResults=true \
+            runProviderPactVerification
+        """
+    }
+
     afterAlways('pact-provider-verification') {
         publishHTML target: [
              allowMissing         : true,
