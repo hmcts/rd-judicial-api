@@ -56,6 +56,7 @@ env.PACT_BROKER_FULL_URL = 'https://pact-broker.platform.hmcts.net'
 env.PACT_BROKER_URL = "pact-broker.platform.hmcts.net"
 env.PACT_BROKER_PORT = "443"
 env.PACT_BROKER_SCHEME = "https"
+env.PACT_PUBLISH_VERIFICATION_RESULTS = "true"
 
 withPipeline(type, product, component) {
 
@@ -178,6 +179,17 @@ withPipeline(type, product, component) {
             reportFiles          : "index.html",
             reportName           : "Functional Tests Report"
         ]
+    }
+
+    before('pact-provider-verification') {
+        sh """
+          ./gradlew --no-daemon --init-script init.gradle \
+            -Ppact.broker.url=${env.PACT_BROKER_URL} \
+            -Ppactbroker.url=${env.PACT_BROKER_URL} \
+            -Ppact.provider.version=${env.GIT_COMMIT.take(7)} \
+            -Ppact.verifier.publishResults=true \
+            runProviderPactVerification
+        """
     }
 
     afterAlways('pact-provider-verification') {
