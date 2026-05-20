@@ -1,0 +1,1 @@
+ALTER TABLE dbjudicialdata.judicial_user_profile_audit ADD COLUMN last_updated timestamp NULL;
