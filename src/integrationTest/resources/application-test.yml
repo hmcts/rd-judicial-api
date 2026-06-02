@@ -169,7 +169,7 @@ elinks:
 elastic:
   search:
     query: (roles:judiciary) AND lastModified:>now-12h
-    recordsPerPage: 500
+    recordsPerPage: 4
 
 Idam:
   find:
