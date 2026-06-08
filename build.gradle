@@ -15,7 +15,7 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.54.0'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '4.3.2'
-    id 'org.owasp.dependencycheck' version '12.1.6'
+    id 'org.owasp.dependencycheck' version '12.2.0'
     id 'org.sonarqube' version '7.3.1.8318'
     id 'org.springframework.boot' version '3.5.14'
     id 'uk.gov.hmcts.java' version '0.12.70'
@@ -377,6 +377,7 @@ dependencies {
     integrationTestAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: versions.lombok
 
     implementation group: 'commons-io', name: 'commons-io', version: versions.commonsIo
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
     implementation group: 'com.azure', name: 'azure-core', version: '1.58.0'
@@ -405,7 +406,12 @@ dependencies {
     implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.1'
     implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '7.5.0'
     implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '7.5.0'
+
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '9.0'
+    // CVE-2026-29062: logstash depends on 3.x series of jackson-core and jackson-databind, updated to latest in 3.x
+    implementation group: 'tools.jackson.core', name: 'jackson-core', version: '3.1.4'
+    implementation group: 'tools.jackson.core', name: 'jackson-databind', version: '3.1.4'
+
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
