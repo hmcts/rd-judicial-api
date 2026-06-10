@@ -189,13 +189,13 @@ jrd:
     azure:
       service:
         bus:
-          host: ${JRD_MQ_HOST:rd-servicebus-sandbox.servicebus.windows.net}
+          host: ${JRD_MQ_HOST:rd-sb-preview.servicebus.windows.net}
           username: ${JRD_MQ_USERNAME:SendAndListenSharedAccessKey}
           password: ${JUDICIAL_TOPIC_PRIMARY_SEND_LISTEN_SHARED_ACCESS_KEY:}
           topic: ${JRD_MQ_TOPIC_NAME:rd-judicial-topic-sandbox}
           # DO NOT SET THIS 'true' IN PRODUCTION!
           trustAllCerts: ${JRD_MQ_TRUST_ALL_CERTS:false}
-    jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:50}
+    jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:2}
 email:
   mailTypes:
     asb:
