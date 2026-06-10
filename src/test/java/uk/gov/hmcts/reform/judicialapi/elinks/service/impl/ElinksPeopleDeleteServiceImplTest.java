@@ -19,6 +19,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.ElinksPeopleDeleteAuditService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.PublishSidamIdService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -85,7 +86,8 @@ class ElinksPeopleDeleteServiceImplTest {
         result1 = ResultsRequest.builder().personalCode("1234").knownAs("knownas").fullName("fullName")
             .surname("surname").postNominals("postNOmi").email("email").lastWorkingDate("2022-12-20")
             .objectId("objectId").initials("initials").appointmentsRequests(appointmentsRequests)
-            .authorisationsRequests(authorisations).judiciaryRoles(List.of(roleRequestOne,roleRequestTwo)).build();
+            .lastUpdated("2022-12-10").authorisationsRequests(authorisations)
+            .judiciaryRoles(List.of(roleRequestOne,roleRequestTwo)).build();
     }
 
     @Test
@@ -109,6 +111,7 @@ class ElinksPeopleDeleteServiceImplTest {
         userProfiles.add(UserProfile.builder()
                 .personalCode("1234")
                 .surname("surname")
+                .lastUpdated(LocalDateTime.now())
                 .fullName("full name").build());
         Mockito.when(profileRepository.deleteByPersonalCodeIn(anyList())).thenReturn(userProfiles);
 

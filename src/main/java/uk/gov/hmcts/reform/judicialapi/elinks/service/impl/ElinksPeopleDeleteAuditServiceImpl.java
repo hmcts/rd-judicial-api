@@ -78,6 +78,7 @@ public class ElinksPeopleDeleteAuditServiceImpl implements ElinksPeopleDeleteAud
                             .retirementDate(userProfile.getRetirementDate())
                             .sidamId(userProfile.getSidamId())
                             .surname(userProfile.getSurname())
+                            .lastUpdated(userProfile.getLastUpdated())
                             .title(userProfile.getTitle()).build()).collect(Collectors.toList()));
             log.info("Audit User Profile Success");
         }
