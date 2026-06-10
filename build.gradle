@@ -395,7 +395,7 @@ dependencies {
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
-    implementation group: 'com.azure', name: 'azure-core', version: '1.58.0'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.58.1'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.18'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.22'
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
