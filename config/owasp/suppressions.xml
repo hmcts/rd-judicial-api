@@ -18,7 +18,7 @@
     <suppress>
         <notes>
             <![CDATA[
-                Reviewed 2026-07-03
+                Reviewed 2026-07-06
                 False positive:
                 CVE-2026-54515 applies to jackson libraries.
                 Affected libraries reported by dependency-check are:
