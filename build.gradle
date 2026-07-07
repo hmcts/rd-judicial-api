@@ -148,7 +148,6 @@ compileTestJava {
 }
 
 sourceSets {
-
     integrationTest {
         java {
             compileClasspath += main.output + test.output
