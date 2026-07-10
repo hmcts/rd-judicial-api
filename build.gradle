@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath("org.flywaydb:flyway-database-postgresql:11.20.3")
+        classpath("org.flywaydb:flyway-database-postgresql:12.11.0")
     }
 }
 
@@ -21,7 +21,7 @@ plugins {
     id 'uk.gov.hmcts.java' version '0.12.70'
     id "info.solidsoft.pitest" version '1.15.0'
     id "io.freefair.lombok" version "9.5.0"
-    id "org.flywaydb.flyway" version '11.20.3'
+    id "org.flywaydb.flyway" version '12.11.0'
 }
 
 ext {
@@ -36,7 +36,7 @@ def versions = [
         junitPitest        : '1.2.1',
         jackson            : '2.22.1',
         launchDarklySdk    : '5.10.9',
-        flyway              : '11.20.3',
+        flyway              : '12.11.0',
         lombok              : '1.18.46',
         reformLogging       : '8.0.0',
         serenity            : '4.3.4',
