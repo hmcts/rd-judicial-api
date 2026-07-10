@@ -39,11 +39,11 @@ module "db-rd-judicial-ref-v16" {
     azurerm.postgres_network = azurerm.postgres_network
   }
 
-  admin_user_object_id = var.jenkins_AAD_objectId
-  business_area        = "cft"
-  common_tags          = var.common_tags
-  component            = var.component-v16
-  env                  = var.env
+  admin_user_object_id        = var.jenkins_AAD_objectId
+  business_area               = "cft"
+  common_tags                 = var.common_tags
+  component                   = var.component-v16
+  env                         = var.env
   enable_db_report_privileges = true
   pgsql_databases = [
     {
@@ -59,7 +59,7 @@ module "db-rd-judicial-ref-v16" {
   ]
 
   # Setup Access Reader db user
-  force_user_permissions_trigger = "3"
+  force_user_permissions_trigger     = "3"
   force_db_report_privileges_trigger = "1"
 
   # Sets correct DB owner after migration to fix permissions
@@ -76,10 +76,10 @@ module "db-rd-judicial-ref-v16" {
   product       = "rd"
   name          = local.db_name
 
-  pgsql_server_configuration  = var.pgsql_server_configuration
-  action_group_name           = join("-", [var.action_group_name, local.db_name, var.env])
-  email_address_key           = var.email_address_key
-  email_address_key_vault_id  = data.azurerm_key_vault.rd_key_vault.id
+  pgsql_server_configuration = var.pgsql_server_configuration
+  action_group_name          = join("-", [var.action_group_name, local.db_name, var.env])
+  email_address_key          = var.email_address_key
+  email_address_key_vault_id = data.azurerm_key_vault.rd_key_vault.id
 }
 
 resource "azurerm_key_vault_secret" "POSTGRES-USER" {
