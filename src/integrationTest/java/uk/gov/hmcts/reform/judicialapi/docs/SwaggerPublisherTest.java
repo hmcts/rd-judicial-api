@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import uk.gov.hmcts.reform.judicialapi.util.AuthorizationEnabledIntegrationTest;
@@ -23,6 +24,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
  * Each travis run on master should automatically save and upload (if updated) documentation.
  */
 @WithTags({@WithTag("testType:Integration")})
+@TestPropertySource(properties = {
+    // NB: hide testing-support endpoint from Swagger Publish
+    "testing.support.enabled=false"
+})
 class SwaggerPublisherTest extends AuthorizationEnabledIntegrationTest {
 
     private MockMvc mvc;

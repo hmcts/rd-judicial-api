@@ -51,13 +51,38 @@ class ElinkTopicPublisherTest {
         elinkTopicPublisher.jrdMessageBatchSize = 2;
         elinkTopicPublisher.loggingComponentName = "loggingComponent";
         elinkTopicPublisher.topic = "dummyTopic";
+        elinkTopicPublisher.maxBatchesPerTransaction = 2;
     }
 
     @Test
     @DisplayName("Postive scenario for sending message to Azure Sevice Bus")
     void should_send_message_to_Asb() {
         doReturn(true).when(messageBatch).tryAddMessage(any());
-        doReturn(1).when(messageBatch).getCount();
+        doReturn(2).when(messageBatch).getCount();
+        doReturn(messageBatch).when(serviceBusSenderClient).createMessageBatch();
+        doReturn(transactionContext).when(serviceBusSenderClient).createTransaction();
+        when(messageBatch.getCount()).thenReturn(2);
+        elinkTopicPublisher.sendMessage(sidamIdsList, "1");
+        verify(messageBatch, times(3)).tryAddMessage(any());
+        verify(messageBatch, times(2)).getCount();
+        verify(serviceBusSenderClient,times(2)).sendMessages((ServiceBusMessageBatch)
+            any(), any());
+        verify(serviceBusSenderClient, times(2)).commitTransaction(any());
+    }
+
+    @Test
+    @DisplayName("Postive scenario should_send_message_to_Asb_single_transaction_equal_batches")
+    void should_send_message_to_Asb_single_transaction_equal_batches() {
+        for (int i = 0; i < 5; i++) {
+            sidamIdsList.add(UUID.randomUUID().toString());
+        }
+        elinkTopicPublisher.jrdMessageBatchSize = 4;
+        elinkTopicPublisher.loggingComponentName = "loggingComponent";
+        elinkTopicPublisher.topic = "dummyTopic";
+        elinkTopicPublisher.maxBatchesPerTransaction = 4;
+
+        doReturn(true).when(messageBatch).tryAddMessage(any());
+        doReturn(transactionContext).when(serviceBusSenderClient).createTransaction();
         doReturn(messageBatch).when(serviceBusSenderClient).createMessageBatch();
         when(messageBatch.getCount()).thenReturn(1);
         elinkTopicPublisher.sendMessage(sidamIdsList, "1");
@@ -66,6 +91,76 @@ class ElinkTopicPublisherTest {
         verify(serviceBusSenderClient).sendMessages((ServiceBusMessageBatch) any(), any());
         verify(serviceBusSenderClient, times(1)).commitTransaction(any());
     }
+
+    @Test
+    @DisplayName("Postive scenario should_send_message_to_Asb_single_transaction")
+    void should_send_message_to_Asb_single_transaction() {
+        for (int i = 0; i < 5; i++) {
+            sidamIdsList.add(UUID.randomUUID().toString());
+        }
+        elinkTopicPublisher.jrdMessageBatchSize = 5;
+        elinkTopicPublisher.loggingComponentName = "loggingComponent";
+        elinkTopicPublisher.topic = "dummyTopic";
+        elinkTopicPublisher.maxBatchesPerTransaction = 4;
+
+        doReturn(true).when(messageBatch).tryAddMessage(any());
+        doReturn(transactionContext).when(serviceBusSenderClient).createTransaction();
+        doReturn(messageBatch).when(serviceBusSenderClient).createMessageBatch();
+        when(messageBatch.getCount()).thenReturn(1);
+        elinkTopicPublisher.sendMessage(sidamIdsList, "1");
+        verify(messageBatch, times(2)).tryAddMessage(any());
+        verify(messageBatch).getCount();
+        verify(serviceBusSenderClient).sendMessages((ServiceBusMessageBatch) any(), any());
+        verify(serviceBusSenderClient, times(1)).commitTransaction(any());
+    }
+
+
+    @Test
+    @DisplayName("Postive scenario should_send_message_to_Asb_multiple_transaction")
+    void should_send_message_to_Asb_multiple_transaction() {
+        for (int i = 0; i < 5; i++) {
+            sidamIdsList.add(UUID.randomUUID().toString());
+        }
+        elinkTopicPublisher.jrdMessageBatchSize = 4;
+        elinkTopicPublisher.loggingComponentName = "loggingComponent";
+        elinkTopicPublisher.topic = "dummyTopic";
+        elinkTopicPublisher.maxBatchesPerTransaction = 2;
+
+        when(messageBatch.getCount()).thenReturn(1);
+        doReturn(true).when(messageBatch).tryAddMessage(any());
+        doReturn(transactionContext).when(serviceBusSenderClient).createTransaction();
+        doReturn(messageBatch).when(serviceBusSenderClient).createMessageBatch();
+        elinkTopicPublisher.sendMessage(sidamIdsList, "1");
+        verify(messageBatch, times(3)).tryAddMessage(any());
+        verify(messageBatch,times(2)).getCount();
+        verify(serviceBusSenderClient,times(2)).sendMessages((ServiceBusMessageBatch)
+            any(), any());
+        verify(serviceBusSenderClient, times(2)).commitTransaction(any());
+    }
+
+
+    @Test
+    @DisplayName("Postive scenario should_send_message_to_Asb_multiple_transaction_multiple_batches")
+    void should_send_message_to_Asb_multiple_transaction_multiple_batches() {
+        for (int i = 0; i < 10; i++) {
+            sidamIdsList.add(UUID.randomUUID().toString());
+        }
+        elinkTopicPublisher.jrdMessageBatchSize = 5;
+        elinkTopicPublisher.loggingComponentName = "loggingComponent";
+        elinkTopicPublisher.topic = "dummyTopic";
+        elinkTopicPublisher.maxBatchesPerTransaction = 2;
+
+        when(messageBatch.getCount()).thenReturn(1);
+        doReturn(true).when(messageBatch).tryAddMessage(any());
+        doReturn(transactionContext).when(serviceBusSenderClient).createTransaction();
+        doReturn(messageBatch).when(serviceBusSenderClient).createMessageBatch();
+        elinkTopicPublisher.sendMessage(sidamIdsList, "1");
+        verify(messageBatch, times(3)).tryAddMessage(any());
+        verify(serviceBusSenderClient,times(2)).sendMessages((ServiceBusMessageBatch)
+            any(), any());
+        verify(serviceBusSenderClient, times(2)).commitTransaction(any());
+    }
+
 
     @Test
     @DisplayName("Throw Exception and Rollback Transaction for connection issue while sending message to Azure "
@@ -105,7 +200,7 @@ class ElinkTopicPublisherTest {
         doReturn(messageBatch).when(serviceBusSenderClient).createMessageBatch();
         when(messageBatch.getCount()).thenReturn(1);
         elinkTopicPublisher.sendMessage(sidamIdsList, "1");
-        verify(serviceBusSenderClient, times(4))
+        verify(serviceBusSenderClient, times(2))
                 .sendMessages((ServiceBusMessageBatch) any(), any());
     }
 

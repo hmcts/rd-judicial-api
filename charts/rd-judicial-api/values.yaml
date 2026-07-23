@@ -17,6 +17,7 @@ java:
     JRD_MQ_TOPIC_NAME: rd-judicial-topic-{{ .Values.global.environment }}
     JRD_MQ_TRUST_ALL_CERTS: false
     JRD_DATA_PER_MESSAGE: 50
+    JRD_DATA_PER_TRANSACTION: 100
     LAUNCH_DARKLY_ENV: "{{ .Values.global.environment }}"
     ENVIRONMENT_NAME: "{{ .Values.global.environment }}"
     LOCATION_REF_DATA_URL: http://rd-location-ref-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
