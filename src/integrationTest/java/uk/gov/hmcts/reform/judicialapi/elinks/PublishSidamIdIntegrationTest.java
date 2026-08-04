@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.DataloadSchedulerJob;
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.ElinkDataSchedularAudit;
+import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.JobStatus;
 
@@ -33,6 +34,9 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PUBLISHSIDAM;
 
 class PublishSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
+
+    private static final String OBJECT_ID_1 = "5f8b26ba-0c8b-4192-b5c7-311d737f0cae";
+    private static final String SIDAM_ID_1 = "6455c84c-e77d-4c4f-9759-bf4a93a8e972";
 
     @BeforeEach
     void beforeSetup() {
@@ -66,6 +70,7 @@ class PublishSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
         findSidamIdsByObjectIds(OK);
+        seedSidamId();
         publishSidamIds(OK);
 
         verifyAudit(SUCCESS);
@@ -92,6 +97,7 @@ class PublishSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         loadPeopleData(OK, RESPONSE_BODY_MSG_KEY, PEOPLE_DATA_LOAD_SUCCESS);
 
         findSidamIdsByObjectIds(OK);
+        seedSidamId();
         publishSidamIds(INTERNAL_SERVER_ERROR);
 
         verifyAudit(FAILED);
@@ -141,6 +147,16 @@ class PublishSidamIdIntegrationTest extends ElinksDataLoadBaseTest {
         assertThat(auditEntry4.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
         assertThat(auditEntry4.getSchedulerStartTime()).isNotNull();
         assertThat(auditEntry4.getSchedulerEndTime()).isNotNull();
+    }
+
+    private void seedSidamId() {
+        UserProfile userProfile = profileRepository.findAll()
+                .stream()
+                .filter(profile -> OBJECT_ID_1.equals(profile.getObjectId()))
+                .findFirst()
+                .orElseThrow();
+        userProfile.setSidamId(SIDAM_ID_1);
+        profileRepository.saveAndFlush(userProfile);
     }
 
 }

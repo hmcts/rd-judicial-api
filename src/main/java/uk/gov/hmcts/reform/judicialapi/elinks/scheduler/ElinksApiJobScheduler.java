@@ -22,6 +22,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLeaversWrapperRespon
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkLocationWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkPeopleWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.SchedulerJobStatusResponse;
+import uk.gov.hmcts.reform.judicialapi.elinks.service.IdamElasticSearchService;
 import uk.gov.hmcts.reform.judicialapi.elinks.service.impl.ELinksServiceImpl;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.DataloadSchedulerJobAudit;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinkDataExceptionHelper;
@@ -81,6 +82,9 @@ public class ElinksApiJobScheduler {
 
     @Autowired
     ELinksServiceImpl elinksServiceImpl;
+
+    @Autowired
+    IdamElasticSearchService idamElasticSearchService;
 
     public static final String ELINKS_CONTROLLER_BASE_URL = "/refdata/internal/elink";
 
@@ -198,6 +202,7 @@ public class ElinksApiJobScheduler {
                 }
             }
         }
+        //Look for Idam ids missing in Refdata pick them from idam and update judicial ref data
         try{
         ResponseEntity<Object> idamSearchResponse
                 = retrieveIdamElasticSearchDetails();
@@ -215,6 +220,25 @@ public class ElinksApiJobScheduler {
                 }
             }
         }
+        //look for idam ids missign in refdata and create new in idam if missing then update judicial ref data
+        try{
+            ResponseEntity<Object> idamSyncResponse
+                = createIdamIdsIfMissing();
+        } catch (Exception ex) {
+            log.error("Elinks idam elastic search Job execution completed failure for elastic Response", ex);
+            if (ex instanceof HttpClientErrorException)
+            {
+                HttpClientErrorException exception = (HttpClientErrorException) ex;
+                if (exception.getStatusCode() == HttpStatus.FORBIDDEN && exception.getMessage()
+                    .contains("jrd-elinks-idam-elastic-search".concat(SPACE).concat(FORBIDDEN_EXCEPTION_LD)))
+                {
+
+                    elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS, now(), now(),
+                        RefDataElinksConstants.JobStatus.FAILED.getStatus(), ELASTICSEARCH, ex.getMessage());
+                }
+            }
+        }
+
         try {
             ResponseEntity<Object> idamResponce = retrieveSidamids();
         } catch (Exception ex) {
@@ -338,8 +362,6 @@ public class ElinksApiJobScheduler {
 
     public ResponseEntity<Object> retrieveIdamElasticSearchDetails() {
 
-
-
         String apiUrl = eLinksWrapperBaseUrl.concat(ELINKS_CONTROLLER_BASE_URL)
                 .concat("/idam/elastic/search");
 
@@ -351,6 +373,13 @@ public class ElinksApiJobScheduler {
 
         return restTemplate.exchange(apiUrl,
                 HttpMethod.GET, request, Object.class);
+
+    }
+
+    public ResponseEntity<Object> createIdamIdsIfMissing() {
+
+        idamElasticSearchService.syncMissingSidamIds();
+        return ResponseEntity.ok().build();
 
     }
 

@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -69,6 +70,9 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     @Value("${elastic.search.recordsPerPage}")
     int recordsPerPage;
 
+    @Value("${Idam.sync}")
+    boolean idamSyncFlag;
+
     @Autowired
     IdamFeignClient idamFeignClient;
 
@@ -101,26 +105,26 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             String authorisation = props.getAuthorization();
             String[] userDetails = authorisation.split(":");
             TokenRequest tokenRequest = new TokenRequest(props.getClientId(),
-                    props.getClientAuthorization(),
-                    "password",
-                    props.getRedirectUri(),
-                    userDetails[0].trim(),
-                    userDetails[1].trim(),
-                    SCOPE, "", "");
+                props.getClientAuthorization(),
+                "password",
+                props.getRedirectUri(),
+                userDetails[0].trim(),
+                userDetails[1].trim(),
+                SCOPE, "", "");
 
             idamOpenIdTokenResponse = idamFeignClient.getOpenIdToken(tokenRequest);
 
             if (idamOpenIdTokenResponse == null) {
                 throw new ElinksException(HttpStatus.FORBIDDEN, IDAM_TOKEN_ERROR_MESSAGE,
-                        IDAM_TOKEN_ERROR_MESSAGE);
+                    IDAM_TOKEN_ERROR_MESSAGE);
             }
         } catch (Exception e) {
             elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
                 schedulerStartTime,
                 now(),
-                RefDataElinksConstants.JobStatus.FAILED.getStatus(),ELASTICSEARCH, e.getMessage());
+                RefDataElinksConstants.JobStatus.FAILED.getStatus(), ELASTICSEARCH, e.getMessage());
             throw new ElinksException(HttpStatus.FORBIDDEN, IDAM_TOKEN_ERROR_MESSAGE,
-                    IDAM_TOKEN_ERROR_MESSAGE);
+                IDAM_TOKEN_ERROR_MESSAGE);
         }
         return idamOpenIdTokenResponse.getAccessToken();
     }
@@ -140,6 +144,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             null,
             RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), ELASTICSEARCH);
 
+        // fetch all users from idam
         log.info("Calling idam client");
         try {
             boolean moreAvailable;
@@ -165,11 +170,19 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
             throw new ElinksException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(),
                     IDAM_ERROR_MESSAGE);
         }
-
+        // find all users in judicial database that are not present in idam
+        // Object ID, received from Idam, is not present in Judicial Reference Data
         validateObjectIds(judicialUsers,schedulerStartTime);
         sendEmail.sendEmail(schedulerStartTime);
-
+        // update judicial user profile with idam ids found in idam
         updateSidamIds(judicialUsers);
+
+        // if flag is set to true then create new idam ids and update judicial user profile with
+        // new idam ids found in idam
+        if (idamSyncFlag) {
+            updateNewSidamIds(judicialUsers);
+        }
+
         elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
             schedulerStartTime,
             now(),
@@ -179,6 +192,94 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                 .ok()
                 .body(judicialUsers);
     }
+
+    public void updateNewSidamIds(Set<IdamResponse> sidamUsers) {
+        log.info("Calling idam search");
+        LocalDateTime schedulerStartTime = now();
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            null,
+            RefDataElinksConstants.JobStatus.IN_PROGRESS.getStatus(), IDAMSEARCH);
+        Set<IdamResponse> idamUsersList = new HashSet<>();
+
+        // fetch all judicial users from jrd with object ids present but missing idam ids
+        List<UserProfile> judicialUsers = userProfileRepository.fetchObjectIdMissingSidamId();
+        int userProfileSize = judicialUsers.size();
+        if (userProfileSize == 0) {
+            elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+                schedulerStartTime,
+                now(),
+                RefDataElinksConstants.JobStatus.SUCCESS.getStatus(), IDAMSEARCH);
+            ElinkIdamWrapperResponse response = new ElinkIdamWrapperResponse();
+            response.setMessage("No JRD users found with missing SIDAM id");
+            ResponseEntity
+                .ok()
+                .body(sidamUsers);
+        }
+
+        String bearerToken = "Bearer ".concat(getIdamBearerToken(schedulerStartTime));
+        log.debug("{}:: Number of User profiles from JRD :: " + userProfileSize, loggingComponentName);
+        boolean partialSuccess = false;
+        int generatedIdCount = 0;
+        int idamFoundCount = 0;
+
+        // iterate the users and call idam to check if the users exist in idam
+        for (UserProfile userProfile : judicialUsers) {
+            String objectId = userProfile.getObjectId();
+            String query = idamFindQuery.concat(objectId);
+            log.debug("{}:: search elk query {}", loggingComponentName, query);
+            try {
+                List<IdamResponse> responses = idamFeignClient.searchUsers(bearerToken, query, null, null);
+                if (responses == null || responses.isEmpty()) {
+                    IdamResponse generatedResponse = new IdamResponse();
+                    generatedResponse.setId(UUID.randomUUID().toString());
+                    generatedResponse.setSsoId(objectId);
+                    idamUsersList.add(generatedResponse);
+                    generatedIdCount++;
+                    log.info("{}:: Generated new SIDAM id for Object ID: {}", loggingComponentName, objectId);
+                } else {
+                    idamUsersList.addAll(responses);
+                    idamFoundCount += responses.size();
+                }
+            } catch (Exception ex) {
+                String errorDescription = "IDAM Search Service failed";
+                log.error("{}:: " + errorDescription + " ::{}", loggingComponentName, ex);
+                elinkDataExceptionHelper.auditException(JUDICIAL_REF_DATA_ELINKS,
+                    schedulerStartTime,
+                    IDAMSEARCH,
+                    IDAMSEARCH,
+                    errorDescription,
+                    IDAMSEARCH,
+                    "Object ID:" + objectId,
+                    0,
+                    ex.getMessage());
+                partialSuccess = true;
+            }
+        }
+
+        if (!idamUsersList.isEmpty()) {
+            updateSidamIds(idamUsersList);
+        }
+
+        elinkDataIngestionSchedularAudit.auditSchedulerStatus(JUDICIAL_REF_DATA_ELINKS,
+            schedulerStartTime,
+            now(),
+            partialSuccess
+                ? RefDataElinksConstants.JobStatus.PARTIAL_SUCCESS.getStatus()
+                : RefDataElinksConstants.JobStatus.SUCCESS.getStatus(),
+            IDAMSEARCH);
+
+        ElinkIdamWrapperResponse response = new ElinkIdamWrapperResponse();
+        response.setMessage("SIDAM ids updated. Found in IDAM: " + idamFoundCount
+            + ". Generated: " + generatedIdCount
+            + ". Total missing: " + userProfileSize);
+        ResponseEntity
+            .ok()
+            .body(idamUsersList);
+    }
+
+
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -308,5 +409,10 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                     ps.setString(2, argument.getRight());
                 });
 
+    }
+
+    @Override
+    public void syncMissingSidamIds() {
+        updateNewSidamIds(new HashSet<>());
     }
 }

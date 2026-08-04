@@ -110,7 +110,8 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
         loadLocationData(OK, RESPONSE_BODY_MSG_KEY, BASE_LOCATION_DATA_LOAD_SUCCESS);
         loadPeopleData(expectedHttpStatus, RESPONSE_BODY_ERROR_MSG, testDataArguments.expectedErrorMessage());
 
-        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus(), 2);
+        verifyPeopleDataLoadAudit(testDataArguments.expectedJobStatus(),
+                testDataArguments.expectedAuditRecords());
     }
 
     private void verifyExceptions(TestDataArguments testDataArguments) {
