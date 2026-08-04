@@ -56,7 +56,7 @@ dependencyManagement {
     }
 
     dependencies {
-        dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.57') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '11.0.24') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
