@@ -17,7 +17,7 @@ plugins {
     id 'net.serenity-bdd.serenity-gradle-plugin' version '4.3.2'
     id 'org.owasp.dependencycheck' version '12.2.2'
     id 'org.sonarqube' version '7.3.1.8318'
-    id 'org.springframework.boot' version '3.5.16'
+    id 'org.springframework.boot' version '4.0.7'
     id 'uk.gov.hmcts.java' version '0.12.70'
     id "info.solidsoft.pitest" version '1.15.0'
     id "io.freefair.lombok" version "9.5.0"
@@ -25,7 +25,7 @@ plugins {
 }
 
 ext {
-    set('springCloudVersion', "2025.0.3")
+    set('springCloudVersion', "2025.1.2")
 }
 
 def versions = [
@@ -82,7 +82,7 @@ dependencyManagement {
             entry 'netty-transport-native-kqueue'
             entry 'netty-transport-native-unix-common'
         }
-        dependencySet(group: 'org.springframework', version: '6.2.19') {
+        dependencySet(group: 'org.springframework', version: '7.0.6') {
             entry 'spring-aop'
             entry 'spring-aspects'
             entry 'spring-beans'
