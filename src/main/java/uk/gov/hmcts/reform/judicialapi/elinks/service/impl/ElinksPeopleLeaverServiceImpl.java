@@ -24,7 +24,8 @@ public class ElinksPeopleLeaverServiceImpl implements ElinksPeopleLeaverService 
     JdbcTemplate jdbcTemplate;
 
     private static final String QUERY = "UPDATE dbjudicialdata.judicial_user_profile SET last_working_date = Date(?)"
-            + " , active_flag = ?, last_loaded_date= NOW() AT TIME ZONE 'utc' WHERE personal_code = ?";
+            + " , active_flag = ?, last_loaded_date= NOW() , last_updated= NOW() AT TIME ZONE 'utc' "
+            + "WHERE personal_code = ?";
 
     @Override
     public void processLeavers(List<LeaversResultsRequest> leaversResultsRequests) {
