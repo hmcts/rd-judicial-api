@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -27,6 +28,13 @@ public class ElinksJobSchedulerIntegrationTest extends ElinksDataLoadBaseTest {
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(elinksApiJobScheduler, "isSchedulerEnabled", true);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isloadLocationEnabled", true);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isloadPersonEnabled", true);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isloadDeletedEnabled", true);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isloadLeaversEnabled", true);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isidamElasticSearchEnabled", true);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "ispublishSidamIdToAsbEnabled", true);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isfetchIdamIdsEnabled", true);
         deleteData();
     }
 
@@ -63,6 +71,28 @@ public class ElinksJobSchedulerIntegrationTest extends ElinksDataLoadBaseTest {
         verifyAudit();
 
         verify(elinkTopicPublisher).sendMessage(anyList(), anyString());
+    }
+
+    @DisplayName("Should complete scheduler job without loading data when all step flags are disabled")
+    @Test
+    void shouldCompleteSchedulerJobWithoutLoadingDataWhenAllStepFlagsAreDisabled() {
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isloadLocationEnabled", false);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isloadPersonEnabled", false);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isloadDeletedEnabled", false);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isloadLeaversEnabled", false);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isidamElasticSearchEnabled", false);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "ispublishSidamIdToAsbEnabled", false);
+        ReflectionTestUtils.setField(elinksApiJobScheduler, "isfetchIdamIdsEnabled", false);
+
+        runElinksDataLoadJob();
+
+        assertThat(baseLocationRepository.findAll()).isEmpty();
+        assertThat(profileRepository.findAll()).isEmpty();
+        assertThat(appointmentsRepository.findAll()).isEmpty();
+        assertThat(authorisationsRepository.findAll()).isEmpty();
+        assertThat(judicialRoleTypeRepository.findAll()).isEmpty();
+        assertThat(elinkSchedularAuditRepository.findAll()).isEmpty();
+        verify(elinkTopicPublisher, never()).sendMessage(anyList(), anyString());
     }
 
     @DisplayName("should Fail To Run Elinks Job When Job Already Run")
