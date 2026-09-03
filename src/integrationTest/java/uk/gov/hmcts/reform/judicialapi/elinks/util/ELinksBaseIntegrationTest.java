@@ -50,6 +50,7 @@ import java.util.UUID;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -191,6 +192,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                                     final HttpStatus httpStatus) {
         if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                    .withQueryParam("query", matching("ssoid:.*"))
                     .willReturn(serverError()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
@@ -198,6 +200,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                     ));
         } else {
             sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
+                    .withQueryParam("query", matching("ssoid:.*"))
                     .willReturn(aResponse()
                             .withStatus(httpStatus.value())
                             .withHeader("Content-Type", "application/json")
@@ -308,6 +311,5 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
         }
     }
 }
-
 
 

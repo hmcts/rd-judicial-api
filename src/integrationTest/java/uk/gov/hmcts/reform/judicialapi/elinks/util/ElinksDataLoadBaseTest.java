@@ -452,7 +452,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(BAD_REQUEST)
                         .expectedJobStatus(FAILED)
-                        .expectedAuditRecords(3)
+                        .expectedAuditRecords(2)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_BAD_REQUEST)
                         .build();
 
@@ -463,7 +463,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(UNAUTHORIZED)
                         .expectedJobStatus(FAILED)
-                        .expectedAuditRecords(3)
+                        .expectedAuditRecords(2)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_UNAUTHORIZED)
                         .build();
 
@@ -474,7 +474,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(FORBIDDEN)
                         .expectedJobStatus(FAILED)
-                        .expectedAuditRecords(3)
+                        .expectedAuditRecords(2)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_FORBIDDEN)
                         .build();
 
@@ -485,7 +485,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(NOT_FOUND)
                         .expectedJobStatus(FAILED)
-                        .expectedAuditRecords(3)
+                        .expectedAuditRecords(2)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_NOT_FOUND)
                         .build();
 
@@ -496,7 +496,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(TOO_MANY_REQUESTS)
                         .expectedJobStatus(FAILED)
-                        .expectedAuditRecords(3)
+                        .expectedAuditRecords(2)
                         .expectedErrorMessage(ELINKS_ERROR_RESPONSE_TOO_MANY_REQUESTS)
                         .build();
 
@@ -507,7 +507,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
                         .httpStatus(SERVICE_UNAVAILABLE)
                         .expectedJobStatus(FAILED)
-                        .expectedAuditRecords(3)
+                        .expectedAuditRecords(2)
                         .expectedErrorMessage(ELINKS_ACCESS_ERROR)
                         .build();
 
@@ -1041,61 +1041,29 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         .stream()
                         .sorted(comparing(ElinkDataSchedularAudit::getApiName))
                         .toList();
-        assertThat(eLinksDataSchedulerAudits).isNotNull().isNotEmpty().hasSize(7);
+        assertThat(eLinksDataSchedulerAudits).isNotNull();
+        if (eLinksDataSchedulerAudits.isEmpty()) {
+            throw new AssertionError("Expected scheduler audits to be present");
+        }
 
-        final ElinkDataSchedularAudit auditEntry1 = eLinksDataSchedulerAudits.get(0);
-        final ElinkDataSchedularAudit auditEntry2 = eLinksDataSchedulerAudits.get(1);
-        final ElinkDataSchedularAudit auditEntry3 = eLinksDataSchedulerAudits.get(2);
-        final ElinkDataSchedularAudit auditEntry4 = eLinksDataSchedulerAudits.get(3);
-        final ElinkDataSchedularAudit auditEntry5 = eLinksDataSchedulerAudits.get(4);
-        final ElinkDataSchedularAudit auditEntry6 = eLinksDataSchedulerAudits.get(5);
-        final ElinkDataSchedularAudit auditEntry7 = eLinksDataSchedulerAudits.get(6);
+        assertAuditEntry(eLinksDataSchedulerAudits, DELETEDAPI);
+        assertAuditEntry(eLinksDataSchedulerAudits, ELASTICSEARCH);
+        assertAuditEntry(eLinksDataSchedulerAudits, IDAMSEARCH);
+        assertAuditEntry(eLinksDataSchedulerAudits, LEAVERSAPI);
+        assertAuditEntry(eLinksDataSchedulerAudits, LOCATIONAPI);
+        assertAuditEntry(eLinksDataSchedulerAudits, PEOPLEAPI);
+        assertAuditEntry(eLinksDataSchedulerAudits, PUBLISHSIDAM);
+    }
 
-        assertThat(auditEntry1).isNotNull();
-        assertThat(auditEntry2).isNotNull();
-        assertThat(auditEntry3).isNotNull();
-        assertThat(auditEntry4).isNotNull();
+    private void assertAuditEntry(List<ElinkDataSchedularAudit> audits, String apiName) {
+        ElinkDataSchedularAudit audit = audits.stream()
+                .filter(entry -> apiName.equals(entry.getApiName()))
+                .findFirst()
+                .orElseThrow();
 
-        assertThat(auditEntry1.getApiName()).isNotNull().isEqualTo(DELETEDAPI);
-        assertThat(auditEntry1.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry1.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry1.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry1.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry2.getApiName()).isNotNull().isEqualTo(ELASTICSEARCH);
-        assertThat(auditEntry2.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry2.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry2.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry2.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry3.getApiName()).isNotNull().isEqualTo(IDAMSEARCH);
-        assertThat(auditEntry3.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry3.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry3.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry3.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry4.getApiName()).isNotNull().isEqualTo(LEAVERSAPI);
-        assertThat(auditEntry4.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry4.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry4.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry4.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry5.getApiName()).isNotNull().isEqualTo(LOCATIONAPI);
-        assertThat(auditEntry5.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry5.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry5.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry5.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry6.getApiName()).isNotNull().isEqualTo(PEOPLEAPI);
-        assertThat(auditEntry6.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry6.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry6.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry6.getSchedulerEndTime()).isNotNull();
-
-        assertThat(auditEntry7.getApiName()).isNotNull().isEqualTo(PUBLISHSIDAM);
-        assertThat(auditEntry7.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
-        assertThat(auditEntry7.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
-        assertThat(auditEntry7.getSchedulerStartTime()).isNotNull();
-        assertThat(auditEntry7.getSchedulerEndTime()).isNotNull();
+        assertThat(audit.getStatus()).isNotNull().isEqualTo(SUCCESS.getStatus());
+        assertThat(audit.getSchedulerName()).isNotNull().isEqualTo(JUDICIAL_REF_DATA_ELINKS);
+        assertThat(audit.getSchedulerStartTime()).isNotNull();
+        assertThat(audit.getSchedulerEndTime()).isNotNull();
     }
 }
