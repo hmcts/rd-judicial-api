@@ -170,6 +170,21 @@ elinks:
     lockAtLeastFor: ${Lock_AT_Least_For:PT10M}
     lockAtMostFor: ${Lock_AT_Most_For:PT20M}
     defaultLockAtMostFor: ${Default_Lock_At_Most_For:PT30M}
+    steps:
+      loadLocation:
+        enabled: ${LOAD_LOCATION_STEP_ENABLED:false}
+      loadPerson:
+        enabled: ${LOAD_PERSON_STEP_ENABLED:false}
+      loadDeleted:
+        enabled: ${LOAD_DELETED_STEP_ENABLED:false}
+      loadLeavers:
+        enabled: ${LOAD_LEAVERS_STEP_ENABLED:false}
+      idamElasticSearch:
+        enabled: ${IDAM_ELASTIC_SEARCH_STEP_ENABLED:false}
+      publishSidamIdToAsb:
+        enabled: ${PUBLISH_SIDAM_ID_TO_ASB_STEP_ENABLED:false}
+      fetchIdamIds:
+        enabled: ${FETCH_IDAM_IDS_STEP_ENABLED:false}
 
 
 logging.level.uk.gov.hmcts: ${APPLICATION_LOGGING_LEVEL:INFO}
