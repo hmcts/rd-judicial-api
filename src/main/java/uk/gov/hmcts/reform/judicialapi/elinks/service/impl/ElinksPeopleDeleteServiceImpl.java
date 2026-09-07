@@ -121,6 +121,8 @@ public class ElinksPeopleDeleteServiceImpl implements ElinksPeopleDeleteService 
                 userProfiles.forEach(userProfile -> {
                     userProfile.setDeletedFlag(true);
                     userProfile.setActiveFlag(false);
+                    userProfile.setLastUpdated(LocalDateTime.now());
+                    userProfile.setLastLoadedDate(LocalDateTime.now());
                     userProfile.setDeletedOn(LocalDateTime.now());
                 });
                 profileRepository.saveAll(userProfiles);
