@@ -59,4 +59,24 @@ class DateUtilTest {
         LocalDateTime dateTime = DateUtil.convertToLocalDateTime(FIELD_NAME, DATE_TIME_FORMAT, null);
         assertNull(dateTime);
     }
+
+    @Test
+    void shouldConvertToLocalDateTimeNoFormat() {
+        LocalDateTime localDateTime = DateUtil.convertToLocalDateTime(FIELD_NAME, "2024-06-24");
+        assertNotNull(localDateTime);
+    }
+
+    @Test
+    void shouldReturnNullWhenDateIsNullNoFormat() {
+        LocalDateTime localDateTime = DateUtil.convertToLocalDateTime(FIELD_NAME, null);
+        assertNull(localDateTime);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenInvalidDateIsPassedNoFormat() {
+        DateTimeParseException exception = assertThrows(DateTimeParseException.class, () ->
+                DateUtil.convertToLocalDateTime(FIELD_NAME, "2024-14-24"));
+        assertTrue(exception.getMessage().contains(FIELD_NAME));
+    }
+
 }
