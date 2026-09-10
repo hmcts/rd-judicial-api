@@ -66,8 +66,8 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
     @DisplayName("Success - ELinks People Api Data Load and Delete Success Scenarios")
     @ParameterizedTest(name = "{0}")
-    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest" +
-            "#provideDataForPeopleLoadAndDeleteApi")
+    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest"
+            + "#provideDataForPeopleLoadAndDeleteApi")
     void shouldLoadPeopleApiDataAndDelete(TestDataArguments testDataArguments) throws Exception {
 
         final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());

@@ -48,8 +48,8 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
 
     @DisplayName("Non-Tribunal cft region and location")
     @ParameterizedTest
-    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest" +
-            "#provideRefreshUserProfileTestData")
+    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest"
+            + "#provideRefreshUserProfileTestData")
     void shouldReturn200NonTribunalScenario(String serviceCode,
                                             String serviceName,
                                             int expectedUserProfilesCount) throws JsonProcessingException {
