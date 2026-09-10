@@ -100,7 +100,7 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
                         .request(mock(Request.class)).body(body, defaultCharset()).status(201).build());
     }
 
-    private Stream<Arguments> provideRefreshUserProfileTestData() {
+    private static Stream<Arguments> provideRefreshUserProfileTestData() {
         return Stream.of(
                 arguments("BBA2", "ST_CIC", 1),
                 arguments("BFA1", "CMC", 6)
