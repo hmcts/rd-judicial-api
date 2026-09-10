@@ -76,7 +76,7 @@ class DeletedIntegrationTest extends ElinksDataLoadBaseTest {
 
     @DisplayName("Negative - ELinks Deleted Api Data Load Failure Scenarios")
     @ParameterizedTest(name = "{0}")
-    @MethodSource("provideDataLoadFailStatusCodes")
+    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest#provideDataLoadFailStatusCodes")
     void shouldFailToLoadDeletedApiDataWhenELinksApiResponseNot200(TestDataArguments testDataArguments)
             throws IOException {
         final String locationApiResponseJson = readJsonAsString(testDataArguments.eLinksLocationApiResponseJson());
