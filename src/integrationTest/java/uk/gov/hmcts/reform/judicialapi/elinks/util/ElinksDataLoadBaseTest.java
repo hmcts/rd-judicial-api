@@ -444,7 +444,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
 
     }
 
-    protected Stream<Arguments> provideDataLoadFailStatusCodes() {
+    public static Stream<Arguments> provideDataLoadFailStatusCodes() {
         final TestDataArguments badRequest =
                 TestDataArguments
                         .builder()
@@ -522,7 +522,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
 
     }
 
-    protected Stream<Arguments> provideDataForLeaversApi() {
+    public static Stream<Arguments> provideDataForLeaversApi() {
         final TestDataArguments successLoadTestDataArguments =
                 TestDataArguments.builder()
                         .eLinksPeopleApiResponseJson(PEOPLE_API_RESPONSE_JSON)
@@ -567,7 +567,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         named("Should load deleted data with success status", successLoadTestDataArguments)));
     }
 
-    protected Stream<Arguments> provideDataForLocationApi() {
+    public static Stream<Arguments> provideDataForLocationApi() {
         final TestDataArguments successLoadTestDataArguments =
                 TestDataArguments.builder()
                         .eLinksLocationApiResponseJson(LOCATION_API_RESPONSE_JSON)
@@ -1017,7 +1017,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
         assertEquals(SUCCESS.getStatus(), jobDetails.getPublishingStatus());
     }
 
-    protected TestDataArguments getTestDataArguments() {
+    public static TestDataArguments getTestDataArguments() {
         return
                 TestDataArguments.builder()
                         .expectedAppointmentsSize(2)
