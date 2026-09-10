@@ -542,7 +542,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                         named("Should load leavers data with success status", successLoadTestDataArguments)));
     }
 
-    public Stream<Arguments> provideDataForDeletedApi() {
+    public static Stream<Arguments> provideDataForDeletedApi() {
 
         final TestDataArguments successLoadTestDataArguments =
                 TestDataArguments.builder()
