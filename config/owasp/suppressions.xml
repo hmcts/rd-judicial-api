@@ -101,10 +101,6 @@
         <cve>CVE-2026-59270</cve>
         <cve>CVE-2026-59276</cve>
   </suppress>
-      <suppress>
-        <notes>https://tools.hmcts.net/jira/browse/DTSRD-6685 spring cloud</notes>
-        <cve>CVE-2026-59284</cve>
-    </suppress>
     <suppress>
         <notes>https://tools.hmcts.net/jira/browse/DTSRD-6689 Reactor Netty</notes>
         <cve>CVE-2026-47874</cve>
