@@ -45,7 +45,7 @@ def versions = [
         log4j               : '2.26.1',
         logback             : '1.6.3',
         testContainer_postgresql: '2.0.5',
-        bouncycastle        : '1.85',
+        bouncycastle        : '1.86',
         jwtVersion          : '0.13.0',
         wiremock            : '3.13.2'
 ]
