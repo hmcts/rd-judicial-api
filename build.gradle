@@ -37,7 +37,7 @@ def versions = [
         jackson            : '2.22.1',
         launchDarklySdk    : '5.10.9',
         flyway              : '11.20.3',
-        lombok              : '1.18.46',
+        lombok              : '1.18.48',
         reformLogging       : '8.0.0',
         serenity            : '5.3.11',
         restAssured         : '5.5.7',
