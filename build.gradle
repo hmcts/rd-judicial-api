@@ -114,6 +114,9 @@ dependencyManagement {
         dependencySet(group: 'org.apache.qpid', version: '0.35.0') {
             entry 'proton-j'
         }
+        dependencySet(group: 'org.freemarker', version: '2.3.35') {
+            entry 'freemarker'
+        }
     }
 }
 
