@@ -86,4 +86,7 @@ public class UserProfileAudit implements Serializable {
 
     @Column(name = "date_of_deletion")
     private LocalDateTime deletedOn;
+
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 }
