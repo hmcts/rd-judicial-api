@@ -26,6 +26,13 @@ java:
     ELINKS_URL: https://gateway.staging.elinks.judiciary.uk/elinks/api/v5
     LAST_UPDATED: 1900-01-01
     SCHEDULER_ENABLED: true
+    LOAD_LOCATION_STEP_ENABLED: true
+    LOAD_PERSON_STEP_ENABLED: true
+    LOAD_DELETED_STEP_ENABLED: true
+    LOAD_LEAVERS_STEP_ENABLED: true
+    IDAM_ELASTIC_SEARCH_STEP_ENABLED: true
+    PUBLISH_SIDAM_ID_TO_ASB_STEP_ENABLED: true
+    FETCH_IDAM_IDS_STEP_ENABLED: true
     CRON_EXPRESSION: "0 00 10 7 10 ?"
     DB_READER_USERNAME: "{{ .Values.postgresql.auth.username}}"
     APPLICATION_LOGGING_LEVEL: INFO
