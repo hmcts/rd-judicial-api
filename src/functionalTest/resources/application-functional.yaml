@@ -10,6 +10,7 @@ idam.auth.redirectUrl: ${OAUTH2_REDIRECT_URI:https://rd-judicial-api-aat.service
 s2s-secret: ${JUDICIAL_API_S2S_SECRET:}
 jrd.security.roles.hmcts-admin: jrd-admin
 jrd.security.roles.system-user: jrd-system-user
+jrd.publisher.jrd-message-batch-size: ${JRD_DATA_PER_MESSAGE:2}
 
 elinks:
   people:
