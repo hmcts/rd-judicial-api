@@ -11,4 +11,7 @@ public interface IdamElasticSearchService {
     ResponseEntity<Object> getIdamElasticSearchSyncFeed();
 
     ResponseEntity<Object> getIdamDetails();
+
+    void syncMissingSidamIds();
+
 }
