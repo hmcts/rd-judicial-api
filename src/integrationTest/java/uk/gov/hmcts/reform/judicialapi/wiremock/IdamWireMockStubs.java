@@ -26,7 +26,6 @@ public final class IdamWireMockStubs {
 
     public static void registerDefaults(WireMockServer server) {
         idamMockServer = server;
-
         server.stubFor(
                 get(urlPathEqualTo("/o/userinfo"))
                         .atPriority(10)

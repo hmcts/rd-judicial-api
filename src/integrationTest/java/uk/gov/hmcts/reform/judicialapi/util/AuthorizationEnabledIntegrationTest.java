@@ -1,9 +1,13 @@
 package uk.gov.hmcts.reform.judicialapi.util;
 
 import com.launchdarkly.sdk.server.LDClient;
+import net.serenitybdd.annotations.WithTag;
+import net.serenitybdd.annotations.WithTags;
+import net.serenitybdd.junit5.SerenityJUnit5Extension;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +20,8 @@ import static org.mockito.Mockito.when;
 
 @Configuration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SerenityJUnit5Extension.class)
+@WithTags({@WithTag("testType:Integration")})
 @DirtiesContext
 public abstract class AuthorizationEnabledIntegrationTest extends SpringBootIntegrationTest {
 

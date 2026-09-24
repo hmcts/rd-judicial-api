@@ -26,7 +26,6 @@ public class BaseSecurityIntegrationTest extends AuthorizationEnabledIntegration
     protected static final String VALID_ISSUER_1 = "http://localhost:5062/o";
     protected static final String VALID_ISSUER_2 = "https://secondary-idam.platform.hmcts.net";
     protected static final String ROGUE_ISSUER = "https://rogue-issuer.com";
-    protected static final String ELINKS_BASE_URL = "/refdata/internal/elink";
     protected static final UserSearchRequest USER_SEARCH_REQUEST =
             UserSearchRequest.builder().searchString("test").build();
 

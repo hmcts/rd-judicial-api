@@ -43,7 +43,6 @@ public class WireMockContextInitializer
 
     @Override
     public void initialize(@NonNull ConfigurableApplicationContext context) {
-
         WireMockTestEnvironment.start();
 
         registerBeans(context);
