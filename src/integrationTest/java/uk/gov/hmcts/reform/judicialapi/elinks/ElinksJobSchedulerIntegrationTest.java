@@ -21,6 +21,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.verify;
 import static org.springframework.http.HttpStatus.OK;
+import static uk.gov.hmcts.reform.judicialapi.wiremock.IdamWireMockStubs.stubIdamElasticSearchResponse;
+import static uk.gov.hmcts.reform.judicialapi.wiremock.IdamWireMockStubs.stubIdamResponse;
+import static uk.gov.hmcts.reform.judicialapi.wiremock.IdamWireMockStubs.stubIdamTokenResponse;
 
 public class ElinksJobSchedulerIntegrationTest extends ElinksDataLoadBaseTest {
 
