@@ -37,7 +37,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
     @DisplayName("Success - ELinks People Api Data Load Success Scenarios")
     @ParameterizedTest(name = "{0}")
-    @MethodSource("provideDataForPeopleApi")
+    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest#provideDataForPeopleApi")
     void shouldLoadPeopleApiData(TestDataArguments testDataArguments) throws Exception {
 
         final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
@@ -66,7 +66,8 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
     @DisplayName("Success - ELinks People Api Data Load and Delete Success Scenarios")
     @ParameterizedTest(name = "{0}")
-    @MethodSource("provideDataForPeopleLoadAndDeleteApi")
+    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest"
+            + "#provideDataForPeopleLoadAndDeleteApi")
     void shouldLoadPeopleApiDataAndDelete(TestDataArguments testDataArguments) throws Exception {
 
         final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
@@ -95,7 +96,7 @@ class PeopleIntegrationTest extends ElinksDataLoadBaseTest {
 
     @DisplayName("Negative - ELinks People Api Data Load Failure Scenarios")
     @ParameterizedTest(name = "{0}")
-    @MethodSource("provideDataLoadFailStatusCodes")
+    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest#provideDataLoadFailStatusCodes")
     void shouldFailToLoadPeopleApiDataWhenELinksApiResponseNot200(TestDataArguments testDataArguments)
             throws IOException {
         final String peopleApiResponseJson = readJsonAsString(testDataArguments.eLinksPeopleApiResponseJson());
