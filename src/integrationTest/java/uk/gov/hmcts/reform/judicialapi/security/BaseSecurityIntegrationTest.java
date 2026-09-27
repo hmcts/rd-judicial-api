@@ -37,8 +37,6 @@ public class BaseSecurityIntegrationTest extends AuthorizationEnabledIntegration
 
     @BeforeEach
     public void setUp() throws IOException {
-
-
         final String locationApiResponseJson =
                 readString(Paths.get(requireNonNull(this.getClass()
                         .getResource(LOCATION_API_RESPONSE_JSON)).getPath()), UTF_8);
@@ -47,22 +45,17 @@ public class BaseSecurityIntegrationTest extends AuthorizationEnabledIntegration
     }
 
     protected RequestSpecification jwtRequest(String issuer, boolean expired) {
-
         return SerenityRest.given()
                 .baseUri(testApplicationServer.getBaseUrl() + APP_BASE_PATH)
                 .headers(getHttpHeaders(issuer, expired, UUID.randomUUID().toString(), jrdSystemUser));
 
     }
 
-    protected RequestSpecification unexpiredJwt(
-            String issuer) {
-
+    protected RequestSpecification unexpiredJwt(String issuer) {
         return jwtRequest(issuer, false);
     }
 
-    protected RequestSpecification expiredJwt(
-            String issuer) {
-
+    protected RequestSpecification expiredJwt(String issuer) {
         return jwtRequest(issuer, true);
     }
 }

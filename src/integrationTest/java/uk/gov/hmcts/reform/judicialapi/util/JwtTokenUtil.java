@@ -79,7 +79,6 @@ public final class JwtTokenUtil {
     private static JWTClaimsSet.Builder getJwtClaimsBuilder(
             final LocalDateTime issuedAt,
             final LocalDateTime expiresAt) {
-
         final ZoneId zoneId = ZoneId.systemDefault();
 
         return new JWTClaimsSet.Builder()

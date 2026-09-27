@@ -80,7 +80,6 @@ public class JwtIssuerValidationEnabledIntegrationTest extends BaseSecurityInteg
                                                             String jwtIssuer,
                                                             boolean tokenExpired,
                                                             int expectedStatusCode) {
-
         RequestSpecification jwtRequestSpecification =
                 tokenExpired
                         ? expiredJwt(jwtIssuer)
@@ -88,11 +87,11 @@ public class JwtIssuerValidationEnabledIntegrationTest extends BaseSecurityInteg
 
         jwtRequestSpecification
                 .when()
-                .request().log().all()
+                .request()
                 .with()
                 .body(USER_SEARCH_REQUEST)
                 .post("/users/search")
-                .then().log().all()
+                .then()
                 .assertThat()
                 .statusCode(expectedStatusCode);
     }

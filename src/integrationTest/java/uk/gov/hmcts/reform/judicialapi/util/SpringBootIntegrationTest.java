@@ -31,7 +31,6 @@ public abstract class SpringBootIntegrationTest {
     protected TestApplicationServer testApplicationServer;
 
     public static ObjectMapper getObjectMapper() {
-
         return new ObjectMapper()
                 .configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
 

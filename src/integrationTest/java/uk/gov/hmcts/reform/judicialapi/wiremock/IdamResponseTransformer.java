@@ -20,7 +20,6 @@ public class IdamResponseTransformer extends ResponseTransformer {
             Response response,
             FileSource files,
             Parameters parameters) {
-
         String token = extractBearerToken(request.getHeader("Authorization"));
 
         UserTokenInfo tokenInfo = getUserIdAndRoleFromToken(token);
@@ -59,14 +58,11 @@ public class IdamResponseTransformer extends ResponseTransformer {
             );
 
         } catch (ParseException e) {
-            throw new InvalidTokenException(
-                    "Unable to parse JWT token",
-                    e
-            );
+            throw new InvalidTokenException("Unable to parse JWT token", e);
         }
     }
 
-    private static String @NonNull [] getParts(SignedJWT signedJwt) throws ParseException {
+    private static @NonNull String[] getParts(SignedJWT signedJwt) throws ParseException {
         String subject = signedJwt.getJWTClaimsSet().getSubject();
 
         if (subject == null || subject.isBlank()) {
@@ -78,9 +74,7 @@ public class IdamResponseTransformer extends ResponseTransformer {
         String[] parts = subject.trim().split("\\s+", 2);
 
         if (parts.length != 2) {
-            throw new InvalidTokenException(
-                    "Token 'sub' must contain role and userId"
-            );
+            throw new InvalidTokenException("Token 'sub' must contain role and userId");
         }
         return parts;
     }
@@ -101,7 +95,6 @@ public class IdamResponseTransformer extends ResponseTransformer {
         if (token.isEmpty()) {
             throw new InvalidTokenException("Bearer token is missing");
         }
-
         return token;
     }
 }
