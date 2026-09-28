@@ -20,7 +20,6 @@ public class IdamResponseTransformer extends ResponseTransformer {
             Response response,
             FileSource files,
             Parameters parameters) {
-
         String token = extractBearerToken(request.getHeader("Authorization"));
 
         UserTokenInfo tokenInfo = getUserIdAndRoleFromToken(token);
@@ -66,7 +65,7 @@ public class IdamResponseTransformer extends ResponseTransformer {
         }
     }
 
-    private static String @NonNull [] getParts(SignedJWT signedJwt) throws ParseException {
+    private static @NonNull String[] getParts(SignedJWT signedJwt) throws ParseException {
         String subject = signedJwt.getJWTClaimsSet().getSubject();
 
         if (subject == null || subject.isBlank()) {
