@@ -196,6 +196,27 @@ class CheckForSearchV2UsersIntegrationTest extends AuthorizationEnabledIntegrati
     }
 
     @ParameterizedTest
+    @CsvSource({
+        "jrd-system-user,BAA9",
+        "jrd-admin,BAA9",
+    })
+    void shouldReturn200WhenUserProfileRequestedSscsAppointmentExpiredIacSscsAuthNullOrActive(String role,
+                                                                                        String serviceCode) {
+        mockJwtToken(role);
+        UserSearchRequest userSearchRequest = UserSearchRequest.builder()
+            .searchString("Eight")
+            .serviceCode(serviceCode)
+            .build();
+        var response = judicialReferenceDataClient.searchUsers(
+            userSearchRequest, role, false, MediaType.valueOf(V2.MediaType.SERVICE),
+            MediaType.valueOf(V2.MediaType.SERVICE));
+        var profiles = (List<Map<String, String>>) response.get("body");
+        if (("BAA9").equals(serviceCode)) {
+            assertEquals(2, profiles.size());
+        }
+    }
+
+    @ParameterizedTest
     @CsvSource({"jrd-system-user,BHA1",
             "jrd-admin,BHA1"})
     void shouldReturn200WhenUserProfileRequestedFamilyAppointmentActiveAuthExpires(String role,
