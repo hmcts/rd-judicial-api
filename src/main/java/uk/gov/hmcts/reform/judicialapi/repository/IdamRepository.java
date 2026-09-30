@@ -41,7 +41,8 @@ public class IdamRepository {
 
 
         try {
-            return idamClient.getUserInfo("Bearer " + jwtToken);
+            UserInfo userInfo = idamClient.getUserInfo("Bearer " + jwtToken);
+            return userInfo;
         } catch (FeignException feignException) {
             log.error("FeignException Unauthorized: retrieve user info ", feignException);
             throw new UnauthorizedException("User is not authorized", feignException);
