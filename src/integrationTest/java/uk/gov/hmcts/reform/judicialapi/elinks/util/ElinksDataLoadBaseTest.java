@@ -74,7 +74,7 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
     protected static final String BASE_LOCATION_PARENT_ID_NULL_ERROR_MSG =
             "The Parent ID is null/blanks for Tribunal Base Location ID 1122 in the Location_Type table.";
     private static final String WIREMOCK_RESPONSES_FOLDER = "/wiremock_responses";
-    protected static final String LOCATION_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/location.json";
+    public static final String LOCATION_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/location.json";
     protected static final String LEAVERS_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/leavers.json";
     protected static final String DELETED_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/deleted.json";
     protected static final String PEOPLE_API_RESPONSE_JSON = WIREMOCK_RESPONSES_FOLDER + "/people.json";
