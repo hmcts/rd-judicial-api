@@ -1,8 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
-import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
-import com.github.tomakehurst.wiremock.http.Response;
-import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.launchdarkly.sdk.server.LDClient;
 import net.serenitybdd.annotations.WithTag;
 import net.serenitybdd.annotations.WithTags;
@@ -16,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -45,20 +41,11 @@ import uk.gov.hmcts.reform.judicialapi.util.SpringBootIntegrationTest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 import uk.gov.hmcts.reform.judicialapi.wiremock.WireMockExtension;
 
-import java.util.UUID;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
-import static java.lang.String.format;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.decodeJwtToken;
-import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.getUserIdAndRoleFromToken;
 
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
@@ -73,20 +60,15 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     public static final String RESPONSE_BODY_MSG_KEY = "message";
     protected static final String USER_PASSWORD = "user:password";
     protected static final String JUDICIAL_REF_DATA_ELINKS = "judicial-ref-data-elinks";
-    private static final String IDAM_SEARCHUSERS = "/api/v1/users";
-    @RegisterExtension
-    protected static final WireMockExtension s2sService = new WireMockExtension(8990);
-    @RegisterExtension
-    protected static final WireMockExtension sidamService = new WireMockExtension(5000, new JudicialTransformer());
-    @RegisterExtension
-    protected static final WireMockExtension mockHttpServerForOidc = new WireMockExtension(7000);
+
     @RegisterExtension
     protected static final WireMockExtension elinks = new WireMockExtension(8000);
+
     @MockitoBean
     protected FeatureToggleServiceImpl featureToggleServiceImpl;
-    @MockitoBean
-    protected JwtDecoder jwtDecoder;
+
     protected ElinksReferenceDataClient elinksReferenceDataClient;
+
     @Autowired
     protected AppointmentsRepository appointmentsRepository;
     @Autowired
@@ -158,95 +140,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                         .withBody(peopleApiResponseJson)));
     }
 
-    protected void stubS2SResponse() {
-        s2sService.stubFor(get(urlEqualTo("/details"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withHeader("Connection", "close")
-                        .withBody("rd_judicial_api")));
-    }
-
-    protected void stubIdamUserInfoResponse() {
-        sidamService.stubFor(get(urlPathMatching("/o/userinfo"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withHeader("Connection", "close")
-                        .withBody("""
-                                  {
-                                      "id": "%s",
-                                      "uid": "%s",
-                                      "forename": "Super",
-                                      "surname": "User",
-                                      "email": "super.user@hmcts.net",
-                                      "accountStatus": "active",
-                                      "roles": [ "%s" ]
-                                  }
-                                  """)
-                        .withTransformers("user-token-response")));
-    }
-
-    protected void stubIdamResponse(final String idamResponseValidationJson,
-                                    final HttpStatus httpStatus) {
-        if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
-            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                    .willReturn(serverError()
-                            .withStatus(httpStatus.value())
-                            .withHeader("Content-Type", "application/json")
-                            .withBody("Internal server error")
-                    ));
-        } else {
-            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                    .willReturn(aResponse()
-                            .withStatus(httpStatus.value())
-                            .withHeader("Content-Type", "application/json")
-                            .withHeader("Connection", "close")
-                            .withBody(idamResponseValidationJson)
-                    ));
-        }
-    }
-
-    protected void stubIdamElasticSearchResponse(final String idamResponseValidationJson,
-                                                 final int pageNumber,
-                                                 final HttpStatus httpStatus) {
-        if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
-            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                    .willReturn(serverError()
-                            .withStatus(httpStatus.value())
-                            .withHeader("Content-Type", "application/json")
-                            .withBody("Internal server error")
-                    ));
-        } else {
-            sidamService.stubFor(get(urlPathMatching(IDAM_SEARCHUSERS))
-                    .withId(UUID.randomUUID())
-                    .withQueryParam("page", equalTo(String.valueOf(pageNumber)))
-                    .withQueryParam("size", equalTo("4"))
-                    .withQueryParam("query", equalTo("(roles:judiciary) AND lastModified:>now-12h"))
-                    .willReturn(aResponse()
-                            .withStatus(httpStatus.value())
-                            .withHeader("Content-Type", "application/json")
-                            .withHeader("Connection", "close")
-                            .withBody(idamResponseValidationJson)));
-        }
-    }
-
-    protected void stubIdamTokenResponse(final HttpStatus httpStatus) {
-        sidamService.stubFor(post(urlPathMatching("/o/token"))
-                .willReturn(aResponse()
-                        .withStatus(httpStatus.value())
-                        .withHeader("Content-Type", "application/json")
-                        .withHeader("Connection", "close")
-                        .withBody("""
-                                  {
-                                  "access_token": "12345"
-                                   }
-                                   """
-                        )
-                ));
-    }
-
-    protected void stubLocationApiResponse(final String locationApiResponseJson,
+    public static void stubLocationApiResponse(final String locationApiResponseJson,
                                            final HttpStatus httpStatus) {
 
         elinks.stubFor(get(urlPathMatching("/reference_data/location"))
@@ -279,34 +173,6 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
                         .withBody(leaversApiResponseJson)));
     }
 
-    public static class JudicialTransformer implements ResponseTransformerV2 {
-
-        @Override
-        public Response transform(Response response, ServeEvent serveEvent) {
-
-            String formatResponse = response.getBodyAsString();
-
-            String token = serveEvent.getRequest().header("Authorization").firstValue();
-            String tokenBody = decodeJwtToken(token.split(" ")[1]);
-            var tokenInfo = getUserIdAndRoleFromToken(tokenBody);
-            formatResponse = format(formatResponse, tokenInfo.get(1), tokenInfo.get(1), tokenInfo.get(0));
-
-            return Response.Builder.like(response)
-                    .but().body(formatResponse)
-                    .build();
-
-        }
-
-        @Override
-        public String getName() {
-            return "user-token-response";
-        }
-
-        @Override
-        public boolean applyGlobally() {
-            return false;
-        }
-    }
 }
 
 
