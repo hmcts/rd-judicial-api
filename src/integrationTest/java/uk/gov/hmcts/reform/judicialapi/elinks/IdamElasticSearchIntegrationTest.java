@@ -25,6 +25,8 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.LOCATIONAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLEAPI;
 import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants.PEOPLE_DATA_LOAD_SUCCESS;
+import static uk.gov.hmcts.reform.judicialapi.wiremock.IdamWireMockStubs.stubIdamElasticSearchResponse;
+import static uk.gov.hmcts.reform.judicialapi.wiremock.IdamWireMockStubs.stubIdamTokenResponse;
 
 @Slf4j
 class IdamElasticSearchIntegrationTest extends ElinksDataLoadBaseTest {
