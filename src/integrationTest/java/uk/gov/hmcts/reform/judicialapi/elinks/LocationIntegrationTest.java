@@ -28,7 +28,7 @@ class LocationIntegrationTest extends ElinksDataLoadBaseTest {
 
     @DisplayName("Success - ELinks Location Api Data Load Success Scenario")
     @ParameterizedTest(name = "{0}")
-    @MethodSource("provideDataForLocationApi")
+    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest#provideDataForLocationApi")
     void shouldLoadLocationApiData(TestDataArguments testDataArguments) throws Exception {
 
         final String locationApiResponseJson = readJsonAsString(testDataArguments.eLinksLocationApiResponseJson());
@@ -46,7 +46,7 @@ class LocationIntegrationTest extends ElinksDataLoadBaseTest {
 
     @DisplayName("Negative - ELinks Location Api Data Load Failure Scenarios")
     @ParameterizedTest(name = "{0}")
-    @MethodSource("provideDataLoadFailStatusCodes")
+    @MethodSource("uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest#provideDataLoadFailStatusCodes")
     void shouldFailToLoadLocationApiDataWhenELinksApiResponseNot200(TestDataArguments testDataArguments) {
 
         stubLocationApiResponse(null, testDataArguments.httpStatus());
