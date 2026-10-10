@@ -38,6 +38,8 @@ public class ResultsRequest {
     private String title;
     @JsonProperty("retirement_date")
     private String retirementDate;
+    @JsonProperty("last_updated")
+    private String lastUpdated;
     //TBC
     @JsonProperty("initials")
     private String initials;
