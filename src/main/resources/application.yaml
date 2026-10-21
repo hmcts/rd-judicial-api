@@ -116,7 +116,7 @@ idam:
   s2s-authorised:
     services: ${JRD_S2S_AUTHORISED_SERVICES:rd_judicial_api,am_org_role_mapping_service,iac,xui_webapp}
   api:
-    url: ${IDAM_URL:https://idam-web-public.aat.platform.hmcts.net}
+    url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
     client-id: ${OAUTH2_CLIENT_ID:rd-professional-api}
     redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
     authorization: ${RD_SYSTEM_USER_USERNAME:}:${RD_SYSTEM_USER_PASSWORD:}
