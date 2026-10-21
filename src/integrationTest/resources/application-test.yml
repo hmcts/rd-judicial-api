@@ -107,13 +107,15 @@ idam:
     redirect-uri: ${OAUTH2_REDIRECT_URI:https://rd-professional-api-aat.service.core-compute-aat.internal/oauth2redirect}
     authorization: ${OAUTH2_AUTH:}
     client-authorization: ${OAUTH2_CLIENT_AUTH:}
+  oidc:
+    use_oidc_api: true
+    url: ${IDAM_URL:http://127.0.0.1:5000}
   security:
     issuerValidation: ${JWT_ISSUER_VALIDATION_ENABLED:false}
 
 ## IDAM feign connection
 auth.idam.client.baseUrl: ${http://127.0.0.1:5000/o}
 oidc:
-  issuer: ${OIDC_ISSUER:http://127.0.0.1:5000/openam/oauth2/hmcts}
   expiration: 14400000 # milliseconds 4 hours
 
 feign:
