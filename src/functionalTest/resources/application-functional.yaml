@@ -32,8 +32,7 @@ idam:
     authorization: ${OAUTH2_AUTH:}
     client-authorization: ${OAUTH2_CLIENT_AUTH:}
   oidc:
-    url: ${IDAM_URL:https://idam-web-public.{{ .Values.global.environment }}.platform.hmcts.net}/o
-    use_oidc_api: true
+    url: ${IDAM_OIDC_URL:https://idam-web-public.aat.platform.hmcts.net}
 launchdarkly:
   sdk:
     key: ${LD_SDK_KEY:}
