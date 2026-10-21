@@ -24,6 +24,10 @@ elastic:
     recordsPerPage: 500
 
 idam:
+  s2s-auth:
+    totp_secret: ${JUDICIAL_API_S2S_SECRET:}
+    microservice: rd_judicial_api
+    url: ${S2S_URL:http://rpe-service-auth-provider-aat.service.core-compute-aat.internal}
   api:
     url: ${IDAM_URL:https://idam-api.aat.platform.hmcts.net}
     client-id: ${OAUTH2_CLIENT_ID:rd-judicial-api}
