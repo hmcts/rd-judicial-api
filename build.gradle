@@ -12,7 +12,7 @@ plugins {
     id 'pmd'
     id 'project-report'
     id 'au.com.dius.pact' version '4.7.5'
-    id 'com.github.ben-manes.versions' version '0.65.0'
+    id 'com.github.ben-manes.versions' version '0.66.0'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '4.3.2'
     id 'org.owasp.dependencycheck' version '13.0.0'
@@ -441,7 +441,7 @@ dependencies {
             strictly versions.jackson
         }
     }
-    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.3.0'
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.3.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
     implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.1.0'
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.5'
