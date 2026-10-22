@@ -108,13 +108,11 @@ idam:
     authorization: ${OAUTH2_AUTH:}
     client-authorization: ${OAUTH2_CLIENT_AUTH:}
   oidc:
-    use_oidc_api: true
+    use_oidc_api: false
     url: http://127.0.0.1:5000
   security:
     issuerValidation: ${JWT_ISSUER_VALIDATION_ENABLED:false}
 
-## IDAM feign connection
-auth.idam.client.baseUrl: ${http://127.0.0.1:5000/o}
 oidc:
   expiration: 14400000 # milliseconds 4 hours
 
