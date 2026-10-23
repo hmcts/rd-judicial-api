@@ -20,7 +20,7 @@ plugins {
     id 'org.springframework.boot' version '3.5.16'
     id 'uk.gov.hmcts.java' version '0.12.70'
     id "info.solidsoft.pitest" version '1.15.0'
-    id "io.freefair.lombok" version "9.8.0"
+    id "io.freefair.lombok" version "9.8.2"
     id "org.flywaydb.flyway" version '11.20.3'
 }
 
@@ -34,7 +34,7 @@ def versions = [
         pitest             : '1.16.1',
         sonarPitest        : '0.5',
         junitPitest        : '1.2.1',
-        jackson            : '2.22.3',
+        jackson            : '2.22.4',
         launchDarklySdk    : '5.10.9',
         flyway              : '11.20.3',
         lombok              : '1.18.48',
@@ -463,8 +463,8 @@ dependencies {
 
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '9.0'
     // CVE-2026-29062: logstash depends on 3.x series of jackson-core and jackson-databind, updated to latest in 3.x
-    implementation group: 'tools.jackson.core', name: 'jackson-core', version: '3.2.3'
-    implementation group: 'tools.jackson.core', name: 'jackson-databind', version: '3.2.3'
+    implementation group: 'tools.jackson.core', name: 'jackson-core', version: '3.2.4'
+    implementation group: 'tools.jackson.core', name: 'jackson-databind', version: '3.2.4'
 
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.21.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
