@@ -50,7 +50,8 @@ import static org.mockito.Mockito.when;
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
 @ExtendWith(SerenityJUnit5Extension.class)
-@TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
+@TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000",
+    "IDAM_OIDC_URL:http://127.0.0.1:5000"})
 @ContextConfiguration(classes = {RestTemplateConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext
