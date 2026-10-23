@@ -22,7 +22,4 @@ public interface IdamFeignClient {
                                    @RequestParam("size") final String size,
                                    @RequestParam("page") final String page);
 
-    @PostMapping(value = "/o/token", consumes = {"application/x-www-form-urlencoded"})
-    IdamOpenIdTokenResponse getOpenIdToken(@RequestBody TokenRequest tokenRequest);
-
 }
