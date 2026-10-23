@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import uk.gov.hmcts.reform.idam.client.models.TokenRequest;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
 
-import java.util.List;
-
 
 @FeignClient(name = "IdamOpenIdFeignClient", url = "${idam.oidc.url}")
 public interface IdamOpenIdFeignClient {
