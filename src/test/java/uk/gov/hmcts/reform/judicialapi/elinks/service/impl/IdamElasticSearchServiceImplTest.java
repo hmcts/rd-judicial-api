@@ -21,6 +21,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigPrope
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
+import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamOpenIdFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ElinkDataExceptionRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkIdamWrapperResponse;
@@ -65,6 +66,7 @@ import static uk.gov.hmcts.reform.judicialapi.elinks.util.RefDataElinksConstants
 class IdamElasticSearchServiceImplTest {
 
     private final IdamFeignClient idamClientMock = spy(IdamFeignClient.class);
+    private final IdamOpenIdFeignClient idamOpenIdClientMock = spy(IdamOpenIdFeignClient.class);
     private final IdamTokenConfigProperties tokenConfigProperties = new IdamTokenConfigProperties();
     private final IdamOpenIdTokenResponse openIdTokenResponseMock = mock(IdamOpenIdTokenResponse.class);
     @InjectMocks
@@ -111,11 +113,11 @@ class IdamElasticSearchServiceImplTest {
     @Test
     void getBearerToken() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
-        when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
+        when(idamOpenIdClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
         String actualToken = idamElasticSearchServiceImpl.getIdamBearerToken(LocalDateTime.now());
         assertThat(actualToken).isEqualTo(CLIENT_AUTHORIZATION);
         verify(openIdTokenResponseMock, times(1)).getAccessToken();
-        verify(idamClientMock, times(1)).getOpenIdToken(any());
+        verify(idamOpenIdClientMock, times(1)).getOpenIdToken(any());
     }
 
     @Test
@@ -138,7 +140,7 @@ class IdamElasticSearchServiceImplTest {
 
     private void testIdamElasticSearchSyncFeed(final List<String> emails) {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
-        when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
+        when(idamOpenIdClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
         List<IdamResponse> users = createIdamResponses(emails);
 
@@ -164,7 +166,7 @@ class IdamElasticSearchServiceImplTest {
     @Test
     void testSidamUpdate() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
-        when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
+        when(idamOpenIdClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
         List<String> emails = List.of("some@some.com");
         List<IdamResponse> users = createIdamResponses(emails);
@@ -197,7 +199,7 @@ class IdamElasticSearchServiceImplTest {
     @Test
     void testSyncFeedResponseError() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
-        when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
+        when(idamOpenIdClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
         when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenThrow(feignExceptionMock);
@@ -212,7 +214,7 @@ class IdamElasticSearchServiceImplTest {
     @Test
     void testIdamSearchResponseError() {
         when(openIdTokenResponseMock.getAccessToken()).thenReturn(CLIENT_AUTHORIZATION);
-        when(idamClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
+        when(idamOpenIdClientMock.getOpenIdToken(any())).thenReturn(openIdTokenResponseMock);
 
         FeignException feignExceptionMock = Mockito.mock(FeignException.class);
         when(idamClientMock.searchUsers(anyString(), any(), any(), any())).thenThrow(feignExceptionMock);

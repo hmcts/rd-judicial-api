@@ -65,6 +65,9 @@ public class WireMockContextInitializer
                         "idam.api.url",
                         WireMockTestEnvironment.idamBaseUrl(),
 
+                        "idam.oidc.url",
+                        WireMockTestEnvironment.idamBaseUrl(),
+
                         "idam.s2s-auth.url",
                         WireMockTestEnvironment.s2sBaseUrl()
                 )

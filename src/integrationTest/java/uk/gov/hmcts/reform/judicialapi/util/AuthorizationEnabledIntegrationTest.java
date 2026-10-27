@@ -34,7 +34,7 @@ public abstract class AuthorizationEnabledIntegrationTest extends SpringBootInte
     Flyway flyway;
     @Value("${oidc.expiration}")
     private long expiration;
-    @Value("${oidc.issuer}")
+    @Value("${spring.security.oauth2.client.provider.oidc.issuer-uri}")
     private String issuer;
     @Value("${idam.s2s-authorised.services}")
     private String serviceName;
