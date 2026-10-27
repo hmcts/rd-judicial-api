@@ -50,7 +50,8 @@ import static org.mockito.Mockito.when;
 @Configuration
 @WithTags({@WithTag("testType:Integration")})
 @ExtendWith(SerenityJUnit5Extension.class)
-@TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000"})
+@TestPropertySource(properties = {"S2S_URL=http://127.0.0.1:8990", "IDAM_URL:http://127.0.0.1:5000",
+    "IDAM_OIDC_URL:http://127.0.0.1:5000"})
 @ContextConfiguration(classes = {RestTemplateConfiguration.class})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DirtiesContext
@@ -115,7 +116,7 @@ public abstract class ELinksBaseIntegrationTest extends SpringBootIntegrationTes
     private Flyway flyway;
     @Value("${oidc.expiration}")
     private long expiration;
-    @Value("${oidc.issuer}")
+    @Value("${spring.security.oauth2.client.provider.oidc.issuer-uri}")
     private String issuer;
     @Value("${idam.s2s-authorised.services}")
     private String serviceName;
