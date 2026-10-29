@@ -183,7 +183,9 @@ withPipeline(type, product, component) {
     }
 
     before('pact-provider-verification') {
-        sh """
+        def consumerTag = params.PACT_CONSUMER_TAG?.trim()
+        withEnv(["PACT_BRANCH_NAME=${consumerTag ?: env.BRANCH_NAME}"]) {
+            sh """
           ./gradlew --no-daemon --init-script init.gradle \
             -Ppact.broker.url=${env.PACT_BROKER_URL} \
             -Ppactbroker.url=${env.PACT_BROKER_URL} \
@@ -191,6 +193,8 @@ withPipeline(type, product, component) {
             -Ppact.verifier.publishResults=true \
             runProviderPactVerification
         """
+        }
+
     }
 
     afterAlways('pact-provider-verification') {
