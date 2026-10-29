@@ -114,6 +114,7 @@ class ElinksPeopleDeleteAuditServiceImplTest {
         userProfile.setLastWorkingDate(LocalDate.now());
         userProfile.setActiveFlag(false);
         userProfile.setCreatedDate(LocalDateTime.now());
+        userProfile.setLastUpdated(LocalDateTime.now());
         userProfile.setLastLoadedDate(LocalDateTime.now());
         userProfile.setObjectId("asd12345-0987asdas-asdas8asdas");
         userProfile.setSidamId("4c0ff6a3-8fd6-803b-301a-29d9dacccca8");
