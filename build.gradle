@@ -40,7 +40,7 @@ def versions = [
         lombok              : '1.18.48',
         reformLogging       : '8.0.0',
         serenity            : '5.4.1',
-        restAssured         : '5.5.7',
+        restAssured         : '6.3.0',
         pact_version        : '4.7.6',
         log4j               : '2.26.1',
         logback             : '1.6.6',
