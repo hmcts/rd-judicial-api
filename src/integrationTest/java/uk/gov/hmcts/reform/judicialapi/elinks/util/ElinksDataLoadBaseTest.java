@@ -419,6 +419,15 @@ public class ElinksDataLoadBaseTest extends ELinksBaseIntegrationTest {
                 .statusCode(expectedHttpStatus.value());
     }
 
+    protected ValidatableResponse publishDeltaSidamIds(final HttpStatus expectedHttpStatus) {
+        final ValidatableResponse validatableResponse = elinksReferenceDataClient.publishSidamIds();
+        validatableResponse
+            .assertThat()
+            .statusCode(expectedHttpStatus.value());
+        return validatableResponse;
+    }
+
+
     protected void loadLeaversData(final HttpStatus expectedHttpStatus,
                                    final String messageKey,
                                    final String expectedMessage) {
