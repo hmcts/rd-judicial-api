@@ -6,6 +6,7 @@ java:
   image: ${IMAGE_NAME}
   ingressHost: ${SERVICE_FQDN}
   environment:
+    TESTING_SUPPORT_ENABLED : true
     POSTGRES_HOST: "{{ .Release.Name }}-postgresql"
     POSTGRES_NAME: "{{ .Values.postgresql.auth.database}}"
     POSTGRES_USERNAME: "{{ .Values.postgresql.auth.username}}"
@@ -17,6 +18,7 @@ java:
     JRD_MQ_USERNAME: RootManageSharedAccessKey
     JRD_MQ_TRUST_ALL_CERTS: false
     JRD_DATA_PER_MESSAGE: 200
+    JRD_DATA_PER_TRANSACTION: 100
     LAUNCH_DARKLY_ENV: "preview"
     ENVIRONMENT_NAME: "preview"
     Del_Joh_Profiles: true
