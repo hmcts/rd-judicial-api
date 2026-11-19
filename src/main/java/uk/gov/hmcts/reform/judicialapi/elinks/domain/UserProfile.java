@@ -88,14 +88,14 @@ public class UserProfile implements Serializable {
     @Column(name = "retirement_date")
     private LocalDate retirementDate;
 
-
-
     @Column(name = "deleted_flag")
     private Boolean deletedFlag;
 
     @Column(name = "date_of_deletion")
     private LocalDateTime deletedOn;
 
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
 
     @OneToMany(targetEntity = Appointment.class, mappedBy = "userProfile", cascade = ALL, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
