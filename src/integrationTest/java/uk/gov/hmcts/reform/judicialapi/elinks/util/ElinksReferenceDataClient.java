@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.util;
 
-import io.jsonwebtoken.Jwts;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import lombok.extern.slf4j.Slf4j;
@@ -18,16 +17,15 @@ import org.springframework.web.client.RestTemplate;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
 import uk.gov.hmcts.reform.judicialapi.versions.V2;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.generateToken;
+import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.generateAuthToken;
+import static uk.gov.hmcts.reform.judicialapi.util.JwtTokenUtil.generateS2SToken;
 
 @Slf4j
 @PropertySource(value = "/integrationTest/resources/application.yml")
@@ -57,14 +55,6 @@ public class ElinksReferenceDataClient {
 
     public static void setIdamAuthToken(String idamAuthToken) {
         ElinksReferenceDataClient.idamAuthToken = idamAuthToken;
-    }
-
-    public static String generateS2SToken(String serviceName) {
-        return Jwts.builder()
-                .subject(serviceName)
-                .issuedAt(new Date())
-                .signWith(Jwts.SIG.HS256.key().build())
-                .compact();
     }
 
     public ValidatableResponse loadPeopleData() {
@@ -153,7 +143,7 @@ public class ElinksReferenceDataClient {
     }
 
     private String getBearerToken(String userId, String role) {
-        return generateToken(issuer, expiration, userId, role);
+        return generateAuthToken(issuer, false, userId, role);
     }
 
     private void additionalHeaders(Integer pageSize, Integer pageNumber, String sortDirection,
@@ -162,23 +152,6 @@ public class ElinksReferenceDataClient {
         headers.add("page_number", String.valueOf(pageNumber));
         headers.add("sort_direction", sortDirection);
         headers.add("sort_column", sortColumn);
-    }
-
-    public void clearTokens() {
-        s2sToken = null;
-        bearerToken = null;
-    }
-
-    public String getAndReturnBearerToken(String userId, String role) {
-        if (StringUtils.isBlank(s2sToken)) {
-            s2sToken = generateS2SToken("rd_judicial_api");
-        }
-
-        if (StringUtils.isBlank(bearerToken)) {
-            bearerToken = "Bearer ".concat(getBearerToken(Objects.isNull(userId) ? UUID.randomUUID().toString()
-                    : userId, role));
-        }
-        return bearerToken;
     }
 
     public Map<String, Object> refreshUserProfile(RefreshRoleRequest refreshRoleRequest, Integer pageSize,

@@ -11,8 +11,8 @@ plugins {
     id 'jacoco'
     id 'pmd'
     id 'project-report'
-    id 'au.com.dius.pact' version '4.7.5'
-    id 'com.github.ben-manes.versions' version '0.63.1'
+    id 'au.com.dius.pact' version '4.7.7'
+    id 'com.github.ben-manes.versions' version '0.67.0'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'net.serenity-bdd.serenity-gradle-plugin' version '5.3.9'
     id 'org.owasp.dependencycheck' version '13.0.0'
@@ -20,7 +20,7 @@ plugins {
     id 'org.springframework.boot' version '3.5.16'
     id 'uk.gov.hmcts.java' version '0.12.70'
     id "info.solidsoft.pitest" version '1.15.0'
-    id "io.freefair.lombok" version "9.5.0"
+    id "io.freefair.lombok" version "9.8.3"
     id "org.flywaydb.flyway" version '13.7.0'
 }
 
@@ -34,16 +34,16 @@ def versions = [
         pitest             : '1.16.1',
         sonarPitest        : '0.5',
         junitPitest        : '1.2.1',
-        jackson            : '2.22.2',
+        jackson            : '2.23.0',
         launchDarklySdk    : '5.10.9',
         flyway              : '13.7.0',
         lombok              : '1.18.48',
         reformLogging       : '8.0.0',
-        serenity            : '5.3.11',
+        serenity            : '5.4.2',
         restAssured         : '5.5.7',
-        pact_version        : '4.7.5',
+        pact_version        : '4.7.7',
         log4j               : '2.26.1',
-        logback             : '1.6.3',
+        logback             : '1.6.6',
         testContainer_postgresql: '2.0.5',
         bouncycastle        : '1.86',
         jwtVersion          : '0.13.0',
@@ -56,12 +56,12 @@ dependencyManagement {
     }
 
     dependencies {
-        dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.60') {
+        dependencySet(group: 'org.apache.tomcat.embed', version: '10.1.61') {
             entry 'tomcat-embed-core'
             entry 'tomcat-embed-el'
             entry 'tomcat-embed-websocket'
         }
-        dependencySet(group: 'io.netty', version: '4.2.18.Final') {
+        dependencySet(group: 'io.netty', version: '4.2.20.Final') {
             entry 'netty-buffer'
             entry 'netty-codec'
             entry 'netty-codec-dns'
@@ -261,7 +261,7 @@ configurations {
 }
 
 pmd {
-    toolVersion = "7.26.0"
+    toolVersion = "7.29.0"
     ignoreFailures = true
     sourceSets = [sourceSets.main, sourceSets.test, sourceSets.integrationTest, sourceSets.functionalTest, sourceSets.smokeTest]
     reportsDir = file("$project.buildDir/reports/pmd")
@@ -271,7 +271,7 @@ pmd {
 
 checkstyle {
     maxWarnings = 0
-    toolVersion = '14.1.0'
+    toolVersion = '14.4.0'
     getConfigDirectory().set(new File(rootDir, 'config/checkstyle'))
 }
 
@@ -414,8 +414,8 @@ dependencies {
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0'
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: versions.logback
     implementation group: 'ch.qos.logback', name: 'logback-core', version: versions.logback
-    implementation group: 'com.azure', name: 'azure-core', version: '1.59.1'
-    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.20'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.61.0'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.19.1'
     implementation (group: 'com.fasterxml.jackson.core', name: 'jackson-annotations') {
         version {
             strictly '2.22'
@@ -441,32 +441,32 @@ dependencies {
             strictly versions.jackson
         }
     }
-    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.3.0'
+    implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.3.1'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: versions.reformLogging
-    implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.5'
+    implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.1.0'
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.5'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.14.0'
-    implementation group: 'com.google.guava', name: 'guava', version: '33.7.1-jre'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.15.0'
+    implementation group: 'com.google.guava', name: 'guava', version: '33.7.2-jre'
     implementation group: 'com.launchdarkly', name: 'launchdarkly-java-server-sdk', version: versions.launchDarklySdk
     implementation group: 'com.nimbusds', name: 'lang-tag', version: '1.7'
     implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.10'
     implementation group: 'com.sendgrid', name: 'sendgrid-java', version: '4.10.3'
-    implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '13.15'
-    implementation group: 'io.hypersistence', name: 'hypersistence-utils-hibernate-63', version: '3.15.5'
+    implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: '13.17'
+    implementation group: 'io.hypersistence', name: 'hypersistence-utils-hibernate-63', version: '3.16.0'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: versions.jwtVersion
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: versions.jwtVersion
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: versions.jwtVersion
     implementation group: 'io.rest-assured', name: 'rest-assured', version: versions.restAssured
     implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.1'
-    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '7.10.1'
-    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '7.10.1'
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-provider-jdbc-template', version: '7.11.0'
+    implementation group: 'net.javacrumbs.shedlock', name: 'shedlock-spring', version: '7.11.0'
 
     implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '9.0'
     // CVE-2026-29062: logstash depends on 3.x series of jackson-core and jackson-databind, updated to latest in 3.x
-    implementation group: 'tools.jackson.core', name: 'jackson-core', version: '3.2.2'
-    implementation group: 'tools.jackson.core', name: 'jackson-databind', version: '3.2.2'
+    implementation group: 'tools.jackson.core', name: 'jackson-core', version: '3.3.0'
+    implementation group: 'tools.jackson.core', name: 'jackson-databind', version: '3.3.0'
 
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.21.0'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: versions.log4j
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: versions.log4j
@@ -475,8 +475,8 @@ dependencies {
     implementation group: 'org.flywaydb', name: 'flyway-core', version: versions.flyway
     implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: versions.flyway
     implementation group: 'org.json', name: 'json', version: '20250517'
-    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.13'
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.9.1'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.14'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.10.0'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-freemarker'
@@ -520,6 +520,12 @@ dependencies {
     contractTestImplementation group: 'au.com.dius.pact.consumer', name: 'junit5', version: versions.pact_version
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: versions.pact_version
     contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5spring', version: versions.pact_version
+
+    integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: versions.junit
+    integrationTestRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: versions.junit
+    integrationTestImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: versions.junit
+    integrationTestImplementation group: 'org.junit.platform', name: 'junit-platform-commons', version: versions.junitPlatform
+    integrationTestRuntimeOnly group: 'org.junit.platform', name: 'junit-platform-engine', version: versions.junitPlatform
 
     integrationTestImplementation sourceSets.main.runtimeClasspath
     integrationTestImplementation sourceSets.test.runtimeClasspath

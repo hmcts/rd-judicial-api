@@ -25,7 +25,6 @@ import static java.nio.charset.Charset.defaultCharset;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,9 +36,6 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
 
     @BeforeEach
     void setUp() {
-        mockJwtToken();
-        stubS2SResponse();
-        stubIdamUserInfoResponse();
         new RefreshRoleRequest("BFA1",
                 List.of("aa57907b-6d8f-4d2a-9950-7dde95059d05"),
                 List.of("ba57907b-6d8f-4d2a-9950-7dde95059d06"),
@@ -66,13 +62,6 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
         var userProfileList = (List<?>) response.get("body");
 
         assertThat(userProfileList).hasSize(expectedUserProfilesCount);
-    }
-
-    private void mockJwtToken() {
-        elinksReferenceDataClient.clearTokens();
-        String bearerToken = elinksReferenceDataClient.getAndReturnBearerToken(null, JRD_SYSTEM_USER);
-        String[] bearerTokenArray = bearerToken.split(" ");
-        when(jwtDecoder.decode(anyString())).thenReturn(getJwt(bearerTokenArray[1]));
     }
 
     private Jwt getJwt(String bearerToken) {

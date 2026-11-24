@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.judicialapi.elinks.configuration.IdamTokenConfigPrope
 import uk.gov.hmcts.reform.judicialapi.elinks.domain.UserProfile;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamFeignClient;
+import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamOpenIdFeignClient;
 import uk.gov.hmcts.reform.judicialapi.elinks.repository.ProfileRepository;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.ElinkIdamWrapperResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.response.IdamOpenIdTokenResponse;
@@ -73,6 +74,9 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
     IdamFeignClient idamFeignClient;
 
     @Autowired
+    IdamOpenIdFeignClient idamOpenIdFeignClient;
+
+    @Autowired
     IdamTokenConfigProperties props;
 
     @Autowired
@@ -108,7 +112,7 @@ public class IdamElasticSearchServiceImpl implements IdamElasticSearchService {
                     userDetails[1].trim(),
                     SCOPE, "", "");
 
-            idamOpenIdTokenResponse = idamFeignClient.getOpenIdToken(tokenRequest);
+            idamOpenIdTokenResponse = idamOpenIdFeignClient.getOpenIdToken(tokenRequest);
 
             if (idamOpenIdTokenResponse == null) {
                 throw new ElinksException(HttpStatus.FORBIDDEN, IDAM_TOKEN_ERROR_MESSAGE,
