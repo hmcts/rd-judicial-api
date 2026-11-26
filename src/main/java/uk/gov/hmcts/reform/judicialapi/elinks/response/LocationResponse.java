@@ -1,8 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +10,10 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@com.fasterxml.jackson.databind.annotation.JsonNaming(
+    com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy.class)
+@tools.jackson.databind.annotation.JsonNaming(
+    tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LocationResponse implements Serializable {
     private String id;
     private String name;

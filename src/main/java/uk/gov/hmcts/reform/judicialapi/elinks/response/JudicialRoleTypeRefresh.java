@@ -1,8 +1,6 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +14,10 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+@com.fasterxml.jackson.databind.annotation.JsonNaming(
+    com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy.class)
+@tools.jackson.databind.annotation.JsonNaming(
+    tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class JudicialRoleTypeRefresh implements Serializable {
 
     @JsonProperty("jurisdiction_role_name")

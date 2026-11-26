@@ -1,11 +1,11 @@
 package uk.gov.hmcts.reform.judicialapi.util;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.cfg.ConstructorDetector;
+import tools.jackson.databind.json.JsonMapper;
 import feign.Response;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -26,8 +26,11 @@ import static uk.gov.hmcts.reform.judicialapi.util.RefDataConstants.ERROR_IN_PAR
 @SuppressWarnings("unchecked")
 public class JsonFeignResponseUtil {
 
-    private static final ObjectMapper json = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final JsonMapper json = JsonMapper.builder()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+            .constructorDetector(ConstructorDetector.DEFAULT.withAllowImplicitWithDefaultConstructor(false))
+            .build();
 
     private JsonFeignResponseUtil() {
 
@@ -36,10 +39,10 @@ public class JsonFeignResponseUtil {
     public static ResponseEntity<Object> toResponseEntityWithListBody(Response response, Object clazz) {
         List<Object> payload = mapObjectToList(response, clazz);
 
-        return new ResponseEntity<>(
-                payload,
-                convertHeaders(response.headers()),
-                HttpStatus.valueOf(response.status()));
+        return ResponseEntity.status(response.status())
+                .headers(headers -> convertHeaders(response.headers())
+                        .forEach(headers::addAll))
+                .body(payload);
     }
 
     public static List<Object> mapObjectToList(Response response, Object clazz) {
@@ -69,10 +72,10 @@ public class JsonFeignResponseUtil {
     public static ResponseEntity<Object> toResponseEntity(Response response, Object clazz) {
         Optional<Object> payload = decode(response, clazz);
 
-        return new ResponseEntity<>(
-                payload.orElse("unknown"),
-                convertHeaders(response.headers()),
-                HttpStatus.valueOf(response.status()));
+        return ResponseEntity.status(response.status())
+                .headers(headers -> convertHeaders(response.headers())
+                        .forEach(headers::addAll))
+                .body(payload.orElse("unknown"));
     }
 
     public static ResponseEntity<Object> toResponseEntity(Response response, TypeReference<?> reference) {
@@ -85,10 +88,10 @@ public class JsonFeignResponseUtil {
             throw new JudicialDataLoadException("Response parsing failed");
         }
 
-        return new ResponseEntity<>(
-                payload.orElse(null),
-                convertHeaders(response.headers()),
-                HttpStatus.valueOf(response.status()));
+        return ResponseEntity.status(response.status())
+                .headers(headers -> convertHeaders(response.headers())
+                        .forEach(headers::addAll))
+                .body(payload.orElse(null));
     }
 
     public static Optional<Object> decode(Response response, Object clazz) {

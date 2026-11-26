@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UnauthorizedException;
+import uk.gov.hmcts.reform.judicialapi.elinks.feign.IdamOpenIdFeignClient;
 
 import static java.util.Objects.requireNonNull;
 
@@ -23,11 +24,18 @@ public class IdamRepository {
     private String loggingComponentName;
 
     private final IdamClient idamClient;
+    private final IdamOpenIdFeignClient idamOpenIdFeignClient;
     private final CacheManager cacheManager;
 
+    @Value("${idam.oidc.use_oidc_api:false}")
+    private boolean useOidcApi;
+
     @Autowired
-    public IdamRepository(IdamClient idamClient, CacheManager cacheManager) {
+    public IdamRepository(IdamClient idamClient,
+                          IdamOpenIdFeignClient idamOpenIdFeignClient,
+                          CacheManager cacheManager) {
         this.idamClient = idamClient;
+        this.idamOpenIdFeignClient = idamOpenIdFeignClient;
         this.cacheManager = cacheManager;
     }
 
@@ -41,8 +49,11 @@ public class IdamRepository {
 
 
         try {
-            UserInfo userInfo = idamClient.getUserInfo("Bearer " + jwtToken);
-            return userInfo;
+            String bearerToken = "Bearer " + jwtToken;
+            if (useOidcApi) {
+                return idamOpenIdFeignClient.retrieveUserInfo(bearerToken);
+            }
+            return idamClient.getUserInfo(bearerToken);
         } catch (FeignException feignException) {
             log.error("FeignException Unauthorized: retrieve user info ", feignException);
             throw new UnauthorizedException("User is not authorized", feignException);

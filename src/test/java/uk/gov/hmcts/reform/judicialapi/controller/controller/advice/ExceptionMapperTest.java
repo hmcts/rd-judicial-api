@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.controller.controller.advice;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,9 +18,9 @@ import uk.gov.hmcts.reform.judicialapi.controller.advice.ForbiddenException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.InvalidRequestException;
 import uk.gov.hmcts.reform.judicialapi.controller.advice.UserProfileException;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DatabindException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -43,9 +42,6 @@ class ExceptionMapperTest {
     @Mock
     BindingResult bindingResult;
 
-    @Mock
-    LinkedList<JsonMappingException.Reference> path = new LinkedList<>();
-
     @Test
     void test_handle_invalid_request_exception() {
         InvalidRequestException invalidRequestException = new InvalidRequestException("Invalid Request");
@@ -62,12 +58,11 @@ class ExceptionMapperTest {
     @Test
     void test_handle_invalid_serialization_exception() {
 
-        JsonMappingException jm = mock(JsonMappingException.class);
-        JsonMappingException.Reference rf = mock(JsonMappingException.Reference.class);
-        when(httpMessageNotReadableException.getCause()).thenReturn(jm);
-        when(jm.getPath()).thenReturn(Collections.unmodifiableList(path));
-        when(jm.getPath().get(0)).thenReturn(rf);
-        when(jm.getPath().get(0).getFieldName()).thenReturn("field");
+        DatabindException databindException = mock(DatabindException.class);
+        JacksonException.Reference reference = mock(JacksonException.Reference.class);
+        when(httpMessageNotReadableException.getCause()).thenReturn(databindException);
+        when(databindException.getPath()).thenReturn(List.of(reference));
+        when(reference.getPropertyName()).thenReturn("field");
         ResponseEntity<Object> responseEntity = exceptionMapper
             .customSerializationError(httpMessageNotReadableException);
 

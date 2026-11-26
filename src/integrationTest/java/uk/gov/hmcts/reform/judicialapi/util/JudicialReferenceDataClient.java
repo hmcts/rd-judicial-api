@@ -146,7 +146,7 @@ public class JudicialReferenceDataClient {
 
         } catch (RestClientResponseException ex) {
             var statusAndBody = new HashMap<String, Object>(2);
-            statusAndBody.put("http_status", String.valueOf(ex.getRawStatusCode()));
+            statusAndBody.put("http_status", String.valueOf(ex.getStatusCode().value()));
             statusAndBody.put("response_body", ex.getResponseBodyAsString());
             return statusAndBody;
         }
