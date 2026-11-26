@@ -70,32 +70,6 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
         assertThat(userProfileList).hasSize(expectedUserProfilesCount);
     }
 
-    @DisplayName("Print refresh user profile response")
-    @Test
-    void shouldPrintRefreshUserProfileResponse() throws JsonProcessingException {
-        mockLocationReferenceDataFeignClient("BBA2", "ST_CIC");
-        RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
-                .ccdServiceNames(null)
-                .sidamIds(Collections.emptyList())
-                .objectIds(Arrays.asList("5f8b26ba-0c8b-4192-b5c7-311d737f0ret"))
-                .build();
-
-        var response = elinksReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
-                0, "ASC", "objectId", JRD_SYSTEM_USER, false);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<UserProfileRefreshResponse> userProfiles = objectMapper.convertValue(
-                response.get("body"), new TypeReference<List<UserProfileRefreshResponse>>() {});
-        assertThat(userProfiles).hasSize(1);
-        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(userProfiles));
-
-        userProfiles.forEach(userProfile -> System.out.println(
-                "objectId=" + userProfile.getObjectId()
-                        + ", lastWorkingDate=" + userProfile.getLastWorkingDate()));
-        
-        assertThat(true).isTrue();
-    }
-
     @DisplayName("Include last_working_date in refresh user profile response")
     @ParameterizedTest
     @MethodSource("provideRefreshRoleRequestTestData")
