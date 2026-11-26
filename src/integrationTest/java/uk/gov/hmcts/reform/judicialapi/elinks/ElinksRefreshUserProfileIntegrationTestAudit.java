@@ -24,6 +24,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.nio.charset.Charset.defaultCharset;
@@ -111,12 +112,13 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
         var response = elinksReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
                 0, "ASC", "objectId", JRD_SYSTEM_USER, false);
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<UserProfileRefreshResponse> userProfiles = objectMapper.convertValue(
-                response.get("body"), new TypeReference<List<UserProfileRefreshResponse>>() {});
-
-        assertThat(userProfiles).hasSize(1);
-        assertThat(userProfiles.getFirst().getLastWorkingDate()).isEqualTo(expectedLastWorkingDate);
+        List<?> responseProfiles = (List<?>) response.get("body");
+        assertThat(responseProfiles).hasSize(1);
+        assertThat(responseProfiles.getFirst()).isInstanceOf(Map.class);
+        Map<String, String> responseProfile = (Map<String, String>) responseProfiles.getFirst();
+        assertThat(responseProfile)
+                .containsEntry("last_working_date", expectedLastWorkingDate)
+                .doesNotContainKey("lastWorkingDate");
     }
 
     private Jwt getJwt(String bearerToken) {
