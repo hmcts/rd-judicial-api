@@ -41,6 +41,8 @@ public class UserProfileRefreshResponse implements Serializable {
 
     private String retirementDate;
 
+    private String lastWorkingDate;
+
     private String activeFlag;
     
     private String deletedFlag;

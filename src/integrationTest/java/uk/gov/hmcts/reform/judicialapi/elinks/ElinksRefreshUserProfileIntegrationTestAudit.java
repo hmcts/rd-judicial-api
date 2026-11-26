@@ -1,11 +1,14 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import feign.Request;
 import feign.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -13,10 +16,12 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
+import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -64,6 +69,56 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
         assertThat(userProfileList).hasSize(expectedUserProfilesCount);
     }
 
+    @DisplayName("Print refresh user profile response")
+    @Test
+    void shouldPrintRefreshUserProfileResponse() throws JsonProcessingException {
+        mockLocationReferenceDataFeignClient("BBA2", "ST_CIC");
+        RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
+                .ccdServiceNames(null)
+                .sidamIds(Collections.emptyList())
+                .objectIds(Arrays.asList("5f8b26ba-0c8b-4192-b5c7-311d737f0ret"))
+                .build();
+
+        var response = elinksReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
+                0, "ASC", "objectId", JRD_SYSTEM_USER, false);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<UserProfileRefreshResponse> userProfiles = objectMapper.convertValue(
+                response.get("body"), new TypeReference<List<UserProfileRefreshResponse>>() {});
+        assertThat(userProfiles).hasSize(1);
+        System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(userProfiles));
+
+        userProfiles.forEach(userProfile -> System.out.println(
+                "objectId=" + userProfile.getObjectId()
+                        + ", lastWorkingDate=" + userProfile.getLastWorkingDate()));
+        
+        assertThat(true).isTrue();
+    }
+
+    @DisplayName("Include last_working_date in refresh user profile response")
+    @ParameterizedTest
+    @MethodSource("provideRefreshRoleRequestTestData")
+    void shouldDisplayLastWorkingDateInRefreshUserProfileResponse(
+            String objectId,
+            String expectedLastWorkingDate) throws JsonProcessingException {
+        mockLocationReferenceDataFeignClient("BBA2", "ST_CIC");
+        RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
+                .ccdServiceNames(null)
+                .sidamIds(Collections.emptyList())
+                .objectIds(Arrays.asList(objectId))
+                .build();
+
+        var response = elinksReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
+                0, "ASC", "objectId", JRD_SYSTEM_USER, false);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<UserProfileRefreshResponse> userProfiles = objectMapper.convertValue(
+                response.get("body"), new TypeReference<List<UserProfileRefreshResponse>>() {});
+
+        assertThat(userProfiles).hasSize(1);
+        assertThat(userProfiles.getFirst().getLastWorkingDate()).isEqualTo(expectedLastWorkingDate);
+    }
+
     private Jwt getJwt(String bearerToken) {
         return Jwt.withTokenValue(bearerToken)
                 .claim("exp", Instant.ofEpochSecond(1985763216))
@@ -93,6 +148,14 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
         return Stream.of(
                 arguments("BBA2", "ST_CIC", 1),
                 arguments("BFA1", "CMC", 6)
+        );
+    }
+
+    private Stream<Arguments> provideRefreshRoleRequestTestData() {
+        return Stream.of(
+                arguments("5f8b26ba-0c8b-4192-b5c7-311d737f0ret", "2020-03-31"),
+                arguments("5f8b26ba-0c8b-4192-b5c7-311d737f0ytt", "2020-04-30"),
+                arguments("5f8b26ba-0c8b-4192-b5c7-rttd737f0ytt", "2020-05-31")
         );
     }
 

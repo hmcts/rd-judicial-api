@@ -6,7 +6,7 @@ services:
     image: hmcts/rd-judicial-db
     container_name: rd-judicial-db
     volumes:
-      - rd-judicial-db-volume:/var/lib/postgresql/data
+      - rd-judicial-db-volume:/var/lib/postgresql
     environment:
       - POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-dbjuddata}"
     ports:
