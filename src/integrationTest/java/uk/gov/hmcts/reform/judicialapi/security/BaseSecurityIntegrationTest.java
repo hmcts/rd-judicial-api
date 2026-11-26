@@ -46,7 +46,8 @@ public class BaseSecurityIntegrationTest extends AuthorizationEnabledIntegration
     protected RequestSpecification jwtRequest(String issuer, boolean expired) {
         return SerenityRest.given()
                 .baseUri(testApplicationServer.getBaseUrl() + APP_BASE_PATH)
-                .headers(getHttpHeaders(issuer, expired, UUID.randomUUID().toString(), jrdSystemUser));
+                .headers(getHttpHeaders(issuer, expired, UUID.randomUUID().toString(), jrdSystemUser)
+                        .toSingleValueMap());
     }
 
     protected RequestSpecification unexpiredJwt(

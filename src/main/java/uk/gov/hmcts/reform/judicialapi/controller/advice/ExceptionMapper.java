@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.judicialapi.controller.advice;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
+import tools.jackson.databind.DatabindException;
 import uk.gov.hmcts.reform.judicialapi.elinks.exception.ElinksException;
 
 import java.time.LocalDateTime;
@@ -55,9 +55,8 @@ public class ExceptionMapper {
         HttpMessageNotReadableException ex) {
 
         String field = "";
-        if (ex.getCause() != null) {
-            JsonMappingException jme = (JsonMappingException) ex.getCause();
-            field = jme.getPath().get(0).getFieldName();
+        if (ex.getCause() instanceof DatabindException databindException && !databindException.getPath().isEmpty()) {
+            field = databindException.getPath().get(0).getPropertyName();
         }
         var errorDetails = new ErrorResponse(BAD_REQUEST.value(), BAD_REQUEST.getReasonPhrase(),
              field + " in invalid format",

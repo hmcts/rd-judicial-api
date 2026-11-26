@@ -61,11 +61,7 @@ class ElinksControllerTest {
 
 
 
-        responseEntity = new ResponseEntity<>(
-            elinkBaseLocationWrapperResponse,
-                null,
-                HttpStatus.OK
-        );
+        responseEntity = ResponseEntity.ok(elinkBaseLocationWrapperResponse);
 
         when(eLinksService.retrieveLocation()).thenReturn(responseEntity);
 
@@ -85,11 +81,7 @@ class ElinksControllerTest {
         ElinkPeopleWrapperResponse elinkPeopleWrapperResponse = new ElinkPeopleWrapperResponse();
         elinkPeopleWrapperResponse.setMessage(PEOPLE_DATA_LOAD_SUCCESS);
 
-        responseEntity = new ResponseEntity<>(
-                elinkPeopleWrapperResponse,
-                null,
-                HttpStatus.OK
-        );
+        responseEntity = ResponseEntity.ok(elinkPeopleWrapperResponse);
 
         when(elinksPeopleServiceImpl.updatePeople()).thenReturn(responseEntity);
 
@@ -139,11 +131,7 @@ class ElinksControllerTest {
 
 
 
-        responseEntity = new ResponseEntity<>(
-                elinkLeaversWrapperResponse,
-                null,
-                HttpStatus.OK
-        );
+        responseEntity = ResponseEntity.ok(elinkLeaversWrapperResponse);
 
         when(eLinksService.retrieveLeavers()).thenReturn(responseEntity);
 
@@ -162,11 +150,7 @@ class ElinksControllerTest {
         ElinkDeletedWrapperResponse elinkDeletedWrapperResponse = new ElinkDeletedWrapperResponse();
         elinkDeletedWrapperResponse.setMessage(DELETEDSUCCESS);
 
-        responseEntity = new ResponseEntity<>(
-            elinkDeletedWrapperResponse,
-            null,
-            HttpStatus.OK
-        );
+        responseEntity = ResponseEntity.ok(elinkDeletedWrapperResponse);
 
         when(eLinksService.retrieveDeleted()).thenReturn(responseEntity);
 
@@ -186,11 +170,7 @@ class ElinksControllerTest {
         SchedulerJobStatusResponse schedulerJobStatusResponse = SchedulerJobStatusResponse.builder().id("id")
             .jobStatus("success").sidamIdsCount(10).statusCode(HttpStatus.OK.value()).build();
 
-        responseEntity = new ResponseEntity<>(
-            schedulerJobStatusResponse,
-            null,
-            HttpStatus.OK
-        );
+        responseEntity = ResponseEntity.ok(schedulerJobStatusResponse);
 
         when(publishSidamIdService.publishSidamIdToAsb()).thenReturn(responseEntity);
 

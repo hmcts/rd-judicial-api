@@ -1,7 +1,7 @@
 package uk.gov.hmcts.reform.judicialapi.elinks.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import feign.Request;
 import feign.Response;
 import jakarta.validation.constraints.NotNull;
@@ -90,7 +90,7 @@ class ElinkUserServiceImplTest {
 
     @Spy
     LocationMapppingRepository locationMappingRepository;
-    ObjectMapper mapper = new ObjectMapper();
+    JsonMapper mapper = JsonMapper.builder().build();
 
     private List<String> searchServiceCode;
 
