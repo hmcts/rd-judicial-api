@@ -1,14 +1,12 @@
 package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import feign.Request;
 import feign.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,7 +14,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import uk.gov.hmcts.reform.judicialapi.controller.response.LrdOrgInfoServiceResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.controller.request.RefreshRoleRequest;
-import uk.gov.hmcts.reform.judicialapi.elinks.response.UserProfileRefreshResponse;
 import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
