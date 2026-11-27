@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.judicialapi.elinks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import feign.Request;
 import feign.Response;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +18,10 @@ import uk.gov.hmcts.reform.judicialapi.elinks.util.ElinksDataLoadBaseTest;
 import uk.gov.hmcts.reform.judicialapi.feign.LocationReferenceDataFeignClient;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.nio.charset.Charset.defaultCharset;
@@ -64,6 +67,31 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
         assertThat(userProfileList).hasSize(expectedUserProfilesCount);
     }
 
+    @DisplayName("Include last_working_date in refresh user profile response")
+    @ParameterizedTest
+    @MethodSource("provideRefreshRoleRequestTestData")
+    void shouldDisplayLastWorkingDateInRefreshUserProfileResponse(
+            String objectId,
+            String expectedLastWorkingDate) throws JsonProcessingException {
+        mockLocationReferenceDataFeignClient("BBA2", "ST_CIC");
+        RefreshRoleRequest refreshRoleRequest = RefreshRoleRequest.builder()
+                .ccdServiceNames(null)
+                .sidamIds(Collections.emptyList())
+                .objectIds(Arrays.asList(objectId))
+                .build();
+
+        var response = elinksReferenceDataClient.refreshUserProfile(refreshRoleRequest, 10,
+                0, "ASC", "objectId", JRD_SYSTEM_USER, false);
+
+        List<?> responseProfiles = (List<?>) response.get("body");
+        assertThat(responseProfiles).hasSize(1);
+        assertThat(responseProfiles.getFirst()).isInstanceOf(Map.class);
+        Map<String, String> responseProfile = (Map<String, String>) responseProfiles.getFirst();
+        assertThat(responseProfile)
+                .containsEntry("last_working_date", expectedLastWorkingDate)
+                .doesNotContainKey("lastWorkingDate");
+    }
+
     private Jwt getJwt(String bearerToken) {
         return Jwt.withTokenValue(bearerToken)
                 .claim("exp", Instant.ofEpochSecond(1985763216))
@@ -93,6 +121,14 @@ public class ElinksRefreshUserProfileIntegrationTestAudit extends ElinksDataLoad
         return Stream.of(
                 arguments("BBA2", "ST_CIC", 1),
                 arguments("BFA1", "CMC", 6)
+        );
+    }
+
+    private Stream<Arguments> provideRefreshRoleRequestTestData() {
+        return Stream.of(
+                arguments("5f8b26ba-0c8b-4192-b5c7-311d737f0ret", "2020-03-31"),
+                arguments("5f8b26ba-0c8b-4192-b5c7-311d737f0ytt", "2020-04-30"),
+                arguments("5f8b26ba-0c8b-4192-b5c7-rttd737f0ytt", "2020-05-31")
         );
     }
 

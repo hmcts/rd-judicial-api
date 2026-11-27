@@ -1,14 +1,14 @@
-INSERT INTO dbjudicialdata.judicial_user_profile (personal_code,known_as,surname,full_name,post_nominals,ejudiciary_email,active_flag,created_date,last_loaded_date,object_id,sidam_id,initials)
-VALUES ('32','One2Kb','One2Sb','One2Fb','Mr','One531@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-311d737f0qwe','1.11112E+12','J.K');
-INSERT INTO dbjudicialdata.judicial_user_profile (personal_code,known_as,surname,full_name,post_nominals,ejudiciary_email,active_flag,created_date,last_loaded_date,object_id,sidam_id,initials)
-VALUES ('33','Two2Kb','Two2Sb','Two2Fb','Mr','Two532@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-311d737f0qrr','1.11112E+12','O.K');
-INSERT INTO dbjudicialdata.judicial_user_profile (personal_code,known_as,surname,full_name,post_nominals,ejudiciary_email,active_flag,created_date,last_loaded_date,object_id,sidam_id,initials)
-VALUES ('34','Three2Kb','Three2Sb','Three2Fb','Mr','Three532@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-311d737f0ret','1.11112E+12','T.K'),
-('35','Four2Kb','Four2Sb','Four2Fb','Mr','Four534@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-311d737f0ytt','1.11112E+12','F.K'),
-('36','Five2Kb','Five2Sb','Five2Fb','Mr','Five535@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-rttd737f0ytt','1.11112E+12','F.K'),
-('37','SIX2Kb','Six2Sb','Six2Fb','Mr','Six536@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','F.K'),
-('38','Seven2Kb','Seven2Sb','Seven2Fb','Mr','Seven537@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8msdba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','S.K'),
-('39','Seven3Kb','Seven3Sb','Seven3Fb','Mr','Seven538@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8msdba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','S.K');
+INSERT INTO dbjudicialdata.judicial_user_profile (personal_code,known_as,surname,full_name,post_nominals,ejudiciary_email,active_flag,created_date,last_loaded_date,object_id,sidam_id,initials,last_working_date)
+VALUES ('32','One2Kb','One2Sb','One2Fb','Mr','One531@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-311d737f0qwe','1.11112E+12','J.K','2020-01-31');
+INSERT INTO dbjudicialdata.judicial_user_profile (personal_code,known_as,surname,full_name,post_nominals,ejudiciary_email,active_flag,created_date,last_loaded_date,object_id,sidam_id,initials,last_working_date)
+VALUES ('33','Two2Kb','Two2Sb','Two2Fb','Mr','Two532@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-311d737f0qrr','1.11112E+12','O.K','2020-02-29');
+INSERT INTO dbjudicialdata.judicial_user_profile (personal_code,known_as,surname,full_name,post_nominals,ejudiciary_email,active_flag,created_date,last_loaded_date,object_id,sidam_id,initials,last_working_date)
+VALUES ('34','Three2Kb','Three2Sb','Three2Fb','Mr','Three532@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-311d737f0ret','1.11112E+12','T.K','2020-03-31'),
+('35','Four2Kb','Four2Sb','Four2Fb','Mr','Four534@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-311d737f0ytt','1.11112E+12','F.K','2020-04-30'),
+('36','Five2Kb','Five2Sb','Five2Fb','Mr','Five535@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0c8b-4192-b5c7-rttd737f0ytt','1.11112E+12','F.K','2020-05-31'),
+('37','SIX2Kb','Six2Sb','Six2Fb','Mr','Six536@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8b26ba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','F.K','2020-06-30'),
+('38','Seven2Kb','Seven2Sb','Seven2Fb','Mr','Seven537@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8msdba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','S.K','2020-07-31'),
+('39','Seven3Kb','Seven3Sb','Seven3Fb','Mr','Seven538@test.net','TRUE','2021-07-14 12:25:28.763','2021-07-14 12:25:28.763','5f8msdba-0rtb-4192-b5c7-rttd737f0ytt','1.11112E+12','S.K','2020-08-31');
 
 INSERT INTO dbjudicialdata.location_type (base_location_id,"name",type_id,parent_id,jurisdiction_id,start_date,end_date,created_at,updated_at) values  ('1032','Social Entitlement Chamber','42','1503','27',NULL,NULL,'2023-05-02 11:43:53','2023-05-02 11:43:53');
 

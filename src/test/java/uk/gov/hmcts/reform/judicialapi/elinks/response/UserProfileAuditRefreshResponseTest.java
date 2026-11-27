@@ -67,6 +67,7 @@ public class UserProfileAuditRefreshResponseTest {
         userProfileRefreshResponse.setPersonalCode("personalCode");
         userProfileRefreshResponse.setPostNominals("postNominals");
         userProfileRefreshResponse.setRetirementDate("RetirementDate");
+        userProfileRefreshResponse.setLastWorkingDate("lastWorkingDate");
         userProfileRefreshResponse.setTitle("title");
         userProfileRefreshResponse.setSidamId("sidamId");
         userProfileRefreshResponse.setSurname("surName");
@@ -81,6 +82,7 @@ public class UserProfileAuditRefreshResponseTest {
         assertThat(userProfileRefreshResponse.getPersonalCode()).isEqualTo("personalCode");
         assertThat(userProfileRefreshResponse.getPostNominals()).isEqualTo("postNominals");
         assertThat(userProfileRefreshResponse.getRetirementDate()).isEqualTo("RetirementDate");
+        assertThat(userProfileRefreshResponse.getLastWorkingDate()).isEqualTo("lastWorkingDate");
         assertThat(userProfileRefreshResponse.getTitle()).isEqualTo("title");
         assertThat(userProfileRefreshResponse.getSidamId()).isEqualTo("sidamId");
         assertThat(userProfileRefreshResponse.getSurname()).isEqualTo("surName");
